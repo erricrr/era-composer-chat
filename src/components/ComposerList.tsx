@@ -1,7 +1,6 @@
 
 import { ComposerCard } from './ComposerCard';
 import { Composer, Era, getComposersByEra } from '@/data/composers';
-import { ScrollArea } from './ui/scroll-area';
 
 interface ComposerListProps {
   era: Era;
@@ -10,18 +9,24 @@ interface ComposerListProps {
 
 export function ComposerList({ era, onSelectComposer }: ComposerListProps) {
   const composers = getComposersByEra(era);
-
+  
   return (
-    <div className="w-full py-6">
-      <ScrollArea className="w-full">
-        <div className="flex gap-6 px-4 pb-4">
-          {composers.map((composer) => (
-            <div key={composer.id} className="flex-none">
-              <ComposerCard composer={composer} onClick={onSelectComposer} />
-            </div>
-          ))}
-        </div>
-      </ScrollArea>
+    <div className="w-full mt-4">
+      <h2 className="text-lg font-medium text-center mb-2">
+        {era} era ({era === 'Modern' ? '1900-Present' : 
+                  era === 'Romantic' ? '1820-1900' : 
+                  era === 'Classical' ? '1750-1820' : 
+                  '1600-1750'})
+      </h2>
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 md:gap-4">
+        {composers.map((composer) => (
+          <ComposerCard 
+            key={composer.id} 
+            composer={composer} 
+            onClick={onSelectComposer} 
+          />
+        ))}
+      </div>
     </div>
   );
 }

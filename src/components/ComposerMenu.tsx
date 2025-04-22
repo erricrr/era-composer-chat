@@ -14,19 +14,19 @@ export function ComposerMenu({ onSelectComposer, isOpen }: ComposerMenuProps) {
 
   return (
     <div
-      className={`fixed inset-x-0 top-0 z-40 bg-background border-b border-border shadow-lg transition-transform duration-500 ease-in-out ${
+      className={`fixed inset-x-0 top-0 z-40 bg-background/95 backdrop-blur-sm border-b border-border shadow-lg transition-transform duration-500 ease-in-out ${
         isOpen ? 'translate-y-0' : '-translate-y-full'
       }`}
-      style={{ height: isOpen ? 'min(100vh, 560px)' : 'auto' }}
+      style={{ height: isOpen ? 'auto' : '0' }}
     >
-      <div className="container mx-auto px-4 py-6 h-full flex flex-col">
-        <h1 className="text-3xl font-bold text-center font-serif mt-4 mb-8">
+      <div className="container mx-auto px-4 py-6 flex flex-col">
+        <h1 className="text-3xl font-bold text-center font-serif mt-2 mb-4">
           <span className="text-primary">Classical</span> Composer Conversations
         </h1>
         
         <Timeline selectedEra={selectedEra} onSelectEra={setSelectedEra} />
         
-        <div className="flex-1 overflow-y-auto px-4 pb-4">
+        <div className="px-2 md:px-6 pb-8 animate-fade-in">
           <ComposerList era={selectedEra} onSelectComposer={onSelectComposer} />
         </div>
         

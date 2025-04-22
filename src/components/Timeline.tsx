@@ -8,54 +8,53 @@ interface TimelineProps {
 
 export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
   return (
-    <div className="w-full max-w-4xl mx-auto py-8">
+    <div className="w-full max-w-4xl mx-auto my-8">
+      {/* Era Timeline */}
       <div className="relative">
-        {/* Era labels and info above the timeline */}
-        <div className="flex justify-between relative z-10 mb-6">
+        {/* Era labels and periods */}
+        <div className="flex justify-between mb-6">
           {eras.map((era) => (
             <div 
               key={era.id}
               className="flex flex-col items-center cursor-pointer group"
               onClick={() => onSelectEra(era.name)}
             >
-              <p className={`text-base font-medium mb-1 transition-colors duration-300 ${
-                selectedEra === era.name ? 'text-primary font-bold' : 'text-muted-foreground group-hover:text-primary/80'
+              <h3 className={`text-lg font-medium transition-colors ${
+                selectedEra === era.name ? 'text-primary font-semibold' : 'text-muted-foreground'
               }`}>
                 {era.id === 'modern' ? '20th-21st Century' : era.name}
+              </h3>
+              <p className="text-sm text-muted-foreground mt-1">
+                {era.period}
               </p>
-              <p className="text-sm text-muted-foreground">{era.period}</p>
             </div>
           ))}
         </div>
         
         {/* Timeline line with gradient */}
-        <div 
-          className="absolute h-1 w-full top-1/2 -translate-y-1/2 z-0 rounded-full"
-          style={{
-            background: 'linear-gradient(to right, #8B6D43, #2D5D7C, #8E4545, #2D5D3D)'
-          }}
-        />
+        <div className="relative h-1 w-full rounded-full overflow-hidden">
+          <div 
+            className="absolute inset-0 rounded-full"
+            style={{
+              background: 'linear-gradient(to right, #8B6D43, #2D5D7C, #8E4545, #2D5D3D)'
+            }}
+          />
+        </div>
         
         {/* Timeline nodes */}
-        <div className="flex justify-between relative z-10 px-1.5">
+        <div className="flex justify-between relative -mt-2.5 px-1">
           {eras.map((era) => (
-            <div 
-              key={era.id}
-              className="flex flex-col items-center"
-            >
+            <div key={era.id} className="flex flex-col items-center">
               <button
                 onClick={() => onSelectEra(era.name)}
-                className={`w-4 h-4 rounded-full transition-all duration-300 transform ${
+                className={`w-5 h-5 rounded-full transition-colors duration-300 ${
                   selectedEra === era.name 
-                    ? era.id === 'baroque' ? 'bg-baroque border-2 border-baroque/30' :
-                      era.id === 'classical' ? 'bg-classical border-2 border-classical/30' :
-                      era.id === 'romantic' ? 'bg-romantic border-2 border-romantic/30' :
-                      'bg-modern border-2 border-modern/30'
-                    : 'bg-secondary hover:bg-secondary/80'
+                    ? era.id === 'baroque' ? 'bg-baroque' :
+                      era.id === 'classical' ? 'bg-classical' :
+                      era.id === 'romantic' ? 'bg-romantic' :
+                      'bg-modern'
+                    : 'bg-secondary border border-muted-foreground hover:border-primary/60'
                 }`}
-                style={{
-                  transform: selectedEra === era.name ? 'scale(1.25)' : 'scale(1)'
-                }}
                 aria-label={`Select ${era.name} era`}
               />
             </div>
@@ -63,17 +62,15 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
         </div>
 
         {/* Era Description */}
-        <div className="mt-10 text-center">
+        <div className="mt-8 text-center">
           {eras.map((era) => (
             selectedEra === era.name && (
-              <div 
+              <p 
                 key={era.id}
-                className="animate-fade-in"
+                className="text-base text-muted-foreground max-w-3xl mx-auto animate-fade-in italic"
               >
-                <p className="text-sm text-muted-foreground max-w-3xl mx-auto">
-                  {era.description}
-                </p>
-              </div>
+                {era.description}
+              </p>
             )
           ))}
         </div>

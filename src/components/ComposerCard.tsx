@@ -9,26 +9,25 @@ interface ComposerCardProps {
 export function ComposerCard({ composer, onClick }: ComposerCardProps) {
   return (
     <div 
-      className={`composer-card w-[200px] h-[260px] flex-shrink-0 cursor-pointer bg-card/50 backdrop-blur-sm ${
-        composer.era === 'Baroque' ? 'border-baroque/30 hover:border-baroque' :
-        composer.era === 'Classical' ? 'border-classical/30 hover:border-classical' : 
-        composer.era === 'Romantic' ? 'border-romantic/30 hover:border-romantic' :
-        'border-modern/30 hover:border-modern'
-      }`}
+      className="flex flex-col items-center p-3 cursor-pointer group transition-all duration-300 hover:scale-105"
       onClick={() => onClick(composer)}
     >
-      <div className="flex flex-col items-center h-full p-4">
+      <div className={`relative w-16 h-16 mb-2 rounded-full overflow-hidden border-2 ${
+        composer.era === 'Baroque' ? 'border-baroque/60' :
+        composer.era === 'Classical' ? 'border-classical/60' : 
+        composer.era === 'Romantic' ? 'border-romantic/60' :
+        'border-modern/60'
+      }`}>
         <img 
           src={composer.image} 
           alt={composer.name} 
-          className="w-24 h-24 rounded-full object-cover mx-auto mb-4 border-2 border-primary/30"
+          className="w-full h-full object-cover"
         />
-        <div className="flex-1 flex flex-col items-center justify-center">
-          <h3 className="text-lg font-bold text-center font-serif mb-2 line-clamp-2">{composer.name}</h3>
-          <p className="text-sm text-muted-foreground text-center">{composer.years}</p>
-          <p className="text-xs text-muted-foreground text-center mt-1">{composer.country}</p>
-        </div>
       </div>
+      <h3 className="text-sm font-medium text-center group-hover:text-primary transition-colors line-clamp-1">
+        {composer.name}
+      </h3>
+      <p className="text-xs text-muted-foreground text-center">{composer.years}</p>
     </div>
   );
 }
