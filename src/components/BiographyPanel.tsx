@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -29,19 +28,19 @@ export function BiographyPanel({ composer, onStartChat, onClose }: BiographyPane
           className="w-64 h-64 rounded-full object-cover cursor-pointer border-4 border-primary/30 hover:border-primary transition-all"
           onClick={() => setImageModalOpen(true)}
         />
-        <div className="mt-4 text-center">
-          <h2 className="text-xl font-bold font-serif mb-2">{composer.name}</h2>
-          <div className="flex flex-wrap gap-2 justify-center mb-2">
-            <Badge variant="secondary" className="ml-2">
-              {composer.era === 'Modern' ? '20th-21st Century' : composer.era}
-            </Badge>
-          </div>
-          <p className="text-sm text-muted-foreground flex gap-2 justify-center">
-            <span>{composer.years}</span>
-            <span>•</span>
-            <span>{composer.country}</span>
-          </p>
+      <div className="mt-4 text-center">
+        <h2 className="text-xl font-bold font-serif mb-2">{composer.name}</h2>
+        <div className="flex flex-wrap gap-2 justify-center mb-2">
+          <Badge variant="secondary">
+            {composer.era === 'Modern' ? '20th-21st Century' : composer.era}
+          </Badge>
         </div>
+        <p className="text-sm text-muted-foreground flex gap-2 justify-center">
+          <span>{composer.years}</span>
+          <span>•</span>
+          <span>{composer.country}</span>
+        </p>
+      </div>
       </div>
 
       <div className="flex flex-col h-full">
