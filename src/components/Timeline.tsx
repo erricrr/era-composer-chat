@@ -1,4 +1,3 @@
-
 import { Era, eras } from '@/data/composers';
 
 interface TimelineProps {
@@ -62,10 +61,10 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
         <div className="mt-8 flex justify-center relative">
           {eras.map((era) => (
             selectedEra === era.name && (
-              <div key={era.id} className="relative w-full max-w-3xl">
-                {/* Visual connector - precisely centered */}
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-0.5 h-8 bg-primary/60 -z-10" />
-                <p className="text-base text-muted-foreground bg-primary/5 px-4 py-2 rounded-lg italic animate-fade-in relative">
+              <div key={era.id} className="relative">
+                {/* Visual connector */}
+                <div className="absolute left-1/2 -top-4 -translate-x-1/2 w-0.5 h-4 bg-primary/60" />
+                <p className="text-base text-muted-foreground max-w-3xl bg-primary/5 px-4 py-2 rounded-lg italic animate-fade-in">
                   {era.description}
                 </p>
               </div>
