@@ -53,10 +53,14 @@ const Index = () => {
       
       {/* Composer Selection Menu - Updated animation */}
       <div
-        className={`fixed inset-x-0 top-0 z-40 bg-background/95 backdrop-blur-sm border-b border-border shadow-lg transition-transform duration-500 ease-in-out ${
+        className={`fixed inset-x-0 top-0 z-40 bg-background/95 backdrop-blur-sm border-b border-border shadow-lg transition-all duration-500 ease-in-out ${
           isMenuOpen ? 'translate-y-0' : '-translate-y-full'
         }`}
-        style={{ height: 'auto', maxHeight: '80vh' }}
+        style={{ 
+          height: isMenuOpen ? 'auto' : '0',
+          maxHeight: isMenuOpen ? '80vh' : '0',
+          overflow: 'hidden'
+        }}
       >
         <ComposerMenu 
           onSelectComposer={handleSelectComposer}
