@@ -20,19 +20,19 @@ export function BiographyPanel({ composer, onStartChat, onClose }: BiographyPane
     onStartChat(composer);
   };
 
-  // Generate the badge class based on the composer's era
-  const getBadgeClass = () => {
+  // Get the badge variant based on the composer's era
+  const getBadgeVariant = (): "baroque" | "classical" | "romantic" | "modern" => {
     switch(composer.era) {
       case 'Baroque':
-        return 'bg-baroque text-white';
+        return 'baroque';
       case 'Classical':
-        return 'bg-classical text-white';
+        return 'classical';
       case 'Romantic':
-        return 'bg-romantic text-white';
+        return 'romantic';
       case 'Modern':
-        return 'bg-modern text-white';
+        return 'modern';
       default:
-        return '';
+        return 'baroque';
     }
   };
 
@@ -48,7 +48,7 @@ export function BiographyPanel({ composer, onStartChat, onClose }: BiographyPane
       <div className="mt-4 text-center">
         <h2 className="text-xl font-bold font-serif mb-2">{composer.name}</h2>
         <div className="flex flex-wrap gap-2 justify-center mb-2">
-          <Badge variant="outline" className={getBadgeClass()}>
+          <Badge variant={getBadgeVariant()}>
             {composer.era}
           </Badge>
         </div>
