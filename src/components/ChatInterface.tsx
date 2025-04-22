@@ -66,8 +66,14 @@ export function ChatInterface({ composer }: ChatInterfaceProps) {
 
   const handleResetChat = () => {
     if (activeConversationId) {
+      // Properly reset the chat by creating a new conversation with the same composer
       startConversation(composer);
       setInputMessage('');
+      
+      // Reset textarea height
+      if (textareaRef.current) {
+        textareaRef.current.style.height = 'auto';
+      }
     }
   };
 
