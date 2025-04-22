@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect, KeyboardEvent } from 'react';
 import { Composer, Message } from '@/data/composers';
 import { useConversations } from '@/hooks/useConversations';
@@ -101,12 +102,13 @@ export function ChatInterface({ composer }: ChatInterfaceProps) {
         'bg-modern/5'
       }`}>
         <div className="flex items-center">
-          <img 
-            src={composer.image} 
-            alt={composer.name} 
-            className="w-10 h-10 rounded-full object-cover shadow-sm cursor-pointer"
-            onClick={() => setImageModalOpen(true)}
-          />
+          <div className="w-10 h-10 rounded-full overflow-hidden shadow-sm cursor-pointer" onClick={() => setImageModalOpen(true)}>
+            <img 
+              src={composer.image} 
+              alt={composer.name} 
+              className="w-full h-full object-cover"
+            />
+          </div>
           <div className="ml-3">
             <h2 className="font-serif font-bold">{composer.name}</h2>
             <p className="text-xs text-muted-foreground">{composer.era} Era • {composer.years}</p>

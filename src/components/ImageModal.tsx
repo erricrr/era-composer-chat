@@ -17,13 +17,13 @@ export function ImageModal({ isOpen, onClose, imageSrc, composerName }: ImageMod
       onClick={onClose}
     >
       <div 
-        className="relative max-w-4xl max-h-[90vh] overflow-auto"
+        className="relative max-w-[90vw] max-h-[90vh] overflow-hidden rounded-lg shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
         <img 
           src={imageSrc} 
           alt={composerName} 
-          className="max-h-[90vh] max-w-full object-contain rounded-lg shadow-xl" 
+          className="w-full h-auto object-contain max-h-[80vh]" 
         />
         <button
           onClick={onClose}
