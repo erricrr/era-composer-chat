@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect, KeyboardEvent } from 'react';
 import { Composer, Message } from '@/data/composers';
 import { useConversations } from '@/hooks/useConversations';
@@ -96,43 +95,34 @@ export function ChatInterface({ composer }: ChatInterfaceProps) {
 
   return (
     <div className="flex flex-col h-full bg-background/50 backdrop-blur-sm rounded-lg overflow-hidden z-10">
-      {/* Chat header with clear separation between elements */}
-      <div className="flex items-center p-4 border-b shadow-sm bg-primary/5">
-        {/* Left section with avatar and composer info */}
-        <div className="flex items-center space-x-3 min-w-0 flex-grow">
-          <div 
-            className="w-10 h-10 rounded-full overflow-hidden shadow-sm cursor-pointer flex-shrink-0" 
-            onClick={() => setImageModalOpen(true)}
-          >
+      <div className="flex items-center justify-between p-4 border-b shadow-sm bg-primary/5">
+        <div className="flex items-center">
+          <div className="w-10 h-10 rounded-full overflow-hidden shadow-sm cursor-pointer" onClick={() => setImageModalOpen(true)}>
             <img 
               src={composer.image} 
               alt={composer.name} 
               className="w-full h-full object-cover"
             />
           </div>
-          <div className="min-w-0 overflow-hidden">
-            <div className="flex items-center gap-2 flex-wrap">
-              <h2 className="font-serif font-bold truncate">{composer.name}</h2>
+          <div className="ml-3">
+            <div className="flex items-center gap-2">
+              <h2 className="font-serif font-bold">{composer.name}</h2>
               <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30">
                 {composer.era}
               </Badge>
             </div>
-            <p className="text-xs text-muted-foreground truncate">{composer.years} • {composer.country}</p>
+            <p className="text-xs text-muted-foreground">{composer.years} • {composer.country}</p>
           </div>
         </div>
-        
-        {/* Reset button positioned on the right with proper spacing */}
-        <div className="ml-4 flex-shrink-0">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleResetChat}
-            className="h-8 w-8"
-            title="Reset conversation"
-          >
-            <RefreshCcw className="h-4 w-4" />
-          </Button>
-        </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={handleResetChat}
+          className="ml-2"
+          title="Reset conversation"
+        >
+          <RefreshCcw className="h-4 w-4" />
+        </Button>
       </div>
       
       <div className="flex-1 overflow-y-auto p-4 space-y-4 relative">

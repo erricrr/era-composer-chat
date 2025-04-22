@@ -6,10 +6,9 @@ import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 interface ComposerListProps {
   era: Era;
   onSelectComposer: (composer: Composer) => void;
-  selectedComposer: Composer | null;
 }
 
-export function ComposerList({ era, onSelectComposer, selectedComposer }: ComposerListProps) {
+export function ComposerList({ era, onSelectComposer }: ComposerListProps) {
   const composers = getComposersByEra(era);
   
   return (
@@ -27,7 +26,6 @@ export function ComposerList({ era, onSelectComposer, selectedComposer }: Compos
               key={composer.id} 
               composer={composer} 
               onClick={onSelectComposer} 
-              isSelected={selectedComposer?.id === composer.id}
             />
           ))}
         </div>
@@ -36,3 +34,4 @@ export function ComposerList({ era, onSelectComposer, selectedComposer }: Compos
     </div>
   );
 }
+

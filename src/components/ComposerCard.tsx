@@ -4,32 +4,25 @@ import { Composer } from '@/data/composers';
 interface ComposerCardProps {
   composer: Composer;
   onClick: (composer: Composer) => void;
-  isSelected?: boolean;
 }
 
-export function ComposerCard({ composer, onClick, isSelected = false }: ComposerCardProps) {
-  const handleClick = () => {
-    onClick(composer);
-  };
-
+export function ComposerCard({ composer, onClick }: ComposerCardProps) {
   return (
     <div 
-      className={`flex flex-col items-center w-40 min-w-40 p-3 rounded-lg cursor-pointer transition-colors
-        ${isSelected 
-          ? 'bg-primary/20 ring-2 ring-primary/50' 
-          : 'hover:bg-card/80 hover:shadow-md'
-        }`}
-      onClick={handleClick}
+      className="flex-shrink-0 flex flex-col items-center p-2 cursor-pointer group transition-all duration-300 hover:scale-105"
+      onClick={() => onClick(composer)}
     >
-      <div className="w-24 h-24 rounded-full overflow-hidden mb-2 shadow-md">
+      <div className="relative w-14 h-14 mb-1 rounded-full overflow-hidden border-2 border-primary/60">
         <img 
           src={composer.image} 
           alt={composer.name} 
           className="w-full h-full object-cover"
         />
       </div>
-      <h3 className="font-serif text-center font-medium">{composer.name}</h3>
-      <p className="text-xs text-center text-muted-foreground">{composer.years}</p>
+      <h3 className="text-xs font-medium text-center group-hover:text-primary transition-colors line-clamp-1">
+        {composer.name}
+      </h3>
+      <p className="text-[10px] text-muted-foreground text-center">{composer.years}</p>
     </div>
   );
 }
