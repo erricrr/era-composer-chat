@@ -8,11 +8,11 @@ interface TimelineProps {
 
 export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
   return (
-    <div className="w-full max-w-4xl mx-auto my-4">
+    <div className="w-full max-w-4xl mx-auto my-8">
       {/* Era Timeline */}
       <div className="relative">
         {/* Era labels with period */}
-        <div className="flex justify-between mb-2">
+        <div className="flex justify-between mb-4">
           {eras.map((era) => (
             <div 
               key={era.id}
@@ -24,7 +24,7 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
               }`}>
                 {era.id === 'modern' ? '20th-21st Century' : era.name}
               </h3>
-              <p className="text-xs text-muted-foreground mt-0.5 text-center">
+              <p className="text-xs text-muted-foreground mt-1 text-center">
                 {era.period}
               </p>
             </div>
@@ -32,14 +32,14 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
         </div>
         
         {/* Timeline line with single color gradient */}
-        <div className="relative h-1 w-full rounded-full overflow-hidden mt-2">
+        <div className="relative h-1 w-full rounded-full overflow-hidden mt-4">
           <div 
             className="absolute inset-0 bg-gradient-to-r from-primary/30 to-primary rounded-full"
           />
         </div>
         
         {/* Timeline nodes - aligned with text above */}
-        <div className="flex justify-between relative -mt-2.5 px-1 mb-4">
+        <div className="flex justify-between relative -mt-2.5 px-1 mb-8">
           {eras.map((era) => (
             <div 
               key={era.id} 
@@ -59,20 +59,23 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
         </div>
 
         {/* Era Description with correctly aligned connector */}
-        <div className="relative">
+        <div className="relative mt-4">
           {eras.map((era) => (
             selectedEra === era.name && (
               <div 
                 key={era.id} 
                 className="absolute w-full transition-all duration-300 ease-in-out"
+                style={{
+                  top: '0'
+                }}
               >
                 {/* Visual connector - positioned to connect to the dot */}
                 <div 
                   className="absolute w-0.5 bg-primary/60"
                   style={{
-                    left: `${eras.findIndex(e => e.name === era.name) * 25 + 12.5}%`,
-                    height: '1.5rem',
-                    top: '-1.5rem'
+                    left: `calc(${eras.findIndex(e => e.name === era.name) * 25}% + 12.5% - 1px)`,
+                    height: '2rem',
+                    top: '-2.5rem'
                   }}
                 />
                 <p className="text-base text-muted-foreground bg-primary/5 px-6 py-3 rounded-lg italic animate-fade-in">
