@@ -21,7 +21,7 @@ export function ComposerList({ era, onSelectComposer, selectedComposer, onStartC
 
   return (
     <div className="w-full mt-4">
-      <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-8">
         {/* Left side - Scrolling composers */}
         <ScrollArea className="w-full bg-card dark:bg-sidebar/40 rounded-lg p-4">
           <div className="flex space-x-4 pb-4">
@@ -39,7 +39,7 @@ export function ComposerList({ era, onSelectComposer, selectedComposer, onStartC
 
         {/* Right side - Biography */}
         {selectedComposer && (
-          <div className="bg-card dark:bg-sidebar/40 rounded-lg p-6">
+          <div className="bg-card dark:bg-sidebar/40 rounded-lg p-6 max-h-[calc(100vh-12rem)] overflow-y-auto">
             <div className="flex flex-col items-center space-y-4">
               <img
                 src={selectedComposer.image}
