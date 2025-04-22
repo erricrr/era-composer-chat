@@ -12,19 +12,19 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
       {/* Era Timeline */}
       <div className="relative">
         {/* Era labels with period */}
-        <div className="flex justify-between mb-2">
+        <div className="flex justify-between mb-6">
           {eras.map((era) => (
             <div 
               key={era.id}
               className="flex flex-col items-center w-1/4 group cursor-pointer"
               onClick={() => onSelectEra(era.name)}
             >
-              <h3 className={`text-base font-medium text-center transition-colors ${
+              <h3 className={`text-base font-medium text-center mb-2 transition-colors ${
                 selectedEra === era.name ? 'text-primary font-semibold' : 'text-muted-foreground'
               }`}>
                 {era.id === 'modern' ? '20th-21st Century' : era.name}
               </h3>
-              <p className="text-xs text-muted-foreground mt-0.5 text-center">
+              <p className="text-xs text-muted-foreground text-center">
                 {era.period}
               </p>
             </div>
@@ -32,14 +32,14 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
         </div>
         
         {/* Timeline line with single color gradient */}
-        <div className="relative h-1 w-full rounded-full overflow-hidden mt-2">
+        <div className="relative h-1 w-full rounded-full overflow-hidden mt-4">
           <div 
             className="absolute inset-0 bg-gradient-to-r from-primary/30 to-primary rounded-full"
           />
         </div>
         
         {/* Timeline nodes - aligned with text above */}
-        <div className="flex justify-between relative -mt-2.5 px-1 mb-6">
+        <div className="flex justify-between relative -mt-2.5 px-1 mb-8">
           {eras.map((era) => (
             <div 
               key={era.id} 
@@ -58,7 +58,7 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
           ))}
         </div>
 
-        {/* Era Description without connector line */}
+        {/* Era Description with more spacing */}
         <div className="relative mb-10">
           {eras.map((era) => (
             selectedEra === era.name && (
@@ -66,7 +66,7 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
                 key={era.id} 
                 className="absolute w-full transition-all duration-300 ease-in-out animate-fade-in"
               >
-                <p className="text-base text-muted-foreground bg-primary/5 px-6 py-3 rounded-lg italic">
+                <p className="text-base text-muted-foreground bg-primary/5 px-6 py-4 rounded-lg italic">
                   {era.description}
                 </p>
               </div>
