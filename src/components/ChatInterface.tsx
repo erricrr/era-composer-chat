@@ -13,6 +13,7 @@ interface ChatInterfaceProps {
 export function ChatInterface({ composer }: ChatInterfaceProps) {
   const [inputMessage, setInputMessage] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const isMobile = useIsMobile();
   
   const { 
@@ -37,6 +38,11 @@ export function ChatInterface({ composer }: ChatInterfaceProps) {
     
     addMessage(activeConversationId, inputMessage, 'user');
     setInputMessage('');
+    
+    // Reset textarea height after sending message
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+    }
     
     setTimeout(() => {
       if (activeConversationId) {
@@ -136,9 +142,10 @@ export function ChatInterface({ composer }: ChatInterfaceProps) {
       </div>
       
       <form onSubmit={handleSendMessage} className="sticky bottom-0 p-4 border-t bg-background/50">
-        <div className="flex gap-2">
+        <div className="flex items-end gap-2">
           <div className="relative flex-1">
             <textarea
+              ref={textareaRef}
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
               onKeyDown={handleKeyPress}
@@ -155,7 +162,7 @@ export function ChatInterface({ composer }: ChatInterfaceProps) {
           <Button
             type="submit"
             disabled={!inputMessage.trim()}
-            className={`px-4 h-10 rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors shrink-0 ${
+            className={`px-4 h-10 rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors shrink-0 self-end ${
               composer.era === 'Baroque' ? 'bg-baroque text-white' :
               composer.era === 'Classical' ? 'bg-classical text-white' : 
               composer.era === 'Romantic' ? 'bg-romantic text-white' :
