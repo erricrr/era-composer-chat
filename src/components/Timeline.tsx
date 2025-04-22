@@ -1,4 +1,3 @@
-
 import { Era, eras } from '@/data/composers';
 
 interface TimelineProps {
@@ -7,6 +6,17 @@ interface TimelineProps {
 }
 
 export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
+  // Calculate the exact center position for each era's connector line
+  const getLinePosition = (index: number): string => {
+    const totalWidth = 100; // Full width percentage
+    const numEras = eras.length;
+    const sectionWidth = totalWidth / numEras;
+    const halfSectionWidth = sectionWidth / 2;
+    
+    // Calculate the center position for this era's section
+    return `${(index * sectionWidth) + halfSectionWidth}%`;
+  };
+
   return (
     <div className="w-full max-w-4xl mx-auto my-8">
       {/* Era Timeline */}
@@ -60,17 +70,17 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
 
         {/* Era Description with correctly aligned connector */}
         <div className="relative mb-10">
-          {eras.map((era) => (
+          {eras.map((era, index) => (
             selectedEra === era.name && (
               <div 
                 key={era.id} 
                 className="absolute w-full transition-all duration-300 ease-in-out"
               >
-                {/* Visual connector - positioned to connect to the dot */}
+                {/* Visual connector - positioned using calculated center */}
                 <div 
                   className="absolute w-0.5 bg-primary/60"
                   style={{
-                    left: `calc(${eras.findIndex(e => e.name === era.name) * 25 + 12.5}%)`,
+                    left: getLinePosition(index),
                     height: '1.25rem',
                     top: '-1.25rem'
                   }}
