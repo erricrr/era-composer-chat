@@ -12,21 +12,6 @@ interface ComposerMenuProps {
 export function ComposerMenu({ onSelectComposer, isOpen }: ComposerMenuProps) {
   const [selectedEra, setSelectedEra] = useState<Era>(Era.Baroque);
 
-  const getEraColor = (era: Era) => {
-    switch (era) {
-      case Era.Baroque:
-        return 'text-baroque';
-      case Era.Classical:
-        return 'text-classical';
-      case Era.Romantic:
-        return 'text-romantic';
-      case Era.Modern:
-        return 'text-modern';
-      default:
-        return 'text-primary';
-    }
-  };
-
   const getEraText = (era: Era) => {
     return era === Era.Modern ? '20th-21st Century' : era;
   };
@@ -40,7 +25,7 @@ export function ComposerMenu({ onSelectComposer, isOpen }: ComposerMenuProps) {
     >
       <div className="container mx-auto px-4 py-6 flex flex-col">
         <h1 className="text-3xl font-bold text-center font-serif mt-2 mb-4">
-          <span className={getEraColor(selectedEra)}>{getEraText(selectedEra)}</span> Composer Conversations
+          {getEraText(selectedEra)} Composer Conversations
         </h1>
         
         <Timeline selectedEra={selectedEra} onSelectEra={setSelectedEra} />
