@@ -24,7 +24,7 @@ export function ComposerCard({ composer, onClick, isSelected }: ComposerCardProp
           className="w-full h-full object-cover"
         />
       </div>
-      <div className="flex flex-col items-center lg:items-start">
+      <div className="flex flex-col items-center lg:items-start lg:ml-4">
         <h3 className={`text-sm font-medium text-center lg:text-left group-hover:text-primary transition-colors line-clamp-1 ${
           isSelected ? 'text-primary' : ''
         }`}>
