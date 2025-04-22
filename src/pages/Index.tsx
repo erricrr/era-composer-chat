@@ -60,7 +60,7 @@ const Index = () => {
           isMenuOpen ? 'translate-y-0' : '-translate-y-full'
         }`}
         style={{ 
-          maxHeight: isMenuOpen ? '80vh' : '0',
+          maxHeight: isMenuOpen ? '95vh' : '0', // Changed from 80vh to 95vh
           height: isMenuOpen ? 'auto' : '0',
           overflow: 'hidden'
         }}
