@@ -1,32 +1,27 @@
-import { useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
-import { ImageModal } from "./ImageModal";
 import { Composer } from "@/data/composers";
 
 interface BiographyPanelProps {
   composer: Composer;
   onStartChat: (composer: Composer) => void;
-  onClose: () => void;
 }
 
-export function BiographyPanel({ composer, onStartChat, onClose }: BiographyPanelProps) {
-  const [imageModalOpen, setImageModalOpen] = useState(false);
-
+export function BiographyPanel({ composer, onStartChat }: BiographyPanelProps) {
   const handleStartChat = () => {
     onStartChat(composer);
   };
 
   return (
-    <Card className="relative w-full max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-[300px_1fr] gap-6 p-6 z-10 animate-fade-in">
+    <Card className="w-full mx-auto grid grid-cols-1 md:grid-cols-[300px_1fr] gap-6 p-6">
       <div className="flex flex-col items-center">
         <img
           src={composer.image}
           alt={composer.name}
-          className="w-64 h-64 rounded-full object-cover cursor-pointer border-4 border-primary/30 hover:border-primary transition-all"
-          onClick={() => setImageModalOpen(true)}
+          className="w-64 h-64 rounded-full object-cover border-4 border-primary/30"
         />
         <div className="mt-4 text-center">
           <h2 className="text-xl font-bold font-serif mb-2">{composer.name}</h2>
@@ -44,18 +39,6 @@ export function BiographyPanel({ composer, onStartChat, onClose }: BiographyPane
       </div>
 
       <div className="flex flex-col h-full">
-        <div className="flex justify-end mb-4">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="rounded-full"
-            onClick={onClose}
-            aria-label="Close biography"
-          >
-            ×
-          </Button>
-        </div>
-
         <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-6 mb-4">
           <ScrollArea className="h-[300px] rounded-md border p-4">
             <p className="text-foreground/90">{composer.bio}</p>
@@ -78,13 +61,6 @@ export function BiographyPanel({ composer, onStartChat, onClose }: BiographyPane
           Start Conversation
         </Button>
       </div>
-
-      <ImageModal
-        isOpen={imageModalOpen}
-        onClose={() => setImageModalOpen(false)}
-        imageSrc={composer.image}
-        composerName={composer.name}
-      />
     </Card>
   );
 }

@@ -16,18 +16,11 @@ const Index = () => {
 
   const handleSelectComposer = (composer: Composer) => {
     setSelectedComposer(composer);
-    setIsMenuOpen(false);
   };
 
   const handleStartChat = (composer: Composer) => {
     startConversation(composer);
     setIsChatting(true);
-  };
-
-  const handleCloseBiography = () => {
-    setIsMenuOpen(true);
-    setSelectedComposer(null);
-    setIsChatting(false);
   };
 
   const toggleMenu = () => {
@@ -40,19 +33,34 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Background Decoration */}
       <MusicNoteDecoration />
-      
-      {/* Theme Toggle */}
       <ThemeToggle />
       
-      {/* Composer Selection Menu */}
-      <ComposerMenu 
-        onSelectComposer={handleSelectComposer} 
-        isOpen={isMenuOpen} 
-      />
-      
-      {/* Menu Toggle Button */}
+      <div className={`transition-all duration-500 ${
+        isChatting ? '-translate-y-full' : 'translate-y-0'
+      }`}>
+        <ComposerMenu 
+          onSelectComposer={handleSelectComposer} 
+          isOpen={isMenuOpen}
+          selectedComposer={selectedComposer}
+        />
+        
+        {selectedComposer && (
+          <div className="container mx-auto px-4 mt-4 animate-fade-in">
+            <BiographyPanel 
+              composer={selectedComposer} 
+              onStartChat={handleStartChat}
+            />
+          </div>
+        )}
+      </div>
+
+      {isChatting && selectedComposer && (
+        <div className="fixed inset-0 animate-fade-in">
+          <ChatInterface composer={selectedComposer} />
+        </div>
+      )}
+
       <button
         onClick={toggleMenu}
         className="fixed top-4 left-4 z-50 p-2 rounded-full bg-card hover:bg-muted transition-colors duration-200 shadow-md"
@@ -72,39 +80,6 @@ const Index = () => {
           )}
         </svg>
       </button>
-      
-      {/* Main Content */}
-      <div 
-        className={`container mx-auto px-4 pt-16 pb-8 transition-all duration-500 ${
-          isMenuOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'
-        }`} 
-        style={{ height: 'calc(100vh - 2rem)' }}
-      >
-        {selectedComposer && !isChatting ? (
-          <BiographyPanel 
-            composer={selectedComposer} 
-            onStartChat={handleStartChat}
-            onClose={handleCloseBiography}
-          />
-        ) : selectedComposer && isChatting ? (
-          <ChatInterface composer={selectedComposer} />
-        ) : (
-          <div className="h-full flex items-center justify-center">
-            <div className="text-center">
-              <h2 className="text-2xl font-serif font-bold mb-4">Select a Composer</h2>
-              <p className="text-muted-foreground mb-6">
-                Click the menu button above to browse composers by era
-              </p>
-              <button
-                onClick={toggleMenu}
-                className="bg-primary text-primary-foreground px-6 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors"
-              >
-                Open Composer Menu
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
     </div>
   );
 }
