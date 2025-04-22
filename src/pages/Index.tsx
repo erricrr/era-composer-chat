@@ -56,13 +56,13 @@ const Index = () => {
       
       {/* Composer Selection Menu - Updated animation */}
       <div
-        className={`fixed inset-x-0 top-0 z-40 bg-background/95 backdrop-blur-sm border-b border-border shadow-lg transition-all duration-500 ease-in-out ${
+        className={`fixed inset-x-0 top-0 z-40 bg-background/95 backdrop-blur-sm border-b border-border shadow-lg transition-all duration-500 ease-in-out overflow-y-auto ${
           isMenuOpen ? 'translate-y-0' : '-translate-y-full'
         }`}
         style={{ 
           height: isMenuOpen ? 'auto' : '0',
-          maxHeight: isMenuOpen ? '100vh' : '0', // Updated maxHeight value
-          overflow: 'hidden'
+          maxHeight: isMenuOpen ? '100vh' : '0',
+          overflow: isMenuOpen ? 'auto' : 'hidden'
         }}
       >
         <ComposerMenu 
