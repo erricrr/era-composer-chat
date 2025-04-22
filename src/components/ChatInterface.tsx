@@ -1,8 +1,10 @@
-import { useState, useRef, useEffect } from 'react';
+
+import { useState, useRef, useEffect, KeyboardEvent } from 'react';
 import { Composer, Message } from '@/data/composers';
 import { useConversations } from '@/hooks/useConversations';
 import { Button } from '@/components/ui/button';
 import { RefreshCcw } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface ChatInterfaceProps {
   composer: Composer;
@@ -11,6 +13,8 @@ interface ChatInterfaceProps {
 export function ChatInterface({ composer }: ChatInterfaceProps) {
   const [inputMessage, setInputMessage] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
+  
   const { 
     activeConversation, 
     activeConversationId,
@@ -28,9 +32,7 @@ export function ChatInterface({ composer }: ChatInterfaceProps) {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [activeConversation?.messages]);
 
-  const handleSendMessage = (e: React.FormEvent) => {
-    e.preventDefault();
-    
+  const handleMessageSubmit = () => {
     if (!inputMessage.trim() || !activeConversationId) return;
     
     addMessage(activeConversationId, inputMessage, 'user');
@@ -44,9 +46,22 @@ export function ChatInterface({ composer }: ChatInterfaceProps) {
     }, 1000);
   };
 
+  const handleSendMessage = (e: React.FormEvent) => {
+    e.preventDefault();
+    handleMessageSubmit();
+  };
+
+  const handleKeyPress = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (!isMobile && e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleMessageSubmit();
+    }
+  };
+
   const handleResetChat = () => {
     if (activeConversationId) {
       startConversation(composer);
+      setInputMessage('');
     }
   };
 
@@ -120,26 +135,27 @@ export function ChatInterface({ composer }: ChatInterfaceProps) {
         <div ref={messagesEndRef} />
       </div>
       
-      <form onSubmit={handleSendMessage} className="p-4 border-t bg-background/50">
-        <div className="flex gap-2 items-start">
-          <div className="flex-1">
+      <form onSubmit={handleSendMessage} className="sticky bottom-0 p-4 border-t bg-background/50">
+        <div className="flex gap-2">
+          <div className="relative flex-1">
             <textarea
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
+              onKeyDown={handleKeyPress}
               placeholder={`Ask ${composer.name} a question...`}
               className="w-full rounded-xl border bg-background p-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary resize-none overflow-hidden"
               rows={1}
               onInput={(e) => {
                 const target = e.target as HTMLTextAreaElement;
                 target.style.height = 'auto';
-                target.style.height = `${target.scrollHeight}px`;
+                target.style.height = `${Math.min(target.scrollHeight, 200)}px`;
               }}
             />
           </div>
           <Button
             type="submit"
             disabled={!inputMessage.trim()}
-            className={`px-4 h-10 rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors ${
+            className={`px-4 h-10 rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors shrink-0 ${
               composer.era === 'Baroque' ? 'bg-baroque text-white' :
               composer.era === 'Classical' ? 'bg-classical text-white' : 
               composer.era === 'Romantic' ? 'bg-romantic text-white' :
