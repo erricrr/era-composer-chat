@@ -1,4 +1,3 @@
-
 import { Composer, Era, getComposersByEra } from '@/data/composers';
 import { ComposerCard } from './ComposerCard';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
@@ -44,26 +43,24 @@ export function ComposerList({ era, onSelectComposer, selectedComposer, onStartC
         {/* Right side - Biography */}
         {selectedComposer && (
           <div className="bg-card dark:bg-sidebar/40 rounded-lg p-6 max-h-[calc(100vh-12rem)] overflow-y-auto">
-            <div className="flex flex-col space-y-4">
-              {/* Header section with avatar and info */}
-              <div className="flex items-start space-x-4">
-                <img
-                  src={selectedComposer.image}
-                  alt={selectedComposer.name}
-                  className="w-20 h-20 rounded-full object-cover border-2 border-primary/30 flex-shrink-0"
-                />
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-xl font-bold font-serif truncate">{selectedComposer.name}</h3>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    {selectedComposer.years} • {selectedComposer.country}
-                  </p>
-                  <Badge variant="secondary" className="mt-2">
-                    {era === Era.Modern ? '20th-21st Century' : era} Era
-                  </Badge>
-                </div>
+            <div className="flex flex-col items-center space-y-4">
+              <img
+                src={selectedComposer.image}
+                alt={selectedComposer.name}
+                className="w-32 h-32 rounded-full object-cover border-2 border-primary/30"
+              />
+              <div className="text-center space-y-1">
+                <h3 className="text-xl font-bold font-serif">{selectedComposer.name}</h3>
+                <p className="text-sm text-muted-foreground">
+                  {selectedComposer.years} • {selectedComposer.country}
+                </p>
+                
+                {/* Era Pill */}
+                <Badge variant="secondary" className="mt-2">
+                  {era === Era.Modern ? '20th-21st Century' : era} Era
+                </Badge>
               </div>
               
-              {/* Biography text */}
               <ScrollArea className="h-[200px] w-full rounded-md">
                 <p className="text-sm text-foreground/90 mb-4">{selectedComposer.bio}</p>
                 <div className="mt-4">
