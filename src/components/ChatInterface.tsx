@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect, KeyboardEvent } from 'react';
 import { Composer, Message } from '@/data/composers';
 import { useConversations } from '@/hooks/useConversations';
@@ -95,16 +96,19 @@ export function ChatInterface({ composer }: ChatInterfaceProps) {
 
   return (
     <div className="flex flex-col h-full bg-background/50 backdrop-blur-sm rounded-lg overflow-hidden z-10">
-      <div className="flex items-center justify-between p-4 border-b shadow-sm bg-primary/5">
-        <div className="flex items-center">
-          <div className="w-10 h-10 rounded-full overflow-hidden shadow-sm cursor-pointer" onClick={() => setImageModalOpen(true)}>
+      <div className="flex items-center justify-between p-4 border-b shadow-sm bg-primary/5 relative">
+        <div className="flex items-center space-x-3">
+          <div 
+            className="w-10 h-10 rounded-full overflow-hidden shadow-sm cursor-pointer" 
+            onClick={() => setImageModalOpen(true)}
+          >
             <img 
               src={composer.image} 
               alt={composer.name} 
               className="w-full h-full object-cover"
             />
           </div>
-          <div className="ml-3">
+          <div>
             <div className="flex items-center gap-2">
               <h2 className="font-serif font-bold">{composer.name}</h2>
               <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30">
@@ -118,7 +122,7 @@ export function ChatInterface({ composer }: ChatInterfaceProps) {
           variant="ghost"
           size="icon"
           onClick={handleResetChat}
-          className="ml-2"
+          className="absolute right-4 top-1/2 -translate-y-1/2"
           title="Reset conversation"
         >
           <RefreshCcw className="h-4 w-4" />
