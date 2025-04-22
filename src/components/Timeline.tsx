@@ -44,10 +44,13 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
         {/* Timeline nodes - aligned with text above */}
         <div className="flex justify-between relative -mt-2.5 px-1">
           {eras.map((era) => (
-            <div key={era.id} className="flex flex-col items-center w-1/4">
+            <div 
+              key={era.id} 
+              className="flex flex-col items-center w-1/4 group"
+              onClick={() => onSelectEra(era.name)}
+            >
               <button
-                onClick={() => onSelectEra(era.name)}
-                className={`w-4 h-4 rounded-full transition-colors duration-300 ${
+                className={`w-4 h-4 rounded-full transition-all duration-300 group-hover:scale-125 ${
                   selectedEra === era.name 
                     ? era.id === 'baroque' ? 'bg-baroque' :
                       era.id === 'classical' ? 'bg-classical' :
