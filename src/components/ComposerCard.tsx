@@ -19,10 +19,10 @@ export function ComposerCard({ composer, onClick }: ComposerCardProps) {
           className="w-full h-full object-cover"
         />
       </div>
-      <h3 className="text-xs font-medium text-center group-hover:text-primary transition-colors line-clamp-1">
+      <h3 className="text-sm font-medium text-center group-hover:text-primary transition-colors line-clamp-1">
         {composer.name}
       </h3>
-      <p className="text-[10px] text-muted-foreground text-center">{composer.years}</p>
+      <p className="text-xs text-muted-foreground text-center">{composer.years}</p>
     </div>
   );
 }
