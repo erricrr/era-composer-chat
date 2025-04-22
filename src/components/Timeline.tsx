@@ -1,4 +1,3 @@
-
 import { Era, eras } from '@/data/composers';
 
 interface TimelineProps {
@@ -7,10 +6,6 @@ interface TimelineProps {
 }
 
 export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
-  const handleEraSelect = (era: Era) => {
-    onSelectEra(era);
-  };
-
   return (
     <div className="w-full max-w-4xl mx-auto my-8">
       {/* Era Timeline */}
@@ -21,7 +16,7 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
             <div 
               key={era.id}
               className="flex flex-col items-center w-1/4 group cursor-pointer"
-              onClick={() => handleEraSelect(era.name)}
+              onClick={() => onSelectEra(era.name)}
             >
               <h3 className={`text-base font-medium text-center transition-colors ${
                 selectedEra === era.name ? 'text-primary font-semibold' : 'text-muted-foreground'
@@ -48,7 +43,7 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
             <div 
               key={era.id} 
               className="flex flex-col items-center w-1/4"
-              onClick={() => handleEraSelect(era.name)}
+              onClick={() => onSelectEra(era.name)}
             >
               <button
                 className={`w-4 h-4 rounded-full transition-all duration-300 group-hover:scale-125 ${
