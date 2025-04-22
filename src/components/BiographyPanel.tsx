@@ -33,8 +33,8 @@ export function BiographyPanel({
           <div className="flex flex-col items-center md:items-start">
             <h2 className="text-2xl font-bold font-serif mb-1 text-[#232834] md:text-2xl">{composer.name}</h2>
             <div className="flex flex-wrap items-center gap-2 text-base md:text-lg">
-              <span className="text-[#907C5C]">{composer.country}</span>
-              <span className="text-[#907C5C]">, {composer.years}</span>
+              <span className="text-[#907C5C] text-base">{composer.country}</span>
+              <span className="text-[#907C5C] text-base">, {composer.years}</span>
               <Badge className="px-3 py-1 bg-[#DED7C6] text-[#7A6945] shadow-none text-sm font-semibold border-none ml-2">
                 {composer.era} Era
               </Badge>
@@ -43,7 +43,7 @@ export function BiographyPanel({
         </div>
 
         {/* Biography */}
-        <p className="text-base md:text-lg text-[#46495D] text-center max-w-4xl mx-auto md:mx-0 mb-8 mt-3 my-[13px] md:text-left">
+        <p className="text-base text-[#46495D] text-center max-w-4xl mx-auto md:mx-0 mb-8 mt-3 my-[13px] md:text-base md:text-left">
           {composer.bio}
         </p>
 
