@@ -1,8 +1,8 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Timeline } from './Timeline';
 import { ComposerList } from './ComposerList';
-import { Composer, Era } from '@/data/composers';
+import { Composer, Era, getComposersByEra } from '@/data/composers';
 
 interface ComposerMenuProps {
   onSelectComposer: (composer: Composer) => void;
@@ -13,6 +13,14 @@ interface ComposerMenuProps {
 
 export function ComposerMenu({ onSelectComposer, onStartChat, selectedComposer, isOpen }: ComposerMenuProps) {
   const [selectedEra, setSelectedEra] = useState<Era>(Era.Baroque);
+
+  // When era changes, select the first composer of that era
+  useEffect(() => {
+    const composers = getComposersByEra(selectedEra);
+    if (composers.length > 0) {
+      onSelectComposer(composers[0]);
+    }
+  }, [selectedEra, onSelectComposer]);
 
   return (
     <div
