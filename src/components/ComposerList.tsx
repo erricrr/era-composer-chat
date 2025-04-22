@@ -1,4 +1,3 @@
-
 import { Composer, Era, getComposersByEra } from '@/data/composers';
 import { ComposerCard } from './ComposerCard';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
@@ -76,7 +75,7 @@ export function ComposerList({ era, onSelectComposer, selectedComposer, onStartC
 
               <Button 
                 onClick={() => onStartChat(selectedComposer)}
-                className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+                className="w-full bg-primary text-primary-foreground hover:bg-primary/90 transition-transform duration-300 hover:scale-[1.02]"
               >
                 Start Conversation
               </Button>
@@ -87,4 +86,3 @@ export function ComposerList({ era, onSelectComposer, selectedComposer, onStartC
     </div>
   );
 }
-
