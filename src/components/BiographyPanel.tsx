@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -31,8 +32,8 @@ export function BiographyPanel({ composer, onStartChat, onClose }: BiographyPane
         <div className="mt-4 text-center">
           <h2 className="text-xl font-bold font-serif mb-2">{composer.name}</h2>
           <div className="flex flex-wrap gap-2 justify-center mb-2">
-            <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30">
-              {composer.era} Era
+            <Badge variant="secondary" className="ml-2">
+              {composer.era === 'Modern' ? '20th-21st Century' : composer.era}
             </Badge>
           </div>
           <p className="text-sm text-muted-foreground flex gap-2 justify-center">
