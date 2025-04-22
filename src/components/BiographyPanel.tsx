@@ -73,27 +73,51 @@ export function BiographyPanel({ composer, onStartChat, onClose }: BiographyPane
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-6 mb-4">
-          <ScrollArea className="h-[300px] rounded-md border p-4">
-            <p className="text-foreground/90">{composer.bio}</p>
-          </ScrollArea>
-
-          <div>
-            <h3 className="font-semibold mb-2">Notable Works:</h3>
-            <ul className="list-disc pl-5 space-y-1">
-              {composer.famousWorks.slice(0, 3).map((work, index) => (
-                <li key={index} className="text-foreground/80">{work}</li>
-              ))}
-            </ul>
+        {/* On small screens: make content vertically scrollable and fixed height */}
+        <div className="block md:hidden overflow-y-auto" style={{ maxHeight: '60vh' }}>
+          <div className="grid grid-cols-1 gap-6 mb-4">
+            <ScrollArea className="h-[200px] rounded-md border p-4">
+              <p className="text-foreground/90">{composer.bio}</p>
+            </ScrollArea>
+            <div>
+              <h3 className="font-semibold mb-2">Notable Works:</h3>
+              <ul className="list-disc pl-5 space-y-1">
+                {composer.famousWorks.slice(0, 3).map((work, index) => (
+                  <li key={index} className="text-foreground/80">{work}</li>
+                ))}
+              </ul>
+            </div>
           </div>
+          <Button 
+            onClick={handleStartChat}
+            className="bg-primary text-primary-foreground hover:bg-primary/90 w-full"
+          >
+            Start Conversation
+          </Button>
         </div>
-            
-        <Button 
-          onClick={handleStartChat}
-          className="bg-primary text-primary-foreground hover:bg-primary/90 w-full"
-        >
-          Start Conversation
-        </Button>
+
+        {/* On medium+ screens: regular layout, no forced scroll */}
+        <div className="hidden md:block">
+          <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-6 mb-4">
+            <ScrollArea className="h-[300px] rounded-md border p-4">
+              <p className="text-foreground/90">{composer.bio}</p>
+            </ScrollArea>
+            <div>
+              <h3 className="font-semibold mb-2">Notable Works:</h3>
+              <ul className="list-disc pl-5 space-y-1">
+                {composer.famousWorks.slice(0, 3).map((work, index) => (
+                  <li key={index} className="text-foreground/80">{work}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          <Button 
+            onClick={handleStartChat}
+            className="bg-primary text-primary-foreground hover:bg-primary/90 w-full"
+          >
+            Start Conversation
+          </Button>
+        </div>
       </div>
 
       <ImageModal
