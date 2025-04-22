@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -34,8 +33,8 @@ export function BiographyPanel({
             <div className="flex flex-wrap items-center gap-2 text-base md:text-lg">
               <span className="text-[#907C5C] dark:text-gray-300 text-base">{composer.country}</span>
               <span className="text-[#907C5C] dark:text-gray-300 text-base">, {composer.years}</span>
-              <Badge variant="outline" className="px-3 py-1 shadow-none text-sm font-semibold border-primary/30">
-                {composer.era} Era
+              <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30">
+                {composer.era}
               </Badge>
             </div>
           </div>
