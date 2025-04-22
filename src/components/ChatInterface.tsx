@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect, KeyboardEvent } from 'react';
 import { Composer, Message } from '@/data/composers';
 import { useConversations } from '@/hooks/useConversations';
@@ -6,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { RefreshCcw } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ImageModal } from './ImageModal';
+import { Badge } from "@/components/ui/badge";
 
 interface ChatInterfaceProps {
   composer: Composer;
@@ -110,8 +110,18 @@ export function ChatInterface({ composer }: ChatInterfaceProps) {
             />
           </div>
           <div className="ml-3">
-            <h2 className="font-serif font-bold">{composer.name}</h2>
-            <p className="text-xs text-muted-foreground">{composer.era} Era • {composer.years}</p>
+            <div className="flex items-center gap-2">
+              <h2 className="font-serif font-bold">{composer.name}</h2>
+              <Badge variant="outline" className={`${
+                composer.era === 'Baroque' ? 'bg-baroque/10 text-baroque border-baroque/30' :
+                composer.era === 'Classical' ? 'bg-classical/10 text-classical border-classical/30' : 
+                composer.era === 'Romantic' ? 'bg-romantic/10 text-romantic border-romantic/30' :
+                'bg-modern/10 text-modern border-modern/30'
+              }`}>
+                {composer.era}
+              </Badge>
+            </div>
+            <p className="text-xs text-muted-foreground">{composer.years} • {composer.country}</p>
           </div>
         </div>
         <Button

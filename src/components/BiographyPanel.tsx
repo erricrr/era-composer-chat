@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Badge } from "@/components/ui/badge";
 import { ImageModal } from "./ImageModal";
 import { Composer } from "@/data/composers";
 
@@ -29,7 +30,17 @@ export function BiographyPanel({ composer, onStartChat, onClose }: BiographyPane
           onClick={() => setImageModalOpen(true)}
         />
         <div className="mt-4 text-center">
-          <h2 className="text-xl font-bold font-serif">{composer.name}</h2>
+          <h2 className="text-xl font-bold font-serif mb-2">{composer.name}</h2>
+          <div className="flex flex-wrap gap-2 justify-center mb-2">
+            <Badge variant="outline" className={`${
+              composer.era === 'Baroque' ? 'bg-baroque/10 text-baroque border-baroque/30' :
+              composer.era === 'Classical' ? 'bg-classical/10 text-classical border-classical/30' : 
+              composer.era === 'Romantic' ? 'bg-romantic/10 text-romantic border-romantic/30' :
+              'bg-modern/10 text-modern border-modern/30'
+            }`}>
+              {composer.era} Era
+            </Badge>
+          </div>
           <p className="text-sm text-muted-foreground flex gap-2 justify-center">
             <span>{composer.years}</span>
             <span>•</span>
