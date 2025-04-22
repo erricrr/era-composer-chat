@@ -4,6 +4,7 @@ import { useConversations } from '@/hooks/useConversations';
 import { Button } from '@/components/ui/button';
 import { RefreshCcw } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { ImageModal } from './ImageModal';
 
 interface ChatInterfaceProps {
   composer: Composer;
@@ -11,6 +12,7 @@ interface ChatInterfaceProps {
 
 export function ChatInterface({ composer }: ChatInterfaceProps) {
   const [inputMessage, setInputMessage] = useState('');
+  const [imageModalOpen, setImageModalOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const isMobile = useIsMobile();
@@ -102,7 +104,8 @@ export function ChatInterface({ composer }: ChatInterfaceProps) {
           <img 
             src={composer.image} 
             alt={composer.name} 
-            className="w-10 h-10 rounded-full object-cover shadow-sm"
+            className="w-10 h-10 rounded-full object-cover shadow-sm cursor-pointer"
+            onClick={() => setImageModalOpen(true)}
           />
           <div className="ml-3">
             <h2 className="font-serif font-bold">{composer.name}</h2>
@@ -181,6 +184,13 @@ export function ChatInterface({ composer }: ChatInterfaceProps) {
           AI-generated conversation from verified sources. Does not reflect {composer.name.split(' ').pop()}&apos;s personal views.
         </p>
       </form>
+      
+      <ImageModal
+        isOpen={imageModalOpen}
+        onClose={() => setImageModalOpen(false)}
+        imageSrc={composer.image}
+        composerName={composer.name}
+      />
     </div>
   );
 }
