@@ -1,4 +1,3 @@
-
 import { Composer, Era, getComposersByEra } from '@/data/composers';
 import { ComposerCard } from './ComposerCard';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
