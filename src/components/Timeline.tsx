@@ -46,7 +46,7 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
           {eras.map((era) => (
             <div 
               key={era.id} 
-              className="flex flex-col items-center w-1/4 group"
+              className="flex flex-col items-center w-1/4"
               onClick={() => onSelectEra(era.name)}
             >
               <button
