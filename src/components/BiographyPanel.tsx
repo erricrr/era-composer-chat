@@ -16,7 +16,7 @@ export function BiographyPanel({ composer, onStartChat, onClose }: BiographyPane
   const [imageModalOpen, setImageModalOpen] = useState(false);
 
   return (
-    <Card className="w-full max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-[300px_1fr] gap-6 p-6">
+    <Card className="relative w-full max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-[300px_1fr] gap-6 p-6 z-10">
       <div className="flex flex-col items-center">
         <img
           src={composer.image}
@@ -31,6 +31,15 @@ export function BiographyPanel({ composer, onStartChat, onClose }: BiographyPane
             <span>•</span>
             <span>{composer.country}</span>
           </p>
+        </div>
+
+        <div className="mt-6 w-full">
+          <h3 className="font-semibold mb-2">Notable Works:</h3>
+          <ul className="list-disc pl-5 space-y-1">
+            {composer.famousWorks.slice(0, 3).map((work, index) => (
+              <li key={index} className="text-foreground/80">{work}</li>
+            ))}
+          </ul>
         </div>
       </div>
 
@@ -47,29 +56,16 @@ export function BiographyPanel({ composer, onStartChat, onClose }: BiographyPane
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-6 h-full">
-          <ScrollArea className="h-[250px] rounded-md border p-4">
-            <p className="text-foreground/90">{composer.bio}</p>
-          </ScrollArea>
-
-          <div className="flex flex-col justify-between">
-            <div>
-              <h3 className="font-semibold mb-2">Notable Works:</h3>
-              <ul className="list-disc pl-5 space-y-1">
-                {composer.famousWorks.slice(0, 3).map((work, index) => (
-                  <li key={index} className="text-foreground/80">{work}</li>
-                ))}
-              </ul>
-            </div>
+        <ScrollArea className="h-[400px] rounded-md border p-4 mb-4">
+          <p className="text-foreground/90">{composer.bio}</p>
+        </ScrollArea>
             
-            <Button 
-              onClick={() => onStartChat(composer)}
-              className="bg-primary text-primary-foreground hover:bg-primary/90 w-full mt-4"
-            >
-              Start Conversation
-            </Button>
-          </div>
-        </div>
+        <Button 
+          onClick={() => onStartChat(composer)}
+          className="bg-primary text-primary-foreground hover:bg-primary/90 w-full"
+        >
+          Start Conversation
+        </Button>
       </div>
 
       <ImageModal
