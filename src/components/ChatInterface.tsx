@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect, KeyboardEvent } from 'react';
 import { Composer, Message } from '@/data/composers';
 import { useConversations } from '@/hooks/useConversations';
@@ -68,12 +67,6 @@ export function ChatInterface({ composer }: ChatInterfaceProps) {
     if (activeConversationId) {
       // Properly reset the chat by creating a new conversation with the same composer
       startConversation(composer);
-      setInputMessage('');
-      
-      // Reset textarea height
-      if (textareaRef.current) {
-        textareaRef.current.style.height = 'auto';
-      }
     }
   };
 
@@ -186,3 +179,4 @@ export function ChatInterface({ composer }: ChatInterfaceProps) {
   );
 }
 
+export default ChatInterface;
