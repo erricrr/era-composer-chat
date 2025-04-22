@@ -15,14 +15,14 @@ export function ComposerMenu({ onSelectComposer, onStartChat, selectedComposer, 
   const [selectedEra, setSelectedEra] = useState<Era>(Era.Baroque);
 
   return (
-    <div className="container mx-auto px-4 py-6 flex flex-col">
+    <div className="container mx-auto px-4 py-6 flex flex-col min-h-[85vh]">
       <h1 className="text-3xl font-bold text-center font-serif mt-2 mb-4">
         {selectedEra === Era.Modern ? '20th-21st Century' : selectedEra} Composer Conversations
       </h1>
       
       <Timeline selectedEra={selectedEra} onSelectEra={setSelectedEra} />
       
-      <div className="px-2 md:px-6 pb-8">
+      <div className="px-2 md:px-6 pb-20 flex-grow">
         <ComposerList 
           era={selectedEra} 
           onSelectComposer={onSelectComposer}

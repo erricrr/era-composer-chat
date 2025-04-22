@@ -1,3 +1,4 @@
+
 import { Composer, Era, getComposersByEra } from '@/data/composers';
 import { ComposerCard } from './ComposerCard';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
@@ -22,10 +23,10 @@ export function ComposerList({ era, onSelectComposer, selectedComposer, onStartC
   }, [composers, selectedComposer, onSelectComposer]);
 
   return (
-    <div className="w-full mt-4">
+    <div className="w-full mt-4 min-h-[60vh]">
       <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-8">
         {/* Left side - Scrolling composers */}
-        <ScrollArea className="w-full bg-card dark:bg-sidebar/40 rounded-lg p-4">
+        <ScrollArea className="w-full bg-card dark:bg-sidebar/40 rounded-lg p-4 min-h-[500px]">
           <div className="flex flex-row lg:flex-col space-x-4 lg:space-x-0 lg:space-y-4 w-max lg:w-full pb-4">
             {composers.map((composer) => (
               <ComposerCard 
@@ -42,7 +43,7 @@ export function ComposerList({ era, onSelectComposer, selectedComposer, onStartC
 
         {/* Right side - Biography with horizontal layout */}
         {selectedComposer && (
-          <div className="bg-card dark:bg-sidebar/40 rounded-lg p-6 flex flex-col">
+          <div className="bg-card dark:bg-sidebar/40 rounded-lg p-6 flex flex-col min-h-[500px]">
             {/* Header with horizontal layout */}
             <div className="flex items-center space-x-6 mb-6">
               <img
