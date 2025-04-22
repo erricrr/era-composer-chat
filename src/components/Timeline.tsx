@@ -1,3 +1,4 @@
+
 import { Era, eras } from '@/data/composers';
 
 interface TimelineProps {
@@ -6,17 +7,6 @@ interface TimelineProps {
 }
 
 export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
-  // Calculate the exact center position for each era's connector line
-  const getLinePosition = (index: number): string => {
-    const totalWidth = 100; // Full width percentage
-    const numEras = eras.length;
-    const sectionWidth = totalWidth / numEras;
-    const halfSectionWidth = sectionWidth / 2;
-    
-    // Calculate the center position for this era's section
-    return `${(index * sectionWidth) + halfSectionWidth}%`;
-  };
-
   return (
     <div className="w-full max-w-4xl mx-auto my-8">
       {/* Era Timeline */}
@@ -68,24 +58,15 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
           ))}
         </div>
 
-        {/* Era Description with correctly aligned connector */}
+        {/* Era Description without connector line */}
         <div className="relative mb-10">
-          {eras.map((era, index) => (
+          {eras.map((era) => (
             selectedEra === era.name && (
               <div 
                 key={era.id} 
-                className="absolute w-full transition-all duration-300 ease-in-out"
+                className="absolute w-full transition-all duration-300 ease-in-out animate-fade-in"
               >
-                {/* Visual connector - positioned using calculated center */}
-                <div 
-                  className="absolute w-0.5 bg-primary/60"
-                  style={{
-                    left: getLinePosition(index),
-                    height: '1.25rem',
-                    top: '-1.25rem'
-                  }}
-                />
-                <p className="text-base text-muted-foreground bg-primary/5 px-6 py-3 rounded-lg italic animate-fade-in">
+                <p className="text-base text-muted-foreground bg-primary/5 px-6 py-3 rounded-lg italic">
                   {era.description}
                 </p>
               </div>
