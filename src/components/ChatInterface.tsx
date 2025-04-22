@@ -148,8 +148,8 @@ export function ChatInterface({ composer }: ChatInterfaceProps) {
       </div>
       
       <form onSubmit={handleSendMessage} className="sticky bottom-0 p-4 border-t bg-background/50">
-        <div className="flex items-end gap-2">
-          <div className="relative flex-1">
+        <div className="flex items-start gap-2">
+          <div className="flex-1">
             <textarea
               ref={textareaRef}
               value={inputMessage}
@@ -168,7 +168,7 @@ export function ChatInterface({ composer }: ChatInterfaceProps) {
           <Button
             type="submit"
             disabled={!inputMessage.trim()}
-            className={`px-4 h-10 rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors shrink-0 self-end ${
+            className={`px-4 h-[42px] rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors shrink-0 ${
               composer.era === 'Baroque' ? 'bg-baroque text-white' :
               composer.era === 'Classical' ? 'bg-classical text-white' : 
               composer.era === 'Romantic' ? 'bg-romantic text-white' :
@@ -178,7 +178,11 @@ export function ChatInterface({ composer }: ChatInterfaceProps) {
             Send
           </Button>
         </div>
+        <p className="text-xs text-muted-foreground mt-2 text-center">
+          AI-generated conversation from verified sources. Does not reflect {composer.name.split(' ').pop()}&apos;s personal views.
+        </p>
       </form>
     </div>
   );
 }
+
