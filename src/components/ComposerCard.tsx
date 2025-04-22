@@ -12,12 +12,7 @@ export function ComposerCard({ composer, onClick }: ComposerCardProps) {
       className="flex-shrink-0 flex flex-col items-center p-2 cursor-pointer group transition-all duration-300 hover:scale-105"
       onClick={() => onClick(composer)}
     >
-      <div className={`relative w-14 h-14 mb-1 rounded-full overflow-hidden border-2 ${
-        composer.era === 'Baroque' ? 'border-baroque/60' :
-        composer.era === 'Classical' ? 'border-classical/60' : 
-        composer.era === 'Romantic' ? 'border-romantic/60' :
-        'border-modern/60'
-      }`}>
+      <div className="relative w-14 h-14 mb-1 rounded-full overflow-hidden border-2 border-primary/60">
         <img 
           src={composer.image} 
           alt={composer.name} 
@@ -31,4 +26,3 @@ export function ComposerCard({ composer, onClick }: ComposerCardProps) {
     </div>
   );
 }
-

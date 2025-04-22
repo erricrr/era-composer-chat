@@ -95,12 +95,7 @@ export function ChatInterface({ composer }: ChatInterfaceProps) {
 
   return (
     <div className="flex flex-col h-full bg-background/50 backdrop-blur-sm rounded-lg overflow-hidden z-10">
-      <div className={`flex items-center justify-between p-4 border-b shadow-sm ${
-        composer.era === 'Baroque' ? 'bg-baroque/5' :
-        composer.era === 'Classical' ? 'bg-classical/5' : 
-        composer.era === 'Romantic' ? 'bg-romantic/5' :
-        'bg-modern/5'
-      }`}>
+      <div className="flex items-center justify-between p-4 border-b shadow-sm bg-primary/5">
         <div className="flex items-center">
           <div className="w-10 h-10 rounded-full overflow-hidden shadow-sm cursor-pointer" onClick={() => setImageModalOpen(true)}>
             <img 
@@ -112,12 +107,7 @@ export function ChatInterface({ composer }: ChatInterfaceProps) {
           <div className="ml-3">
             <div className="flex items-center gap-2">
               <h2 className="font-serif font-bold">{composer.name}</h2>
-              <Badge variant="outline" className={`${
-                composer.era === 'Baroque' ? 'bg-baroque/10 text-baroque border-baroque/30' :
-                composer.era === 'Classical' ? 'bg-classical/10 text-classical border-classical/30' : 
-                composer.era === 'Romantic' ? 'bg-romantic/10 text-romantic border-romantic/30' :
-                'bg-modern/10 text-modern border-modern/30'
-              }`}>
+              <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30">
                 {composer.era}
               </Badge>
             </div>
