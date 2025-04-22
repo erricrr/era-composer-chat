@@ -14,7 +14,6 @@ interface ComposerListProps {
 export function ComposerList({ era, onSelectComposer, selectedComposer, onStartChat }: ComposerListProps) {
   const composers = getComposersByEra(era);
   
-  // Select first composer by default if none selected
   if (!selectedComposer && composers.length > 0) {
     onSelectComposer(composers[0]);
   }
@@ -24,7 +23,7 @@ export function ComposerList({ era, onSelectComposer, selectedComposer, onStartC
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-8">
         {/* Left side - Scrolling composers */}
         <ScrollArea className="w-full bg-card dark:bg-sidebar/40 rounded-lg p-4">
-          <div className="flex space-x-4 pb-4">
+          <div className="flex lg:flex-col lg:space-y-4 lg:space-x-0 flex-row space-x-4 pb-4">
             {composers.map((composer) => (
               <ComposerCard 
                 key={composer.id} 
@@ -34,7 +33,8 @@ export function ComposerList({ era, onSelectComposer, selectedComposer, onStartC
               />
             ))}
           </div>
-          <ScrollBar orientation="horizontal" />
+          <ScrollBar orientation="horizontal" className="lg:hidden" />
+          <ScrollBar orientation="vertical" className="hidden lg:flex" />
         </ScrollArea>
 
         {/* Right side - Biography */}

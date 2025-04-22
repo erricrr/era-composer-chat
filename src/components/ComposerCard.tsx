@@ -10,7 +10,7 @@ interface ComposerCardProps {
 export function ComposerCard({ composer, onClick, isSelected }: ComposerCardProps) {
   return (
     <div 
-      className={`flex-shrink-0 flex flex-col items-center p-2 cursor-pointer group transition-all duration-300 hover:scale-105 ${
+      className={`flex-shrink-0 lg:w-full flex flex-col items-center p-2 cursor-pointer group transition-all duration-300 hover:scale-105 ${
         isSelected ? 'scale-105' : ''
       }`}
       onClick={() => onClick(composer)}
