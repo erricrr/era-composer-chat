@@ -62,25 +62,30 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
+				composerBackground: {
+					light: '#f9fafb',
+					DEFAULT: '#f9fafb',
+					dark: '#1E3A8A'
+				},
 				// Classical music era colors
 				baroque: {
-          DEFAULT: '#8B6D43', // Rich gold
+          DEFAULT: '#8B6D43',
           light: '#D4B886',
         },
         classical: {
-          DEFAULT: '#2D5D7C', // Deep blue
+          DEFAULT: '#2D5D7C',
           light: '#9BBFD9',
         },
         romantic: {
-          DEFAULT: '#8E4545', // Burgundy red
+          DEFAULT: '#8E4545',
           light: '#D9A7A7',
         },
         modern: {
-          DEFAULT: '#2D5D3D', // Forest green
+          DEFAULT: '#2D5D3D',
           light: '#8FB996',
         },
 				parchment: {
-					DEFAULT: '#F5F1E6', // Aged paper
+					DEFAULT: '#F5F1E6',
 					dark: '#E8E0CC',
 				}
 			},

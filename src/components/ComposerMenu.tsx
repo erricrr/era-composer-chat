@@ -14,7 +14,7 @@ export function ComposerMenu({ onSelectComposer, isOpen }: ComposerMenuProps) {
 
   return (
     <div
-      className={`fixed inset-x-0 top-0 z-40 bg-background/95 backdrop-blur-sm border-b border-border shadow-lg transition-transform duration-500 ease-in-out overflow-hidden ${
+      className={`fixed inset-x-0 top-0 z-40 bg-composerBackground-light dark:bg-composerBackground-dark backdrop-blur-sm border-b border-border shadow-lg transition-transform duration-500 ease-in-out overflow-hidden ${
         isOpen ? 'translate-y-0' : '-translate-y-full'
       }`}
       style={{ height: isOpen ? 'auto' : '0', maxHeight: '80vh' }}
