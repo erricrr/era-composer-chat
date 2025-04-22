@@ -6,15 +6,13 @@ import { Composer, Era } from '@/data/composers';
 
 interface ComposerMenuProps {
   onSelectComposer: (composer: Composer) => void;
+  onStartChat: (composer: Composer) => void;
+  selectedComposer: Composer | null;
   isOpen: boolean;
 }
 
-export function ComposerMenu({ onSelectComposer, isOpen }: ComposerMenuProps) {
+export function ComposerMenu({ onSelectComposer, onStartChat, selectedComposer, isOpen }: ComposerMenuProps) {
   const [selectedEra, setSelectedEra] = useState<Era>(Era.Baroque);
-
-  const getEraText = (era: Era) => {
-    return era === Era.Modern ? '20th-21st Century' : era;
-  };
 
   return (
     <div
@@ -25,17 +23,18 @@ export function ComposerMenu({ onSelectComposer, isOpen }: ComposerMenuProps) {
     >
       <div className="container mx-auto px-4 py-6 flex flex-col">
         <h1 className="text-3xl font-bold text-center font-serif mt-2 mb-4">
-          {getEraText(selectedEra)} Composer Conversations
+          {selectedEra === Era.Modern ? '20th-21st Century' : selectedEra} Composer Conversations
         </h1>
         
         <Timeline selectedEra={selectedEra} onSelectEra={setSelectedEra} />
         
         <div className="px-2 md:px-6 pb-8">
-          <ComposerList era={selectedEra} onSelectComposer={onSelectComposer} />
-        </div>
-        
-        <div className="mt-auto text-center text-sm text-muted-foreground pb-4">
-          <p>Select a composer to start a conversation</p>
+          <ComposerList 
+            era={selectedEra} 
+            onSelectComposer={onSelectComposer}
+            selectedComposer={selectedComposer}
+            onStartChat={onStartChat}
+          />
         </div>
       </div>
     </div>
