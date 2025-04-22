@@ -1,7 +1,9 @@
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { ImageModal } from "./ImageModal";
 import { Composer } from "@/data/composers";
 
 interface BiographyPanelProps {
@@ -11,6 +13,8 @@ interface BiographyPanelProps {
 }
 
 export function BiographyPanel({ composer, onStartChat, onClose }: BiographyPanelProps) {
+  const [imageModalOpen, setImageModalOpen] = useState(false);
+
   return (
     <Card className="w-full max-w-3xl mx-auto">
       <CardHeader className="flex flex-row items-start justify-between space-y-0">
@@ -33,6 +37,15 @@ export function BiographyPanel({ composer, onStartChat, onClose }: BiographyPane
         </Button>
       </CardHeader>
       <CardContent className="space-y-4">
+        <div className="flex justify-center mb-6">
+          <img
+            src={composer.image}
+            alt={composer.name}
+            className="w-48 h-48 rounded-full object-cover cursor-pointer border-2 border-primary hover:border-primary/80 transition-colors"
+            onClick={() => setImageModalOpen(true)}
+          />
+        </div>
+
         <ScrollArea className="h-[200px] rounded-md border p-4">
           <p className="text-foreground/90">{composer.bio}</p>
         </ScrollArea>
@@ -55,6 +68,13 @@ export function BiographyPanel({ composer, onStartChat, onClose }: BiographyPane
           </Button>
         </div>
       </CardContent>
+
+      <ImageModal
+        isOpen={imageModalOpen}
+        onClose={() => setImageModalOpen(false)}
+        imageSrc={composer.image}
+        composerName={composer.name}
+      />
     </Card>
   );
 }
