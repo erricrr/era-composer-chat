@@ -18,13 +18,16 @@ const Index = () => {
   };
 
   const handleStartChat = (composer: Composer) => {
-    startConversation(composer);
-    // First start the menu sliding animation
-    setIsMenuOpen(false);
-    // After the menu slides up, show the chat interface
-    setTimeout(() => {
-      setIsChatting(true);
-    }, 500); // This matches the menu slide duration
+    // Make sure composer is not undefined before starting conversation
+    if (composer) {
+      startConversation(composer);
+      // First start the menu sliding animation
+      setIsMenuOpen(false);
+      // After the menu slides up, show the chat interface
+      setTimeout(() => {
+        setIsChatting(true);
+      }, 500); // This matches the menu slide duration
+    }
   };
 
   const handleCloseBiography = () => {
@@ -97,9 +100,9 @@ const Index = () => {
           isChatting ? 'translate-y-0' : 'translate-y-full'
         }`}
       >
-        {isChatting && (
+        {isChatting && selectedComposer && (
           <div className="container mx-auto px-4 pt-16 pb-8" style={{ height: 'calc(100vh - 2rem)' }}>
-            <ChatInterface composer={selectedComposer!} />
+            <ChatInterface composer={selectedComposer} />
           </div>
         )}
       </div>
