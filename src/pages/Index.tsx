@@ -1,41 +1,48 @@
+
 import { useState } from 'react';
 import { Composer } from '@/data/composers';
 import { ComposerMenu } from '@/components/ComposerMenu';
 import { ChatInterface } from '@/components/ChatInterface';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { MusicNoteDecoration } from '@/components/MusicNoteDecoration';
-import { BiographyPanel } from '@/components/BiographyPanel';
 import { useConversations } from '@/hooks/useConversations';
 
 const Index = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(true);
   const [selectedComposer, setSelectedComposer] = useState<Composer | null>(null);
-  const [isBiographyOpen, setIsBiographyOpen] = useState(false);
   const [isChatting, setIsChatting] = useState(false);
   const { startConversation } = useConversations();
 
   const handleSelectComposer = (composer: Composer) => {
     setSelectedComposer(composer);
-    setIsBiographyOpen(true);
   };
 
   const handleStartChat = (composer: Composer) => {
-    startConversation(composer);
-    setIsBiographyOpen(false);
-    setIsChatting(true);
+    // Make sure composer is not undefined before starting conversation
+    if (composer) {
+      startConversation(composer);
+      // First start the menu sliding animation
+      setIsMenuOpen(false);
+      // After the menu slides up, show the chat interface
+      setTimeout(() => {
+        setIsChatting(true);
+      }, 500); // This matches the menu slide duration
+    }
   };
 
   const handleCloseBiography = () => {
-    setIsBiographyOpen(false);
+    setIsMenuOpen(true);
+    setSelectedComposer(null);
+    setIsChatting(false);
   };
 
   const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-    if (isMenuOpen && isChatting) {
-      return;
-    }
     if (!isMenuOpen) {
       setIsChatting(false);
+      setIsMenuOpen(true);
+    } else {
+      setIsChatting(false); // Ensure chat is hidden when closing menu
+      setIsMenuOpen(false);
     }
   };
 
@@ -47,11 +54,24 @@ const Index = () => {
       {/* Theme Toggle */}
       <ThemeToggle />
       
-      {/* Composer Selection Menu */}
-      <ComposerMenu 
-        onSelectComposer={handleSelectComposer} 
-        isOpen={isMenuOpen} 
-      />
+      {/* Composer Selection Menu - Updated animation */}
+      <div
+        className={`fixed inset-x-0 top-0 z-40 bg-background/95 backdrop-blur-sm border-b border-border shadow-lg transition-all duration-500 ease-in-out ${
+          isMenuOpen ? 'translate-y-0' : '-translate-y-full'
+        }`}
+        style={{ 
+          height: isMenuOpen ? 'auto' : '0',
+          maxHeight: isMenuOpen ? '80vh' : '0',
+          overflow: 'hidden'
+        }}
+      >
+        <ComposerMenu 
+          onSelectComposer={handleSelectComposer}
+          onStartChat={handleStartChat}
+          selectedComposer={selectedComposer}
+          isOpen={isMenuOpen} 
+        />
+      </div>
       
       {/* Menu Toggle Button */}
       <button
@@ -61,7 +81,7 @@ const Index = () => {
       >
         <svg 
           xmlns="http://www.w3.org/2000/svg" 
-          className="h-5 w-5" 
+          className={`h-5 w-5 transition-transform duration-500 ${isMenuOpen ? 'rotate-180' : 'rotate-0'}`}
           fill="none" 
           viewBox="0 0 24 24" 
           stroke="currentColor"
@@ -74,42 +94,18 @@ const Index = () => {
         </svg>
       </button>
       
-      {/* Main Content */}
+      {/* Chat Interface with slide-in animation */}
       <div 
-        className={`container mx-auto px-4 pt-16 pb-8 transition-all duration-500 ${
-          isChatting ? 'opacity-100' : (isMenuOpen ? 'opacity-0 pointer-events-none' : 'opacity-100')
-        }`} 
-        style={{ height: 'calc(100vh - 2rem)' }}
+        className={`transition-transform duration-500 ease-in-out ${
+          isChatting ? 'translate-y-0' : 'translate-y-full'
+        }`}
       >
-        {selectedComposer && isChatting ? (
-          <ChatInterface composer={selectedComposer} />
-        ) : (
-          <div className="h-full flex items-center justify-center">
-            <div className="text-center">
-              <h2 className="text-2xl font-serif font-bold mb-4">Select a Composer</h2>
-              <p className="text-muted-foreground mb-6">
-                Click the menu button above to browse composers by era
-              </p>
-              <button
-                onClick={toggleMenu}
-                className="bg-primary text-primary-foreground px-6 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors"
-              >
-                Open Composer Menu
-              </button>
-            </div>
+        {isChatting && selectedComposer && (
+          <div className="container mx-auto px-4 pt-16 pb-8" style={{ height: 'calc(100vh - 2rem)' }}>
+            <ChatInterface composer={selectedComposer} />
           </div>
         )}
       </div>
-      
-      {/* Biography Panel that slides up from bottom */}
-      {selectedComposer && (
-        <BiographyPanel 
-          composer={selectedComposer} 
-          onStartChat={handleStartChat}
-          onClose={handleCloseBiography}
-          isOpen={isBiographyOpen}
-        />
-      )}
     </div>
   );
 }
