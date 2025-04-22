@@ -10,27 +10,29 @@ interface ComposerCardProps {
 export function ComposerCard({ composer, onClick, isSelected }: ComposerCardProps) {
   return (
     <div 
-      className={`flex-shrink-0 w-full flex flex-col lg:flex-row lg:items-center p-2 cursor-pointer group transition-all duration-300 hover:scale-105 ${
+      className={`flex-shrink-0 cursor-pointer group transition-all duration-300 hover:scale-105 ${
         isSelected ? 'scale-105' : ''
       }`}
       onClick={() => onClick(composer)}
     >
-      <div className={`relative w-14 h-14 mx-auto lg:mx-0 rounded-full overflow-hidden border-2 ${
-        isSelected ? 'border-primary' : 'border-primary/60'
-      }`}>
-        <img 
-          src={composer.image} 
-          alt={composer.name} 
-          className="w-full h-full object-cover"
-        />
-      </div>
-      <div className="flex flex-col items-center lg:items-start lg:ml-4 mt-1 lg:mt-0">
-        <h3 className={`text-sm font-medium text-center lg:text-left group-hover:text-primary transition-colors line-clamp-1 ${
-          isSelected ? 'text-primary' : ''
+      <div className="flex flex-col lg:flex-row lg:items-center p-2">
+        <div className={`relative w-14 h-14 mx-auto lg:mx-0 rounded-full overflow-hidden border-2 ${
+          isSelected ? 'border-primary' : 'border-primary/60'
         }`}>
-          {composer.name}
-        </h3>
-        <p className="text-xs text-muted-foreground text-center lg:text-left">{composer.years}</p>
+          <img 
+            src={composer.image} 
+            alt={composer.name} 
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="flex flex-col items-center lg:items-start lg:ml-4 mt-1 lg:mt-0">
+          <h3 className={`text-sm font-medium text-center lg:text-left group-hover:text-primary transition-colors line-clamp-1 ${
+            isSelected ? 'text-primary' : ''
+          }`}>
+            {composer.name}
+          </h3>
+          <p className="text-xs text-muted-foreground text-center lg:text-left">{composer.years}</p>
+        </div>
       </div>
     </div>
   );

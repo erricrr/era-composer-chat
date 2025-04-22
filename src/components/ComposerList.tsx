@@ -23,7 +23,7 @@ export function ComposerList({ era, onSelectComposer, selectedComposer, onStartC
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-8">
         {/* Left side - Scrolling composers */}
         <ScrollArea className="w-full bg-card dark:bg-sidebar/40 rounded-lg p-4">
-          <div className="flex lg:flex-col lg:space-y-4 lg:space-x-0 flex-row space-x-4 pb-4">
+          <div className="flex flex-row lg:flex-col space-x-4 lg:space-x-0 lg:space-y-4 w-max lg:w-full pb-4">
             {composers.map((composer) => (
               <ComposerCard 
                 key={composer.id} 
