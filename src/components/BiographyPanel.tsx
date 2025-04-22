@@ -32,15 +32,6 @@ export function BiographyPanel({ composer, onStartChat, onClose }: BiographyPane
             <span>{composer.country}</span>
           </p>
         </div>
-
-        <div className="mt-6 w-full">
-          <h3 className="font-semibold mb-2">Notable Works:</h3>
-          <ul className="list-disc pl-5 space-y-1">
-            {composer.famousWorks.slice(0, 3).map((work, index) => (
-              <li key={index} className="text-foreground/80">{work}</li>
-            ))}
-          </ul>
-        </div>
       </div>
 
       <div className="flex flex-col h-full">
@@ -56,9 +47,20 @@ export function BiographyPanel({ composer, onStartChat, onClose }: BiographyPane
           </Button>
         </div>
 
-        <ScrollArea className="h-[400px] rounded-md border p-4 mb-4">
-          <p className="text-foreground/90">{composer.bio}</p>
-        </ScrollArea>
+        <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-6 mb-4">
+          <ScrollArea className="h-[300px] rounded-md border p-4">
+            <p className="text-foreground/90">{composer.bio}</p>
+          </ScrollArea>
+
+          <div>
+            <h3 className="font-semibold mb-2">Notable Works:</h3>
+            <ul className="list-disc pl-5 space-y-1">
+              {composer.famousWorks.slice(0, 3).map((work, index) => (
+                <li key={index} className="text-foreground/80">{work}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
             
         <Button 
           onClick={() => onStartChat(composer)}
