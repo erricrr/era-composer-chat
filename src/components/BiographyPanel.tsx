@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ImageModal } from "./ImageModal";
 import { Composer } from "@/data/composers";
@@ -16,7 +16,7 @@ export function BiographyPanel({ composer, onStartChat, onClose }: BiographyPane
   const [imageModalOpen, setImageModalOpen] = useState(false);
 
   return (
-    <Card className="w-full max-w-3xl mx-auto grid grid-cols-[300px_1fr] gap-6 p-6">
+    <Card className="w-full max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-[300px_1fr] gap-6 p-6">
       <div className="flex flex-col items-center">
         <img
           src={composer.image}
@@ -34,7 +34,7 @@ export function BiographyPanel({ composer, onStartChat, onClose }: BiographyPane
         </div>
       </div>
 
-      <div className="flex flex-col">
+      <div className="flex flex-col h-full">
         <div className="flex justify-end mb-4">
           <Button
             variant="ghost"
@@ -47,26 +47,28 @@ export function BiographyPanel({ composer, onStartChat, onClose }: BiographyPane
           </Button>
         </div>
 
-        <ScrollArea className="h-[300px] rounded-md border p-4 mb-4">
-          <p className="text-foreground/90">{composer.bio}</p>
-        </ScrollArea>
-        
-        <div>
-          <h3 className="font-semibold mb-2">Notable Works:</h3>
-          <ul className="list-disc pl-5 space-y-1">
-            {composer.famousWorks.slice(0, 3).map((work, index) => (
-              <li key={index} className="text-foreground/80">{work}</li>
-            ))}
-          </ul>
-        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-6 h-full">
+          <ScrollArea className="h-[250px] rounded-md border p-4">
+            <p className="text-foreground/90">{composer.bio}</p>
+          </ScrollArea>
 
-        <div className="mt-auto text-right">
-          <Button 
-            onClick={() => onStartChat(composer)}
-            className="bg-primary text-primary-foreground hover:bg-primary/90"
-          >
-            Start Conversation
-          </Button>
+          <div className="flex flex-col justify-between">
+            <div>
+              <h3 className="font-semibold mb-2">Notable Works:</h3>
+              <ul className="list-disc pl-5 space-y-1">
+                {composer.famousWorks.slice(0, 3).map((work, index) => (
+                  <li key={index} className="text-foreground/80">{work}</li>
+                ))}
+              </ul>
+            </div>
+            
+            <Button 
+              onClick={() => onStartChat(composer)}
+              className="bg-primary text-primary-foreground hover:bg-primary/90 w-full mt-4"
+            >
+              Start Conversation
+            </Button>
+          </div>
         </div>
       </div>
 
