@@ -35,4 +35,3 @@ export function ComposerCard({ composer, onClick, isSelected }: ComposerCardProp
     </div>
   );
 }
-
