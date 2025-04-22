@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Composer } from '@/data/composers';
 import { ComposerMenu } from '@/components/ComposerMenu';
@@ -11,29 +10,31 @@ import { useConversations } from '@/hooks/useConversations';
 const Index = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(true);
   const [selectedComposer, setSelectedComposer] = useState<Composer | null>(null);
+  const [isBiographyOpen, setIsBiographyOpen] = useState(false);
   const [isChatting, setIsChatting] = useState(false);
   const { startConversation } = useConversations();
 
   const handleSelectComposer = (composer: Composer) => {
     setSelectedComposer(composer);
-    setIsMenuOpen(false);
+    setIsBiographyOpen(true);
   };
 
   const handleStartChat = (composer: Composer) => {
     startConversation(composer);
+    setIsBiographyOpen(false);
     setIsChatting(true);
   };
 
   const handleCloseBiography = () => {
-    setIsMenuOpen(true);
-    setSelectedComposer(null);
-    setIsChatting(false);
+    setIsBiographyOpen(false);
   };
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+    if (isMenuOpen && isChatting) {
+      return;
+    }
     if (!isMenuOpen) {
-      setSelectedComposer(null);
       setIsChatting(false);
     }
   };
@@ -76,17 +77,11 @@ const Index = () => {
       {/* Main Content */}
       <div 
         className={`container mx-auto px-4 pt-16 pb-8 transition-all duration-500 ${
-          isMenuOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'
+          isChatting ? 'opacity-100' : (isMenuOpen ? 'opacity-0 pointer-events-none' : 'opacity-100')
         }`} 
         style={{ height: 'calc(100vh - 2rem)' }}
       >
-        {selectedComposer && !isChatting ? (
-          <BiographyPanel 
-            composer={selectedComposer} 
-            onStartChat={handleStartChat}
-            onClose={handleCloseBiography}
-          />
-        ) : selectedComposer && isChatting ? (
+        {selectedComposer && isChatting ? (
           <ChatInterface composer={selectedComposer} />
         ) : (
           <div className="h-full flex items-center justify-center">
@@ -105,6 +100,16 @@ const Index = () => {
           </div>
         )}
       </div>
+      
+      {/* Biography Panel that slides up from bottom */}
+      {selectedComposer && (
+        <BiographyPanel 
+          composer={selectedComposer} 
+          onStartChat={handleStartChat}
+          onClose={handleCloseBiography}
+          isOpen={isBiographyOpen}
+        />
+      )}
     </div>
   );
 }
