@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { Composer, Message } from '@/data/composers';
 import { useConversations } from '@/hooks/useConversations';
+import { Button } from '@/components/ui/button';
+import { RefreshCcw } from 'lucide-react';
 
 interface ChatInterfaceProps {
   composer: Composer;
@@ -42,6 +44,12 @@ export function ChatInterface({ composer }: ChatInterfaceProps) {
     }, 1000);
   };
 
+  const handleResetChat = () => {
+    if (activeConversationId) {
+      startConversation(composer);
+    }
+  };
+
   const generatePlaceholderResponse = (userMessage: string, composer: Composer): string => {
     if (userMessage.toLowerCase().includes('work') || userMessage.toLowerCase().includes('composition')) {
       return `As ${composer.name}, my most famous works include ${composer.famousWorks.join(', ')}. Each composition reflects my style from the ${composer.era} period.`;
@@ -64,25 +72,36 @@ export function ChatInterface({ composer }: ChatInterfaceProps) {
 
   return (
     <div className="flex flex-col h-full bg-background/50 backdrop-blur-sm rounded-lg overflow-hidden z-10">
-      <div className={`flex items-center p-4 border-b shadow-sm ${
+      <div className={`flex items-center justify-between p-4 border-b shadow-sm ${
         composer.era === 'Baroque' ? 'bg-baroque/5' :
         composer.era === 'Classical' ? 'bg-classical/5' : 
         composer.era === 'Romantic' ? 'bg-romantic/5' :
         'bg-modern/5'
       }`}>
-        <img 
-          src={composer.image} 
-          alt={composer.name} 
-          className="w-10 h-10 rounded-full object-cover shadow-sm"
-        />
-        <div className="ml-3">
-          <h2 className="font-serif font-bold">{composer.name}</h2>
-          <p className="text-xs text-muted-foreground">{composer.era} Era • {composer.years}</p>
+        <div className="flex items-center">
+          <img 
+            src={composer.image} 
+            alt={composer.name} 
+            className="w-10 h-10 rounded-full object-cover shadow-sm"
+          />
+          <div className="ml-3">
+            <h2 className="font-serif font-bold">{composer.name}</h2>
+            <p className="text-xs text-muted-foreground">{composer.era} Era • {composer.years}</p>
+          </div>
         </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={handleResetChat}
+          className="ml-2"
+          title="Reset conversation"
+        >
+          <RefreshCcw className="h-4 w-4" />
+        </Button>
       </div>
       
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {activeConversation?.messages.map((message: Message) => (
+        {activeConversation?.messages.map((message: Message, index) => (
           <div 
             key={message.id} 
             className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
@@ -102,23 +121,25 @@ export function ChatInterface({ composer }: ChatInterfaceProps) {
       </div>
       
       <form onSubmit={handleSendMessage} className="p-4 border-t bg-background/50">
-        <div className="flex gap-2">
-          <textarea
-            value={inputMessage}
-            onChange={(e) => setInputMessage(e.target.value)}
-            placeholder={`Ask ${composer.name} a question...`}
-            className="flex-1 min-h-[44px] max-h-[200px] rounded-xl border bg-background p-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary resize-none overflow-hidden"
-            rows={1}
-            onInput={(e) => {
-              const target = e.target as HTMLTextAreaElement;
-              target.style.height = 'auto';
-              target.style.height = `${target.scrollHeight}px`;
-            }}
-          />
-          <button
+        <div className="flex gap-2 items-start">
+          <div className="flex-1">
+            <textarea
+              value={inputMessage}
+              onChange={(e) => setInputMessage(e.target.value)}
+              placeholder={`Ask ${composer.name} a question...`}
+              className="w-full rounded-xl border bg-background p-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary resize-none overflow-hidden"
+              rows={1}
+              onInput={(e) => {
+                const target = e.target as HTMLTextAreaElement;
+                target.style.height = 'auto';
+                target.style.height = `${target.scrollHeight}px`;
+              }}
+            />
+          </div>
+          <Button
             type="submit"
             disabled={!inputMessage.trim()}
-            className={`px-4 rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors ${
+            className={`px-4 h-10 rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors ${
               composer.era === 'Baroque' ? 'bg-baroque text-white' :
               composer.era === 'Classical' ? 'bg-classical text-white' : 
               composer.era === 'Romantic' ? 'bg-romantic text-white' :
@@ -126,7 +147,7 @@ export function ChatInterface({ composer }: ChatInterfaceProps) {
             }`}
           >
             Send
-          </button>
+          </Button>
         </div>
       </form>
     </div>

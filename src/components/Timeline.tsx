@@ -9,7 +9,7 @@ interface TimelineProps {
 
 export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
   return (
-    <div className="w-full max-w-xl mx-auto py-6">
+    <div className="w-full max-w-md mx-auto py-6">
       <div className="relative">
         {/* Timeline line */}
         <div className="absolute h-0.5 bg-border w-full top-1/2 -translate-y-1/2 z-0" />
