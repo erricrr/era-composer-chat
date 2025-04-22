@@ -1,10 +1,8 @@
 
-import { ComposerCard } from './ComposerCard';
 import { Composer, Era, getComposersByEra } from '@/data/composers';
+import { ComposerCard } from './ComposerCard';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
-import { ImageModal } from './ImageModal';
-import { useState } from 'react';
 
 interface ComposerListProps {
   era: Era;
@@ -15,17 +13,14 @@ interface ComposerListProps {
 
 export function ComposerList({ era, onSelectComposer, selectedComposer, onStartChat }: ComposerListProps) {
   const composers = getComposersByEra(era);
-  const [imageModalOpen, setImageModalOpen] = useState(false);
   
+  // Select first composer by default if none selected
+  if (!selectedComposer && composers.length > 0) {
+    onSelectComposer(composers[0]);
+  }
+
   return (
     <div className="w-full mt-4">
-      <h2 className="text-lg font-medium text-center mb-4">
-        {era === 'Modern' ? '20th-21st Century' : era} era ({era === 'Modern' ? '1900-Present' : 
-                  era === 'Romantic' ? '1820-1900' : 
-                  era === 'Classical' ? '1750-1820' : 
-                  '1600-1750'})
-      </h2>
-
       <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-8">
         {/* Left side - Scrolling composers */}
         <ScrollArea className="w-full bg-card dark:bg-sidebar/40 rounded-lg p-4">
@@ -34,7 +29,8 @@ export function ComposerList({ era, onSelectComposer, selectedComposer, onStartC
               <ComposerCard 
                 key={composer.id} 
                 composer={composer} 
-                onClick={onSelectComposer} 
+                onClick={onSelectComposer}
+                isSelected={selectedComposer?.id === composer.id}
               />
             ))}
           </div>
@@ -48,8 +44,7 @@ export function ComposerList({ era, onSelectComposer, selectedComposer, onStartC
               <img
                 src={selectedComposer.image}
                 alt={selectedComposer.name}
-                className="w-32 h-32 rounded-full object-cover cursor-pointer border-2 border-primary/30 hover:border-primary transition-all"
-                onClick={() => setImageModalOpen(true)}
+                className="w-32 h-32 rounded-full object-cover border-2 border-primary/30"
               />
               <div className="text-center space-y-1">
                 <h3 className="text-xl font-bold font-serif">{selectedComposer.name}</h3>
@@ -77,13 +72,6 @@ export function ComposerList({ era, onSelectComposer, selectedComposer, onStartC
                 Start Conversation
               </Button>
             </div>
-
-            <ImageModal
-              isOpen={imageModalOpen}
-              onClose={() => setImageModalOpen(false)}
-              imageSrc={selectedComposer.image}
-              composerName={selectedComposer.name}
-            />
           </div>
         )}
       </div>
