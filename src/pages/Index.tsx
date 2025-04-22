@@ -12,27 +12,16 @@ const Index = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(true);
   const [selectedComposer, setSelectedComposer] = useState<Composer | null>(null);
   const [isChatting, setIsChatting] = useState(false);
-  const [isBiographyOpen, setIsBiographyOpen] = useState(false);
   const { startConversation } = useConversations();
 
   const handleSelectComposer = (composer: Composer) => {
     setSelectedComposer(composer);
-    setIsBiographyOpen(true);
-    setIsMenuOpen(false);
+    setIsMenuOpen(true);
   };
 
   const handleStartChat = (composer: Composer) => {
     startConversation(composer);
     setIsChatting(true);
-    // This will trigger the slide-up animation
-    setIsBiographyOpen(false);
-  };
-
-  const handleCloseBiography = () => {
-    setIsBiographyOpen(false);
-    setIsMenuOpen(true);
-    setSelectedComposer(null);
-    setIsChatting(false);
   };
 
   const toggleMenu = () => {
@@ -59,6 +48,14 @@ const Index = () => {
           isOpen={isMenuOpen} 
         />
         
+        {/* Biography Panel */}
+        {selectedComposer && !isChatting && (
+          <BiographyPanel 
+            composer={selectedComposer} 
+            onStartChat={handleStartChat}
+          />
+        )}
+        
         {/* Menu Toggle Button */}
         <button
           onClick={toggleMenu}
@@ -80,16 +77,6 @@ const Index = () => {
           </svg>
         </button>
       </div>
-
-      {/* Biography Panel as Drawer */}
-      {selectedComposer && (
-        <BiographyPanel 
-          composer={selectedComposer} 
-          onStartChat={handleStartChat}
-          onClose={handleCloseBiography}
-          isOpen={isBiographyOpen}
-        />
-      )}
       
       {/* Chat Interface with Slide Up Animation */}
       <div 
