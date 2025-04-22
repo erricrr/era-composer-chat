@@ -1,3 +1,4 @@
+
 import { Era, eras } from '@/data/composers';
 
 interface TimelineProps {
@@ -7,11 +8,11 @@ interface TimelineProps {
 
 export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
   return (
-    <div className="w-full max-w-4xl mx-auto my-8">
+    <div className="w-full max-w-4xl mx-auto my-4">
       {/* Era Timeline */}
       <div className="relative">
         {/* Era labels with period */}
-        <div className="flex justify-between mb-4">
+        <div className="flex justify-between mb-2">
           {eras.map((era) => (
             <div 
               key={era.id}
@@ -23,7 +24,7 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
               }`}>
                 {era.id === 'modern' ? '20th-21st Century' : era.name}
               </h3>
-              <p className="text-xs text-muted-foreground mt-1 text-center">
+              <p className="text-xs text-muted-foreground mt-0.5 text-center">
                 {era.period}
               </p>
             </div>
@@ -31,14 +32,14 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
         </div>
         
         {/* Timeline line with single color gradient */}
-        <div className="relative h-1 w-full rounded-full overflow-hidden">
+        <div className="relative h-1 w-full rounded-full overflow-hidden mt-2">
           <div 
             className="absolute inset-0 bg-gradient-to-r from-primary/30 to-primary rounded-full"
           />
         </div>
         
         {/* Timeline nodes - aligned with text above */}
-        <div className="flex justify-between relative -mt-2.5 px-1">
+        <div className="flex justify-between relative -mt-2.5 px-1 mb-4">
           {eras.map((era) => (
             <div 
               key={era.id} 
@@ -58,18 +59,20 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
         </div>
 
         {/* Era Description with correctly aligned connector */}
-        <div className="mt-8 relative h-[120px]">
+        <div className="relative">
           {eras.map((era) => (
             selectedEra === era.name && (
               <div 
                 key={era.id} 
                 className="absolute w-full transition-all duration-300 ease-in-out"
               >
-                {/* Visual connector - properly centered with the era */}
+                {/* Visual connector - positioned to connect to the dot */}
                 <div 
-                  className="absolute w-0.5 h-4 bg-primary/60"
+                  className="absolute w-0.5 bg-primary/60"
                   style={{
                     left: `${eras.findIndex(e => e.name === era.name) * 25 + 12.5}%`,
+                    height: '1.5rem',
+                    top: '-1.5rem'
                   }}
                 />
                 <p className="text-base text-muted-foreground bg-primary/5 px-6 py-3 rounded-lg italic animate-fade-in">
