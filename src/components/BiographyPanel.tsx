@@ -22,9 +22,6 @@ export function BiographyPanel({
     onStartChat(composer);
   };
 
-  // Era badge coloring by era, fallback to default
-  const eraColor = composer.era === "Baroque" ? "bg-baroque text-white" : composer.era === "Classical" ? "bg-classical text-white" : composer.era === "Romantic" ? "bg-romantic text-white" : composer.era === "Modern" ? "bg-modern text-white" : "bg-muted text-foreground";
-
   return <Card className="relative w-full max-w-[900px] mx-auto min-h-[65vh] md:min-h-[55vh] bg-card dark:bg-[#1A1F2C] flex flex-col justify-between py-8 px-4 md:px-8 animate-fade-in border-none shadow-none">
       {/* Top area: avatar, name, subtitle, badge */}
       <div>
@@ -37,7 +34,7 @@ export function BiographyPanel({
             <div className="flex flex-wrap items-center gap-2 text-base md:text-lg">
               <span className="text-[#907C5C] dark:text-gray-300 text-base">{composer.country}</span>
               <span className="text-[#907C5C] dark:text-gray-300 text-base">, {composer.years}</span>
-              <Badge className="px-3 py-1 bg-[#DED7C6] dark:bg-[#403E43] text-[#7A6945] dark:text-gray-200 shadow-none text-sm font-semibold border-none ml-2">
+              <Badge variant="outline" className="px-3 py-1 shadow-none text-sm font-semibold border-primary/30">
                 {composer.era} Era
               </Badge>
             </div>
