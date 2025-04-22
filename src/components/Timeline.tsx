@@ -8,42 +8,54 @@ interface TimelineProps {
 
 export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
   return (
-    <div className="w-full max-w-4xl mx-auto space-y-6">
+    <div className="w-full max-w-4xl mx-auto py-8">
       <div className="relative">
+        {/* Era labels and info above the timeline */}
+        <div className="flex justify-between relative z-10 mb-6">
+          {eras.map((era) => (
+            <div 
+              key={era.id}
+              className="flex flex-col items-center cursor-pointer group"
+              onClick={() => onSelectEra(era.name)}
+            >
+              <p className={`text-base font-medium mb-1 transition-colors duration-300 ${
+                selectedEra === era.name ? 'text-primary font-bold' : 'text-muted-foreground group-hover:text-primary/80'
+              }`}>
+                {era.id === 'modern' ? '20th-21st Century' : era.name}
+              </p>
+              <p className="text-sm text-muted-foreground">{era.period}</p>
+            </div>
+          ))}
+        </div>
+        
         {/* Timeline line with gradient */}
         <div 
-          className="absolute h-0.5 w-full top-1/2 -translate-y-1/2 z-0"
+          className="absolute h-1 w-full top-1/2 -translate-y-1/2 z-0 rounded-full"
           style={{
             background: 'linear-gradient(to right, #8B6D43, #2D5D7C, #8E4545, #2D5D3D)'
           }}
         />
         
         {/* Timeline nodes */}
-        <div className="flex justify-between relative z-10">
+        <div className="flex justify-between relative z-10 px-1.5">
           {eras.map((era) => (
             <div 
               key={era.id}
               className="flex flex-col items-center"
-              onClick={() => onSelectEra(era.name)}
             >
-              <div className="text-center mb-4 cursor-pointer group">
-                <p className={`text-base font-medium mb-1 transition-colors duration-300 ${
-                  selectedEra === era.name ? 'text-primary font-bold scale-105' : 'text-muted-foreground group-hover:text-primary/80'
-                }`}>
-                  {era.name}
-                </p>
-                <p className="text-sm text-muted-foreground">{era.period}</p>
-              </div>
-              
               <button
-                className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                onClick={() => onSelectEra(era.name)}
+                className={`w-4 h-4 rounded-full transition-all duration-300 transform ${
                   selectedEra === era.name 
-                    ? era.id === 'baroque' ? 'bg-baroque scale-110' :
-                      era.id === 'classical' ? 'bg-classical scale-110' :
-                      era.id === 'romantic' ? 'bg-romantic scale-110' :
-                      'bg-modern scale-110'
-                    : 'bg-secondary hover:scale-105'
+                    ? era.id === 'baroque' ? 'bg-baroque border-2 border-baroque/30' :
+                      era.id === 'classical' ? 'bg-classical border-2 border-classical/30' :
+                      era.id === 'romantic' ? 'bg-romantic border-2 border-romantic/30' :
+                      'bg-modern border-2 border-modern/30'
+                    : 'bg-secondary hover:bg-secondary/80'
                 }`}
+                style={{
+                  transform: selectedEra === era.name ? 'scale(1.25)' : 'scale(1)'
+                }}
                 aria-label={`Select ${era.name} era`}
               />
             </div>
@@ -51,14 +63,14 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
         </div>
 
         {/* Era Description */}
-        <div className="mt-8 text-center">
+        <div className="mt-10 text-center">
           {eras.map((era) => (
             selectedEra === era.name && (
               <div 
                 key={era.id}
                 className="animate-fade-in"
               >
-                <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
+                <p className="text-sm text-muted-foreground max-w-3xl mx-auto">
                   {era.description}
                 </p>
               </div>
@@ -69,4 +81,3 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
     </div>
   );
 }
-
