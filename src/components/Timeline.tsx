@@ -58,21 +58,21 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
           ))}
         </div>
 
-        {/* Era Description with connecting line - Dynamic positioning */}
-        <div className="mt-8 flex relative h-[120px]">
-          {eras.map((era) => (
+        {/* Era Description with correctly aligned connector */}
+        <div className="mt-8 relative h-[120px] w-full">
+          {eras.map((era, index) => (
             selectedEra === era.name && (
               <div 
                 key={era.id} 
-                className="absolute w-full transition-all duration-300 ease-in-out"
+                className="absolute transition-all duration-300 ease-in-out"
                 style={{
-                  left: `${eras.findIndex(e => e.name === era.name) * 25}%`,
-                  transform: 'translateX(12.5%)'
+                  left: `${index * 25}%`,
+                  width: '25%'
                 }}
               >
-                {/* Visual connector - Centered with the node */}
+                {/* Visual connector - properly centered with the era */}
                 <div className="absolute left-1/2 -top-4 -translate-x-1/2 w-0.5 h-4 bg-primary/60" />
-                <p className="text-base text-muted-foreground max-w-[300px] mx-auto bg-primary/5 px-4 py-2 rounded-lg italic animate-fade-in text-center">
+                <p className="text-base text-muted-foreground bg-primary/5 mx-auto px-4 py-2 rounded-lg italic animate-fade-in text-center">
                   {era.description}
                 </p>
               </div>
