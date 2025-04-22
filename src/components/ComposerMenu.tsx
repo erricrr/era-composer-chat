@@ -26,7 +26,7 @@ export function ComposerMenu({ onSelectComposer, isOpen }: ComposerMenuProps) {
         
         <Timeline selectedEra={selectedEra} onSelectEra={setSelectedEra} />
         
-        <div className="px-2 md:px-6 pb-8 animate-fade-in overflow-y-auto" style={{ maxHeight: '45vh' }}>
+        <div className="px-2 md:px-6 pb-8">
           <ComposerList era={selectedEra} onSelectComposer={onSelectComposer} />
         </div>
         
@@ -37,3 +37,4 @@ export function ComposerMenu({ onSelectComposer, isOpen }: ComposerMenuProps) {
     </div>
   );
 }
+
