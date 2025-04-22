@@ -36,10 +36,9 @@ const Index = () => {
   const toggleMenu = () => {
     if (!isMenuOpen) {
       setIsChatting(false);
-      setTimeout(() => {
-        setIsMenuOpen(true);
-      }, 100);
+      setIsMenuOpen(true);
     } else {
+      setIsChatting(false); // Ensure chat is hidden when closing menu
       setIsMenuOpen(false);
     }
   };
@@ -52,13 +51,20 @@ const Index = () => {
       {/* Theme Toggle */}
       <ThemeToggle />
       
-      {/* Composer Selection Menu */}
-      <ComposerMenu 
-        onSelectComposer={handleSelectComposer}
-        onStartChat={handleStartChat}
-        selectedComposer={selectedComposer}
-        isOpen={isMenuOpen} 
-      />
+      {/* Composer Selection Menu - Updated animation */}
+      <div
+        className={`fixed inset-x-0 top-0 z-40 bg-background/95 backdrop-blur-sm border-b border-border shadow-lg transition-transform duration-500 ease-in-out ${
+          isMenuOpen ? 'translate-y-0' : '-translate-y-full'
+        }`}
+        style={{ height: 'auto', maxHeight: '80vh' }}
+      >
+        <ComposerMenu 
+          onSelectComposer={handleSelectComposer}
+          onStartChat={handleStartChat}
+          selectedComposer={selectedComposer}
+          isOpen={isMenuOpen} 
+        />
+      </div>
       
       {/* Menu Toggle Button */}
       <button
@@ -68,7 +74,7 @@ const Index = () => {
       >
         <svg 
           xmlns="http://www.w3.org/2000/svg" 
-          className="h-5 w-5" 
+          className={`h-5 w-5 transition-transform duration-500 ${isMenuOpen ? 'rotate-180' : 'rotate-0'}`}
           fill="none" 
           viewBox="0 0 24 24" 
           stroke="currentColor"
