@@ -39,7 +39,7 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
         </div>
         
         {/* Timeline nodes - aligned with text above */}
-        <div className="flex justify-between relative -mt-2.5 px-1 mb-6">
+        <div className="flex justify-between relative -mt-2.5 px-1 mb-8">
           {eras.map((era) => (
             <div 
               key={era.id} 
@@ -59,7 +59,7 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
         </div>
 
         {/* Era Description with correctly aligned connector */}
-        <div className="relative mb-8">
+        <div className="relative mb-12">
           {eras.map((era) => (
             selectedEra === era.name && (
               <div 
@@ -70,9 +70,9 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
                 <div 
                   className="absolute w-0.5 bg-primary/60"
                   style={{
-                    left: `calc(${eras.findIndex(e => e.name === era.name) * 25 + 12.5}% - 1px)`,
-                    height: '1rem',
-                    top: '-1rem'
+                    left: `calc(${eras.findIndex(e => e.name === era.name) * 25 + 12.5}%)`,
+                    height: '2rem',
+                    top: '-2rem'
                   }}
                 />
                 <p className="text-base text-muted-foreground bg-primary/5 px-6 py-3 rounded-lg italic animate-fade-in">
