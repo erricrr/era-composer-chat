@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -19,6 +20,22 @@ export function BiographyPanel({ composer, onStartChat, onClose }: BiographyPane
     onStartChat(composer);
   };
 
+  // Generate the badge class based on the composer's era
+  const getBadgeClass = () => {
+    switch(composer.era) {
+      case 'Baroque':
+        return 'bg-baroque text-white';
+      case 'Classical':
+        return 'bg-classical text-white';
+      case 'Romantic':
+        return 'bg-romantic text-white';
+      case 'Modern':
+        return 'bg-modern text-white';
+      default:
+        return '';
+    }
+  };
+
   return (
     <Card className="relative w-full max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-[300px_1fr] gap-6 p-6 z-10 animate-fade-in">
       <div className="flex flex-col items-center">
@@ -31,8 +48,8 @@ export function BiographyPanel({ composer, onStartChat, onClose }: BiographyPane
       <div className="mt-4 text-center">
         <h2 className="text-xl font-bold font-serif mb-2">{composer.name}</h2>
         <div className="flex flex-wrap gap-2 justify-center mb-2">
-          <Badge variant="secondary">
-            {composer.era === 'Modern' ? '20th-21st Century' : composer.era}
+          <Badge variant="outline" className={getBadgeClass()}>
+            {composer.era}
           </Badge>
         </div>
         <p className="text-sm text-muted-foreground flex gap-2 justify-center">

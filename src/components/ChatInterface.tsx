@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect, KeyboardEvent } from 'react';
 import { Composer, Message } from '@/data/composers';
 import { useConversations } from '@/hooks/useConversations';
@@ -24,6 +25,22 @@ export function ChatInterface({ composer }: ChatInterfaceProps) {
     startConversation, 
     addMessage 
   } = useConversations();
+  
+  // Get the badge variant based on the composer's era
+  const getBadgeVariant = (): "baroque" | "classical" | "romantic" | "modern" => {
+    switch(composer.era) {
+      case 'Baroque':
+        return 'baroque';
+      case 'Classical':
+        return 'classical';
+      case 'Romantic':
+        return 'romantic';
+      case 'Modern':
+        return 'modern';
+      default:
+        return 'baroque';
+    }
+  };
   
   useEffect(() => {
     if (!activeConversation) {
@@ -107,7 +124,7 @@ export function ChatInterface({ composer }: ChatInterfaceProps) {
           <div className="ml-3">
             <div className="flex items-center gap-2">
               <h2 className="font-serif font-bold">{composer.name}</h2>
-              <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30">
+              <Badge variant={getBadgeVariant()}>
                 {composer.era}
               </Badge>
             </div>
