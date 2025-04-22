@@ -3,7 +3,6 @@ import { Composer, Era, getComposersByEra } from '@/data/composers';
 import { ComposerCard } from './ComposerCard';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
-import { useEffect } from 'react';
 
 interface ComposerListProps {
   era: Era;
@@ -14,13 +13,6 @@ interface ComposerListProps {
 
 export function ComposerList({ era, onSelectComposer, selectedComposer, onStartChat }: ComposerListProps) {
   const composers = getComposersByEra(era);
-  
-  // Fix the React state update error by using useEffect instead of updating during render
-  useEffect(() => {
-    if (!selectedComposer && composers.length > 0) {
-      onSelectComposer(composers[0]);
-    }
-  }, [composers, selectedComposer, onSelectComposer]);
 
   return (
     <div className="w-full mt-4">
