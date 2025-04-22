@@ -97,7 +97,7 @@ export function ChatInterface({ composer }: ChatInterfaceProps) {
   return (
     <div className="flex flex-col h-full bg-background/50 backdrop-blur-sm rounded-lg overflow-hidden z-10">
       <div className="flex items-center justify-between p-4 border-b shadow-sm bg-primary/5 relative">
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-3 flex-1">
           <div 
             className="w-10 h-10 rounded-full overflow-hidden shadow-sm cursor-pointer" 
             onClick={() => setImageModalOpen(true)}
@@ -118,15 +118,17 @@ export function ChatInterface({ composer }: ChatInterfaceProps) {
             <p className="text-xs text-muted-foreground">{composer.years} • {composer.country}</p>
           </div>
         </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={handleResetChat}
-          className="absolute top-1/2 right-4 -translate-y-1/2"
-          title="Reset conversation"
-        >
-          <RefreshCcw className="h-4 w-4" />
-        </Button>
+        <div className="flex-shrink-0 pl-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleResetChat}
+            className="h-8 w-8"
+            title="Reset conversation"
+          >
+            <RefreshCcw className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
       
       <div className="flex-1 overflow-y-auto p-4 space-y-4 relative">
