@@ -1,6 +1,4 @@
-
 import { Era, eras } from '@/data/composers';
-import { MapPin } from 'lucide-react';
 
 interface TimelineProps {
   selectedEra: Era;
@@ -10,23 +8,6 @@ interface TimelineProps {
 export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
   return (
     <div className="w-full max-w-4xl mx-auto my-8">
-      {/* Era Description */}
-      <div className="mb-6">
-        {eras.map((era) => (
-          selectedEra === era.name && (
-            <div 
-              key={era.id}
-              className="flex items-center justify-center gap-2 animate-fade-in"
-            >
-              <MapPin className="w-5 h-5 text-primary" />
-              <p className="text-base text-muted-foreground max-w-3xl bg-primary/5 px-4 py-2 rounded-lg italic">
-                {era.description}
-              </p>
-            </div>
-          )
-        ))}
-      </div>
-
       {/* Era Timeline */}
       <div className="relative">
         {/* Era labels with period */}
@@ -73,6 +54,21 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
                 aria-label={`Select ${era.name} era`}
               />
             </div>
+          ))}
+        </div>
+
+        {/* Era Description with connecting line */}
+        <div className="mt-8 flex justify-center relative">
+          {eras.map((era) => (
+            selectedEra === era.name && (
+              <div key={era.id} className="relative">
+                {/* Visual connector */}
+                <div className="absolute left-1/2 -top-4 -translate-x-1/2 w-0.5 h-4 bg-primary/60" />
+                <p className="text-base text-muted-foreground max-w-3xl bg-primary/5 px-4 py-2 rounded-lg italic animate-fade-in">
+                  {era.description}
+                </p>
+              </div>
+            )
           ))}
         </div>
       </div>
