@@ -1,5 +1,6 @@
 
 import { Era, eras } from '@/data/composers';
+import { MapPin } from 'lucide-react';
 
 interface TimelineProps {
   selectedEra: Era;
@@ -9,6 +10,23 @@ interface TimelineProps {
 export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
   return (
     <div className="w-full max-w-4xl mx-auto my-8">
+      {/* Era Description */}
+      <div className="mb-6">
+        {eras.map((era) => (
+          selectedEra === era.name && (
+            <div 
+              key={era.id}
+              className="flex items-center justify-center gap-2 animate-fade-in"
+            >
+              <MapPin className="w-5 h-5 text-primary" />
+              <p className="text-base text-muted-foreground max-w-3xl bg-primary/5 px-4 py-2 rounded-lg italic">
+                {era.description}
+              </p>
+            </div>
+          )
+        ))}
+      </div>
+
       {/* Era Timeline */}
       <div className="relative">
         {/* Era labels with period */}
@@ -55,20 +73,6 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
                 aria-label={`Select ${era.name} era`}
               />
             </div>
-          ))}
-        </div>
-
-        {/* Era Description */}
-        <div className="mt-6 text-center">
-          {eras.map((era) => (
-            selectedEra === era.name && (
-              <p 
-                key={era.id}
-                className="text-sm text-muted-foreground max-w-3xl mx-auto animate-fade-in italic"
-              >
-                {era.description}
-              </p>
-            )
           ))}
         </div>
       </div>
