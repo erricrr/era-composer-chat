@@ -16,42 +16,43 @@ export function BiographyPanel({ composer, onStartChat, onClose }: BiographyPane
   const [imageModalOpen, setImageModalOpen] = useState(false);
 
   return (
-    <Card className="w-full max-w-3xl mx-auto">
-      <CardHeader className="flex flex-row items-start justify-between space-y-0">
-        <div>
-          <CardTitle className="text-2xl font-serif mb-2">{composer.name}</CardTitle>
-          <div className="flex gap-2 text-sm text-muted-foreground">
+    <Card className="w-full max-w-3xl mx-auto grid grid-cols-[300px_1fr] gap-6 p-6">
+      <div className="flex flex-col items-center">
+        <img
+          src={composer.image}
+          alt={composer.name}
+          className="w-64 h-64 rounded-full object-cover cursor-pointer border-4 border-primary/30 hover:border-primary transition-all"
+          onClick={() => setImageModalOpen(true)}
+        />
+        <div className="mt-4 text-center">
+          <h2 className="text-xl font-bold font-serif">{composer.name}</h2>
+          <p className="text-sm text-muted-foreground flex gap-2 justify-center">
             <span>{composer.years}</span>
             <span>•</span>
             <span>{composer.country}</span>
-          </div>
+          </p>
         </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="rounded-full"
-          onClick={onClose}
-          aria-label="Close biography"
-        >
-          ×
-        </Button>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="flex justify-center mb-6">
-          <img
-            src={composer.image}
-            alt={composer.name}
-            className="w-48 h-48 rounded-full object-cover cursor-pointer border-2 border-primary hover:border-primary/80 transition-colors"
-            onClick={() => setImageModalOpen(true)}
-          />
+      </div>
+
+      <div className="flex flex-col">
+        <div className="flex justify-end mb-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="rounded-full"
+            onClick={onClose}
+            aria-label="Close biography"
+          >
+            ×
+          </Button>
         </div>
 
-        <ScrollArea className="h-[200px] rounded-md border p-4">
+        <ScrollArea className="h-[300px] rounded-md border p-4 mb-4">
           <p className="text-foreground/90">{composer.bio}</p>
         </ScrollArea>
         
-        <div className="space-y-2">
-          <h3 className="font-semibold">Notable Works:</h3>
+        <div>
+          <h3 className="font-semibold mb-2">Notable Works:</h3>
           <ul className="list-disc pl-5 space-y-1">
             {composer.famousWorks.slice(0, 3).map((work, index) => (
               <li key={index} className="text-foreground/80">{work}</li>
@@ -59,7 +60,7 @@ export function BiographyPanel({ composer, onStartChat, onClose }: BiographyPane
           </ul>
         </div>
 
-        <div className="flex justify-end mt-6">
+        <div className="mt-auto text-right">
           <Button 
             onClick={() => onStartChat(composer)}
             className="bg-primary text-primary-foreground hover:bg-primary/90"
@@ -67,7 +68,7 @@ export function BiographyPanel({ composer, onStartChat, onClose }: BiographyPane
             Start Conversation
           </Button>
         </div>
-      </CardContent>
+      </div>
 
       <ImageModal
         isOpen={imageModalOpen}
