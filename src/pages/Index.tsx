@@ -61,7 +61,7 @@ const Index = () => {
         }`}
         style={{ 
           height: isMenuOpen ? 'auto' : '0',
-          maxHeight: isMenuOpen ? '95vh' : '0', // Updated maxHeight value
+          maxHeight: isMenuOpen ? '100vh' : '0', // Updated maxHeight value
           overflow: 'hidden'
         }}
       >
