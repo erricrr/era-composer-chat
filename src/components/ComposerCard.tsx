@@ -12,7 +12,7 @@ export function ComposerCard({ composer, onClick }: ComposerCardProps) {
       className="flex flex-col items-center p-2 cursor-pointer group transition-all duration-300 hover:scale-105"
       onClick={() => onClick(composer)}
     >
-      <div className={`relative w-12 h-12 mb-1 rounded-full overflow-hidden border-2 ${
+      <div className={`relative w-14 h-14 mb-1 rounded-full overflow-hidden border-2 ${
         composer.era === 'Baroque' ? 'border-baroque/60' :
         composer.era === 'Classical' ? 'border-classical/60' : 
         composer.era === 'Romantic' ? 'border-romantic/60' :
@@ -27,7 +27,7 @@ export function ComposerCard({ composer, onClick }: ComposerCardProps) {
       <h3 className="text-xs font-medium text-center group-hover:text-primary transition-colors line-clamp-1">
         {composer.name}
       </h3>
-      <p className="text-[10px] text-muted-foreground text-center font-medium">{composer.years}</p>
+      <p className="text-[10px] text-muted-foreground text-center">{composer.years}</p>
     </div>
   );
 }

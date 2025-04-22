@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -14,18 +15,22 @@ interface BiographyPanelProps {
 export function BiographyPanel({ composer, onStartChat, onClose }: BiographyPanelProps) {
   const [imageModalOpen, setImageModalOpen] = useState(false);
 
+  const handleStartChat = () => {
+    onStartChat(composer);
+  };
+
   return (
-    <Card className="relative w-full max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-[280px_1fr] gap-6 p-6 z-10 animate-fade-in bg-card/95 backdrop-blur-sm shadow-lg">
+    <Card className="relative w-full max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-[300px_1fr] gap-6 p-6 z-10 animate-fade-in">
       <div className="flex flex-col items-center">
         <img
           src={composer.image}
           alt={composer.name}
-          className="w-56 h-56 rounded-full object-cover cursor-pointer border-4 border-primary/20 hover:border-primary/40 transition-colors duration-300"
+          className="w-64 h-64 rounded-full object-cover cursor-pointer border-4 border-primary/30 hover:border-primary transition-all"
           onClick={() => setImageModalOpen(true)}
         />
         <div className="mt-4 text-center">
-          <h2 className="text-2xl font-bold font-serif">{composer.name}</h2>
-          <p className="text-sm text-muted-foreground flex gap-2 justify-center mt-1 font-medium">
+          <h2 className="text-xl font-bold font-serif">{composer.name}</h2>
+          <p className="text-sm text-muted-foreground flex gap-2 justify-center">
             <span>{composer.years}</span>
             <span>•</span>
             <span>{composer.country}</span>

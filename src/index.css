@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,77 +7,84 @@
 @layer base {
   :root {
     /* Light mode theme */
-    --background: 0 0% 100%;
-    --foreground: 222 47% 11%;
-    
-    --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
-    
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
-    
-    --primary: 221 83% 53%;
-    --primary-foreground: 210 40% 98%;
-    
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222 47% 11%;
-    
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    
+    --background: 38 33% 94%;
+    --foreground: 220 20% 20%;
+
+    --card: 38 33% 97%;
+    --card-foreground: 220 20% 20%;
+
+    --popover: 38 33% 97%;
+    --popover-foreground: 220 20% 20%;
+
+    --primary: 36 32% 40%;
+    --primary-foreground: 38 33% 97%;
+
+    --secondary: 38 33% 90%;
+    --secondary-foreground: 36 32% 40%;
+
+    --muted: 38 33% 90%;
+    --muted-foreground: 36 30% 40%;
+
+    --accent: 24 40% 70%;
+    --accent-foreground: 36 32% 20%;
+
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 38 33% 97%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221 83% 53%;
+    --border: 38 33% 85%;
+    --input: 38 33% 85%;
+    --ring: 36 32% 40%;
 
-    --radius: 0.75rem;
+    --radius: 0.5rem;
 
-    /* Era-specific colors */
-    --baroque: 43 35% 40%;
-    --classical: 210 47% 33%;
-    --romantic: 0 35% 41%;
-    --modern: 153 35% 27%;
+    --sidebar-background: 38 33% 97%;
+    --sidebar-foreground: 36 32% 40%;
+    --sidebar-primary: 36 32% 40%;
+    --sidebar-primary-foreground: 38 33% 97%;
+    --sidebar-accent: 24 40% 70%;
+    --sidebar-accent-foreground: 36 32% 20%;
+    --sidebar-border: 38 33% 85%;
+    --sidebar-ring: 36 32% 40%;
   }
 
   .dark {
-    --background: 222 47% 11%;
-    --foreground: 210 40% 98%;
-    
-    --card: 222 47% 11%;
-    --card-foreground: 210 40% 98%;
-    
-    --popover: 222 47% 11%;
-    --popover-foreground: 210 40% 98%;
-    
-    --primary: 217 91% 60%;
-    --primary-foreground: 222 47% 11%;
-    
-    --secondary: 217 19% 27%;
-    --secondary-foreground: 210 40% 98%;
-    
-    --muted: 217 19% 27%;
-    --muted-foreground: 215 20.2% 65.1%;
-    
-    --accent: 217 19% 27%;
-    --accent-foreground: 210 40% 98%;
-    
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    
-    --border: 217 19% 27%;
-    --input: 217 19% 27%;
-    --ring: 224 76% 48%;
+    /* Dark mode theme */
+    --background: 220 20% 12%;
+    --foreground: 38 33% 94%;
 
-    /* Era-specific colors - darkmode */
-    --baroque: 43 25% 50%;
-    --classical: 210 37% 43%;
-    --romantic: 0 25% 51%;
-    --modern: 153 25% 37%;
+    --card: 220 20% 15%;
+    --card-foreground: 38 33% 94%;
+
+    --popover: 220 20% 15%;
+    --popover-foreground: 38 33% 94%;
+
+    --primary: 36 30% 60%;
+    --primary-foreground: 220 20% 12%;
+
+    --secondary: 220 20% 18%;
+    --secondary-foreground: 38 33% 94%;
+
+    --muted: 220 20% 18%;
+    --muted-foreground: 38 33% 70%;
+
+    --accent: 24 40% 35%;
+    --accent-foreground: 38 33% 94%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 38 33% 94%;
+
+    --border: 220 20% 20%;
+    --input: 220 20% 20%;
+    --ring: 36 30% 60%;
+    
+    --sidebar-background: 220 20% 15%;
+    --sidebar-foreground: 38 33% 94%;
+    --sidebar-primary: 36 30% 60%;
+    --sidebar-primary-foreground: 220 20% 12%;
+    --sidebar-accent: 220 20% 18%;
+    --sidebar-accent-foreground: 38 33% 94%;
+    --sidebar-border: 220 20% 20%;
+    --sidebar-ring: 36 30% 60%;
   }
 }
 
@@ -86,18 +92,46 @@
   * {
     @apply border-border;
   }
+
   body {
-    @apply bg-background text-foreground antialiased;
-    font-feature-settings: "ss01", "ss02", "cv01", "cv02";
+    @apply bg-background text-foreground font-sans;
   }
-  h1 {
-    @apply font-serif text-4xl font-bold tracking-tight;
-  }
-  h2 {
-    @apply font-serif text-2xl font-semibold tracking-tight;
-  }
-  h3 {
-    @apply font-serif text-xl font-medium;
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
   }
 }
 
+@layer components {
+  .composer-card {
+    @apply relative flex flex-col items-center p-4 bg-card rounded-lg shadow-md hover:shadow-lg transition-all duration-300 border border-border;
+  }
+
+  .composer-image {
+    @apply w-24 h-24 rounded-full object-cover border-2 border-primary shadow-md mb-3;
+  }
+
+  .era-tab {
+    @apply px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200;
+  }
+
+  .era-tab.active {
+    @apply bg-primary text-primary-foreground;
+  }
+
+  .era-tab:not(.active) {
+    @apply bg-secondary text-secondary-foreground hover:bg-secondary/80;
+  }
+
+  .music-paper-bg {
+    @apply bg-parchment bg-music-staff;
+  }
+
+  .chat-message-user {
+    @apply bg-primary/10 text-foreground p-3 rounded-lg rounded-tr-none max-w-[80%] ml-auto my-1;
+  }
+
+  .chat-message-composer {
+    @apply bg-primary/20 text-foreground p-3 rounded-lg rounded-tl-none max-w-[80%] mr-auto my-1;
+  }
+}
