@@ -15,8 +15,12 @@ interface BiographyPanelProps {
 export function BiographyPanel({ composer, onStartChat, onClose }: BiographyPanelProps) {
   const [imageModalOpen, setImageModalOpen] = useState(false);
 
+  const handleStartChat = () => {
+    onStartChat(composer);
+  };
+
   return (
-    <Card className="relative w-full max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-[300px_1fr] gap-6 p-6 z-10">
+    <Card className="relative w-full max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-[300px_1fr] gap-6 p-6 z-10 animate-fade-in">
       <div className="flex flex-col items-center">
         <img
           src={composer.image}
@@ -63,7 +67,7 @@ export function BiographyPanel({ composer, onStartChat, onClose }: BiographyPane
         </div>
             
         <Button 
-          onClick={() => onStartChat(composer)}
+          onClick={handleStartChat}
           className="bg-primary text-primary-foreground hover:bg-primary/90 w-full"
         >
           Start Conversation

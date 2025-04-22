@@ -11,20 +11,20 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
     <div className="w-full max-w-4xl mx-auto my-8">
       {/* Era Timeline */}
       <div className="relative">
-        {/* Era labels and periods */}
-        <div className="flex justify-between mb-6">
+        {/* Era labels with period */}
+        <div className="flex justify-between mb-4">
           {eras.map((era) => (
             <div 
               key={era.id}
-              className="flex flex-col items-center cursor-pointer group"
+              className="flex flex-col items-center cursor-pointer group w-1/4"
               onClick={() => onSelectEra(era.name)}
             >
-              <h3 className={`text-lg font-medium transition-colors ${
+              <h3 className={`text-base font-medium text-center transition-colors ${
                 selectedEra === era.name ? 'text-primary font-semibold' : 'text-muted-foreground'
               }`}>
                 {era.id === 'modern' ? '20th-21st Century' : era.name}
               </h3>
-              <p className="text-sm text-muted-foreground mt-1">
+              <p className="text-xs text-muted-foreground mt-1 text-center">
                 {era.period}
               </p>
             </div>
@@ -41,13 +41,13 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
           />
         </div>
         
-        {/* Timeline nodes */}
+        {/* Timeline nodes - aligned with text above */}
         <div className="flex justify-between relative -mt-2.5 px-1">
           {eras.map((era) => (
-            <div key={era.id} className="flex flex-col items-center">
+            <div key={era.id} className="flex flex-col items-center w-1/4">
               <button
                 onClick={() => onSelectEra(era.name)}
-                className={`w-5 h-5 rounded-full transition-colors duration-300 ${
+                className={`w-4 h-4 rounded-full transition-colors duration-300 ${
                   selectedEra === era.name 
                     ? era.id === 'baroque' ? 'bg-baroque' :
                       era.id === 'classical' ? 'bg-classical' :
@@ -62,12 +62,12 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
         </div>
 
         {/* Era Description */}
-        <div className="mt-8 text-center">
+        <div className="mt-6 text-center">
           {eras.map((era) => (
             selectedEra === era.name && (
               <p 
                 key={era.id}
-                className="text-base text-muted-foreground max-w-3xl mx-auto animate-fade-in italic"
+                className="text-sm text-muted-foreground max-w-3xl mx-auto animate-fade-in italic"
               >
                 {era.description}
               </p>

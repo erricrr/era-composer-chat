@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { Composer, Era } from '@/data/composers';
+import { Composer } from '@/data/composers';
 import { ComposerMenu } from '@/components/ComposerMenu';
 import { ChatInterface } from '@/components/ChatInterface';
 import { ThemeToggle } from '@/components/ThemeToggle';
@@ -76,7 +76,7 @@ const Index = () => {
       {/* Main Content */}
       <div 
         className={`container mx-auto px-4 pt-16 pb-8 transition-all duration-500 ${
-          isMenuOpen ? 'opacity-0' : 'opacity-100'
+          isMenuOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'
         }`} 
         style={{ height: 'calc(100vh - 2rem)' }}
       >
@@ -107,6 +107,6 @@ const Index = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Index;
