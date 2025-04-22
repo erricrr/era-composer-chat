@@ -120,18 +120,24 @@ export function ChatInterface({ composer }: ChatInterfaceProps) {
         </Button>
       </div>
       
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 relative">
+        {activeConversation.messages.length === 1 && (
+          <div className="absolute inset-0 flex items-center justify-center text-muted-foreground text-sm pointer-events-none">
+            <p>You started a conversation with {composer.name.split(' ').pop()}. Ask them about their music.</p>
+          </div>
+        )}
+
         {activeConversation?.messages.map((message: Message, index) => (
           <div 
             key={message.id} 
             className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
           >
             <div 
-              className={`max-w-[80%] rounded-2xl px-4 py-2 ${
+              className={
                 message.sender === 'user' 
-                  ? 'bg-primary text-primary-foreground ml-auto' 
-                  : 'bg-muted'
-              }`}
+                  ? 'max-w-[80%] rounded-2xl px-4 py-2 bg-primary text-primary-foreground ml-auto'
+                  : 'max-w-[80%] px-4 py-2 text-foreground'
+              }
             >
               {message.text}
             </div>
