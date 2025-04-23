@@ -9,12 +9,12 @@ import { Badge } from "@/components/ui/badge";
 
 interface ChatInterfaceProps {
   composer: Composer;
-  onUserTyping: (isTyping: boolean) => void; // Add onUserTyping function here
+  onUserTyping: (isTyping: boolean) => void;
 }
 
 export function ChatInterface({
   composer,
-  onUserTyping, // Accept the prop here
+  onUserTyping,
 }: ChatInterfaceProps) {
   const [inputMessage, setInputMessage] = useState('');
   const [imageModalOpen, setImageModalOpen] = useState(false);
@@ -98,15 +98,25 @@ export function ChatInterface({
     return <div className="flex items-center justify-center h-full">Loading conversation...</div>;
   }
 
-  return <div className="flex flex-col h-full bg-background/50 backdrop-blur-sm rounded-lg overflow-hidden z-10">
-      <div className="flex items-center justify-between p-4 border-b shadow-sm bg-primary/5">
+  const getEraColor = (era: string): string => {
+    switch(era) {
+      case 'Baroque': return 'bg-amber-600';
+      case 'Classical': return 'bg-blue-600';
+      case 'Romantic': return 'bg-rose-600';
+      case 'Modern': return 'bg-emerald-600';
+      default: return 'bg-primary';
+    }
+  };
+
+  return <div className="flex flex-col h-full bg-background/60 backdrop-blur-sm rounded-lg overflow-hidden z-10 shadow-md">
+      <div className="flex items-center justify-between p-4 border-b shadow-sm bg-primary/10">
         <div className="flex items-center">
-          <div className="w-10 h-10 rounded-full overflow-hidden shadow-sm cursor-pointer" onClick={() => setImageModalOpen(true)}>
+          <div className="w-14 h-14 rounded-full overflow-hidden shadow-md cursor-pointer border-2 border-primary/20" onClick={() => setImageModalOpen(true)}>
             <img src={composer.image} alt={composer.name} className="w-full h-full object-cover" />
           </div>
-          <div className="ml-3">
+          <div className="ml-4">
             <div className="flex items-center gap-2">
-              <h2 className="font-serif font-bold">{composer.name}</h2>
+              <h2 className="font-serif font-bold text-lg">{composer.name}</h2>
               <Badge variant="secondary"
               className="border border-secondary/30 bg-secondary/20"
               >
@@ -116,43 +126,60 @@ export function ChatInterface({
             <p className="text-xs text-muted-foreground">{composer.years} • {composer.country}</p>
           </div>
         </div>
-        <Button variant="ghost" size="icon" onClick={handleResetChat} title="Reset conversation" className="ml-2 rounded-full">
+        <Button variant="ghost" size="icon" onClick={handleResetChat} title="Reset conversation" className="ml-2 rounded-full hover:bg-primary/20 transition-colors">
           <RefreshCcw className="h-4 w-4" />
         </Button>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 relative">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 relative bg-gray-50/30 dark:bg-gray-900/30">
         {activeConversation.messages.length === 1 && <div className="absolute inset-0 flex items-center justify-center text-muted-foreground text-sm pointer-events-none">
             <p>You started a conversation with {composer.name.split(' ').pop()}. Ask them about their music.</p>
           </div>}
 
         {activeConversation?.messages.map((message: Message, index) => <div key={message.id} className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div className={message.sender === 'user' ? 'max-w-[80%] rounded-2xl px-4 py-2 bg-primary text-primary-foreground ml-auto' : 'max-w-[80%] px-4 py-2 text-foreground'}>
+            <div className={message.sender === 'user'
+              ? 'max-w-[80%] rounded-2xl px-4 py-2 bg-primary text-primary-foreground ml-auto shadow-sm'
+              : 'max-w-[80%] rounded-2xl px-4 py-2 text-foreground bg-white/70 dark:bg-gray-800/70 shadow-sm'}>
               {message.text}
             </div>
           </div>)}
         <div ref={messagesEndRef} />
       </div>
 
-      <form onSubmit={handleSendMessage} className="sticky bottom-0 p-4 border-t bg-background/50">
-        <div className="flex items-start gap-2">
-          <div className="flex-1">
-            <textarea ref={textareaRef} value={inputMessage} onChange={(e) => {
-              setInputMessage(e.target.value);
-              onUserTyping(true); // Notify the parent that the user is typing
-            }} onKeyDown={handleKeyPress} placeholder={`Ask ${composer.name} a question...`} className="w-full rounded-xl border bg-background p-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary resize-none overflow-hidden" rows={1} onInput={e => {
-            const target = e.target as HTMLTextAreaElement;
-            target.style.height = 'auto';
-            target.style.height = `${Math.min(target.scrollHeight, 200)}px`;
-          }} />
+      <form onSubmit={handleSendMessage} className="sticky bottom-0 p-4 border-t bg-background/80 backdrop-blur-sm">
+        <div className="flex flex-col gap-2">
+          <div className="flex items-stretch gap-2">
+            <div className="flex-1">
+              <textarea
+                ref={textareaRef}
+                value={inputMessage}
+                onChange={(e) => {
+                  setInputMessage(e.target.value);
+                  onUserTyping(true);
+                }}
+                onKeyDown={handleKeyPress}
+                placeholder={`Ask ${composer.name} a question...`}
+                className="w-full rounded-xl border bg-background/80 p-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary resize-none overflow-hidden min-h-[42px]"
+                rows={1}
+                onInput={e => {
+                  const target = e.target as HTMLTextAreaElement;
+                  target.style.height = 'auto';
+                  target.style.height = `${Math.min(target.scrollHeight, 200)}px`;
+                }}
+              />
+            </div>
+            <Button
+              type="submit"
+              disabled={!inputMessage.trim()}
+              className={`px-4 h-10 mb-2.5 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors shrink-0 bg-primary hover:opacity-90 text-white self-end`}
+            >
+              Send
+            </Button>
           </div>
-          <Button type="submit" disabled={!inputMessage.trim()} className={`px-4 h-[42px] rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors shrink-0 ${composer.era === 'Baroque' ? 'bg-baroque text-white' : composer.era === 'Classical' ? 'bg-classical text-white' : composer.era === 'Romantic' ? 'bg-romantic text-white' : 'bg-modern text-white'}`}>
-            Send
-          </Button>
+          <p className="text-xs text-muted-foreground text-center">
+            AI-generated conversation from verified sources. Does not reflect {composer.name.split(' ').pop()}&apos;s personal views.
+          </p>
         </div>
-        <p className="text-xs text-muted-foreground mt-2 text-center">
-          AI-generated conversation from verified sources. Does not reflect {composer.name.split(' ').pop()}&apos;s personal views.
-        </p>
       </form>
 
       <ImageModal isOpen={imageModalOpen} onClose={() => setImageModalOpen(false)} imageSrc={composer.image} composerName={composer.name} />
