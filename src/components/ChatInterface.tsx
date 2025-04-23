@@ -6,9 +6,11 @@ import { RefreshCcw } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ImageModal } from './ImageModal';
 import { Badge } from "@/components/ui/badge";
+
 interface ChatInterfaceProps {
   composer: Composer;
 }
+
 export function ChatInterface({
   composer
 }: ChatInterfaceProps) {
@@ -24,31 +26,18 @@ export function ChatInterface({
     addMessage
   } = useConversations();
 
-  // Get the badge variant based on the composer's era
-  const getBadgeVariant = (): "baroque" | "classical" | "romantic" | "modern" => {
-    switch (composer.era) {
-      case 'Baroque':
-        return 'baroque';
-      case 'Classical':
-        return 'classical';
-      case 'Romantic':
-        return 'romantic';
-      case 'Modern':
-        return 'modern';
-      default:
-        return 'baroque';
-    }
-  };
   useEffect(() => {
     if (!activeConversation) {
       startConversation(composer);
     }
   }, [activeConversation, composer, startConversation]);
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({
       behavior: 'smooth'
     });
   }, [activeConversation?.messages]);
+
   const handleMessageSubmit = () => {
     if (!inputMessage.trim() || !activeConversationId) return;
     addMessage(activeConversationId, inputMessage, 'user');
@@ -65,22 +54,26 @@ export function ChatInterface({
       }
     }, 1000);
   };
+
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
     handleMessageSubmit();
   };
+
   const handleKeyPress = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (!isMobile && e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleMessageSubmit();
     }
   };
+
   const handleResetChat = () => {
     if (activeConversationId) {
       // Properly reset the chat by creating a new conversation with the same composer
       startConversation(composer);
     }
   };
+
   const generatePlaceholderResponse = (userMessage: string, composer: Composer): string => {
     if (userMessage.toLowerCase().includes('work') || userMessage.toLowerCase().includes('composition')) {
       return `As ${composer.name}, my most famous works include ${composer.famousWorks.join(', ')}. Each composition reflects my style from the ${composer.era} period.`;
@@ -93,9 +86,11 @@ export function ChatInterface({
     }
     return `Thank you for your interest in my work. I was a composer from the ${composer.era} era, known for ${composer.famousWorks[0]}. Is there anything specific about my compositions or life you would like to know?`;
   };
+
   if (!activeConversation) {
     return <div className="flex items-center justify-center h-full">Loading conversation...</div>;
   }
+
   return <div className="flex flex-col h-full bg-background/50 backdrop-blur-sm rounded-lg overflow-hidden z-10">
       <div className="flex items-center justify-between p-4 border-b shadow-sm bg-primary/5">
         <div className="flex items-center">
@@ -105,7 +100,7 @@ export function ChatInterface({
           <div className="ml-3">
             <div className="flex items-center gap-2">
               <h2 className="font-serif font-bold">{composer.name}</h2>
-              <Badge variant={getBadgeVariant()}>
+              <Badge variant="secondary">
                 {composer.era}
               </Badge>
             </div>
