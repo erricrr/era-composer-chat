@@ -1,5 +1,4 @@
-
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { useLocalStorage } from './useLocalStorage';
 import { Conversation, Message, Composer } from '@/data/composers';
 import { getComposerIntroduction } from '@/data/composerIntroductions';
@@ -12,72 +11,58 @@ export function useConversations() {
   const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
 
   // Get active conversation
-  const activeConversation = useCallback(() => {
+  const activeConversation = useMemo(() => {
+    console.log('Computing active conversation:', {
+      activeConversationId,
+      conversations
+    });
     return conversations.find(conv => conv.id === activeConversationId) || null;
   }, [conversations, activeConversationId]);
 
   // Start a new conversation with a composer
   const startConversation = useCallback((composer: Composer): string => {
-    // Check if we already have a conversation with this composer
-    const existingConversation = conversations.find(conv => conv.composerId === composer.id);
-    
-    if (existingConversation) {
-      setActiveConversationId(existingConversation.id);
-      return existingConversation.id;
+    // Clear existing conversation first
+    if (activeConversationId) {
+      setConversations(prev => prev.filter(conv => conv.id !== activeConversationId));
     }
-    
-    // Count existing conversations for this era
-    const eraConversations = conversations.filter(
-      conv => conversations.find(c => c.composerId === conv.composerId)?.composerId === composer.id
-    );
-    
-    // Check if we've reached the limit
-    if (eraConversations.length >= MAX_CONVERSATIONS_PER_ERA) {
-      // Sort by last updated and remove the oldest
-      const sortedConversations = [...eraConversations].sort((a, b) => a.lastUpdated - b.lastUpdated);
-      const toRemove = sortedConversations[0].id;
-      
-      setConversations(prev => prev.filter(conv => conv.id !== toRemove));
-    }
-    
-    // Create new conversation with personalized introduction
+
+    // Create new conversation with NO initial message
     const newConversation: Conversation = {
       id: uuidv4(),
       composerId: composer.id,
-      messages: [
-        {
-          id: uuidv4(),
-          text: getComposerIntroduction(composer),
-          sender: 'composer',
-          timestamp: Date.now()
-        }
-      ],
+      messages: [], // Start with empty messages array
       lastUpdated: Date.now()
     };
-    
+
     setConversations(prev => [...prev, newConversation]);
     setActiveConversationId(newConversation.id);
     return newConversation.id;
-  }, [conversations, setConversations]);
+  }, [conversations, setConversations, activeConversationId]);
 
   // Add message to conversation
   const addMessage = useCallback((conversationId: string, text: string, sender: 'user' | 'composer'): void => {
+    console.log('Adding message:', { conversationId, text, sender });
+
     const newMessage: Message = {
       id: uuidv4(),
       text,
       sender,
       timestamp: Date.now()
     };
-    
-    setConversations(prev => prev.map(conv => 
-      conv.id === conversationId 
-        ? { 
-            ...conv, 
-            messages: [...conv.messages, newMessage],
-            lastUpdated: Date.now() 
-          } 
-        : conv
-    ));
+
+    setConversations(prev => {
+      const updated = prev.map(conv =>
+        conv.id === conversationId
+          ? {
+              ...conv,
+              messages: [...conv.messages, newMessage],
+              lastUpdated: Date.now()
+            }
+          : conv
+      );
+      console.log('Updated conversations:', updated);
+      return updated;
+    });
   }, [setConversations]);
 
   // Get conversations for a specific composer
@@ -94,7 +79,7 @@ export function useConversations() {
   // Delete a specific conversation
   const deleteConversation = useCallback((conversationId: string): void => {
     setConversations(prev => prev.filter(conv => conv.id !== conversationId));
-    
+
     if (activeConversationId === conversationId) {
       setActiveConversationId(null);
     }
@@ -103,7 +88,7 @@ export function useConversations() {
   return {
     conversations,
     activeConversationId,
-    activeConversation: activeConversation(),
+    activeConversation,
     startConversation,
     addMessage,
     getConversationsForComposer,

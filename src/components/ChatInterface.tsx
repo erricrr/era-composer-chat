@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, KeyboardEvent } from 'react';
+import { useState, useRef, useEffect, KeyboardEvent, useCallback } from 'react';
 import { Composer, Message, Era } from '@/data/composers';
 import { useConversations } from '@/hooks/useConversations';
 import { Button } from '@/components/ui/button';
@@ -6,6 +6,7 @@ import { RefreshCcw } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ImageModal } from './ImageModal';
 import { Badge } from "@/components/ui/badge";
+import { v4 as uuidv4 } from 'uuid';
 
 interface ChatInterfaceProps {
   composer: Composer;
@@ -27,6 +28,7 @@ export function ChatInterface({
     startConversation,
     addMessage
   } = useConversations();
+  const [localMessages, setLocalMessages] = useState<Message[]>([]);
 
   // Format era display text
   const getEraDisplayText = (era: string): string => {
@@ -45,18 +47,52 @@ export function ChatInterface({
     });
   }, [activeConversation?.messages]);
 
+  useEffect(() => {
+    if (activeConversation && activeConversation.messages.length > 0) {
+      // Only update local messages if we're initializing or resetting
+      if (localMessages.length === 0) {
+        console.log('Initializing local messages from active conversation');
+        setLocalMessages(activeConversation.messages);
+      }
+    }
+  }, [activeConversation]);
+
   const handleMessageSubmit = () => {
     if (!inputMessage.trim() || !activeConversationId) return;
+
+    const userMessage: Message = {
+      id: uuidv4(),
+      text: inputMessage,
+      sender: 'user',
+      timestamp: Date.now()
+    };
+
+    // Update local state first
+    setLocalMessages(prev => [...prev, userMessage]);
+
+    // Then update conversation state
     addMessage(activeConversationId, inputMessage, 'user');
     setInputMessage('');
 
-    // Reset textarea height after sending message
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
     }
+
+    // Handle composer response
     setTimeout(() => {
       if (activeConversationId) {
         const response = generatePlaceholderResponse(inputMessage, composer);
+        const composerMessage: Message = {
+          id: uuidv4(),
+          text: response,
+          sender: 'composer',
+          timestamp: Date.now()
+        };
+
+        // Update local state first
+        setLocalMessages(prev => [...prev, composerMessage]);
+
+        // Then update conversation state
         addMessage(activeConversationId, response, 'composer');
       }
     }, 1000);
@@ -76,7 +112,7 @@ export function ChatInterface({
 
   const handleResetChat = () => {
     if (activeConversationId) {
-      // Properly reset the chat by creating a new conversation with the same composer
+      setLocalMessages([]); // Clear local messages first
       startConversation(composer);
     }
   };
@@ -119,7 +155,7 @@ export function ChatInterface({
             {composer.country}, {composer.years}
           </p>
           <Badge
-            variant="default" className="ml-2"         >
+            variant="default" className="ml-2 bg-primary/65 text-background"         >
             {getEraDisplayText(composer.era)}
           </Badge>
         </div>
@@ -137,17 +173,20 @@ export function ChatInterface({
       </div>
 
       <div className="flex-1 overflow-y-auto p-4 space-y-4 relative bg-gray-50/30 dark:bg-gray-800/30">
-        {activeConversation.messages.length === 1 && <div className="absolute inset-0 flex items-center justify-center text-muted-foreground text-sm pointer-events-none">
-            <p>You started a conversation with {composer.name.split(' ').pop()}. Ask them about their music.</p>
+        {localMessages.length === 0 && <div className="absolute inset-0 flex items-center justify-center text-muted-foreground text-sm pointer-events-none">
+            <p>Start a conversation with {composer.name.split(' ').pop()}. Ask them about their music.</p>
           </div>}
 
-        {activeConversation?.messages.map((message: Message, index) => <div key={message.id} className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+        {localMessages.map((message: Message, index) => (
+          <div key={message.id} className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
             <div className={message.sender === 'user'
-              ? 'max-w-[80%] rounded-2xl px-4 py-2 bg-primary text-primary-foreground ml-auto shadow-sm'
-              : 'max-w-[80%] rounded-2xl px-4 py-2 text-foreground'}>
+              ? 'max-w-[80%] rounded-2xl px-4 py-2 bg-primary/80 text-background ml-auto shadow-sm'
+              : 'max-w-[80%] px-4 py-2 text-foreground'
+            }>
               {message.text}
             </div>
-          </div>)}
+          </div>
+        ))}
         <div ref={messagesEndRef} />
       </div>
 
@@ -176,7 +215,7 @@ export function ChatInterface({
             <Button
               type="submit"
               disabled={!inputMessage.trim()}
-              className={`px-4 h-10 mb-2.5 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors shrink-0 bg-primary hover:opacity-90 text-white self-end`}
+              className={`px-4 h-10 mb-2.5 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors shrink-0 bg-primary text-background hover:opacity-90 self-end`}
             >
               Send
             </Button>
