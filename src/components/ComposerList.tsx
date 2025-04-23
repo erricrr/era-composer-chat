@@ -52,7 +52,7 @@ export function ComposerList({
                     {selectedComposer.country}, {selectedComposer.years}
                   </span>
                   <Badge variant="secondary" className="ml-2">
-                    {era === Era.Modern ? '20th-21st Century' : era} Era
+                    {era === Era.Modern ? '20th-21st Century' : era}
                   </Badge>
                 </div>
               </div>
@@ -62,7 +62,7 @@ export function ComposerList({
             <ScrollArea className="flex-grow mb-6 overflow-y-auto">
               <p className="text-sm text-foreground/90 mb-6">{selectedComposer.bio}</p>
               <div>
-                <h4 className="font-semibold mb-2">Notable Works:</h4>
+                <h4 className="font-semibold mb-2">Notable Works</h4>
                 <ul className="list-disc pl-5 space-y-1">
                   {selectedComposer.famousWorks.slice(0, 3).map((work, index) => <li key={index} className="text-sm text-foreground/80">{work}</li>)}
                 </ul>
