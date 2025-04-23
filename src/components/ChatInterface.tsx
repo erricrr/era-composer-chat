@@ -9,10 +9,12 @@ import { Badge } from "@/components/ui/badge";
 
 interface ChatInterfaceProps {
   composer: Composer;
+  onUserTyping: (isTyping: boolean) => void; // Add onUserTyping function here
 }
 
 export function ChatInterface({
-  composer
+  composer,
+  onUserTyping, // Accept the prop here
 }: ChatInterfaceProps) {
   const [inputMessage, setInputMessage] = useState('');
   const [imageModalOpen, setImageModalOpen] = useState(false);
@@ -105,7 +107,7 @@ export function ChatInterface({
           <div className="ml-3">
             <div className="flex items-center gap-2">
               <h2 className="font-serif font-bold">{composer.name}</h2>
-              <Badge variant="secondary" 
+              <Badge variant="secondary"
               className="border border-secondary/30 bg-secondary/20"
               >
                 {getEraDisplayText(composer.era)}
@@ -118,7 +120,7 @@ export function ChatInterface({
           <RefreshCcw className="h-4 w-4" />
         </Button>
       </div>
-      
+
       <div className="flex-1 overflow-y-auto p-4 space-y-4 relative">
         {activeConversation.messages.length === 1 && <div className="absolute inset-0 flex items-center justify-center text-muted-foreground text-sm pointer-events-none">
             <p>You started a conversation with {composer.name.split(' ').pop()}. Ask them about their music.</p>
@@ -131,11 +133,14 @@ export function ChatInterface({
           </div>)}
         <div ref={messagesEndRef} />
       </div>
-      
+
       <form onSubmit={handleSendMessage} className="sticky bottom-0 p-4 border-t bg-background/50">
         <div className="flex items-start gap-2">
           <div className="flex-1">
-            <textarea ref={textareaRef} value={inputMessage} onChange={e => setInputMessage(e.target.value)} onKeyDown={handleKeyPress} placeholder={`Ask ${composer.name} a question...`} className="w-full rounded-xl border bg-background p-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary resize-none overflow-hidden" rows={1} onInput={e => {
+            <textarea ref={textareaRef} value={inputMessage} onChange={(e) => {
+              setInputMessage(e.target.value);
+              onUserTyping(true); // Notify the parent that the user is typing
+            }} onKeyDown={handleKeyPress} placeholder={`Ask ${composer.name} a question...`} className="w-full rounded-xl border bg-background p-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary resize-none overflow-hidden" rows={1} onInput={e => {
             const target = e.target as HTMLTextAreaElement;
             target.style.height = 'auto';
             target.style.height = `${Math.min(target.scrollHeight, 200)}px`;
@@ -149,8 +154,9 @@ export function ChatInterface({
           AI-generated conversation from verified sources. Does not reflect {composer.name.split(' ').pop()}&apos;s personal views.
         </p>
       </form>
-      
+
       <ImageModal isOpen={imageModalOpen} onClose={() => setImageModalOpen(false)} imageSrc={composer.image} composerName={composer.name} />
     </div>;
 }
+
 export default ChatInterface;

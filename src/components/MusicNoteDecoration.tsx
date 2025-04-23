@@ -3,7 +3,7 @@ import React from 'react';
 
 export function MusicNoteDecoration() {
   return (
-    <div className="fixed pointer-events-none inset-0 z-0 opacity-10 dark:opacity-5">
+    <div className="fixed pointer-events-none inset-0 z-0 opacity-15 dark:opacity-15">
       {/* Musical notes scattered around */}
       <div className="absolute top-[10%] left-[5%] text-2xl rotate-12">♩</div>
       <div className="absolute top-[25%] right-[15%] text-4xl -rotate-6">♪</div>

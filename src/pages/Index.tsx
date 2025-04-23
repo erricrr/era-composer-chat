@@ -30,11 +30,6 @@ const Index = () => {
     }
   };
 
-  const handleCloseBiography = () => {
-    setIsMenuOpen(true);
-    setSelectedComposer(null);
-    setIsChatting(false);
-  };
 
   const toggleMenu = () => {
     if (!isMenuOpen) {
@@ -50,40 +45,41 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       {/* Background Decoration */}
       <MusicNoteDecoration />
-      
+
       {/* Theme Toggle */}
       <ThemeToggle />
-      
-      {/* Composer Selection Menu - Updated animation */}
-      <div
-        className={`fixed inset-x-0 top-0 z-40 bg-background/95 backdrop-blur-sm border-b border-border shadow-lg transition-all duration-500 ease-in-out overflow-y-auto ${
-          isMenuOpen ? 'translate-y-0' : '-translate-y-full'
-        }`}
-        style={{ 
-          height: isMenuOpen ? 'auto' : '0',
-          maxHeight: isMenuOpen ? '100vh' : '0',
-          overflow: isMenuOpen ? 'auto' : 'hidden'
-        }}
-      >
-        <ComposerMenu 
-          onSelectComposer={handleSelectComposer}
-          onStartChat={handleStartChat}
-          selectedComposer={selectedComposer}
-          isOpen={isMenuOpen} 
-        />
-      </div>
-      
+
+  {/* Composer Selection Menu - Updated animation */}
+  <div
+    className={`
+      fixed inset-x-0 top-0 z-40
+      bg-background/95 backdrop-blur-sm border-b border-border shadow-lg
+      transition-transform duration-500 ease-[cubic-bezier(0.25, 0.8, 0.25, 1)]
+      ${isMenuOpen ? 'translate-y-0' : '-translate-y-full pointer-events-none'}
+      overflow-y-auto
+    `}
+  >
+    <ComposerMenu
+      onSelectComposer={handleSelectComposer}
+      onStartChat={handleStartChat}
+      selectedComposer={selectedComposer}
+      isOpen={isMenuOpen}
+    />
+  </div>
+
+
+
       {/* Menu Toggle Button */}
       <button
         onClick={toggleMenu}
         className="fixed top-4 left-4 z-50 p-2 rounded-full bg-card hover:bg-muted transition-colors duration-200 shadow-md"
         aria-label={isMenuOpen ? "Close menu" : "Open menu"}
       >
-        <svg 
-          xmlns="http://www.w3.org/2000/svg" 
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
           className={`h-5 w-5 transition-transform duration-500 ${isMenuOpen ? 'rotate-180' : 'rotate-0'}`}
-          fill="none" 
-          viewBox="0 0 24 24" 
+          fill="none"
+          viewBox="0 0 24 24"
           stroke="currentColor"
         >
           {isMenuOpen ? (
@@ -93,19 +89,26 @@ const Index = () => {
           )}
         </svg>
       </button>
-      
-      {/* Chat Interface with slide-in animation */}
-      <div 
-        className={`transition-transform duration-500 ease-in-out ${
-          isChatting ? 'translate-y-0' : 'translate-y-full'
-        }`}
+
+      {/* Chat Interface without slide-in animation */}
+      <div
+        className="fixed inset-x-0 bottom-0 opacity-100 pointer-events-auto"
+        style={{
+          height: 'calc(100vh - 0rem)',
+          backdropFilter: 'blur(8px)',
+          boxShadow: '0 -10px 25px rgba(0,0,0,0.1)',
+        }}
       >
-        {isChatting && selectedComposer && (
-          <div className="container mx-auto px-4 pt-16 pb-8" style={{ height: 'calc(100vh - 2rem)' }}>
-            <ChatInterface composer={selectedComposer} />
+        {selectedComposer && (
+          <div className="container mx-auto px-4 pt-16 pb-8 h-full">
+            <ChatInterface
+              composer={selectedComposer}
+              onUserTyping={() => {}} // Add required prop
+            />
           </div>
         )}
       </div>
+
     </div>
   );
 }
