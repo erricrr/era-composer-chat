@@ -98,40 +98,47 @@ export function ChatInterface({
     return <div className="flex items-center justify-center h-full">Loading conversation...</div>;
   }
 
-  const getEraColor = (era: string): string => {
-    switch(era) {
-      case 'Baroque': return 'bg-amber-600';
-      case 'Classical': return 'bg-blue-600';
-      case 'Romantic': return 'bg-rose-600';
-      case 'Modern': return 'bg-emerald-600';
-      default: return 'bg-primary';
-    }
-  };
 
-  return <div className="flex flex-col h-full bg-background/60 backdrop-blur-sm rounded-lg overflow-hidden z-10 shadow-md">
-      <div className="flex items-center justify-between p-4 border-b shadow-sm bg-primary/10">
-        <div className="flex items-center">
-          <div className="w-14 h-14 rounded-full overflow-hidden shadow-md cursor-pointer border-2 border-primary/20" onClick={() => setImageModalOpen(true)}>
-            <img src={composer.image} alt={composer.name} className="w-full h-full object-cover" />
-          </div>
-          <div className="ml-4">
-            <div className="flex items-center gap-2">
-              <h2 className="font-serif font-bold text-lg">{composer.name}</h2>
-              <Badge variant="secondary"
-              className="border border-secondary/30 bg-secondary/20"
-              >
-                {getEraDisplayText(composer.era)}
-              </Badge>
-            </div>
-            <p className="text-xs text-muted-foreground">{composer.years} • {composer.country}</p>
-          </div>
+  return   <div className="flex flex-col h-full bg-background/60 backdrop-blur-sm rounded-lg overflow-hidden z-10 shadow-md">
+  <div className="flex items-center justify-between p-4 border-b shadow-sm bg-primary/10">
+    <div className="flex items-center space-x-6">
+      <div
+        className="w-24 h-24 rounded-full overflow-hidden border-2 border-primary/30 flex-shrink-0 cursor-pointer"
+        onClick={() => setImageModalOpen(true)}
+      >
+        <img
+          src={composer.image}
+          alt={composer.name}
+          className="w-full h-full object-cover"
+        />
+      </div>
+      <div className="flex flex-col items-start">
+        <h2 className="font-serif font-bold text-lg">{composer.name}</h2>
+        <div className="flex items-center gap-2 mt-1">
+          <p className="text-xs text-muted-foreground">
+            {composer.country}, {composer.years}
+          </p>
+          <Badge
+            variant="secondary"
+            className="border border-secondary/30 bg-secondary/20 ml-2"
+          >
+            {getEraDisplayText(composer.era)}
+          </Badge>
         </div>
-        <Button variant="ghost" size="icon" onClick={handleResetChat} title="Reset conversation" className="ml-2 rounded-full hover:bg-primary/20 transition-colors">
-          <RefreshCcw className="h-4 w-4" />
-        </Button>
+      </div>
+    </div>
+    <Button
+      variant="ghost"
+      size="icon"
+      onClick={handleResetChat}
+      title="Reset conversation"
+      className="ml-2 rounded-full hover:bg-primary/20 transition-colors"
+    >
+      <RefreshCcw className="h-4 w-4" />
+    </Button>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 relative bg-gray-50/30 dark:bg-gray-900/30">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 relative bg-gray-50/30 dark:bg-gray-800/30">
         {activeConversation.messages.length === 1 && <div className="absolute inset-0 flex items-center justify-center text-muted-foreground text-sm pointer-events-none">
             <p>You started a conversation with {composer.name.split(' ').pop()}. Ask them about their music.</p>
           </div>}
@@ -139,7 +146,7 @@ export function ChatInterface({
         {activeConversation?.messages.map((message: Message, index) => <div key={message.id} className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
             <div className={message.sender === 'user'
               ? 'max-w-[80%] rounded-2xl px-4 py-2 bg-primary text-primary-foreground ml-auto shadow-sm'
-              : 'max-w-[80%] rounded-2xl px-4 py-2 text-foreground bg-white/70 dark:bg-gray-800/70 shadow-sm'}>
+              : 'max-w-[80%] rounded-2xl px-4 py-2 text-foreground'}>
               {message.text}
             </div>
           </div>)}
