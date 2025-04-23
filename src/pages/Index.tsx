@@ -50,7 +50,7 @@ const Index = () => {
       <div
         className={`
           fixed inset-x-0 top-0 z-40
-          bg-background/95 backdrop-blur-sm border-b border-border shadow-lg
+          bg-background backdrop-blur-sm border-b border-border shadow-lg
           transition-transform duration-500 ease-[cubic-bezier(0.25, 0.8, 0.25, 1)]
           ${isMenuOpen ? 'translate-y-0' : '-translate-y-full pointer-events-none'}
           overflow-y-scroll max-h-screen
