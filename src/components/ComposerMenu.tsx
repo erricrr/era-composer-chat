@@ -22,7 +22,7 @@ export function ComposerMenu({
   return (
     <div className="container mx-auto px-4 py-6 flex flex-col h-full overflow-y-auto">
       <h1 className="text-3xl font-bold text-center font-serif mt-2 mb-4 mx-[30px]">
-        {selectedEra === Era.Modern ? '20th-21st Century' : selectedEra} Composers
+        {selectedEra === Era.Modern ? '20th-21st Century' : selectedEra} Era Composers
       </h1>
 
       <Timeline selectedEra={selectedEra} onSelectEra={setSelectedEra} />

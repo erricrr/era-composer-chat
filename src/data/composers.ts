@@ -1,4 +1,3 @@
-
 export interface Composer {
   id: string;
   name: string;
@@ -18,29 +17,29 @@ export enum Era {
 }
 
 export const eras = [
-  { 
-    id: "baroque", 
-    name: Era.Baroque, 
+  {
+    id: "baroque",
+    name: Era.Baroque,
     period: "1600-1750",
-    description: "Known for ornate compositions, complex counterpoint, and the music of Bach, Handel, and Vivaldi." 
+    description: "A period of grandeur and drama in music, known for its intricate polyphony (counterpoint), ornate melodic decorations, use of the basso continuo for harmonic foundation, and the flourishing of opera, concerto, and fugue."
   },
-  { 
-    id: "classical", 
-    name: Era.Classical, 
+  {
+    id: "classical",
+    name: Era.Classical,
     period: "1750-1820",
-    description: "Characterized by elegance, clarity, and the works of Mozart, Haydn, and early Beethoven."
+    description: "This era emphasized clarity, balance, elegance, and formal structure, particularly sonata form. It saw the refinement of the symphony, string quartet, and piano sonata, featuring well-defined melodies and clear harmonic progressions."
   },
-  { 
-    id: "romantic", 
-    name: Era.Romantic, 
+  {
+    id: "romantic",
+    name: Era.Romantic,
     period: "1820-1900",
-    description: "Defined by emotional expression, nationalism, and composers like Chopin, Tchaikovsky, and Brahms."
+    description: "Characterized by heightened emotional expression, individualism, and often drawing inspiration from literature, nature, and national identity. Music features lyrical melodies, rich and often chromatic harmonies, expanded orchestras, and greater dynamic contrasts."
   },
-  { 
-    id: "modern", 
-    name: Era.Modern, 
+  {
+    id: "modern",
+    name: Era.Modern,
     period: "1900-Present",
-    description: "Diverse styles including impressionism, atonality, and minimalism with composers like Debussy, Stravinsky, and Glass."
+    description: "A time of immense experimentation and stylistic diversity, challenging traditional tonality and form. Encompasses Impressionism's focus on atmosphere, Neoclassicism's return to earlier forms, the structured atonality of serialism, the repetitive patterns of Minimalism, and the advent of electronic music."
   }
 ];
 
@@ -77,7 +76,7 @@ export const composers: Composer[] = [
     image: "https://upload.wikimedia.org/wikipedia/commons/b/bd/Vivaldi.jpg",
     famousWorks: ["The Four Seasons", "Gloria", "L'Olimpiade"]
   },
-  
+
   // Classical Era
   {
     id: "mozart",
@@ -109,7 +108,7 @@ export const composers: Composer[] = [
     image: "https://upload.wikimedia.org/wikipedia/commons/0/05/Joseph_Haydn.jpg",
     famousWorks: ["The Creation", "Symphony No. 94 (Surprise)", "String Quartets Op. 76"]
   },
-  
+
   // Romantic Era
   {
     id: "chopin",
@@ -141,7 +140,7 @@ export const composers: Composer[] = [
     image: "https://upload.wikimedia.org/wikipedia/commons/1/15/JohannesBrahms.jpg",
     famousWorks: ["Symphony No. 4", "Ein deutsches Requiem", "Hungarian Dances"]
   },
-  
+
   // Modern Era
   {
     id: "debussy",
