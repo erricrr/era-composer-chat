@@ -103,7 +103,7 @@ export function ChatInterface({
   <div className="flex items-center justify-between p-4 border-b shadow-sm bg-primary/10">
     <div className="flex items-center space-x-6">
       <div
-        className="w-24 h-24 rounded-full overflow-hidden border-2 border-primary/30 flex-shrink-0 cursor-pointer"
+        className="w-20 h-20 rounded-full overflow-hidden border-2 border-primary/30 flex-shrink-0 cursor-pointer"
         onClick={() => setImageModalOpen(true)}
       >
         <img
@@ -115,13 +115,11 @@ export function ChatInterface({
       <div className="flex flex-col items-start">
         <h2 className="font-serif font-bold text-lg">{composer.name}</h2>
         <div className="flex items-center gap-2 mt-1">
-          <p className="text-xs text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             {composer.country}, {composer.years}
           </p>
           <Badge
-            variant="secondary"
-            className="border border-secondary/30 bg-secondary/20 ml-2"
-          >
+            variant="default" className="ml-2"         >
             {getEraDisplayText(composer.era)}
           </Badge>
         </div>
