@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, KeyboardEvent } from 'react';
-import { Composer, Message } from '@/data/composers';
+import { Composer, Message, Era } from '@/data/composers';
 import { useConversations } from '@/hooks/useConversations';
 import { Button } from '@/components/ui/button';
 import { RefreshCcw } from 'lucide-react';
@@ -25,6 +25,11 @@ export function ChatInterface({
     startConversation,
     addMessage
   } = useConversations();
+
+  // Format era display text
+  const getEraDisplayText = (era: string): string => {
+    return era === Era.Modern ? '20th-21st Century' : era;
+  };
 
   useEffect(() => {
     if (!activeConversation) {
@@ -100,8 +105,10 @@ export function ChatInterface({
           <div className="ml-3">
             <div className="flex items-center gap-2">
               <h2 className="font-serif font-bold">{composer.name}</h2>
-              <Badge variant="secondary">
-                {composer.era}
+              <Badge variant="secondary" 
+              className="border border-secondary/30 bg-secondary/20"
+              >
+                {getEraDisplayText(composer.era)}
               </Badge>
             </div>
             <p className="text-xs text-muted-foreground">{composer.years} • {composer.country}</p>
