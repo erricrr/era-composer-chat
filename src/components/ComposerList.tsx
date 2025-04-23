@@ -33,7 +33,7 @@ export function ComposerList({
     <div className="w-full mt-4">
       <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-8">
         {/* Left side - Scrolling composers */}
-        <ScrollArea className="w-full bg-card dark:bg-sidebar/40 rounded-lg p-3">
+        <ScrollArea className="w-full bg-card dark:bg-foreground/2 rounded-lg p-3">
           <div className="flex flex-row md:flex-col space-x-4 md:space-x-0 md:space-y-4 w-max md:w-full pb-4">
             {composers.map(composer => <ComposerCard key={composer.id} composer={composer} onClick={onSelectComposer} isSelected={selectedComposer?.id === composer.id} />)}
           </div>
@@ -43,9 +43,9 @@ export function ComposerList({
 
     {/* Right side - Biography with horizontal layout */}
 {selectedComposer && (
-  <div className="bg-card dark:bg-sidebar/40 rounded-lg p-4 flex flex-col max-h-[70vh] md:max-h-none overflow-y-auto">
+  <div className="rounded-lg p-4 flex flex-col max-h-[70vh] md:max-h-none overflow-y-auto">
     {/* Header with horizontal layout */}
-    <div className="flex items-center space-x-6 mb-6">
+    <div className="flex items-center space-x-6 mb-3">
       <div
         className="w-24 h-24 rounded-full overflow-hidden border-2 border-primary/30 flex-shrink-0 cursor-pointer"
         onClick={() => setImageModalOpen(true)}

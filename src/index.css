@@ -7,85 +7,86 @@
 @layer base {
   :root {
     /* Light mode theme */
-    --background: 38 33% 94%;
-    --foreground: 220 20% 20%;
+    --background: 38 33% 94%; /* Light blueish-gray */
+    --foreground: 220 20% 20%; /* Dark gray, almost black */
 
-    --card: 38 33% 97%;
-    --card-foreground: 220 20% 20%;
+    --card: 38 33% 97%; /* Very light gray, almost white */
+    --card-foreground: 220 20% 20%; /* Dark gray, almost black */
 
-    --popover: 38 33% 97%;
-    --popover-foreground: 220 20% 20%;
+    --popover: 38 33% 97%; /* Very light gray, almost white */
+    --popover-foreground: 220 20% 20%; /* Dark gray, almost black */
 
-    --primary: 36 32% 40%;
-    --primary-foreground: 38 33% 97%;
+    --primary: 36 32% 40%; /* Dark gray */
+    --primary-foreground: 38 33% 97%; /* Very light gray, almost white */
 
-    --secondary: 38 33% 90%;
-    --secondary-foreground: 36 32% 40%;
+    --secondary: 38 33% 90%; /* Light gray */
+    --secondary-foreground: 36 32% 40%; /* Dark gray */
 
-    --muted: 38 33% 90%;
-    --muted-foreground: 36 30% 40%;
+    --muted: 38 33% 90%; /* Light gray */
+    --muted-foreground: 36 30% 40%; /* Dark gray */
 
-    --accent: 24 40% 70%;
-    --accent-foreground: 36 32% 20%;
+    --accent: 24 40% 70%; /* Dark blue */
+    --accent-foreground: 36 32% 20%; /* Very dark gray, almost black */
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 38 33% 97%;
+    --destructive: 0 84.2% 60.2%; /* Bright red */
+    --destructive-foreground: 38 33% 97%; /* Very light gray, almost white */
 
-    --border: 38 33% 85%;
-    --input: 38 33% 85%;
-    --ring: 36 32% 40%;
+    --border: 38 33% 85%; /* Light gray */
+    --input: 38 33% 85%; /* Light gray */
+    --ring: 36 32% 40%; /* Dark gray */
 
     --radius: 0.5rem;
 
-    --sidebar-background: 38 33% 97%;
-    --sidebar-foreground: 36 32% 40%;
-    --sidebar-primary: 36 32% 40%;
-    --sidebar-primary-foreground: 38 33% 97%;
-    --sidebar-accent: 24 40% 70%;
-    --sidebar-accent-foreground: 36 32% 20%;
-    --sidebar-border: 38 33% 85%;
-    --sidebar-ring: 36 32% 40%;
+    --sidebar-background: 38 33% 97%; /* Very light gray, almost white */
+    --sidebar-foreground: 36 32% 40%; /* Dark gray */
+    --sidebar-primary: 36 32% 40%; /* Dark gray */
+    --sidebar-primary-foreground: 38 33% 97%; /* Very light gray, almost white */
+    --sidebar-accent: 24 40% 70%; /* Dark blue */
+    --sidebar-accent-foreground: 36 32% 20%; /* Very dark gray, almost black */
+    --sidebar-border: 38 33% 85%; /* Light gray */
+    --sidebar-ring: 36 32% 40%; /* Dark gray */
   }
 
   .dark {
     /* Dark mode theme */
-    --background: 220 20% 12%;
-    --foreground: 38 33% 94%;
+    --background: 220 20% 12%; /* Very dark gray, almost black */
+    --foreground: 38 33% 94%; /* Light blueish-gray */
 
-    --card: 220 20% 15%;
-    --card-foreground: 38 33% 94%;
+    --card: 220 20% 15%; /* Dark gray */
+    --card-foreground: 38 33% 94%; /* Light blueish-gray */
 
-    --popover: 220 20% 15%;
-    --popover-foreground: 38 33% 94%;
+    --popover: 220 20% 15%; /* Dark gray */
+    --popover-foreground: 38 33% 94%; /* Light blueish-gray */
 
-    --primary: 36 30% 60%;
-    --primary-foreground: 220 20% 12%;
+    --primary: 36 30% 60%; /* Gray */
+    --primary-foreground: 220 20% 12%; /* Very dark gray, almost black */
 
-    --secondary: 220 20% 18%;
-    --secondary-foreground: 38 33% 94%;
+    --secondary: 220 20% 18%; /* Dark gray */
+    --secondary-foreground: 38 33% 94%; /* Light blueish-gray */
 
-    --muted: 220 20% 18%;
-    --muted-foreground: 38 33% 70%;
+    --muted: 220 20% 18%; /* Dark gray */
+    --muted-foreground: 38 33% 70%; /* Light gray */
 
-    --accent: 24 40% 35%;
-    --accent-foreground: 38 33% 94%;
+    --accent: 24 40% 35%; /* Dark blue */
+    --accent-foreground: 38 33% 94%; /* Light blueish-gray */
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 38 33% 94%;
+    --destructive: 0 62.8% 30.6%; /* Dark red */
+    --destructive-foreground: 38 33% 94%; /* Light blueish-gray */
 
-    --border: 220 20% 20%;
-    --input: 220 20% 20%;
-    --ring: 36 30% 60%;
-    
-    --sidebar-background: 220 20% 15%;
-    --sidebar-foreground: 38 33% 94%;
-    --sidebar-primary: 36 30% 60%;
-    --sidebar-primary-foreground: 220 20% 12%;
-    --sidebar-accent: 220 20% 18%;
-    --sidebar-accent-foreground: 38 33% 94%;
-    --sidebar-border: 220 20% 20%;
-    --sidebar-ring: 36 30% 60%;
+    --border: 220 20% 20%; /* Dark gray */
+    --input: 220 20% 20%; /* Dark gray */
+    --ring: 36 30% 60%; /* Gray */
+
+    --sidebar-background: 220 20% 15%; /* Dark gray */
+    --sidebar-foreground: 38 33% 94%; /* Light blueish-gray */
+    --sidebar-primary: 36 30% 60%; /* Gray */
+    --sidebar-primary-foreground: 220 20% 12%; /* Very dark gray, almost black */
+    --sidebar-accent: 220 20% 18%; /* Dark gray */
+    --sidebar-accent-foreground: 38 33% 94%; /* Light blueish-gray */
+    --sidebar-border: 220 20% 20%; /* Dark gray */
+    --sidebar-ring: 36 30% 60%; /* Gray */
   }
+
 }
 
 @layer base {
