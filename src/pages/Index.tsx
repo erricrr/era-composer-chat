@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Composer } from '@/data/composers';
 import { ComposerMenu } from '@/components/ComposerMenu';
@@ -30,7 +29,6 @@ const Index = () => {
     }
   };
 
-
   const toggleMenu = () => {
     if (!isMenuOpen) {
       setIsChatting(false);
@@ -45,29 +43,28 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       {/* Background Decoration */}
       <MusicNoteDecoration />
-
       {/* Theme Toggle */}
       <ThemeToggle />
 
-  {/* Composer Selection Menu - Updated animation */}
-  <div
-    className={`
-      fixed inset-x-0 top-0 z-40
-      bg-background/95 backdrop-blur-sm border-b border-border shadow-lg
-      transition-transform duration-500 ease-[cubic-bezier(0.25, 0.8, 0.25, 1)]
-      ${isMenuOpen ? 'translate-y-0' : '-translate-y-full pointer-events-none'}
-      overflow-y-auto
-    `}
-  >
-    <ComposerMenu
-      onSelectComposer={handleSelectComposer}
-      onStartChat={handleStartChat}
-      selectedComposer={selectedComposer}
-      isOpen={isMenuOpen}
-    />
-  </div>
-
-
+      {/* Composer Selection Menu - With max height and forced scrollbar */}
+      <div
+        className={`
+          fixed inset-x-0 top-0 z-40
+          bg-background/95 backdrop-blur-sm border-b border-border shadow-lg
+          transition-transform duration-500 ease-[cubic-bezier(0.25, 0.8, 0.25, 1)]
+          ${isMenuOpen ? 'translate-y-0' : '-translate-y-full pointer-events-none'}
+          overflow-y-scroll max-h-screen
+        `}
+      >
+        <div className="pb-20"> {/* Add padding at bottom to ensure content is visible */}
+          <ComposerMenu
+            onSelectComposer={handleSelectComposer}
+            onStartChat={handleStartChat}
+            selectedComposer={selectedComposer}
+            isOpen={isMenuOpen}
+          />
+        </div>
+      </div>
 
       {/* Menu Toggle Button */}
       <button
@@ -90,9 +87,9 @@ const Index = () => {
         </svg>
       </button>
 
-      {/* Chat Interface without slide-in animation */}
+      {/* Chat Interface */}
       <div
-        className="fixed inset-x-0 bottom-0 opacity-100 pointer-events-auto"
+        className="fixed inset-x-0 bottom-0 overflow-y-auto"
         style={{
           height: 'calc(100vh - 0rem)',
           backdropFilter: 'blur(8px)',
@@ -108,7 +105,6 @@ const Index = () => {
           </div>
         )}
       </div>
-
     </div>
   );
 }
