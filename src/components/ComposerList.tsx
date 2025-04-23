@@ -2,9 +2,10 @@
 import { Composer, Era, getComposersByEra } from '@/data/composers';
 import { ComposerCard } from './ComposerCard';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { ImageModal } from './ImageModal'; // Adjust the import path as needed
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 interface ComposerListProps {
   era: Era;
@@ -20,6 +21,7 @@ export function ComposerList({
   onStartChat
 }: ComposerListProps) {
   const composers = getComposersByEra(era);
+  const [imageModalOpen, setImageModalOpen] = useState(false);
 
   useEffect(() => {
     if (!selectedComposer && composers.length > 0) {
@@ -39,42 +41,59 @@ export function ComposerList({
           <ScrollBar orientation="vertical" className="hidden md:flex" />
         </ScrollArea>
 
-        {/* Right side - Biography with horizontal layout */}
-        {selectedComposer && (
-          <div className="bg-card dark:bg-sidebar/40 rounded-lg p-4 flex flex-col max-h-[70vh] md:max-h-none overflow-y-auto">
-            {/* Header with horizontal layout */}
-            <div className="flex items-center space-x-6 mb-6">
-              <img src={selectedComposer.image} alt={selectedComposer.name} className="w-24 h-24 rounded-full object-cover border-2 border-primary/30 flex-shrink-0" />
-              <div className="flex flex-col items-start">
-                <h3 className="text-2xl font-bold font-serif">{selectedComposer.name}</h3>
-                <div className="flex items-center gap-2 mt-1">
-                  <span className="text-sm text-muted-foreground">
-                    {selectedComposer.country}, {selectedComposer.years}
-                  </span>
-                  <Badge variant="secondary" className="border border-secondary/30 bg-secondary/20 ml-2">
-                    {era === Era.Modern ? '20th-21st Century' : era}
-                  </Badge>
-                </div>
-              </div>
-            </div>
+    {/* Right side - Biography with horizontal layout */}
+{selectedComposer && (
+  <div className="bg-card dark:bg-sidebar/40 rounded-lg p-4 flex flex-col max-h-[70vh] md:max-h-none overflow-y-auto">
+    {/* Header with horizontal layout */}
+    <div className="flex items-center space-x-6 mb-6">
+      <div
+        className="w-24 h-24 rounded-full overflow-hidden border-2 border-primary/30 flex-shrink-0 cursor-pointer"
+        onClick={() => setImageModalOpen(true)}
+      >
+        <img
+          src={selectedComposer.image}
+          alt={selectedComposer.name}
+          className="w-full h-full object-cover"
+        />
+      </div>
+      <div className="flex flex-col items-start">
+        <h3 className="text-2xl font-bold font-serif">{selectedComposer.name}</h3>
+        <div className="flex items-center gap-2 mt-1">
+          <span className="text-sm text-muted-foreground">
+            {selectedComposer.country}, {selectedComposer.years}
+          </span>
+          <Badge variant="secondary" className="border border-secondary/30 bg-secondary/20 ml-2">
+            {era === Era.Modern ? '20th-21st Century' : era}
+          </Badge>
+        </div>
+      </div>
+    </div>
 
-            {/* Biography and works */}
-            <ScrollArea className="flex-grow mb-6 overflow-y-auto">
-              <p className="text-sm text-foreground/90 mb-6">{selectedComposer.bio}</p>
-              <div>
-                <h4 className="font-semibold mb-2">Notable Works</h4>
-                <ul className="list-disc pl-5 space-y-1">
-                  {selectedComposer.famousWorks.slice(0, 3).map((work, index) => <li key={index} className="text-sm text-foreground/80">{work}</li>)}
-                </ul>
-              </div>
-            </ScrollArea>
+    {/* Biography and works */}
+    <ScrollArea className="flex-grow mb-6 overflow-y-auto">
+      <p className="text-sm text-foreground/90 mb-6">{selectedComposer.bio}</p>
+      <div>
+        <h4 className="font-semibold mb-2">Notable Works</h4>
+        <ul className="list-disc pl-5 space-y-1">
+          {selectedComposer.famousWorks.slice(0, 3).map((work, index) => <li key={index} className="text-sm text-foreground/80">{work}</li>)}
+        </ul>
+      </div>
+    </ScrollArea>
 
-            {/* Start Conversation button with full width and bottom positioning */}
-            <Button onClick={() => onStartChat(selectedComposer)} className="w-full bg-primary text-primary-foreground hover:bg-primary/90 transition-transform duration-300 hover:scale-[1.02] mt-auto">
-              Start Conversation
-            </Button>
-          </div>
-        )}
+    {/* Start Conversation button with full width and bottom positioning */}
+    <Button onClick={() => onStartChat(selectedComposer)} className="w-full bg-primary text-primary-foreground hover:bg-primary/90 transition-transform duration-300 hover:scale-[1.02] mt-auto">
+      Start Conversation
+    </Button>
+  </div>
+)}
+
+{/* Image Modal component */}
+<ImageModal
+  isOpen={imageModalOpen}
+  onClose={() => setImageModalOpen(false)}
+  imageSrc={selectedComposer?.image}
+  composerName={selectedComposer?.name}
+/>
       </div>
     </div>
   );
