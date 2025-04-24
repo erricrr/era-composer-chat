@@ -7,7 +7,6 @@ interface ComposerCardProps {
 }
 
 export function ComposerCard({ composer, onClick, isSelected }: ComposerCardProps) {
-  const isHoverStyle = !isSelected;
 
   return (
     <div
