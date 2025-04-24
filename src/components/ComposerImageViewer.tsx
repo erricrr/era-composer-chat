@@ -23,7 +23,7 @@ export function ComposerImageViewer({
   return (
     <>
       <div
-        className={`${sizeClasses[size]} rounded-full overflow-hidden border-2 border-primary/30 flex-shrink-0 cursor-pointer ${className}`}
+        className={`${sizeClasses[size]} rounded-full overflow-hidden border-2 border-primary flex-shrink-0 cursor-pointer ${className}`}
         onClick={() => setImageModalOpen(true)}
       >
         <img
