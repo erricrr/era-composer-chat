@@ -7,6 +7,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { ImageModal } from './ImageModal';
 import { Badge } from "@/components/ui/badge";
 import { v4 as uuidv4 } from 'uuid';
+import { ComposerImageViewer } from './ComposerImageViewer';
 
 interface ChatInterfaceProps {
   composer: Composer;
@@ -138,16 +139,7 @@ export function ChatInterface({
   return   <div className="flex flex-col h-full bg-background/60 backdrop-blur-sm rounded-lg overflow-hidden z-10 shadow-md">
   <div className="flex items-center justify-between p-4 border-b shadow-sm bg-primary/10">
     <div className="flex items-center space-x-6">
-      <div
-        className="w-20 h-20 rounded-full overflow-hidden border-2 border-primary/30 flex-shrink-0 cursor-pointer"
-        onClick={() => setImageModalOpen(true)}
-      >
-        <img
-          src={composer.image}
-          alt={composer.name}
-          className="w-full h-full object-cover"
-        />
-      </div>
+      <ComposerImageViewer composer={composer} size="sm" />
       <div className="flex flex-col items-start">
         <h2 className="font-serif font-bold text-lg">{composer.name}</h2>
         <div className="flex items-center gap-2 mt-1">
@@ -225,8 +217,6 @@ export function ChatInterface({
           </p>
         </div>
       </form>
-
-      <ImageModal isOpen={imageModalOpen} onClose={() => setImageModalOpen(false)} imageSrc={composer.image} composerName={composer.name} />
     </div>;
 }
 

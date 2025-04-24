@@ -1,4 +1,3 @@
-
 import { Composer, Era, getComposersByEra } from '@/data/composers';
 import { ComposerCard } from './ComposerCard';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
@@ -6,6 +5,7 @@ import { ImageModal } from './ImageModal'; // Adjust the import path as needed
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useEffect, useState } from 'react';
+import { ComposerImageViewer } from './ComposerImageViewer';
 
 interface ComposerListProps {
   era: Era;
@@ -46,16 +46,7 @@ export function ComposerList({
   <div className="rounded-lg p-4 flex flex-col max-h-[70vh] md:max-h-none overflow-y-auto">
     {/* Header with horizontal layout */}
     <div className="flex items-center space-x-6 mb-3">
-      <div
-        className="w-24 h-24 rounded-full overflow-hidden border-2 border-primary/30 flex-shrink-0 cursor-pointer"
-        onClick={() => setImageModalOpen(true)}
-      >
-        <img
-          src={selectedComposer.image}
-          alt={selectedComposer.name}
-          className="w-full h-full object-cover"
-        />
-      </div>
+      <ComposerImageViewer composer={selectedComposer} />
       <div className="flex flex-col items-start">
         <h3 className="text-2xl font-bold font-serif">{selectedComposer.name}</h3>
         <div className="flex items-center gap-2 mt-1">
@@ -86,14 +77,6 @@ export function ComposerList({
     </Button>
   </div>
 )}
-
-{/* Image Modal component */}
-<ImageModal
-  isOpen={imageModalOpen}
-  onClose={() => setImageModalOpen(false)}
-  imageSrc={selectedComposer?.image}
-  composerName={selectedComposer?.name}
-/>
       </div>
     </div>
   );
