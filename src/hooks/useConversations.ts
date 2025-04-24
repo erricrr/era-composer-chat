@@ -1,10 +1,8 @@
 import { useState, useCallback, useMemo } from 'react';
 import { useLocalStorage } from './useLocalStorage';
 import { Conversation, Message, Composer } from '@/data/composers';
-import { getComposerIntroduction } from '@/data/composerIntroductions';
 import { v4 as uuidv4 } from 'uuid';
 
-const MAX_CONVERSATIONS_PER_ERA = 3;
 
 export function useConversations() {
   const [conversations, setConversations] = useLocalStorage<Conversation[]>('composer-conversations', []);
@@ -14,9 +12,20 @@ export function useConversations() {
   const activeConversation = useMemo(() => {
     // Log when useMemo runs and the dependencies
     console.log('[useConversations] useMemo calculating activeConversation. ID:', activeConversationId);
+
+    if (!activeConversationId) {
+      console.log('[useConversations] No active conversation ID set');
+      return null;
+    }
+
     const foundConv = conversations.find(conv => conv.id === activeConversationId) || null;
     // Log the result
     console.log('[useConversations] useMemo found conversation:', foundConv);
+
+    if (!foundConv) {
+      console.log(`[useConversations] Warning: Active conversation ID ${activeConversationId} not found in conversations`);
+    }
+
     return foundConv;
   }, [conversations, activeConversationId]);
 
@@ -30,17 +39,30 @@ export function useConversations() {
       lastUpdated: Date.now()
     };
 
-    // Directly use the new conversation without the greeting
-    setConversations(prev => [...prev, newConversation]);
+    console.log(`[useConversations] Starting new conversation with composer ${composer.id}, new ID: ${newConversation.id}`);
+
+    // Use functional update to ensure we have latest state
+    setConversations(prev => {
+      const newConversations = [...prev, newConversation];
+      console.log(`[useConversations] Added new conversation. Total conversations: ${newConversations.length}`);
+      return newConversations;
+    });
+
+    // Set the active conversation ID
     setActiveConversationId(newConversation.id);
+    console.log(`[useConversations] Set active conversation ID to: ${newConversation.id}`);
+
     return newConversation.id;
-  }, [setConversations]);
+  }, [setConversations, setActiveConversationId]);
 
   // Add message to conversation
   const addMessage = useCallback((conversationId: string, text: string, sender: 'user' | 'composer'): void => {
-    if (!conversationId) return;
+    if (!conversationId) {
+      console.error('[useConversations] Cannot add message: No conversation ID provided');
+      return;
+    }
 
-    console.log(`[useConversations] addMessage called for convId: ${conversationId}, sender: ${sender}, text: ${text}`);
+    console.log(`[useConversations] addMessage called for convId: ${conversationId}, sender: ${sender}`);
 
     const newMessage: Message = {
       id: uuidv4(),
@@ -49,19 +71,70 @@ export function useConversations() {
       timestamp: Date.now()
     };
 
+    // Log the message being added for debugging
+    console.log(`[useConversations] Adding message type: ${sender}`);
+
+    // Try to read directly from localStorage first to ensure we have latest data
+    try {
+      const storedData = localStorage.getItem('composer-conversations');
+      if (storedData) {
+        const storedConversations = JSON.parse(storedData);
+        const conversationIndex = storedConversations.findIndex((c: Conversation) => c.id === conversationId);
+
+        if (conversationIndex !== -1) {
+          // Update the conversation directly in the parsed localStorage data
+          const updatedConversation = {
+            ...storedConversations[conversationIndex],
+            messages: [...storedConversations[conversationIndex].messages, newMessage],
+            lastUpdated: Date.now()
+          };
+
+          // Replace the conversation in the array
+          storedConversations[conversationIndex] = updatedConversation;
+
+          // Save back to localStorage
+          localStorage.setItem('composer-conversations', JSON.stringify(storedConversations));
+
+          // Update React state to match localStorage
+          setConversations(storedConversations);
+
+          console.log(`[useConversations] Directly updated localStorage. Conversation now has ${updatedConversation.messages.length} messages.`);
+
+          // Finished direct localStorage update
+          return;
+        }
+      }
+    } catch (e) {
+      console.error('[useConversations] Error updating localStorage directly:', e);
+      // Fall through to normal state update if direct localStorage update fails
+    }
+
+    // If we couldn't update localStorage directly, use the state update method as fallback
     setConversations(prev => {
-      console.log('[useConversations] setConversations - previous state:', prev);
-      const updated = prev.map(conv =>
-        conv.id === conversationId
-          ? {
-              ...conv,
-              messages: [...conv.messages, newMessage],
-              lastUpdated: Date.now()
-            }
-          : conv
-      );
-      console.log('[useConversations] setConversations - next state:', updated);
-      return updated;
+      // Make a shallow copy of previous conversations
+      const updatedConversations = [...prev];
+
+      // Find the conversation index
+      const conversationIndex = updatedConversations.findIndex(conv => conv.id === conversationId);
+
+      if (conversationIndex === -1) {
+        console.error(`[useConversations] Conversation ${conversationId} not found`);
+        return prev; // Return unchanged state
+      }
+
+      // Create a new conversation object with the message added
+      const updatedConversation = {
+        ...updatedConversations[conversationIndex],
+        messages: [...updatedConversations[conversationIndex].messages, newMessage],
+        lastUpdated: Date.now()
+      };
+
+      // Replace the old conversation with the updated one
+      updatedConversations[conversationIndex] = updatedConversation;
+
+      console.log(`[useConversations] Updated conversation ${conversationId} with message. Now has ${updatedConversation.messages.length} messages`);
+
+      return updatedConversations;
     });
   }, [setConversations]);
 

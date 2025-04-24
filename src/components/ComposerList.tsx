@@ -1,7 +1,6 @@
 import { Composer, Era, getComposersByEra } from '@/data/composers';
 import { ComposerCard } from './ComposerCard';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import { ImageModal } from './ImageModal'; // Adjust the import path as needed
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useEffect, useState } from 'react';
@@ -21,7 +20,6 @@ export function ComposerList({
   onStartChat
 }: ComposerListProps) {
   const composers = getComposersByEra(era);
-  const [imageModalOpen, setImageModalOpen] = useState(false);
 
   useEffect(() => {
     if (!selectedComposer && composers.length > 0) {
