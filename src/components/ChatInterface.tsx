@@ -27,7 +27,9 @@ export function ChatInterface({
     activeConversation,
     activeConversationId,
     startConversation,
-    addMessage
+    addMessage,
+    getConversationsForComposer,
+    setActiveConversationId
   } = useConversations();
   const [localMessages, setLocalMessages] = useState<Message[]>([]);
 
@@ -36,27 +38,42 @@ export function ChatInterface({
     return era === Era.Modern ? '20th-21st Century' : era;
   };
 
+  // Effect to handle composer changes and ensure correct conversation is loaded
   useEffect(() => {
-    if (!activeConversation) {
-      startConversation(composer);
+    const composerConversations = getConversationsForComposer(composer.id);
+    if (composerConversations.length > 0) {
+      // Use the most recent conversation for this composer
+      const mostRecentConversation = composerConversations.reduce((latest, current) =>
+        current.lastUpdated > latest.lastUpdated ? current : latest
+      );
+      setLocalMessages(mostRecentConversation.messages);
+      setActiveConversationId(mostRecentConversation.id); // Set the active conversation ID
+    } else {
+      // Start a new conversation for this composer
+      setLocalMessages([]);
+      const newConversationId = startConversation(composer);
+      // No need to set local messages here as the activeConversation effect will handle it
     }
-  }, [activeConversation, composer, startConversation]);
+  }, [composer.id, getConversationsForComposer, startConversation, setActiveConversationId]);
 
+  // Effect to update local messages when active conversation changes
+  useEffect(() => {
+    if (activeConversation && activeConversation.composerId === composer.id) {
+      setLocalMessages(activeConversation.messages);
+    }
+  }, [activeConversation, composer.id]);
+
+  // Scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({
       behavior: 'smooth'
     });
-  }, [activeConversation?.messages]);
+  }, [localMessages]);
 
-  useEffect(() => {
-    if (activeConversation && activeConversation.messages.length > 0) {
-      // Only update local messages if we're initializing or resetting
-      if (localMessages.length === 0) {
-        console.log('Initializing local messages from active conversation');
-        setLocalMessages(activeConversation.messages);
-      }
-    }
-  }, [activeConversation]);
+  // Don't show loading if we have local messages
+  if (!activeConversation && localMessages.length === 0) {
+    return <div className="flex items-center justify-center h-full">Loading conversation...</div>;
+  }
 
   const handleMessageSubmit = () => {
     if (!inputMessage.trim() || !activeConversationId) return;
@@ -130,11 +147,6 @@ export function ChatInterface({
     }
     return `Thank you for your interest in my work. I was a composer from the ${composer.era} era, known for ${composer.famousWorks[0]}. Is there anything specific about my compositions or life you would like to know?`;
   };
-
-  if (!activeConversation) {
-    return <div className="flex items-center justify-center h-full">Loading conversation...</div>;
-  }
-
 
   return   <div className="flex flex-col h-full bg-background/60 backdrop-blur-sm rounded-lg overflow-hidden z-10 shadow-md">
   <div className="flex items-center justify-between p-4 border-b shadow-sm bg-primary/10">

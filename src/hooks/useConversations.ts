@@ -21,12 +21,7 @@ export function useConversations() {
 
   // Start a new conversation with a composer
   const startConversation = useCallback((composer: Composer): string => {
-    // Clear existing conversation first
-    if (activeConversationId) {
-      setConversations(prev => prev.filter(conv => conv.id !== activeConversationId));
-    }
-
-    // Create new conversation with NO initial message
+    // Create new conversation
     const newConversation: Conversation = {
       id: uuidv4(),
       composerId: composer.id,
@@ -34,14 +29,27 @@ export function useConversations() {
       lastUpdated: Date.now()
     };
 
-    setConversations(prev => [...prev, newConversation]);
-    setActiveConversationId(newConversation.id);
-    return newConversation.id;
-  }, [conversations, setConversations, activeConversationId]);
+    // Add initial greeting message from composer
+    const initialMessage: Message = {
+      id: uuidv4(),
+      text: getComposerIntroduction(composer),
+      sender: 'composer',
+      timestamp: Date.now()
+    };
+
+    const conversationWithGreeting = {
+      ...newConversation,
+      messages: [initialMessage]
+    };
+
+    setConversations(prev => [...prev, conversationWithGreeting]);
+    setActiveConversationId(conversationWithGreeting.id);
+    return conversationWithGreeting.id;
+  }, [setConversations]);
 
   // Add message to conversation
   const addMessage = useCallback((conversationId: string, text: string, sender: 'user' | 'composer'): void => {
-    console.log('Adding message:', { conversationId, text, sender });
+    if (!conversationId) return;
 
     const newMessage: Message = {
       id: uuidv4(),
@@ -60,14 +68,14 @@ export function useConversations() {
             }
           : conv
       );
-      console.log('Updated conversations:', updated);
       return updated;
     });
   }, [setConversations]);
 
   // Get conversations for a specific composer
   const getConversationsForComposer = useCallback((composerId: string): Conversation[] => {
-    return conversations.filter(conv => conv.composerId === composerId);
+    return conversations.filter(conv => conv.composerId === composerId)
+      .sort((a, b) => b.lastUpdated - a.lastUpdated); // Sort by most recent first
   }, [conversations]);
 
   // Clear all conversations
