@@ -29,22 +29,10 @@ export function useConversations() {
       lastUpdated: Date.now()
     };
 
-    // Add initial greeting message from composer
-    const initialMessage: Message = {
-      id: uuidv4(),
-      text: getComposerIntroduction(composer),
-      sender: 'composer',
-      timestamp: Date.now()
-    };
-
-    const conversationWithGreeting = {
-      ...newConversation,
-      messages: [initialMessage]
-    };
-
-    setConversations(prev => [...prev, conversationWithGreeting]);
-    setActiveConversationId(conversationWithGreeting.id);
-    return conversationWithGreeting.id;
+    // Directly use the new conversation without the greeting
+    setConversations(prev => [...prev, newConversation]);
+    setActiveConversationId(newConversation.id);
+    return newConversation.id;
   }, [setConversations]);
 
   // Add message to conversation

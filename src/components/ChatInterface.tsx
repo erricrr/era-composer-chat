@@ -31,7 +31,6 @@ export function ChatInterface({
     getConversationsForComposer,
     setActiveConversationId
   } = useConversations();
-  const [localMessages, setLocalMessages] = useState<Message[]>([]);
 
   // Format era display text
   const getEraDisplayText = (era: string): string => {
@@ -46,51 +45,39 @@ export function ChatInterface({
       const mostRecentConversation = composerConversations.reduce((latest, current) =>
         current.lastUpdated > latest.lastUpdated ? current : latest
       );
-      setLocalMessages(mostRecentConversation.messages);
       setActiveConversationId(mostRecentConversation.id); // Set the active conversation ID
     } else {
       // Start a new conversation for this composer
-      setLocalMessages([]);
       const newConversationId = startConversation(composer);
-      // No need to set local messages here as the activeConversation effect will handle it
+      // The activeConversation effect below will handle setting the messages
     }
   }, [composer.id, getConversationsForComposer, startConversation, setActiveConversationId]);
-
-  // Effect to update local messages when active conversation changes
-  useEffect(() => {
-    if (activeConversation && activeConversation.composerId === composer.id) {
-      setLocalMessages(activeConversation.messages);
-    }
-  }, [activeConversation, composer.id]);
 
   // Scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({
       behavior: 'smooth'
     });
-  }, [localMessages]);
+  }, [activeConversation?.messages]);
 
-  // Don't show loading if we have local messages
-  if (!activeConversation && localMessages.length === 0) {
+  // Use activeConversation directly for loading state and messages
+  const messages = activeConversation?.messages || [];
+
+  // Updated loading condition
+  if (!activeConversation && messages.length === 0) {
+    // Added check for messages length to prevent brief flicker
     return <div className="flex items-center justify-center h-full">Loading conversation...</div>;
   }
 
   const handleMessageSubmit = () => {
     if (!inputMessage.trim() || !activeConversationId) return;
 
-    const userMessage: Message = {
-      id: uuidv4(),
-      text: inputMessage,
-      sender: 'user',
-      timestamp: Date.now()
-    };
+    // User message is added via addMessage hook below
+    const userText = inputMessage; // Capture input before clearing
 
-    // Update local state first
-    setLocalMessages(prev => [...prev, userMessage]);
-
-    // Then update conversation state
-    addMessage(activeConversationId, inputMessage, 'user');
-    setInputMessage('');
+    // Update conversation state via hook
+    addMessage(activeConversationId, userText, 'user');
+    setInputMessage(''); // Clear input after sending
 
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
@@ -99,21 +86,13 @@ export function ChatInterface({
     // Handle composer response
     setTimeout(() => {
       if (activeConversationId) {
-        const response = generatePlaceholderResponse(inputMessage, composer);
-        const composerMessage: Message = {
-          id: uuidv4(),
-          text: response,
-          sender: 'composer',
-          timestamp: Date.now()
-        };
+        const response = generatePlaceholderResponse(userText, composer); // Use captured userText
+        // Composer message is added via addMessage hook below
 
-        // Update local state first
-        setLocalMessages(prev => [...prev, composerMessage]);
-
-        // Then update conversation state
+        // Update conversation state via hook
         addMessage(activeConversationId, response, 'composer');
       }
-    }, 1000);
+    }, 1000); // Simulate API delay
   };
 
   const handleSendMessage = (e: React.FormEvent) => {
@@ -129,9 +108,9 @@ export function ChatInterface({
   };
 
   const handleResetChat = () => {
-    if (activeConversationId) {
-      setLocalMessages([]); // Clear local messages first
-      startConversation(composer);
+    if (composer) { // Ensure composer exists before starting
+      // Removed setLocalMessages([])
+      startConversation(composer); // This creates a new convo and sets it active
     }
   };
 
@@ -177,11 +156,13 @@ export function ChatInterface({
       </div>
 
       <div className="flex-1 overflow-y-auto p-4 space-y-4 relative bg-gray-50/30 dark:bg-gray-800/30">
-        {localMessages.length === 0 && <div className="absolute inset-0 flex items-center justify-center text-muted-foreground text-sm pointer-events-none">
+        {messages.length === 0 && (
+          <div className="absolute inset-0 flex items-center justify-center text-muted-foreground text-sm pointer-events-none">
             <p>Start a conversation with {composer.name.split(' ').pop()}. Ask them about their music.</p>
-          </div>}
+          </div>
+        )}
 
-        {localMessages.map((message: Message, index) => (
+        {messages.map((message: Message) => (
           <div key={message.id} className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
             <div className={message.sender === 'user'
               ? 'max-w-[80%] rounded-2xl px-4 py-2 bg-primary/80 text-background ml-auto shadow-sm'
