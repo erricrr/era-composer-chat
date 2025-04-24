@@ -13,36 +13,36 @@ export function Timeline({
         {/* Era labels with period */}
         <div className="flex justify-between mb-2">
           {eras.map(era => (
-            <div
-              key={era.id}
-              className="flex flex-col items-center w-1/4 group cursor-pointer"
-              onClick={() => onSelectEra(era.name)}
-            >
-              <div className="relative">
-                <h3 className={`text-lg md:text-xl text-center transition-colors duration-300
-                  ${selectedEra === era.name
-                    ? 'text-primary'
-                    : 'text-muted-foreground group-hover:text-primary/80'}`}
-                >
-                  {era.id === 'modern' ? '20th-21st Century' : era.name}
-                </h3>
-                {/* Underline effect instead of scale */}
-                <div className={`absolute -bottom-1 left-0 w-full h-[2px] transform origin-left
-                  transition-all duration-300 ease-out
-                  ${selectedEra === era.name
-                    ? 'bg-primary scale-x-100'
-                    : 'bg-primary/60 scale-x-0 group-hover:scale-x-100'}`}
-                />
-              </div>
-              <p className={`text-sm text-muted-foreground mt-2 text-center
-                transition-opacity duration-300
-                ${selectedEra === era.name
-                  ? 'opacity-100'
-                  : 'opacity-70 group-hover:opacity-100'}`}
-              >
-                ({era.period})
-              </p>
-            </div>
+                       <div
+                       key={era.id}
+                       className="flex flex-col items-center w-1/4 group cursor-pointer"
+                       onClick={() => onSelectEra(era.name)}
+                     >
+                       <div className="relative">
+                         <h3 className={`text-lg md:text-xl text-center transition-all duration-300 ease-out
+                           ${selectedEra === era.name
+                             ? 'text-primary scale-[1.02]'
+                             : 'text-muted-foreground group-hover:text-primary/80 group-hover:scale-[1.02]'}`}
+                         >
+                           {era.id === 'modern' ? '20th-21st Century' : era.name}
+                         </h3>
+                         {/* Enhanced underline effect */}
+                         <div className={`absolute -bottom-1 left-0 w-full h-[2px] transform origin-left
+                           transition-all duration-300 ease-out
+                           ${selectedEra === era.name
+                             ? 'bg-primary scale-x-100 h-[3px]'
+                             : 'bg-secondary/80 scale-x-0 group-hover:scale-x-100'}`}
+                         />
+                       </div>
+                       <p className={`text-sm text-muted-foreground mt-2 text-center
+                         transition-all duration-300 ease-out
+                         ${selectedEra === era.name
+                           ? 'opacity-100 scale-[1.02]'
+                           : 'opacity-70 group-hover:opacity-100 group-hover:scale-[1.02]'}`}
+                       >
+                         ({era.period})
+                       </p>
+                     </div>
           ))}
         </div>
 
@@ -56,21 +56,21 @@ export function Timeline({
           {/* Timeline nodes - aligned with text above */}
           <div className="flex justify-between relative px-1 h-full">
             {eras.map(era => (
-              <div
-                key={era.id}
-                className="flex flex-col items-center w-1/4"
-                onClick={() => onSelectEra(era.name)}
-              >
-                <button
-                  className={`w-4 h-4 rounded-full relative top-1/2 -translate-y-1/2
-                    transition-all duration-300
-                    ${selectedEra === era.name
-                      ? 'bg-primary border-2 border-background shadow-lg shadow-primary/20'
-                      : 'bg-background border-2 border-primary/60 hover:border-primary hover:shadow-md hover:shadow-primary/10'
-                    }`}
-                  aria-label={`Select ${era.name} era`}
-                />
-              </div>
+                          <div
+                          key={era.id}
+                          className="flex flex-col items-center w-1/4 relative z-10"
+                          onClick={() => onSelectEra(era.name)}
+                        >
+                         <button
+                          className={`w-4 h-4 rounded-full relative top-1/2 -translate-y-1/2
+                            transition-all duration-300 ease-out
+                            ${selectedEra === era.name
+                              ? 'bg-background border-[3px] border-primary shadow-lg shadow-primary/20 scale-110 z-10'
+                              : 'bg-background border-2 border-primary/60 hover:border-primary hover:shadow-md hover:shadow-primary/10 hover:scale-105 hover:bg-background z-10'
+                            }`}
+                          aria-label={`Select ${era.name} era`}
+                        />
+                        </div>
             ))}
           </div>
         </div>
