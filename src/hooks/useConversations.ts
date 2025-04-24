@@ -12,11 +12,12 @@ export function useConversations() {
 
   // Get active conversation
   const activeConversation = useMemo(() => {
-    console.log('Computing active conversation:', {
-      activeConversationId,
-      conversations
-    });
-    return conversations.find(conv => conv.id === activeConversationId) || null;
+    // Log when useMemo runs and the dependencies
+    console.log('[useConversations] useMemo calculating activeConversation. ID:', activeConversationId);
+    const foundConv = conversations.find(conv => conv.id === activeConversationId) || null;
+    // Log the result
+    console.log('[useConversations] useMemo found conversation:', foundConv);
+    return foundConv;
   }, [conversations, activeConversationId]);
 
   // Start a new conversation with a composer
@@ -39,6 +40,8 @@ export function useConversations() {
   const addMessage = useCallback((conversationId: string, text: string, sender: 'user' | 'composer'): void => {
     if (!conversationId) return;
 
+    console.log(`[useConversations] addMessage called for convId: ${conversationId}, sender: ${sender}, text: ${text}`);
+
     const newMessage: Message = {
       id: uuidv4(),
       text,
@@ -47,6 +50,7 @@ export function useConversations() {
     };
 
     setConversations(prev => {
+      console.log('[useConversations] setConversations - previous state:', prev);
       const updated = prev.map(conv =>
         conv.id === conversationId
           ? {
@@ -56,6 +60,7 @@ export function useConversations() {
             }
           : conv
       );
+      console.log('[useConversations] setConversations - next state:', updated);
       return updated;
     });
   }, [setConversations]);
