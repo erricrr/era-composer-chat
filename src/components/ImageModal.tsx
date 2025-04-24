@@ -24,7 +24,7 @@ export function ImageModal({ isOpen, onClose, imageSrc, composerName }: ImageMod
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm"
+      className="fixed inset-0 z-50 bg-white/70 dark:bg-black/70 backdrop-blur-sm"
       onClick={onClose}
       style={{ position: 'fixed', touchAction: 'none' }}
     >
