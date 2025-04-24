@@ -16,7 +16,11 @@ export function ComposerMenu({
   selectedComposer,
   isOpen
 }: ComposerMenuProps) {
-  const [selectedEra, setSelectedEra] = useState<Era>(Era.Baroque);
+  // Initialize era from localStorage or default to Baroque
+  const [selectedEra, setSelectedEra] = useState<Era>(() => {
+    const saved = localStorage.getItem('selectedEra');
+    return saved ? (saved as Era) : Era.Baroque;
+  });
   // State to remember the last selected composer for each era
   const [lastSelectedComposerPerEra, setLastSelectedComposerPerEra] = useState<Partial<Record<Era, Composer>>>({});
 
@@ -33,18 +37,17 @@ export function ComposerMenu({
   // Handle era changes
   const handleEraChange = (newEra: Era) => {
     setSelectedEra(newEra);
-    const rememberedComposer = lastSelectedComposerPerEra[newEra];
+    // Save to localStorage
+    localStorage.setItem('selectedEra', newEra);
 
-    // If we have a remembered composer for this era, select them
+    const rememberedComposer = lastSelectedComposerPerEra[newEra];
     if (rememberedComposer) {
       onSelectComposer(rememberedComposer);
     } else {
-      // Otherwise, select the first composer of the new era
       const composersInEra = getComposersByEra(newEra);
       if (composersInEra.length > 0) {
         onSelectComposer(composersInEra[0]);
       }
-      // Potentially handle the case where an era might have 0 composers, though unlikely based on current data
     }
   };
 
