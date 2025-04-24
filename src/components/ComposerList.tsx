@@ -71,7 +71,7 @@ export function ComposerList({
 
     {/* Start Conversation button with full width and bottom positioning */}
     <Button onClick={() => onStartChat(selectedComposer)} className="w-full bg-primary text-primary-foreground hover:bg-primary/90 transition-transform duration-300 hover:scale-[1.02] mt-auto">
-      Start Conversation
+      Start Conversation with {selectedComposer.name.split(' ').pop()}
     </Button>
   </div>
 )}

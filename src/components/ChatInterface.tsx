@@ -282,7 +282,7 @@ export function ChatInterface({
                 onUserTyping(true);
               }}
               onKeyDown={handleKeyPress}
-              placeholder={`Ask ${composer.name} a question...`}
+              placeholder={`Ask ${composer.name.split(' ').pop()} a question...`}
               className="w-full rounded-xl border bg-background/80 p-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary resize-none overflow-hidden min-h-[42px]"
               rows={1}
               onInput={e => {
