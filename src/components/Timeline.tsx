@@ -19,7 +19,7 @@ export function Timeline({
                        onClick={() => onSelectEra(era.name)}
                      >
                         <div className="relative">
-                         <h3 className={`text-lg md:text-xl text-center transition-all duration-300 ease-out
+                         <h3 className={`text-lg mb-1 md:text-xl text-center transition-all duration-300 ease-out
                            ${selectedEra === era.name
                              ? 'text-primary scale-[1.02]'
                              : 'text-muted-foreground group-hover:text-primary/80 group-hover:scale-[1.02]'}`}
