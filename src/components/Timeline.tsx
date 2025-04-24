@@ -31,7 +31,7 @@ export function Timeline({
                            transition-all duration-300 ease-out
                            ${selectedEra === era.name
                              ? 'bg-primary scale-x-100'
-                             : 'bg-secondary/80 scale-x-0 group-hover:scale-x-100'}`}
+                             : 'bg-primary/15 scale-x-0 group-hover:scale-x-100'}`}
                          />
                        </div>
                        <p className={`text-sm text-muted-foreground mt-2 text-center
