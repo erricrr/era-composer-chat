@@ -16,7 +16,7 @@ export function ComposerCard({ composer, onClick, isSelected }: ComposerCardProp
 
       ${isSelected
         ? 'bg-background shadow-md [&_h2]:text-primary [&_p]:opacity-90'
-        : 'hover:bg-secondary/50 hover:shadow-sm'}
+        : 'hover:bg-background/50 hover:shadow-sm'}
     `}
     onClick={() => onClick(composer)}
   >
