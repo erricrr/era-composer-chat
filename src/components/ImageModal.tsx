@@ -1,4 +1,6 @@
+// ImageModal.tsx
 import React from 'react';
+import { createPortal } from 'react-dom';
 
 interface ImageModalProps {
   isOpen: boolean;
@@ -28,12 +30,11 @@ export function ImageModal({
   React.useEffect(() => {
     if (isOpen) {
       setIsAnimating(true);
-      // Lock body scroll when modal opens
       document.body.style.overflow = 'hidden';
     } else {
       const timer = setTimeout(() => {
         setIsAnimating(false);
-      }, 200); // Match this with your CSS transition duration
+      }, 150);
       document.body.style.overflow = 'unset';
       return () => clearTimeout(timer);
     }
@@ -41,18 +42,31 @@ export function ImageModal({
 
   if (!isOpen && !isAnimating) return null;
 
-  return (
+  const modalContent = (
     <div
-      className={`fixed inset-0 bg-black/60 flex items-center justify-center p-4 transition-opacity duration-200 ${
-        isOpen ? 'opacity-100 z-[100]' : 'opacity-0 z-[-1]'
-      }`}
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 9999,
+        display: 'grid',
+        placeItems: 'center',
+        padding: '1rem',
+        background: 'rgba(0, 0, 0, 0.6)',
+        backdropFilter: 'blur(5px)',
+        opacity: isOpen ? 1 : 0,
+        transition: 'opacity 150ms ease-in-out',
+      }}
       onClick={onClose}
-      style={{ position: 'fixed', touchAction: 'none' }}
     >
       <div
-        className={`bg-[hsl(40,50%,98%)] dark:bg-[hsl(220,15%,18%)] rounded-lg shadow-xl max-w-lg w-full overflow-hidden border border-[hsl(45,30%,88%)] dark:border-[hsl(220,15%,25%)] transition-transform duration-200 ${
-          isOpen ? 'scale-100' : 'scale-95'
-        }`}
+        className="bg-[hsl(40,50%,98%)] dark:bg-[hsl(220,15%,18%)] rounded-lg shadow-xl w-full max-w-lg overflow-hidden border border-[hsl(45,30%,88%)] dark:border-[hsl(220,15%,25%)]"
+        style={{
+          transform: isOpen ? 'scale(1)' : 'scale(0.95)',
+          transition: 'transform 150ms ease-in-out',
+        }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal header */}
@@ -78,7 +92,7 @@ export function ImageModal({
           </button>
         </div>
 
-        {/* Image container with appropriate background colors */}
+        {/* Image container */}
         <div className="flex justify-center bg-[hsl(45,50%,96%)] dark:bg-[hsl(220,15%,15%)] p-4">
           <img
             src={imageSrc}
@@ -87,31 +101,13 @@ export function ImageModal({
           />
         </div>
 
-        {/* Caption area */}
-        {caption && (
-          <div className="px-4 py-3 text-sm text-[hsl(220,15%,25%)] dark:text-[hsl(40,30%,80%)] border-t border-[hsl(45,30%,88%)] dark:border-[hsl(220,15%,25%)]">
-            {caption}
-          </div>
-        )}
-
-        {/* Copyright information with link */}
+        {/* Copyright information */}
         <div className="px-4 py-2 text-xs text-[hsl(220,15%,45%)] dark:text-[hsl(40,20%,65%)] border-t border-[hsl(45,30%,88%)] dark:border-[hsl(220,15%,25%)] bg-[hsl(45,35%,90%)] dark:bg-[hsl(220,15%,22%)]">
-          {sourceUrl ? (
-            <span>
-              {copyright} • <a
-                href={sourceUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[hsl(210,30%,40%)] hover:text-[hsl(210,40%,55%)] dark:text-[hsl(40,70%,70%)] dark:hover:text-[hsl(40,75%,75%)] hover:underline focus:outline-none focus:ring-2 focus:ring-[hsl(210,40%,55%)] dark:focus:ring-[hsl(40,75%,75%)] rounded"
-              >
-                Source
-              </a>
-            </span>
-          ) : (
-            <span>{copyright}</span>
-          )}
+          <span>{copyright}</span>
         </div>
       </div>
     </div>
   );
+
+  return createPortal(modalContent, document.body);
 }
