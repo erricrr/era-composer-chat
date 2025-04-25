@@ -24,6 +24,8 @@ export function ChatInterface({
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const isMobile = useIsMobile();
+  const [shouldAutoScroll, setShouldAutoScroll] = useState(true);
+  const prevMessagesLengthRef = useRef(0);
 
   // Display state controlled entirely by this component
   const [currentMessages, setCurrentMessages] = useState<Message[]>([]);
@@ -68,6 +70,7 @@ export function ChatInterface({
 
     // Reset message display when changing composers
     setCurrentMessages([]);
+    setShouldAutoScroll(true); // Reset auto-scroll when composer changes
 
     const composerConversations = getConversationsForComposer(composer.id);
 
@@ -107,10 +110,30 @@ export function ChatInterface({
     }
   }, [composer.id, getConversationsForComposer, startConversation, setActiveConversationId]);
 
-  // Scroll to bottom when messages change
+  // Modified scroll effect to only scroll when new messages are added
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [currentMessages]);
+    // Only auto-scroll if shouldAutoScroll is true and messages were added (not loaded)
+    if (shouldAutoScroll && currentMessages.length > prevMessagesLengthRef.current) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+    prevMessagesLengthRef.current = currentMessages.length;
+  }, [currentMessages, shouldAutoScroll]);
+
+  // Add scroll listener to detect user scrolling
+  useEffect(() => {
+    const messageContainer = messagesEndRef.current?.parentElement;
+    if (!messageContainer) return;
+
+    const handleScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = messageContainer;
+      // If user scrolls up more than 100px from bottom, disable auto-scroll
+      const isNearBottom = scrollHeight - scrollTop - clientHeight < 100;
+      setShouldAutoScroll(isNearBottom);
+    };
+
+    messageContainer.addEventListener('scroll', handleScroll);
+    return () => messageContainer.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Add effect to handle composer list visibility
   useEffect(() => {
