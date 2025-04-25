@@ -18,12 +18,12 @@ export function ComposerCard({ composer, onClick, isSelected }: ComposerCardProp
     >
       {/* Left selection bar - active state */}
       {isSelected && (
-        <div className="absolute left-0 top-2 bottom-2 w-1.5 rounded-r-md bg-primary transition-all duration-300 ease-out" />
+        <div className="absolute left-0 top-2 bottom-2 w-1.5 rounded-r-md bg-primary transform origin-center transition-all duration-300 ease-out" />
       )}
 
       {/* Left selection bar - hover state (only shows when not selected) */}
       {!isSelected && (
-        <div className="absolute left-0 top-2 bottom-2 w-1.5 rounded-r-md bg-primary/15 opacity-0 scale-y-0 origin-center group-hover:opacity-100 group-hover:scale-y-100 transition-all duration-300 ease-out" />
+        <div className="absolute left-0 top-2 bottom-2 w-1.5 rounded-r-md bg-primary/15 opacity-0 scale-y-0 origin-center group-hover:opacity-100 group-hover:scale-y-100 transform transition-all duration-300 ease-out" />
       )}
 
       {/* Composer image */}

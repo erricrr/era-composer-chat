@@ -20,7 +20,7 @@ const FooterDrawer = () => {
         <Button
           variant="ghost"
           size="sm"
-          className="flex items-center gap-1 text-muted-foreground hover:bg-transparent hover:text-primary fixed bottom-0 right-0 m-4"
+          className="flex items-center gap-1 text-muted-foreground hover:bg-transparent hover:text-primary fixed top-4 right-16 z-50"
         >
           <FontAwesomeIcon icon={faInfoCircle} className="h-5 w-5" />
         </Button>

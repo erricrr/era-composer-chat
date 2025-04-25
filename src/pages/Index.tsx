@@ -5,6 +5,7 @@ import { ChatInterface } from '@/components/ChatInterface';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { MusicNoteDecoration } from '@/components/MusicNoteDecoration';
 import { useConversations } from '@/hooks/useConversations';
+import FooterDrawer from '@/components/ui/footerDrawer';
 
 const Index = () => {
   const [selectedComposer, setSelectedComposer] = useState<Composer | null>(() => {
@@ -69,8 +70,11 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       {/* Background Decoration */}
       <MusicNoteDecoration />
-      {/* Theme Toggle */}
-      <ThemeToggle />
+      {/* Theme Toggle and Info */}
+      <div className="fixed top-4 right-4 z-50 flex items-center gap-2">
+        <FooterDrawer />
+        <ThemeToggle />
+      </div>
 
       {/* Composer Selection Menu - With max height and forced scrollbar */}
       <div
