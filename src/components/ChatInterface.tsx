@@ -2,11 +2,12 @@ import { useState, useRef, useEffect, KeyboardEvent, useCallback } from 'react';
 import { Composer, Message, Era, Conversation } from '@/data/composers';
 import { useConversations } from '@/hooks/useConversations';
 import { Button } from '@/components/ui/button';
-import { RefreshCcw } from 'lucide-react';
+import { RefreshCcw , ArrowUp} from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Badge } from "@/components/ui/badge";
 import { v4 as uuidv4 } from 'uuid';
 import { ComposerImageViewer } from './ComposerImageViewer';
+
 
 interface ChatInterfaceProps {
   composer: Composer;
@@ -307,12 +308,14 @@ export function ChatInterface({
             />
           </div>
           <Button
-            type="submit"
-            disabled={!inputMessage.trim() || isComposerMenuOpen}
-            className={`px-4 h-10 mb-2.5 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors shrink-0 bg-primary text-background hover:opacity-90 self-end`}
-          >
-            Send
-          </Button>
+  type="submit"
+  disabled={!inputMessage.trim() || isComposerMenuOpen}
+  className="px-4 h-12 w-12 mb-2.5 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors shrink-0 bg-primary text-background hover:opacity-90 self-end flex items-center justify-center"
+>
+  <ArrowUp className="w-10 h-10" strokeWidth={3.5} />
+</Button>
+
+
         </div>
         <p className="text-xs text-muted-foreground text-center">
           AI-generated conversation from verified sources. Does not reflect {composer.name.split(' ').pop()}&apos;s personal views.
