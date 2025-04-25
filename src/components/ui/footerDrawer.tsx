@@ -13,7 +13,6 @@ import { Button } from "@/components/ui/button";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 
-
 const FooterDrawer = () => {
   return (
     <Drawer>
@@ -26,9 +25,9 @@ const FooterDrawer = () => {
           <FontAwesomeIcon icon={faInfoCircle} className="h-3.5 w-3.5" />
         </Button>
       </DrawerTrigger>
-      <DrawerContent className="h-[90vh] overflow-hidden flex flex-col">
-        <div className="flex flex-col h-full">
-          <DrawerHeader className="flex-none">
+      <DrawerContent>
+        <div className="flex flex-col max-h-[85vh]">
+          <DrawerHeader className="pb-2">
             <DrawerTitle className="text-center text-lg font-semibold text-primary">
               AI Composer Chat
             </DrawerTitle>
@@ -37,11 +36,10 @@ const FooterDrawer = () => {
             </DrawerDescription>
           </DrawerHeader>
 
-          {/* Main scrollable content */}
-          <div className="flex-1 overflow-y-auto px-4 min-h-0">
-            <div className="py-4 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              <div className="flex flex-col gap-2">
-                <h3 className="font-medium text-lg flex items-center gap-2 text-primary">
+          <div className="px-4 overflow-y-auto">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              <div className="space-y-1">
+                <h3 className="font-medium text-lg text-primary">
                   Educational Purpose
                 </h3>
                 <p className="text-sm text-muted-foreground">
@@ -50,17 +48,17 @@ const FooterDrawer = () => {
                   the stories behind famous works.
                 </p>
               </div>
-              <div className="flex flex-col gap-2">
-                <h3 className="font-medium text-lg flex items-center gap-2 text-primary">
+              <div className="space-y-1">
+                <h3 className="font-medium text-lg text-primary">
                   AI Generated Content
                 </h3>
                 <p className="text-sm text-muted-foreground">
-                Responses are AI generated and do not represent the actual views or words of the composers.
-                AI technology is used to create historically informed representations of composers.
+                  Responses are AI generated and do not represent the actual views or words of the composers.
+                  AI technology is used to create historically informed representations of composers.
                 </p>
               </div>
-              <div className="flex flex-col gap-2">
-                <h3 className="font-medium text-lg flex items-center gap-2 text-primary">
+              <div className="space-y-1">
+                <h3 className="font-medium text-lg text-primary">
                   Contact / Feedback
                 </h3>
                 <p className="text-sm text-muted-foreground">
@@ -69,8 +67,9 @@ const FooterDrawer = () => {
                 </p>
               </div>
             </div>
-            <div className="py-4 text-xs text-muted-foreground text-center">
-              <p className="mb-1">
+
+            <div className="mt-4 mb-2 text-xs text-muted-foreground text-center">
+              <p>
                 Privacy Policy: We do not collect or store personal data. Chat conversations are not permanently stored.
               </p>
               <p>
@@ -79,13 +78,12 @@ const FooterDrawer = () => {
             </div>
           </div>
 
-          {/* Footer - always visible at bottom */}
-          <DrawerFooter className="flex-none border-t border-border mt-auto">
-            <p className="text-xs text-muted-foreground pb-2">
-              &copy; {new Date().getFullYear()} AI Composer Chat - An educational tool for exploring classical music
+          <DrawerFooter className="mt-auto border-t border-border">
+            <p className="text-xs text-muted-foreground text-center">
+              © {new Date().getFullYear()} AI Composer Chat - An educational tool for exploring classical music
             </p>
             <DrawerClose asChild>
-              <Button variant="outline" size="sm" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground transition-transform duration-300 hover:scale-[1.02]">
+              <Button variant="outline" size="sm" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground">
                 Close
               </Button>
             </DrawerClose>
