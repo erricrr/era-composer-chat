@@ -138,6 +138,7 @@ const Index = () => {
               <ChatInterface
                 composer={selectedComposer}
                 onUserTyping={() => {}}
+                isComposerListOpen={isMenuOpen}
               />
             </div>
           )}

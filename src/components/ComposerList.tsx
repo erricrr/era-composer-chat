@@ -12,13 +12,15 @@ interface ComposerListProps {
   onSelectComposer: (composer: Composer) => void;
   selectedComposer: Composer | null;
   onStartChat: (composer: Composer) => void;
+  isOpen?: boolean;
 }
 
 export function ComposerList({
   era,
   onSelectComposer,
   selectedComposer,
-  onStartChat
+  onStartChat,
+  isOpen = false
 }: ComposerListProps) {
   const composers = getComposersByEra(era);
 

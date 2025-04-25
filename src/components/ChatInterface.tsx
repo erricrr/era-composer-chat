@@ -11,11 +11,13 @@ import { ComposerImageViewer } from './ComposerImageViewer';
 interface ChatInterfaceProps {
   composer: Composer;
   onUserTyping: (isTyping: boolean) => void;
+  isComposerListOpen?: boolean;
 }
 
 export function ChatInterface({
   composer,
   onUserTyping,
+  isComposerListOpen = false,
 }: ChatInterfaceProps) {
   const [inputMessage, setInputMessage] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -108,6 +110,14 @@ export function ChatInterface({
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [currentMessages]);
+
+  // Add effect to handle composer list visibility
+  useEffect(() => {
+    if (isComposerListOpen) {
+      // Scroll to top when composer list opens
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [isComposerListOpen]);
 
   // Show loading state
   if (!activeConversationId && currentMessages.length === 0) {
@@ -225,9 +235,7 @@ export function ChatInterface({
     return `Thank you for your interest in my work. I was a composer from the ${composer.era} era, known for ${composer.famousWorks[0]}. Is there anything specific about my compositions or life you would like to know?`;
   };
 
-  return <div className="self-start -mt-10 flex flex-col h-full bg-background/60 backdrop-blur-sm rounded-lg overflow-hidden z-10"
-
->
+  return <div className={`self-start -mt-10 flex flex-col h-full bg-background/60 backdrop-blur-sm rounded-lg overflow-hidden z-10 ${isComposerListOpen ? 'pointer-events-none opacity-50' : ''}`}>
     <div className="flex items-center justify-between p-3 border-b shadow-sm bg-primary/10">
       <div className="flex items-center space-x-6">
         <ComposerImageViewer composer={composer} size="sm" />
