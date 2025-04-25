@@ -8,7 +8,7 @@ export function ComposerCard({ composer, onClick, isSelected }: ComposerCardProp
   return (
     <div
   className={`
-    w-full flex items-center gap-4 p-4 pl-3 rounded-2xl cursor-pointer select-none
+    w-full flex items-center gap-3 p-4 pl-3 rounded-2xl cursor-pointer select-none
     transition-all duration-300 ease-out transform relative group
     ${isSelected
       ? 'bg-background shadow-md [&_h2]:text-primary [&_p]:opacity-90'
@@ -41,7 +41,7 @@ export function ComposerCard({ composer, onClick, isSelected }: ComposerCardProp
         src={composer.image}
         alt={composer.name}
         className={`
-          w-14 h-14 rounded-full object-cover flex-shrink-0 border-2
+          w-12 h-12 rounded-full object-cover flex-shrink-0 border-2
           transition-transform duration-300 ease-out
           ${isSelected ? 'border-primary scale-105' : 'border-white/10 group-hover:scale-105 group-hover:border-primary'}
         `}
