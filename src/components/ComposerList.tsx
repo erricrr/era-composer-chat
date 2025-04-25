@@ -35,7 +35,7 @@ export function ComposerList({
       <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-8">
         {/* Left side - Scrolling composers */}
         <ScrollArea className="w-full bg-primary/10 rounded-lg p-3">
-          <div className="flex flex-row md:flex-col space-x-4 md:space-x-0 md:space-y-4 w-max md:w-full pb-1">
+          <div className="flex flex-row md:flex-col space-x-4 md:space-x-0 md:space-y-2 w-max md:w-full pb-1">
             {composers.map(composer => <ComposerCard key={composer.id} composer={composer} onClick={onSelectComposer} isSelected={selectedComposer?.id === composer.id} />)}
           </div>
           <ScrollBar orientation="horizontal" className="md:hidden" />

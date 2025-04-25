@@ -10,7 +10,7 @@ export function ComposerCard({ composer, onClick, isSelected }: ComposerCardProp
   return (
     <div
       className={`
-        w-full flex items-center gap-3 p-3 rounded-lg cursor-pointer select-none
+        w-full flex items-center gap-3 p-4 rounded-lg cursor-pointer select-none
         transition-all duration-300 ease-out transform relative group
         ${isSelected
           ? 'bg-background shadow-md [&_h2]:text-primary [&_p]:opacity-90'
@@ -21,17 +21,17 @@ export function ComposerCard({ composer, onClick, isSelected }: ComposerCardProp
       {/* Hover state bar - adjusted width from w-2 to w-1.5 */}
       <div
         className={`
-          absolute left-0 top-2 bottom-2 w-1.5 rounded-r-md bg-primary/15
+          absolute left-0 top-1.5 bottom-1.5 w-1.5 rounded-r-md bg-primary/15
           transform origin-center transition-all duration-300 ease-out
           opacity-0 scale-y-0
           ${!isSelected && 'group-hover:opacity-100 group-hover:scale-y-100'}
         `}
       />
 
-      {/* Active state bar - adjusted width from w-2 to w-1.5 */}
+      {/* Active state bar */}
       <div
         className={`
-          absolute left-0 top-2 bottom-2 w-1.5 rounded-r-md bg-primary
+          absolute left-0 top-1.5 bottom-1.5 w-1.5 rounded-r-md bg-primary
           transform origin-center transition-all duration-300 ease-out
           opacity-0 scale-y-0
           ${isSelected && 'opacity-100 scale-y-100'}
