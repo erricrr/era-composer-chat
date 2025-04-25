@@ -70,70 +70,78 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       {/* Background Decoration */}
       <MusicNoteDecoration />
-      {/* Theme Toggle and Info */}
-      <div className="fixed top-4 right-4 z-50 flex items-center gap-2">
-        <FooterDrawer />
-        <ThemeToggle />
-      </div>
 
-      {/* Composer Selection Menu - With max height and forced scrollbar */}
+      {/* Fixed Header */}
       <div
-        className={`
-          fixed inset-x-0 top-0 z-40
-          bg-background backdrop-blur-sm border-b border-border shadow-lg
-          transition-transform duration-500 ease-[cubic-bezier(0.25, 0.8, 0.25, 1)]
-          ${isMenuOpen ? 'translate-y-0' : '-translate-y-full pointer-events-none'}
-          overflow-y-scroll max-h-screen
-        `}
+        className="fixed-header cursor-pointer"
+        onClick={toggleMenu}
       >
-        <div className="pb-20"> {/* Add padding at bottom to ensure content is visible */}
-          <ComposerMenu
-            onSelectComposer={handleSelectComposer}
-            onStartChat={handleStartChat}
-            selectedComposer={selectedComposer}
-            isOpen={isMenuOpen}
-          />
+        <div className="container mx-auto px-2 flex items-center justify-between h-full">
+          {/* Menu Toggle Button - Visual indicator only now */}
+          <div className="p-1 rounded-full hover:bg-muted transition-colors duration-200">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className={`h-5 w-5 transition-transform duration-500 ${isMenuOpen ? 'rotate-180' : 'rotate-0'}`}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              {isMenuOpen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              )}
+            </svg>
+          </div>
+
+          {/* Icons - These should not trigger the menu toggle */}
+          <div className="flex items-center gap-1" onClick={e => e.stopPropagation()}>
+            <FooterDrawer />
+            <ThemeToggle />
+          </div>
         </div>
       </div>
 
-      {/* Menu Toggle Button */}
-      <button
-        onClick={toggleMenu}
-        className="fixed top-4 left-4 z-50 p-2 rounded-full bg-card hover:bg-muted transition-colors duration-200 shadow-md"
-        aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className={`h-5 w-5 transition-transform duration-500 ${isMenuOpen ? 'rotate-180' : 'rotate-0'}`}
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
+      {/* Main Content with proper spacing */}
+      <div className="content-below-header">
+        {/* Composer Selection Menu */}
+        <div
+          className={`
+            fixed inset-x-0 top-10 z-40
+            bg-background backdrop-blur-sm border-b border-border shadow-lg
+            transition-transform duration-500 ease-[cubic-bezier(0.25, 0.8, 0.25, 1)]
+            ${isMenuOpen ? 'translate-y-0' : '-translate-y-full pointer-events-none'}
+            overflow-y-scroll max-h-[calc(100vh-2.5rem)]
+          `}
         >
-          {isMenuOpen ? (
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
-          ) : (
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          )}
-        </svg>
-      </button>
-
-      {/* Chat Interface */}
-      <div
-        className="fixed inset-x-0 bottom-0 overflow-y-auto"
-        style={{
-          height: 'calc(100vh - 0rem)',
-          backdropFilter: 'blur(8px)',
-          boxShadow: '0 -10px 25px rgba(0,0,0,0.1)',
-        }}
-      >
-        {selectedComposer && (
-          <div className="container mx-auto px-4 pt-16 pb-8 h-full">
-            <ChatInterface
-              composer={selectedComposer}
-              onUserTyping={() => {}} // Add required prop
+          <div className="pb-14">
+            <ComposerMenu
+              onSelectComposer={handleSelectComposer}
+              onStartChat={handleStartChat}
+              selectedComposer={selectedComposer}
+              isOpen={isMenuOpen}
             />
           </div>
-        )}
+        </div>
+
+        {/* Chat Interface */}
+        <div
+          className="fixed inset-x-0 bottom-0 overflow-y-auto"
+          style={{
+            height: 'calc(100vh - 2.5rem)',
+            backdropFilter: 'blur(8px)',
+            boxShadow: '0 -10px 25px rgba(0,0,0,0.1)',
+          }}
+        >
+          {selectedComposer && (
+            <div className="container mx-auto px-4 pt-16 pb-8 h-full">
+              <ChatInterface
+                composer={selectedComposer}
+                onUserTyping={() => {}}
+              />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

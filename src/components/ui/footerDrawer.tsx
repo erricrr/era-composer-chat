@@ -21,9 +21,9 @@ const FooterDrawer = () => {
         <Button
           variant="ghost"
           size="sm"
-          className="flex items-center gap-1 text-muted-foreground hover:bg-transparent hover:text-primary fixed top-4 right-16 z-50"
+          className="flex items-center gap-1 text-muted-foreground hover:bg-transparent hover:text-primary p-1"
         >
-          <FontAwesomeIcon icon={faInfoCircle} className="h-5 w-5" />
+          <FontAwesomeIcon icon={faInfoCircle} className="h-3.5 w-3.5" />
         </Button>
       </DrawerTrigger>
       <DrawerContent className="h-[90vh] overflow-hidden flex flex-col">

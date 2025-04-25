@@ -29,7 +29,7 @@ export function ComposerList({
   }, [composers, selectedComposer, onSelectComposer]);
 
   return (
-    <div className="w-full mt-4">
+    <div className="w-full mt-12">
       <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-8">
         {/* Left side - Scrolling composers */}
         <ScrollArea className="w-full bg-primary/10 rounded-lg p-3">

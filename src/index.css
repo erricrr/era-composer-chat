@@ -136,4 +136,12 @@
   .chat-message-composer {
     @apply bg-primary/20 text-foreground p-3 rounded-lg rounded-tl-none max-w-[80%] mr-auto my-1;
   }
+
+  .fixed-header {
+    @apply fixed top-0 left-0 right-0 h-10 bg-background/95 backdrop-blur-md z-50 border-b border-border/40 shadow-sm;
+  }
+
+  .content-below-header {
+    @apply pt-10;
+  }
 }
