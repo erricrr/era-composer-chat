@@ -225,7 +225,7 @@ export function ChatInterface({
     return `Thank you for your interest in my work. I was a composer from the ${composer.era} era, known for ${composer.famousWorks[0]}. Is there anything specific about my compositions or life you would like to know?`;
   };
 
-  return <div className="flex flex-col h-full bg-background/60 backdrop-blur-sm rounded-lg overflow-hidden z-10 shadow-md">
+  return <div className="flex flex-col h-full bg-background/60 backdrop-blur-sm rounded-lg overflow-hidden z-10">
     <div className="flex items-center justify-between p-4 border-b shadow-sm bg-primary/10">
       <div className="flex items-center space-x-6">
         <ComposerImageViewer composer={composer} size="sm" />
@@ -253,7 +253,7 @@ export function ChatInterface({
       </Button>
     </div>
 
-    <div className="flex-1 overflow-y-auto p-4 space-y-4 relative bg-gray-50/30 dark:bg-gray-800/30">
+    <div className="flex-1 overflow-y-auto p-4 space-y-4 relative">
       {currentMessages.length === 0 && (
         <div className="absolute inset-0 flex items-center justify-center text-muted-foreground text-sm pointer-events-none">
           <p>Start a conversation with {composer.name.split(' ').pop()}. Ask them about their music.</p>
@@ -273,7 +273,7 @@ export function ChatInterface({
       <div ref={messagesEndRef} />
     </div>
 
-    <form onSubmit={handleSendMessage} className="sticky bottom-0 p-4 border-t bg-background/80 backdrop-blur-sm">
+    <form onSubmit={handleSendMessage} className="sticky bottom-0 p-4 bg-background/80 backdrop-blur-sm">
       <div className="flex flex-col gap-2">
         <div className="flex items-stretch gap-2">
           <div className="flex-1">

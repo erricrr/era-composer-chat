@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Timeline } from './Timeline';
 import { ComposerList } from './ComposerList';
 import { Composer, Era, getComposersByEra } from '@/data/composers';
+import FooterDrawer from '@/components/ui/footerDrawer';
 
 interface ComposerMenuProps {
   onSelectComposer: (composer: Composer) => void;
@@ -53,9 +54,14 @@ export function ComposerMenu({
 
   return (
     <div className="container mx-auto px-4 py-6 flex flex-col h-full overflow-y-auto">
-      <h1 className="text-3xl font-bold text-center font-serif mt-2 mb-4 mx-[30px]">
-        {selectedEra === Era.Modern ? '20th-21st Century' : selectedEra} Era Composers
-      </h1>
+      <div className="relative">
+        <h1 className="text-3xl font-bold text-center font-serif mt-2 mb-4 mx-[30px]">
+          {selectedEra === Era.Modern ? '20th-21st Century' : selectedEra} Era Composers
+        </h1>
+        <div className="absolute top-1/2 right-14 -translate-y-1/2 z-10">
+          <FooterDrawer />
+        </div>
+      </div>
 
       <Timeline selectedEra={selectedEra} onSelectEra={handleEraChange} />
 
