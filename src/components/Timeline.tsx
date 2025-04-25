@@ -10,41 +10,48 @@ export function Timeline({
   return <div className="w-full max-w-4xl mx-auto my-8">
       {/* Era Timeline */}
       <div className="relative flex flex-col">
-        {/* Era labels with period */}
-        <div className="flex justify-between mb-2">
-          {eras.map(era => (
-                       <div
-                       key={era.id}
-                       className="flex flex-col items-center w-1/4 group cursor-pointer"
-                       onClick={() => onSelectEra(era.name)}
-                     >
-                        <div className="relative">
-                         <h3 className={`text-lg mb-1 md:text-xl text-center transition-all duration-300 ease-out
-                           ${selectedEra === era.name
-                             ? 'text-primary scale-[1.02]'
-                             : 'text-muted-foreground group-hover:text-primary/80 group-hover:scale-[1.02]'}`}
-                         >
-                           {era.id === 'modern' ? '20th-21st Century' : era.name}
-                         </h3>
-                         {/* Flipped underline with rounded bottom corners */}
-                         <div className={`absolute -bottom-1 left-2 right-2 h-1.5 rounded-b-md transform origin-left
-                           transition-all duration-300 ease-out
-                           ${selectedEra === era.name
-                             ? 'bg-primary scale-x-100'
-                             : 'bg-primary/15 scale-x-0 group-hover:scale-x-100'}`}
-                         />
-                       </div>
-                       <p className={`text-sm text-muted-foreground mt-2 text-center
-                         transition-all duration-300 ease-out
-                         ${selectedEra === era.name
-                           ? 'opacity-100 scale-[1.02]'
-                           : 'opacity-70 group-hover:opacity-100 group-hover:scale-[1.02]'}`}
-                       >
-                         ({era.period})
-                       </p>
-                     </div>
-          ))}
-        </div>
+       {/* Era labels with period */}
+<div className="flex justify-between mb-2">
+  {eras.map(era => (
+    <div
+      key={era.id}
+      className="flex flex-col items-center w-1/4 group cursor-pointer"
+      onClick={() => onSelectEra(era.name)}
+    >
+      <div className="relative">
+        <h3 className={`text-lg mb-1 md:text-xl text-center transition-all duration-300 ease-out
+          ${selectedEra === era.name
+            ? 'text-primary scale-[1.02]'
+            : 'text-muted-foreground group-hover:text-primary/80 group-hover:scale-[1.02]'}`}
+        >
+          {era.id === 'modern' ? '20th-21st Century' : era.name}
+        </h3>
+        {/* Hover state underline */}
+        <div className={`absolute -bottom-1 left-2 right-2 h-1.5 rounded-b-md bg-primary/15
+          transform origin-left transition-all duration-300 ease-out
+          scale-x-0
+          ${selectedEra !== era.name && 'group-hover:scale-x-100'}
+        `}
+        />
+        {/* Active state underline */}
+        <div className={`absolute -bottom-1 left-2 right-2 h-1.5 rounded-b-md bg-primary
+          transform origin-left transition-all duration-300 ease-out
+          scale-x-0
+          ${selectedEra === era.name && 'scale-x-100'}
+        `}
+        />
+      </div>
+      <p className={`text-sm text-muted-foreground mt-2 text-center
+        transition-all duration-300 ease-out
+        ${selectedEra === era.name
+          ? 'opacity-100 scale-[1.02]'
+          : 'opacity-70 group-hover:opacity-100 group-hover:scale-[1.02]'}`}
+      >
+        ({era.period})
+      </p>
+    </div>
+  ))}
+</div>
 
         {/* Timeline container for better alignment */}
         <div className="relative h-4">
