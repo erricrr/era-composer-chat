@@ -31,7 +31,7 @@ export function ComposerList({
   }, [composers, selectedComposer, onSelectComposer]);
 
   return (
-    <div className="w-full mt-12">
+    <div className="w-full mt-0">
       <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-8">
         {/* Left side - Scrolling composers */}
         <ScrollArea className="w-full bg-primary/10 rounded-lg p-3">
@@ -44,7 +44,8 @@ export function ComposerList({
 
     {/* Right side - Biography with horizontal layout */}
 {selectedComposer && (
-  <div className="rounded-lg p-4 flex flex-col max-h-[70vh] md:max-h-none overflow-y-auto">
+  <div className="rounded-lg p-1 flex flex-col max-h-[70vh] md:max-h-none overflow-y-auto">
+
     {/* Header with horizontal layout */}
     <div className="flex items-center space-x-6 mb-3">
       <ComposerImageViewer composer={selectedComposer} />

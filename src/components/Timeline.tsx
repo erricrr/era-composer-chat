@@ -7,7 +7,7 @@ export function Timeline({
   selectedEra,
   onSelectEra
 }: TimelineProps) {
-  return <div className="w-full max-w-4xl mx-auto my-8">
+  return <div className="w-full max-w-4xl mx-auto my-6">
       {/* Era Timeline */}
       <div className="relative flex flex-col">
        {/* Era labels with period */}
@@ -83,7 +83,7 @@ export function Timeline({
         </div>
 
         {/* Era Description */}
-        <div className="w-full mt-6">
+        <div className="w-full mt-2">
           {eras.map(era => selectedEra === era.name && (
             <div
               key={era.id}
