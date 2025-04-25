@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useEffect, useState } from 'react';
 import { ComposerImageViewer } from './ComposerImageViewer';
+import FooterDrawer from '@/components/ui/footerDrawer';
 
 interface ComposerListProps {
   era: Era;
@@ -76,6 +77,7 @@ export function ComposerList({
   </div>
 )}
       </div>
+      <FooterDrawer />
     </div>
   );
 }
