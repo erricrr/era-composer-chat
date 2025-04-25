@@ -109,7 +109,7 @@ const Index = () => {
           className={`
             fixed inset-x-0 top-10 z-40
             bg-background backdrop-blur-sm border-b border-border shadow-lg
-            transition-transform duration-500 ease-[cubic-bezier(0.25, 0.8, 0.25, 1)]
+            transition-transform duration-700 ease-in-out]
             ${isMenuOpen ? 'translate-y-0' : '-translate-y-full pointer-events-none'}
             overflow-y-scroll max-h-[calc(100vh-2.5rem)]
           `}
