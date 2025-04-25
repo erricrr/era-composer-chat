@@ -28,6 +28,9 @@ export function ChatInterface({
   // Reference to track current conversation ID to prevent stale state issues
   const currentConversationIdRef = useRef<string | null>(null);
 
+  // State to track if the composer menu is open
+  const [isComposerMenuOpen, setIsComposerMenuOpen] = useState(false);
+
   const {
     activeConversation,
     activeConversationId,
@@ -290,11 +293,12 @@ export function ChatInterface({
                 target.style.height = 'auto';
                 target.style.height = `${Math.min(target.scrollHeight, 200)}px`;
               }}
+              disabled={isComposerMenuOpen}
             />
           </div>
           <Button
             type="submit"
-            disabled={!inputMessage.trim()}
+            disabled={!inputMessage.trim() || isComposerMenuOpen}
             className={`px-4 h-10 mb-2.5 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors shrink-0 bg-primary text-background hover:opacity-90 self-end`}
           >
             Send
