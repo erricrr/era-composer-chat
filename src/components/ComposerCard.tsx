@@ -7,24 +7,34 @@ interface ComposerCardProps {
 export function ComposerCard({ composer, onClick, isSelected }: ComposerCardProps) {
   return (
     <div
-      className={`
-        w-full flex items-center gap-4 p-4 pl-3 rounded-2xl cursor-pointer select-none
-        transition-all duration-300 ease-out transform relative group
-        ${isSelected
-          ? 'bg-background shadow-md [&_h2]:text-primary [&_p]:opacity-90'
-          : 'hover:bg-background/50 hover:shadow-sm'}
-      `}
-      onClick={() => onClick(composer)}
-    >
-      {/* Left selection bar - active state */}
-      {isSelected && (
-        <div className="absolute left-0 top-2 bottom-2 w-1.5 rounded-r-md bg-primary transform origin-center transition-all duration-300 ease-out" />
-      )}
+  className={`
+    w-full flex items-center gap-4 p-4 pl-3 rounded-2xl cursor-pointer select-none
+    transition-all duration-300 ease-out transform relative group
+    ${isSelected
+      ? 'bg-background shadow-md [&_h2]:text-primary [&_p]:opacity-90'
+      : 'hover:bg-background/50 hover:shadow-sm'}
+  `}
+  onClick={() => onClick(composer)}
+>
+  {/* Hover state bar (always visible when hovering) */}
+  <div
+    className={`
+      absolute left-0 top-2 bottom-2 w-1.5 rounded-r-md bg-primary/15
+      transform origin-center transition-all duration-300 ease-out
+      opacity-0 scale-y-0
+      ${!isSelected && 'group-hover:opacity-100 group-hover:scale-y-100'}
+    `}
+  />
+  {/* Active state bar (animated entrance) */}
+  <div
+    className={`
+      absolute left-0 top-2 bottom-2 w-1.5 rounded-r-md bg-primary
+      transform origin-center transition-all duration-300 ease-out
+      opacity-0 scale-y-0
+      ${isSelected && 'opacity-100 scale-y-100'}
+    `}
+  />
 
-      {/* Left selection bar - hover state (only shows when not selected) */}
-      {!isSelected && (
-        <div className="absolute left-0 top-2 bottom-2 w-1.5 rounded-r-md bg-primary/15 opacity-0 scale-y-0 origin-center group-hover:opacity-100 group-hover:scale-y-100 transform transition-all duration-300 ease-out" />
-      )}
 
       {/* Composer image */}
       <img
