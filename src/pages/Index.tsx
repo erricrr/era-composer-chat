@@ -129,12 +129,13 @@ const Index = () => {
           className="fixed inset-x-0 bottom-0 overflow-y-auto"
           style={{
             height: 'calc(100vh - 2.5rem)',
+            top: '2.5rem',
             backdropFilter: 'blur(8px)',
             boxShadow: '0 -10px 25px rgba(0,0,0,0.1)',
           }}
         >
           {selectedComposer && (
-            <div className="container mx-auto px-4 pt-4 pb-8 h-full">
+            <div className="container mx-auto px-4 h-full">
               <ChatInterface
                 composer={selectedComposer}
                 onUserTyping={() => {}}
