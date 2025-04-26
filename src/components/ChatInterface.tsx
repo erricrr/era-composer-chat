@@ -267,18 +267,18 @@ export function ChatInterface({
         isComposerListOpen ? 'pointer-events-none opacity-50' : ''
       }`}
       style={{
-        marginTop: isSplitViewOpen && !isMobile ? '0' : '-2.5rem'
+        marginTop: '0'
       }}
     >
       <MusicNoteDecoration />
       <div className="flex items-center justify-between p-2 border-b shadow-sm bg-secondary z-10">
-        {(!isSplitViewOpen || isMobile) ? (
+        {(!isSplitViewOpen) ? (
           <div className="flex items-center space-x-6">
-            <div onClick={() => !isMobile && setIsSplitViewOpen(true)} className="cursor-pointer">
+            <div onClick={() => setIsSplitViewOpen(true)} className="cursor-pointer">
               <ComposerImageViewer
                 composer={composer}
                 size="sm"
-                onClick={() => !isMobile && setIsSplitViewOpen(true)}
+                onClick={() => setIsSplitViewOpen(true)}
               />
             </div>
             <div className="flex flex-col items-start">
@@ -373,7 +373,7 @@ export function ChatInterface({
 
   return (
     <>
-      {!isMobile && isSplitViewOpen ? (
+      {isSplitViewOpen ? (
         <ComposerSplitView
           composer={composer}
           isOpen={isSplitViewOpen}

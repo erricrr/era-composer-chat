@@ -134,7 +134,7 @@ const Index = () => {
           }}
         >
           {selectedComposer && (
-            <div className="container mx-auto px-4 pt-16 pb-8 h-full">
+            <div className="container mx-auto px-4 pt-4 pb-8 h-full">
               <ChatInterface
                 composer={selectedComposer}
                 onUserTyping={() => {}}
