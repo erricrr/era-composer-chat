@@ -16,6 +16,9 @@ const badgeVariants = cva(
         destructive:
           "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
         outline: "text-foreground",
+        bio:
+        "border-transparent bg-secondary text-secondary-foreground",
+        badge: "border-transparent bg-primary text-primary-foreground",
         baroque: "border-transparent bg-baroque text-white hover:bg-baroque/90",
         classical: "border-transparent bg-classical text-white hover:bg-classical/90",
         romantic: "border-transparent bg-romantic text-white hover:bg-romantic/90",

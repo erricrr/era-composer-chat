@@ -22,8 +22,8 @@ export function ComposerSplitView({ composer, isOpen, onClose, children }: Compo
   const composerContent = (
     <>
       {/* Fixed Header */}
-      <div className="flex justify-between items-start p-6 pb-2 bg-secondary/50 backdrop-blur-sm">
-        <h2 className="text-2xl font-bold font-serif">{composer.name}</h2>
+      <div className="flex justify-between items-start p-4 pb-2 bg-secondary shadow-sm backdrop-blur-sm">
+        <h2 className="text-2xl font-bold font-serif px-2">{composer.name}</h2>
         <Button
           variant="ghost"
           size="icon"
@@ -52,7 +52,7 @@ export function ComposerSplitView({ composer, isOpen, onClose, children }: Compo
               <span className="text-sm text-muted-foreground">
                 {composer.country}, {composer.years}
               </span>
-              <Badge variant="secondary">
+              <Badge variant="badge">
                 {composer.era}
               </Badge>
             </div>

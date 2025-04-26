@@ -263,7 +263,7 @@ export function ChatInterface({
 
   const chatContent = (
     <div
-      className={`relative flex flex-col h-full bg-background rounded-lg overflow-hidden z-10 ${
+      className={`relative flex flex-col h-full bg-background overflow-hidden z-10 ${
         isComposerListOpen ? 'pointer-events-none opacity-50' : ''
       }`}
       style={{
@@ -271,7 +271,7 @@ export function ChatInterface({
       }}
     >
       <MusicNoteDecoration />
-      <div className="flex items-center justify-between p-2 border-b shadow-sm bg-secondary z-10">
+      <div className="flex items-center justify-between px-5 py-3 border-b shadow-sm bg-secondary z-10">
         {(!isSplitViewOpen) ? (
           <div className="flex items-center space-x-6">
             <div onClick={() => setIsSplitViewOpen(true)} className="cursor-pointer">
@@ -288,18 +288,24 @@ export function ChatInterface({
                   {composer.country}, {composer.years}
                 </p>
                 <Badge
-                  variant="default" className="ml-2 bg-primary/65 text-background">
+                  variant="badge" className="ml-2 bg-primary/65 text-background">
                   {getEraDisplayText(composer.era)}
                 </Badge>
               </div>
             </div>
           </div>
         ) : (
-          <div className="h-8 flex items-center space-x-2">
-            <Music className="h-4 w-4 text-primary" />
-            <span className="text-sm text-muted-foreground">Chat with {composer.name.split(' ').pop()}</span>
-            <Music className="h-4 w-4 text-primary" />
+          <div className="h-8 flex items-center space-x-3 px-2">
+          <Music className="h-4 w-4 text-primary" />
+          <span className="text-sm font-medium text-muted-foreground">
+            Chat with {composer.name.split(' ').pop()}
+          </span>
+          <div className="flex space-x-1">
+            <div className="h-1 w-1 rounded-full bg-primary"></div>
+            <div className="h-1 w-1 rounded-full bg-primary opacity-60"></div>
+            <div className="h-1 w-1 rounded-full bg-primary opacity-30"></div>
           </div>
+        </div>
         )}
         <Button
           variant="ghost"
