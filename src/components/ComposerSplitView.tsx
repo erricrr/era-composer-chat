@@ -7,6 +7,7 @@ import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ReactNode } from 'react';
 import { MusicNoteDecoration } from '@/components/MusicNoteDecoration';
+import { ComposerImageViewer } from '@/components/ComposerImageViewer';
 
 
 interface ComposerSplitViewProps {
@@ -23,9 +24,8 @@ export function ComposerSplitView({ composer, isOpen, onClose, children }: Compo
 
   const composerContent = (
     <>
-      <MusicNoteDecoration />
       {/* Fixed Header */}
-      <div className="flex justify-between items-start p-4 pb-2 bg-secondary shadow-sm backdrop-blur-sm">
+      <div className="flex justify-between items-start p-4 pb-2 bg-secondary/50 backdrop-blur-sm shadow-sm">
         <h2 className="text-2xl font-bold font-serif px-2">{composer.name}</h2>
         <Button
           variant="ghost"
@@ -38,21 +38,19 @@ export function ComposerSplitView({ composer, isOpen, onClose, children }: Compo
       </div>
 
       {/* Scrollable Content */}
-      <ScrollArea className="flex-1">
-        <div className="p-6 pt-4 space-y-6">
-          <div className={`relative rounded-lg overflow-hidden border-2 border-primary mx-auto ${
-            isMobile ? 'w-48 h-48' : 'w-full aspect-square'
-          }`}>
-            <img
-              src={composer.image}
-              alt={composer.name}
-              className="w-full h-full object-cover"
-            />
-          </div>
+      <ScrollArea className="flex-1 w-full">
+      <MusicNoteDecoration />
+        <div className="p-4 md:p-6 space-y-4 md:space-y-6">
+          <div className="flex flex-col items-center text-center space-y-3">
 
-          <div className="text-center">
-            <div className="flex items-center justify-center gap-2 mt-2">
-              <span className="text-sm text-muted-foreground">
+            <ComposerImageViewer
+              composer={composer}
+              size="xl"
+              className="w-32 h-32 md:w-44 md:h-44 lg:w-52 lg:h-52 xl:w-56 xl:h-56"
+              allowModalOnDesktop
+            />
+            <div className="flex items-center gap-2 mt-2">
+              <span className="text-sm md:text-base text-muted-foreground">
                 {composer.country}, {composer.years}
               </span>
               <Badge variant="badge">
@@ -61,16 +59,16 @@ export function ComposerSplitView({ composer, isOpen, onClose, children }: Compo
             </div>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-4 md:space-y-6 max-w-prose mx-auto">
             <div>
-              <p className="text-sm text-foreground/90">{composer.bio}</p>
+              <p className="text-sm md:text-base text-foreground/90">{composer.bio}</p>
             </div>
 
             <div>
-              <h3 className="font-semibold mb-2">Notable Works</h3>
+              <h3 className="font-semibold mb-2 text-base md:text-lg">Notable Works</h3>
               <ul className="list-disc pl-5 space-y-1">
                 {composer.famousWorks.map((work, index) => (
-                  <li key={index} className="text-sm text-foreground/80">{work}</li>
+                  <li key={index} className="text-sm md:text-base text-foreground/80">{work}</li>
                 ))}
               </ul>
             </div>
@@ -85,15 +83,36 @@ export function ComposerSplitView({ composer, isOpen, onClose, children }: Compo
       <div className="fixed inset-0 z-40">
         <ResizablePanelGroup direction="vertical" className="h-full">
           {/* Composer Panel on Top */}
-          <ResizablePanel defaultSize={50} minSize={30} className="bg-secondary/50 backdrop-blur-sm flex flex-col">
-            {composerContent}
+          <ResizablePanel
+            defaultSize={50}
+            minSize={10} // Lowered minSize
+            // maxSize can usually be omitted unless you have specific upper bounds
+            className="bg-secondary/50 backdrop-blur-sm flex flex-col"
+            // Optional: Add id and aria-label for better accessibility context
+            id="composer-panel-mobile"
+            aria-label="Composer Panel"
+          >
+            {/* Add overflow handling if content might break at small sizes */}
+            <div className="flex-1 overflow-auto">
+              {composerContent}
+            </div>
           </ResizablePanel>
 
-          <ResizableHandle withHandle />
+          <ResizableHandle
+            withHandle
+            // Optional: Add aria-controls for better accessibility
+            aria-controls="composer-panel-mobile chat-panel-mobile"
+          />
 
           {/* Chat Panel on Bottom */}
-          <ResizablePanel defaultSize={50} minSize={40}>
-            <div className="h-full bg-background">
+          <ResizablePanel
+            defaultSize={50}
+            minSize={10} // Lowered minSize
+            id="chat-panel-mobile"
+            aria-label="Chat Panel"
+          >
+            {/* Add overflow handling */}
+            <div className="h-full bg-background overflow-auto">
               {children}
             </div>
           </ResizablePanel>
@@ -105,20 +124,38 @@ export function ComposerSplitView({ composer, isOpen, onClose, children }: Compo
   return (
     <div className="fixed inset-0 z-40">
       <ResizablePanelGroup direction="horizontal" className="h-full">
-        {/* Composer Image Panel */}
-        <ResizablePanel defaultSize={40} minSize={30} maxSize={50} className="bg-secondary/50 backdrop-blur-sm flex flex-col">
-          {composerContent}
+        {/* Composer Image Panel (Left) */}
+        <ResizablePanel
+          defaultSize={38} // Initial size (valid within 35-65)
+          minSize={35}     // *** UPDATED: Minimum 35% (100 - 65) ***
+          maxSize={65}     // *** UPDATED: Maximum 65% ***
+          className="bg-secondary/50 backdrop-blur-sm flex flex-col"
+          id="composer-panel-desktop"
+          aria-label="Composer Panel"
+          order={1}        // Optional: Explicitly set order for clarity/tab order
+        >
+           <div className="flex-1 overflow-auto">
+             {composerContent}
+           </div>
         </ResizablePanel>
 
         <ResizableHandle
-            withHandle
-          />
+          withHandle
+          aria-controls="composer-panel-desktop chat-panel-desktop"
+        />
 
-        {/* Chat Panel */}
-        <ResizablePanel defaultSize={60}>
-          <div className="h-full bg-background">
+        {/* Chat Panel (Right) */}
+        <ResizablePanel
+          defaultSize={62} // Initial size (valid within 35-65)
+          minSize={35}     // *** ADDED: Minimum 35% (100 - 65) ***
+          maxSize={65}     // *** ADDED: Maximum 65% ***
+          id="chat-panel-desktop"
+          aria-label="Chat Panel"
+          order={2}        // Optional: Explicitly set order
+        >
+           <div className="h-full bg-background overflow-auto">
             {children}
-          </div>
+           </div>
         </ResizablePanel>
       </ResizablePanelGroup>
     </div>

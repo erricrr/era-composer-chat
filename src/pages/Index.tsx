@@ -102,17 +102,20 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Main Content with proper spacing */}
-      <div className="content-below-header">
+      {/* Main Content */}
+      <main className="content-main">
         {/* Composer Selection Menu */}
         <div
           className={`
-            fixed inset-x-0 top-10 z-40
+            fixed inset-x-0 z-40
             bg-background backdrop-blur-sm border-b border-border shadow-lg
-            transition-transform duration-700 ease-in-out]
+            transition-transform duration-700 ease-in-out
             ${isMenuOpen ? 'translate-y-0' : '-translate-y-full pointer-events-none'}
-            overflow-y-scroll max-h-[calc(100vh-2.5rem)]
+            overflow-y-scroll
           `}
+          style={{
+            maxHeight: `calc(100vh - clamp(2rem, 4vw, 2.5rem))`
+          }}
         >
           <div className="pb-14">
             <ComposerMenu
@@ -128,8 +131,8 @@ const Index = () => {
         <div
           className="fixed inset-x-0 bottom-0 overflow-y-auto"
           style={{
-            height: 'calc(100vh - 2.5rem)',
-            top: '2.5rem',
+            top: 'clamp(2rem, 4vw, 2.5rem)',
+            height: 'calc(100vh - clamp(2rem, 4vw, 2.5rem))',
             backdropFilter: 'blur(8px)',
             boxShadow: '0 -10px 25px rgba(0,0,0,0.1)',
           }}
@@ -144,7 +147,7 @@ const Index = () => {
             </div>
           )}
         </div>
-      </div>
+      </main>
     </div>
   );
 }

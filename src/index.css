@@ -94,11 +94,11 @@
   }
 
   .composer-image {
-    @apply w-24 h-24 rounded-full object-cover border-2 border-primary shadow-md mb-3;
+    @apply w-24 h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 rounded-full object-cover border-2 border-primary shadow-md mb-3;
   }
 
   .era-tab {
-    @apply px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200;
+    @apply px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-medium transition-colors duration-200;
   }
 
   .era-tab.active {
@@ -114,18 +114,26 @@
   }
 
   .chat-message-user {
-    @apply bg-primary/10 text-foreground p-3 rounded-lg rounded-tr-none max-w-[80%] ml-auto my-1;
+    @apply bg-primary/10 text-foreground p-2 md:p-3 rounded-lg rounded-tr-none max-w-[90%] md:max-w-[80%] ml-auto my-1 text-sm md:text-base;
   }
 
   .chat-message-composer {
-    @apply bg-primary/20 text-foreground p-3 rounded-lg rounded-tl-none max-w-[80%] mr-auto my-1;
+    @apply bg-primary/20 text-foreground p-2 md:p-3 rounded-lg rounded-tl-none max-w-[90%] md:max-w-[80%] mr-auto my-1 text-sm md:text-base;
   }
 
   .fixed-header {
-    @apply fixed top-0 left-0 right-0 h-10 bg-background/95 backdrop-blur-md z-50 border-b border-border/40 shadow-sm;
+    @apply fixed top-0 left-0 right-0 bg-background/95 backdrop-blur-md z-50 border-b border-border/40 shadow-sm flex items-center transition-all duration-300;
+    height: clamp(2rem, 4vw, 2.5rem);
+  }
+
+  /* Update the main content positioning to match header smoothly */
+  main.content-main {
+    @apply relative transition-[top] duration-300;
+    top: clamp(2rem, 4vw, 2.5rem);
+    min-height: calc(100vh - clamp(2rem, 4vw, 2.5rem));
   }
 
   .content-below-header {
-    @apply pt-10;
+    @apply mt-8 md:mt-10;
   }
 }
