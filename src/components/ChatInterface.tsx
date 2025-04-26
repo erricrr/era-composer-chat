@@ -7,7 +7,6 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { Badge } from "@/components/ui/badge";
 import { v4 as uuidv4 } from 'uuid';
 import { ComposerImageViewer } from './ComposerImageViewer';
-import { MusicNoteDecoration } from '@/components/MusicNoteDecoration';
 import { ComposerSplitView } from './ComposerSplitView';
 
 interface ChatInterfaceProps {
@@ -166,15 +165,15 @@ export function ChatInterface({
 
     if (!conversationId) {
       console.log("[ChatInterface] No conversation ID available, starting new conversation");
-      const newId = startConversation(composer);
-      currentConversationIdRef.current = newId;
+      const newConversationId = startConversation(composer);
+      currentConversationIdRef.current = newConversationId;
 
       // Update UI immediately
       setCurrentMessages([userMessage]);
 
       // Then persist to storage
       setTimeout(() => {
-        addMessage(newId, userMessage.text, 'user');
+        addMessage(newConversationId, userMessage.text, 'user');
 
         // Add composer response
         setTimeout(() => {
@@ -190,7 +189,7 @@ export function ChatInterface({
           setCurrentMessages(messages => [...messages, composerMessage]);
 
           // Persist to storage
-          addMessage(newId, responseText, 'composer');
+          addMessage(newConversationId, responseText, 'composer');
         }, 1000);
       }, 100);
     } else {
@@ -243,8 +242,8 @@ export function ChatInterface({
       setCurrentMessages([]);
 
       // Start a new conversation
-      const newId = startConversation(composer);
-      currentConversationIdRef.current = newId;
+      const newConversationId = startConversation(composer);
+      currentConversationIdRef.current = newConversationId;
     }
   };
 
@@ -263,12 +262,9 @@ export function ChatInterface({
 
   const chatContent = (
     <div
-      className={`relative flex flex-col h-full bg-background overflow-hidden${
-        isComposerListOpen ? 'pointer-events-none opacity-50' : ''
+      className={`relative flex flex-col h-full bg-background overflow-hidden pb-4${
+        isComposerListOpen ? ' pointer-events-none opacity-50' : ''
       }`}
-      style={{
-        marginTop: '0'
-      }}
     >
       <div className="flex items-center justify-between px-5 py-3 border-b shadow-sm bg-secondary">
         {(!isSplitViewOpen) ? (
@@ -318,31 +314,34 @@ export function ChatInterface({
         </Button>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 relative">
-        {currentMessages.length === 0 && (
-          <div className="absolute inset-0 flex items-center justify-center text-muted-foreground text-sm pointer-events-none">
-            <p>Start a conversation with {composer.name.split(' ').pop()}. Ask them about their music.</p>
-          </div>
-        )}
-
-        {currentMessages.map((message: Message) => (
-          <div key={message.id} className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div className={message.sender === 'user'
-              ? 'max-w-[80%] rounded-2xl px-4 py-2 bg-primary text-background ml-auto shadow-sm'
-              : 'max-w-[80%] rounded-2xl px-4 py-2 text-foreground bg-background'
-            }>
-              {message.text}
+      <div className="flex-1 overflow-y-auto p-4 relative">
+        <div className="flex flex-col min-h-[calc(100%-2rem)]">
+          {currentMessages.length === 0 ? (
+            <div className="flex-1 flex items-center justify-center text-muted-foreground text-sm">
+              <p>Start a conversation with {composer.name.split(' ').pop()}. Ask them about their music.</p>
             </div>
-          </div>
-        ))}
-        <div ref={messagesEndRef} />
-
+          ) : (
+            <div className="space-y-4 w-full">
+              {currentMessages.map((message: Message) => (
+                <div key={message.id} className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  <div className={message.sender === 'user'
+                    ? 'max-w-[80%] rounded-2xl px-4 py-2 bg-primary text-background ml-auto shadow-sm'
+                    : 'max-w-[80%] rounded-2xl px-4 py-2 text-foreground bg-background'
+                  }>
+                    {message.text}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+          <div ref={messagesEndRef} />
+        </div>
       </div>
 
-      <form onSubmit={handleSendMessage} className="sticky bottom-0 p-4 bg-background backdrop-blur-sm">
-        <div className="flex flex-col gap-2">
-          <div className="flex items-stretch gap-2">
-            <div className="z-10 flex-1">
+      <form onSubmit={handleSendMessage} className="relative border-t bg-background/80 backdrop-blur-sm">
+        <div className="p-4">
+          <div className="flex items-center gap-2">
+            <div className="flex-1 relative">
               <textarea
                 ref={textareaRef}
                 value={inputMessage}
@@ -352,7 +351,7 @@ export function ChatInterface({
                 }}
                 onKeyDown={handleKeyPress}
                 placeholder={`Ask ${composer.name.split(' ').pop()} a question...`}
-                className="w-full rounded-xl border bg-background p-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary resize-none overflow-hidden min-h-[42px]"
+                className="w-full rounded-xl border bg-background/80 p-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary resize-none overflow-hidden min-h-[42px]"
                 rows={1}
                 onInput={e => {
                   const target = e.target as HTMLTextAreaElement;
@@ -365,15 +364,14 @@ export function ChatInterface({
             <Button
               type="submit"
               disabled={!inputMessage.trim() || isComposerMenuOpen}
-              className="px-4 h-12 w-12 mb-2.5 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors shrink-0 bg-primary text-background hover:opacity-90 self-end flex items-center justify-center"
+              className="px-4 h-[42px] w-[42px] rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors shrink-0 bg-primary text-background hover:opacity-90 flex items-center justify-center"
             >
-              <ArrowUp className="w-10 h-10" strokeWidth={3.5} />
+              <ArrowUp className="w-5 h-5" strokeWidth={2.5} />
             </Button>
           </div>
-          <p className="text-xs text-muted-foreground text-center">
+          <p className="text-xs text-muted-foreground text-center mt-2">
             AI-generated conversation from verified sources. Does not reflect {composer.name.split(' ').pop()}&apos;s personal views.
           </p>
-          <MusicNoteDecoration />
         </div>
       </form>
     </div>
