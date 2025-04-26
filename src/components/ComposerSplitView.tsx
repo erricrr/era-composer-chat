@@ -6,6 +6,8 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ReactNode } from 'react';
+import { MusicNoteDecoration } from '@/components/MusicNoteDecoration';
+
 
 interface ComposerSplitViewProps {
   composer: Composer;
@@ -21,6 +23,7 @@ export function ComposerSplitView({ composer, isOpen, onClose, children }: Compo
 
   const composerContent = (
     <>
+      <MusicNoteDecoration />
       {/* Fixed Header */}
       <div className="flex justify-between items-start p-4 pb-2 bg-secondary shadow-sm backdrop-blur-sm">
         <h2 className="text-2xl font-bold font-serif px-2">{composer.name}</h2>
@@ -107,7 +110,9 @@ export function ComposerSplitView({ composer, isOpen, onClose, children }: Compo
           {composerContent}
         </ResizablePanel>
 
-        <ResizableHandle withHandle />
+        <ResizableHandle
+            withHandle
+          />
 
         {/* Chat Panel */}
         <ResizablePanel defaultSize={60}>

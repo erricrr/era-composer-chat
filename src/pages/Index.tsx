@@ -68,8 +68,8 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Background Decoration */}
-      <MusicNoteDecoration />
+      {/* Removed Background Decoration */}
+      {/* <MusicNoteDecoration /> */}
 
       {/* Fixed Header */}
       <div

@@ -263,17 +263,17 @@ export function ChatInterface({
 
   const chatContent = (
     <div
-      className={`relative flex flex-col h-full bg-background overflow-hidden z-10 ${
+      className={`relative flex flex-col h-full bg-background overflow-hidden${
         isComposerListOpen ? 'pointer-events-none opacity-50' : ''
       }`}
       style={{
         marginTop: '0'
       }}
     >
-      <MusicNoteDecoration />
-      <div className="flex items-center justify-between px-5 py-3 border-b shadow-sm bg-secondary z-10">
+      <div className="flex items-center justify-between px-5 py-3 border-b shadow-sm bg-secondary">
         {(!isSplitViewOpen) ? (
           <div className="flex items-center space-x-6">
+
             <div onClick={() => setIsSplitViewOpen(true)} className="cursor-pointer">
               <ComposerImageViewer
                 composer={composer}
@@ -329,19 +329,20 @@ export function ChatInterface({
           <div key={message.id} className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
             <div className={message.sender === 'user'
               ? 'max-w-[80%] rounded-2xl px-4 py-2 bg-primary text-background ml-auto shadow-sm'
-              : 'max-w-[80%] rounded-2xl px-4 py-2 text-foreground bg-background '
+              : 'max-w-[80%] rounded-2xl px-4 py-2 text-foreground bg-background'
             }>
               {message.text}
             </div>
           </div>
         ))}
         <div ref={messagesEndRef} />
+
       </div>
 
-      <form onSubmit={handleSendMessage} className="sticky bottom-0 p-4 bg-background/80 backdrop-blur-sm">
+      <form onSubmit={handleSendMessage} className="sticky bottom-0 p-4 bg-background backdrop-blur-sm">
         <div className="flex flex-col gap-2">
           <div className="flex items-stretch gap-2">
-            <div className="flex-1">
+            <div className="z-10 flex-1">
               <textarea
                 ref={textareaRef}
                 value={inputMessage}
@@ -351,7 +352,7 @@ export function ChatInterface({
                 }}
                 onKeyDown={handleKeyPress}
                 placeholder={`Ask ${composer.name.split(' ').pop()} a question...`}
-                className="w-full rounded-xl border bg-background/80 p-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary resize-none overflow-hidden min-h-[42px]"
+                className="w-full rounded-xl border bg-background p-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary resize-none overflow-hidden min-h-[42px]"
                 rows={1}
                 onInput={e => {
                   const target = e.target as HTMLTextAreaElement;
@@ -372,6 +373,7 @@ export function ChatInterface({
           <p className="text-xs text-muted-foreground text-center">
             AI-generated conversation from verified sources. Does not reflect {composer.name.split(' ').pop()}&apos;s personal views.
           </p>
+          <MusicNoteDecoration />
         </div>
       </form>
     </div>
