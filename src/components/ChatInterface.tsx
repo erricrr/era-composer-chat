@@ -362,13 +362,15 @@ export function ChatInterface({
         />
       </div>
       <div className="self-end pb-3">
-        <Button
-          type="submit"
-          disabled={!inputMessage.trim() || isComposerMenuOpen}
-          className="h-[42px] w-[42px] rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-        >
-          <ArrowUp className="w-5 h-5" />
-        </Button>
+      <button
+      type="submit"
+      disabled={!inputMessage.trim() || isComposerMenuOpen}
+      className="h-12 w-12 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground
+        flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed
+        transition-all hover:scale-105 active:scale-95 shadow-sm"
+    >
+      <ArrowUp className="w-7 h-7" strokeWidth={2.5} />
+    </button>
       </div>
     </div>
     <p className="text-xs text-muted-foreground text-center mt-2">
