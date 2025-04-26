@@ -338,42 +338,44 @@ export function ChatInterface({
         </div>
       </div>
 
-      <form onSubmit={handleSendMessage} className="relative border-t bg-background/80 backdrop-blur-sm">
-        <div className="p-4">
-          <div className="flex items-center gap-2">
-            <div className="flex-1 relative">
-              <textarea
-                ref={textareaRef}
-                value={inputMessage}
-                onChange={(e) => {
-                  setInputMessage(e.target.value);
-                  onUserTyping(true);
-                }}
-                onKeyDown={handleKeyPress}
-                placeholder={`Ask ${composer.name.split(' ').pop()} a question...`}
-                className="w-full rounded-xl border bg-background/80 p-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary resize-none overflow-hidden min-h-[42px]"
-                rows={1}
-                onInput={e => {
-                  const target = e.target as HTMLTextAreaElement;
-                  target.style.height = 'auto';
-                  target.style.height = `${Math.min(target.scrollHeight, 200)}px`;
-                }}
-                disabled={isComposerMenuOpen}
-              />
-            </div>
-            <Button
-              type="submit"
-              disabled={!inputMessage.trim() || isComposerMenuOpen}
-              className="px-4 h-[42px] w-[42px] rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors shrink-0 bg-primary text-background hover:opacity-90 flex items-center justify-center"
-            >
-              <ArrowUp className="w-5 h-5" strokeWidth={2.5} />
-            </Button>
-          </div>
-          <p className="text-xs text-muted-foreground text-center mt-2">
-            AI-generated conversation from verified sources. Does not reflect {composer.name.split(' ').pop()}&apos;s personal views.
-          </p>
-        </div>
-      </form>
+      <form onSubmit={handleSendMessage} className="sticky bottom-0 border-t bg-background/80 backdrop-blur-sm">
+  <div className="p-4">
+    <div className="relative flex gap-2">
+      <div className="flex-1">
+        <textarea
+          ref={textareaRef}
+          value={inputMessage}
+          onChange={(e) => {
+            setInputMessage(e.target.value);
+            onUserTyping(true);
+          }}
+          onKeyDown={handleKeyPress}
+          placeholder={`Ask ${composer.name.split(' ').pop()} a question...`}
+          className="w-full rounded-xl border border-input bg-background p-3 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary resize-none overflow-hidden min-h-[42px] max-h-[200px] overflow-y-auto"
+          rows={1}
+          onInput={e => {
+            const target = e.target as HTMLTextAreaElement;
+            target.style.height = 'auto';
+            target.style.height = `${Math.min(target.scrollHeight, 200)}px`;
+          }}
+          disabled={isComposerMenuOpen}
+        />
+      </div>
+      <div className="self-end pb-3">
+        <Button
+          type="submit"
+          disabled={!inputMessage.trim() || isComposerMenuOpen}
+          className="h-[42px] w-[42px] rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        >
+          <ArrowUp className="w-5 h-5" />
+        </Button>
+      </div>
+    </div>
+    <p className="text-xs text-muted-foreground text-center mt-2">
+      AI-generated conversation from verified sources. Does not reflect {composer.name.split(' ').pop()}&apos;s personal views.
+    </p>
+  </div>
+</form>
     </div>
   );
 
