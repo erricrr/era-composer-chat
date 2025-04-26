@@ -7,6 +7,8 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { Badge } from "@/components/ui/badge";
 import { v4 as uuidv4 } from 'uuid';
 import { ComposerImageViewer } from './ComposerImageViewer';
+import { MusicNoteDecoration } from '@/components/MusicNoteDecoration';
+
 
 
 interface ChatInterfaceProps {
@@ -259,8 +261,10 @@ export function ChatInterface({
     return `Thank you for your interest in my work. I was a composer from the ${composer.era} era, known for ${composer.famousWorks[0]}. Is there anything specific about my compositions or life you would like to know?`;
   };
 
-  return <div className={`self-start -mt-10 flex flex-col h-full backdrop-blur-sm rounded-lg overflow-hidden z-10 ${isComposerListOpen ? 'pointer-events-none opacity-50' : ''}`}>
-    <div className="flex items-center justify-between p-3 border-b shadow-sm bg-primary/10">
+  return <div className={`self-start -mt-10 flex flex-col h-full bg-background rounded-lg overflow-hidden z-10 ${isComposerListOpen ? 'pointer-events-none opacity-50' : ''}`}>
+    <MusicNoteDecoration />
+    <div className="flex items-center justify-between p-3 border-b shadow-sm bg-secondary z-10">
+
       <div className="flex items-center space-x-6">
         <ComposerImageViewer composer={composer} size="sm" />
         <div className="flex flex-col items-start">
@@ -297,8 +301,8 @@ export function ChatInterface({
       {currentMessages.map((message: Message) => (
         <div key={message.id} className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
           <div className={message.sender === 'user'
-            ? 'max-w-[80%] rounded-2xl px-4 py-2 bg-primary/80 text-background ml-auto shadow-sm'
-            : 'max-w-[80%] px-4 py-2 text-foreground'
+            ? 'max-w-[80%] rounded-2xl px-4 py-2 bg-primary text-background ml-auto shadow-sm'
+            : 'max-w-[80%] rounded-2xl px-4 py-2 text-foreground bg-background '
           }>
             {message.text}
           </div>
