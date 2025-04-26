@@ -284,7 +284,7 @@ export function ChatInterface({
                   {composer.country}, {composer.years}
                 </p>
                 <Badge
-                  variant="badge" className="ml-2 bg-primary/65 text-background">
+                  variant="badge" className="ml-2 bg-primary text-background">
                   {getEraDisplayText(composer.era)}
                 </Badge>
               </div>
@@ -365,11 +365,11 @@ export function ChatInterface({
       <button
       type="submit"
       disabled={!inputMessage.trim() || isComposerMenuOpen}
-      className="h-12 w-12 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground
+      className="h-9 w-9 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground
         flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed
         transition-all hover:scale-105 active:scale-95 shadow-sm"
     >
-      <ArrowUp className="w-7 h-7" strokeWidth={2.5} />
+      <ArrowUp className="w-5 h-5" strokeWidth={3} />
     </button>
       </div>
     </div>
