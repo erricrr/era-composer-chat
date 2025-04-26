@@ -58,24 +58,32 @@ export function ImageModal({
         backdropFilter: 'blur(5px)',
         opacity: isOpen ? 1 : 0,
         transition: 'opacity 150ms ease-in-out',
+        overflow: 'auto',
       }}
       onClick={onClose}
     >
       <div
-        className="bg-[hsl(40,50%,98%)] dark:bg-[hsl(220,15%,18%)] rounded-lg shadow-xl w-full max-w-lg overflow-hidden border border-[hsl(45,30%,88%)] dark:border-[hsl(220,15%,25%)]"
+        className="rounded-lg shadow-xl w-full max-w-lg overflow-hidden border"
         style={{
+          backgroundColor: 'hsl(var(--card))',
+          color: 'hsl(var(--card-foreground))',
+          borderColor: 'hsl(var(--border))',
           transform: isOpen ? 'scale(1)' : 'scale(0.95)',
           transition: 'transform 150ms ease-in-out',
+          margin: '1rem 0',
         }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal header */}
-        <div className="flex justify-between items-center px-4 py-3 border-b border-[hsl(45,30%,88%)] dark:border-[hsl(220,15%,25%)]">
+        <div
+          className="flex justify-between items-center px-4 py-3 border-b"
+          style={{ borderColor: 'hsl(var(--border))' }}
+        >
           <div>
-            <h2 className="text-lg font-medium text-[hsl(220,15%,25%)] dark:text-[hsl(40,50%,95%)]">
+            <h2 className="text-lg font-medium" style={{ color: 'hsl(var(--foreground))' }}>
               {composerName}
             </h2>
-            <div className="flex text-sm text-[hsl(220,15%,45%)] dark:text-[hsl(40,20%,65%)] mt-1">
+            <div className="flex text-sm mt-1" style={{ color: 'hsl(var(--muted-foreground))' }}>
               {country && <span>{country}</span>}
               {country && years && <span className="mx-2">•</span>}
               {years && <span>{years}</span>}
@@ -83,7 +91,16 @@ export function ImageModal({
           </div>
           <button
             onClick={onClose}
-            className="text-[hsl(220,15%,45%)] hover:text-[hsl(220,15%,25%)] dark:text-[hsl(40,20%,65%)] dark:hover:text-[hsl(40,50%,95%)] transition-colors"
+            className="transition-colors"
+            style={{
+              color: 'hsl(var(--muted-foreground))',
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.color = 'hsl(var(--foreground))')
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.color = 'hsl(var(--muted-foreground))')
+            }
             aria-label="Close"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -92,18 +109,47 @@ export function ImageModal({
           </button>
         </div>
 
-        {/* Image container */}
-        <div className="flex justify-center bg-[hsl(45,50%,96%)] dark:bg-[hsl(220,15%,15%)] p-4">
+        {/* Image container with reduced horizontal padding */}
+        <div
+          className="flex justify-center py-4 px-2"
+          style={{ backgroundColor: 'hsl(var(--background))' }}
+        >
           <img
             src={imageSrc}
             alt={composerName}
-            className="max-h-96 w-auto object-contain shadow-md dark:shadow-none border border-[hsl(45,30%,88%)] dark:border-[hsl(220,15%,25%)]"
+            className="max-h-72 sm:max-h-80 md:max-h-96 w-auto object-contain shadow-md border"
+            style={{ borderColor: 'hsl(var(--border))' }}
           />
         </div>
 
-        {/* Copyright information */}
-        <div className="px-4 py-2 text-xs text-[hsl(220,15%,45%)] dark:text-[hsl(40,20%,65%)] border-t border-[hsl(45,30%,88%)] dark:border-[hsl(220,15%,25%)] bg-[hsl(45,35%,90%)] dark:bg-[hsl(220,15%,22%)]">
+        {/* Caption if available */}
+        {caption && (
+          <div className="px-4 pb-3 text-sm" style={{ color: 'hsl(var(--foreground))' }}>
+            {caption}
+          </div>
+        )}
+
+        {/* Copyright */}
+        <div
+          className="px-4 py-2 text-xs border-t"
+          style={{
+            color: 'hsl(var(--muted-foreground))',
+            backgroundColor: 'hsl(var(--muted))',
+            borderColor: 'hsl(var(--border))',
+          }}
+        >
           <span>{copyright}</span>
+          {sourceUrl && (
+            <a
+              href={sourceUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ml-2 underline"
+              style={{ color: 'hsl(var(--primary))' }}
+            >
+              Source
+            </a>
+          )}
         </div>
       </div>
     </div>

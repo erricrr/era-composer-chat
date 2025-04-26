@@ -6,60 +6,62 @@
 
 @layer base {
   :root {
-    /* Light mode theme: Parchment & Ink (keeping as is) */
-    --background: 45 50% 96%; /* Very light, warm beige (parchment) */
-    --foreground: 220 15% 25%; /* Dark, muted blue-grey (ink) */
-    --card: 40 50% 98%; /* Slightly whiter parchment for cards */
-    --card-foreground: 220 15% 25%; /* Ink */
-    --popover: 40 50% 98%; /* Consistent with cards */
-    --popover-foreground: 220 15% 25%; /* Ink */
-    --primary: 210 30% 40%; /* Muted, sophisticated blue */
-    --primary-foreground: 40 50% 95%; /* Light cream, high contrast */
-    --secondary: 45 35% 90%; /* Slightly darker parchment/light grey */
-    --secondary-foreground: 210 30% 35%; /* Darker version of primary blue */
-    --muted: 45 35% 90%; /* Same as secondary */
-    --muted-foreground: 220 15% 45%; /* Softer grey-blue */
-    --accent: 40 60% 65%; /* Muted gold/brass accent */
-    --accent-foreground: 30 30% 20%; /* Dark brown for contrast on gold */
-    --destructive: 0 70% 55%; /* Clear but slightly muted red */
-    --destructive-foreground: 0 0% 98%; /* Almost white */
-    --border: 45 30% 88%; /* Subtle parchment border */
-    --input: 45 30% 88%; /* Consistent border for inputs */
-    --ring: 210 40% 55%; /* Slightly brighter blue for focus rings */
+    /* Light mode theme: Parchment & Ink */
+    --background: 45 50% 96%;
+    --foreground: 220 15% 25%;
+    --card: 40 50% 98%;
+    --card-foreground: 220 15% 25%;
+    --popover: 40 50% 98%;
+    --popover-foreground: 220 15% 25%;
+    --primary: 210 30% 40%;
+    --primary-foreground: 40 50% 95%;
+    --secondary: 45 35% 90%;
+    --secondary-foreground: 210 30% 35%;
+    --muted: 45 35% 90%;
+    --muted-foreground: 220 15% 35%; /* updated for better contrast */
+    --accent: 40 60% 65%;
+    --accent-foreground: 30 30% 20%;
+    --destructive: 0 70% 55%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 45 30% 88%;
+    --input: 45 30% 88%;
+    --ring: 210 40% 55%;
     --radius: 0.5rem;
-    /* Sidebar specific adjustments (Light) */
-    --sidebar-background: 45 40% 92%; /* Slightly darker parchment for sidebar */
-    --sidebar-foreground: 220 15% 25%; /* Ink */
-    --sidebar-primary: 210 30% 40%; /* Muted blue */
-    --sidebar-primary-foreground: 40 50% 95%; /* Light cream */
-    --sidebar-accent: 40 60% 65%; /* Muted gold */
-    --sidebar-accent-foreground: 30 30% 20%; /* Dark brown */
-    --sidebar-border: 45 30% 85%; /* Slightly more visible border */
-    --sidebar-ring: 210 40% 55%; /* Blue focus */
+
+    /* Sidebar (Light) */
+    --sidebar-background: 45 40% 92%;
+    --sidebar-foreground: 220 15% 25%;
+    --sidebar-primary: 210 30% 40%;
+    --sidebar-primary-foreground: 40 50% 95%;
+    --sidebar-accent: 40 60% 65%;
+    --sidebar-accent-foreground: 30 30% 20%;
+    --sidebar-border: 45 30% 85%;
+    --sidebar-ring: 210 40% 55%;
   }
+
   .dark {
     /* Dark mode theme: Desaturated Royal Purple & Gold */
-    --background: 275 15% 12%; /* Deep, desaturated purple */
-    --foreground: 45 25% 90%; /* Softer gold/cream text */
-    --card: 275 15% 15%; /* Slightly lighter purple for cards */
+    --background: 275 15% 12%;
+    --foreground: 45 25% 90%;
+    --card: 275 15% 15%;
     --card-foreground: 45 25% 90%;
     --popover: 275 15% 15%;
     --popover-foreground: 45 25% 90%;
-    --primary: 45 30% 65%; /* Desaturated gold */
-    --primary-foreground: 275 20% 15%; /* Dark purple for contrast */
-    --secondary: 275 10% 20%; /* Softer muted purple */
+    --primary: 45 30% 65%;
+    --primary-foreground: 275 20% 15%;
+    --secondary: 275 10% 20%;
     --secondary-foreground: 45 25% 80%;
     --muted: 275 10% 20%;
-    --muted-foreground: 45 15% 65%; /* Less saturated gold-grey */
-    --accent: 45 35% 60%; /* More muted gold */
+    --muted-foreground: 45 20% 75%; /* updated for better contrast */
+    --accent: 45 35% 60%;
     --accent-foreground: 275 20% 15%;
-    --destructive: 0 40% 60%; /* Desaturated red */
+    --destructive: 0 40% 60%;
     --destructive-foreground: 0 0% 98%;
     --border: 275 15% 22%;
     --input: 275 15% 22%;
-    --ring: 45 30% 65%; /* Desaturated gold focus ring */
+    --ring: 45 30% 65%;
 
-    /* Sidebar specific adjustments (Dark) */
+    /* Sidebar (Dark) */
     --sidebar-background: 275 15% 15%;
     --sidebar-foreground: 45 25% 90%;
     --sidebar-primary: 45 30% 65%;
@@ -69,8 +71,8 @@
     --sidebar-border: 275 15% 25%;
     --sidebar-ring: 45 30% 65%;
   }
-
 }
+
 
 @layer base {
   * {
