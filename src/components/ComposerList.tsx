@@ -48,7 +48,9 @@ export function ComposerList({
 
     {/* Header with horizontal layout */}
     <div className="flex items-center space-x-6 mb-3">
-      <ComposerImageViewer composer={selectedComposer} />
+      <div className="cursor-pointer">
+        <ComposerImageViewer composer={selectedComposer} allowModalOnDesktop={true} />
+      </div>
       <div className="flex flex-col items-start">
         <h3 className="text-2xl font-bold font-serif">{selectedComposer.name}</h3>
         <div className="flex items-center gap-2 mt-1">
