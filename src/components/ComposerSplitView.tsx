@@ -30,7 +30,7 @@ export function ComposerSplitView({ composer, isOpen, onClose, children }: Compo
       </div>
 
       {/* Fixed Header - Now outside ScrollArea */}
-      <div className="relative flex justify-between items-start p-4 pb-2 bg-secondary/50 backdrop-blur-sm shadow-sm z-10">
+      <div className="relative flex justify-between items-start p-4 pb-2 bg-secondary backdrop-blur-sm shadow-sm z-10">
         <h2 className="text-2xl font-bold font-serif px-2">{composer.name}</h2>
         <Button
           variant="ghost"
