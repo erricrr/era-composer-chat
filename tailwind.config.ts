@@ -116,6 +116,10 @@ export default {
 					to: {
 						opacity: '0'
 					}
+				},
+				float: {
+					'0%, 100%': { transform: 'translateY(0)' },
+					'50%': { transform: 'translateY(-10px)' },
 				}
 			},
 			animation: {
@@ -124,7 +128,9 @@ export default {
 				'slide-up': 'slide-up 0.5s ease-out forwards',
 				'slide-down': 'slide-down 0.5s ease-out forwards',
 				'fade-in': 'fade-in 0.3s ease-out',
-				'fade-out': 'fade-out 0.3s ease-out'
+				'fade-out': 'fade-out 0.3s ease-out',
+				'float': 'float 3s ease-in-out infinite',
+				'float-delayed': 'float 3s ease-in-out infinite 1.5s',
 			},
 			fontFamily: {
 				'serif': ['Playfair Display', 'Georgia', 'serif'],

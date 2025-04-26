@@ -26,7 +26,10 @@ export function ChatInterface({
   const isMobile = useIsMobile();
   const [shouldAutoScroll, setShouldAutoScroll] = useState(true);
   const prevMessagesLengthRef = useRef(0);
-  const [isSplitViewOpen, setIsSplitViewOpen] = useState(false);
+  const [isSplitViewOpen, setIsSplitViewOpen] = useState(() => {
+    const saved = localStorage.getItem('splitViewOpen');
+    return saved ? JSON.parse(saved) : false;
+  });
 
   // Display state controlled entirely by this component
   const [currentMessages, setCurrentMessages] = useState<Message[]>([]);
@@ -143,6 +146,11 @@ export function ChatInterface({
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }, [isComposerListOpen]);
+
+  // Effect to persist split view state
+  useEffect(() => {
+    localStorage.setItem('splitViewOpen', JSON.stringify(isSplitViewOpen));
+  }, [isSplitViewOpen]);
 
   // Show loading state
   if (!activeConversationId && currentMessages.length === 0) {
