@@ -39,34 +39,36 @@
     --sidebar-ring: 340 35% 35%;
   }
   .dark {
-    /* Dark mode: Deeper Purple & Refined Accents */
-    --background: 260 15% 18%;
-    --foreground: 200 10% 80%; /* Lightened from 70% to 80% for better contrast */
-    --card: 270 10% 22%;
-    --card-foreground: 200 10% 80%; /* Lightened from 70% to 80% for better contrast */
-    --popover: 270 10% 22%;
-    --popover-foreground: 200 10% 80%; /* Lightened from 70% to 80% for better contrast */
-    --primary: 45 35% 65%; /* Brightened from 15%/55% to 35%/65% for better contrast */
-    --primary-foreground: 260 15% 18%;
-    --secondary: 260 10% 25%;
-    --secondary-foreground: 200 10% 85%; /* Lightened from 70% to 85% for better contrast */
-    --muted: 260 10% 25%;
-    --muted-foreground: 200 5% 80%; /* Lightened from 65% to 80% for better contrast */
-    --accent: 210 30% 70%; /* Brightened from 10%/60% to 30%/70% for better contrast */
-    --accent-foreground: 260 15% 18%;
-    --destructive: 0 70% 55%; /* Brightened from 30%/50% to 70%/55% for better contrast */
-    --destructive-foreground: 200 10% 90%; /* Lightened from 80% to 90% for better contrast */
-    --border: 270 5% 28%;
-    --input: 270 5% 28%;
-    --ring: 45 40% 70%; /* Brightened from 20%/60% to 40%/70% for better contrast */
-    --sidebar-background: 260 12% 20%;
-    --sidebar-foreground: 200 10% 80%; /* Lightened from 70% to 80% for better contrast */
-    --sidebar-primary: 45 35% 65%; /* Brightened from 15%/55% to 35%/65% for better contrast */
-    --sidebar-primary-foreground: 260 15% 18%;
-    --sidebar-accent: 210 30% 70%; /* Brightened from 10%/60% to 30%/70% for better contrast */
-    --sidebar-accent-foreground: 260 15% 18%;
-    --sidebar-border: 270 5% 35%;
-    --sidebar-ring: 45 40% 70%; /* Brightened from 20%/60% to 40%/70% for better contrast */
+    /* Dark mode theme: Desaturated Royal Purple & Gold */
+    --background: 275 15% 12%;
+    --foreground: 45 25% 90%;
+    --card: 275 15% 15%;
+    --card-foreground: 45 25% 90%;
+    --popover: 275 15% 15%;
+    --popover-foreground: 45 25% 90%;
+    --primary: 45 30% 65%;
+    --primary-foreground: 275 20% 15%;
+    --secondary: 275 10% 20%;
+    --secondary-foreground: 45 25% 80%;
+    --muted: 275 10% 20%;
+    --muted-foreground: 45 20% 75%; /* updated for better contrast */
+    --accent: 45 35% 60%;
+    --accent-foreground: 275 20% 15%;
+    --destructive: 0 40% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 275 15% 22%;
+    --input: 275 15% 22%;
+    --ring: 45 30% 65%;
+
+    /* Sidebar (Dark) */
+    --sidebar-background: 275 15% 15%;
+    --sidebar-foreground: 45 25% 90%;
+    --sidebar-primary: 45 30% 65%;
+    --sidebar-primary-foreground: 275 20% 15%;
+    --sidebar-accent: 45 35% 60%;
+    --sidebar-accent-foreground: 275 20% 15%;
+    --sidebar-border: 275 15% 25%;
+    --sidebar-ring: 45 30% 65%;
   }
 
 
