@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { Era, eras } from '@/data/composers';
-import { HelpCircle, Check } from 'lucide-react';
+import { HelpCircle } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
@@ -13,16 +13,12 @@ interface TimelineProps {
 export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
   const localStorageKey = 'timelineOpenPopoverId';
 
-  // Initialize state from localStorage or default to null
   const [openPopoverId, setOpenPopoverId] = useState<string | null>(() => {
     const storedValue = localStorage.getItem(localStorageKey);
-    // Ensure we parse only if the value is not null or undefined
     return storedValue && storedValue !== 'null' ? JSON.parse(storedValue) : null;
   });
 
-  // Effect to update localStorage when state changes
   useEffect(() => {
-    // Store null directly or stringify the ID
     localStorage.setItem(localStorageKey, openPopoverId ? JSON.stringify(openPopoverId) : 'null');
   }, [openPopoverId]);
 
@@ -45,7 +41,6 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
         <div className="w-full max-w-4xl mx-auto my-6">
           {/* Era Timeline */}
           <div className="relative flex flex-col">
-
             {/* Era labels */}
             <div className="flex justify-between mb-2">
               {eras.map(era => (
@@ -124,11 +119,7 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
                                 `}
                               aria-label={`More info about ${era.name}`}
                             >
-                              {selectedEra === era.name ? (
-                                <Check className="w-3 h-3" />
-                              ) : (
-                                <span className="text-xs font-medium">?</span>
-                              )}
+                              <span className="text-xs font-medium">?</span>
                             </button>
                           </PopoverTrigger>
                         </TooltipTrigger>
@@ -151,11 +142,11 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
           </div>
 
           {/* Visual indicator that connects timeline to content below */}
-          {selectedEra && (
+          {/* {selectedEra && (
             <div className="w-full flex justify-center mt-2">
               <div className={`h-6 w-0.5 bg-primary/50 animate-pulse`}></div>
             </div>
-          )}
+          )} */}
         </div>
       </TooltipProvider>
     </>
