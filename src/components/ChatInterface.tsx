@@ -299,7 +299,7 @@ export function ChatInterface({
             </div>
           </div>
         ) : (
-          <div className="h-8 flex items-center space-x-3 px-2">
+          <div className="flex items-center space-x-3 pb-3">
           <Music className="h-4 w-4 text-primary" />
           <span className="text-sm font-medium text-muted-foreground">
             Chat with {composer.name.split(' ').pop()}
