@@ -274,7 +274,7 @@ export function ChatInterface({
         isComposerListOpen ? ' pointer-events-none opacity-50' : ''
       }`}
     >
-      <div className="flex items-center justify-between px-5 py-3 border-b shadow-sm bg-secondary">
+      <div className="flex items-center justify-between px-5 pt-6 pb-2 border-b shadow-sm bg-secondary">
         {(!isSplitViewOpen) ? (
           <div className="flex items-center space-x-6">
 
