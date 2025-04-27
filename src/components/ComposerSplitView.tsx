@@ -111,7 +111,9 @@ export function ComposerSplitView({ composer, isOpen, onClose, children }: Compo
 
       {/* Fixed Header - Now outside ScrollArea */}
       <div className="relative flex justify-between items-center p-4 bg-secondary backdrop-blur-sm shadow-sm z-10 flex-shrink-0">
-        <h2 className="text-2xl font-bold font-serif">{composer.name}</h2>
+        <h2 className="font-bold font-serif text-xl">
+          {composer.name}
+        </h2>
         <Button
           variant="ghost"
           size="icon"
