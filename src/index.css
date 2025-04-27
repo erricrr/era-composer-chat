@@ -6,39 +6,38 @@
 
 @layer base {
   :root {
-    /* Light mode theme: Fine White Wine */
-    --background: 30 20% 97%;
-    --foreground: 30 15% 30%;
-    --card: 30 20% 98%;
-    --card-foreground: 30 15% 30%;
-    --popover: 30 20% 98%;
-    --popover-foreground: 30 15% 30%;
-    --primary: 30 25% 60%;
-    --primary-foreground: 30 20% 97%;
-    --secondary: 30 15% 85%;
-    --secondary-foreground: 30 25% 40%;
-    --muted: 30 15% 85%;
-    --muted-foreground: 30 20% 40%;
-    --accent: 30 25% 70%;
-    --accent-foreground: 30 20% 25%;
-    --destructive: 0 60% 60%;
+    /* Light Mode (Perfect, as you requested) */
+    --background: 42 30% 96%;
+    --foreground: 300 20% 20%;
+    --card: 42 30% 98%;
+    --card-foreground: 300 20% 20%;
+    --popover: 42 30% 98%;
+    --popover-foreground: 300 20% 20%;
+    --primary: 340 35% 35%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 42 20% 90%;
+    --secondary-foreground: 300 20% 25%;
+    --muted: 300 10% 85%;
+    --muted-foreground: 300 15% 40%;
+    --accent: 40 50% 55%;
+    --accent-foreground: 300 20% 20%;
+    --destructive: 0 50% 45%;
     --destructive-foreground: 0 0% 98%;
-    --border: 30 15% 80%;
-    --input: 30 15% 80%;
-    --ring: 30 25% 65%;
+    --border: 42 20% 85%;
+    --input: 42 20% 90%;
+    --ring: 340 35% 35%;
     --radius: 0.5rem;
 
     /* Sidebar (Light) */
-    --sidebar-background: 30 20% 95%;
-    --sidebar-foreground: 30 15% 30%;
-    --sidebar-primary: 30 25% 60%;
-    --sidebar-primary-foreground: 30 20% 97%;
-    --sidebar-accent: 30 25% 70%;
-    --sidebar-accent-foreground: 30 20% 25%;
-    --sidebar-border: 30 15% 75%;
-    --sidebar-ring: 30 25% 65%;
+    --sidebar-background: 42 30% 95%;
+    --sidebar-foreground: 300 20% 20%;
+    --sidebar-primary: 340 35% 35%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 40 50% 55%;
+    --sidebar-accent-foreground: 300 20% 20%;
+    --sidebar-border: 42 20% 85%;
+    --sidebar-ring: 340 35% 35%;
   }
-
   .dark {
     /* Dark mode: Deeper Purple & Refined Accents */
     --background: 260 15% 18%;
@@ -69,8 +68,6 @@
     --sidebar-border: 270 5% 35%;
     --sidebar-ring: 45 40% 70%; /* Brightened from 20%/60% to 40%/70% for better contrast */
   }
-
-
 
 
 
