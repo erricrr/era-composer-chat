@@ -71,6 +71,14 @@
     --sidebar-border: 275 15% 25%;
     --sidebar-ring: 45 30% 65%;
   }
+
+  html, body {
+    @apply h-full overflow-hidden;
+  }
+
+  #root {
+    @apply h-full;
+  }
 }
 
 

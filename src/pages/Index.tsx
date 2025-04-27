@@ -67,7 +67,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="h-full overflow-hidden bg-background">
       {/* Removed Background Decoration */}
       {/* <MusicNoteDecoration /> */}
 
@@ -103,8 +103,7 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Main Content - Conditionally render */}
-      <main className="content-main">
+      <main className="content-main h-full">
         {/* Composer Selection Menu */}
         <div
           className={`
@@ -112,7 +111,7 @@ const Index = () => {
             bg-background backdrop-blur-sm border-b border-border shadow-lg
             transition-transform duration-700 ease-in-out
             ${isMenuOpen ? 'translate-y-0' : '-translate-y-full pointer-events-none'}
-            overflow-y-scroll
+            overflow-y-auto
           `}
           style={{
             maxHeight: `calc(100vh - 2.5rem)`
@@ -130,7 +129,7 @@ const Index = () => {
 
         {/* Chat Interface */}
         <div
-          className="fixed inset-x-0 bottom-0 overflow-y-auto"
+          className="fixed inset-x-0 bottom-0 overflow-y-auto bg-background"
           style={{
             top: '2.5rem',
             height: 'calc(100vh - 2.5rem)',
