@@ -4,6 +4,7 @@ import { Era, eras } from '@/data/composers';
 import { HelpCircle } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useIsTouch } from '@/hooks/useIsTouch';
 
 interface TimelineProps {
   selectedEra: Era;
@@ -12,6 +13,7 @@ interface TimelineProps {
 
 export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
   const localStorageKey = 'timelineOpenPopoverId';
+  const isTouch = useIsTouch();
 
   const [openPopoverId, setOpenPopoverId] = useState<string | null>(() => {
     const storedValue = localStorage.getItem(localStorageKey);
@@ -101,39 +103,62 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
                     className="flex flex-col items-center w-1/4 relative z-10"
                   >
                     <Popover open={openPopoverId === era.id} onOpenChange={(open) => setOpenPopoverId(open ? era.id : null)}>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <PopoverTrigger asChild>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleIconClick(era.id);
-                              }}
-                              className={`w-6 h-6 rounded-full flex items-center justify-center
-                                transition-all duration-300 ease-out relative
-                                ${selectedEra === era.name
-                                  ? 'bg-primary text-background shadow-md shadow-primary/30'
-                                  : 'bg-background border border-primary/60 text-primary/70 hover:border-primary hover:text-primary hover:bg-primary/10'
-                                }
-                                before:absolute before:w-8 before:h-8 before:bg-background before:-z-10 before:rounded-full
-                                `}
-                              aria-label={`More info about ${era.name}`}
-                            >
-                              <span className="text-xs font-medium">?</span>
-                            </button>
-                          </PopoverTrigger>
-                        </TooltipTrigger>
-                        <TooltipContent side="top" className="text-xs">
-                          {selectedEra === era.name ? 'Active Era' : 'Era Details'}
-                        </TooltipContent>
-                      </Tooltip>
+                      {!isTouch ? (
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <PopoverTrigger asChild>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleIconClick(era.id);
+                                }}
+                                className={`w-6 h-6 rounded-full flex items-center justify-center
+                                  transition-all duration-300 ease-out relative
+                                  ${selectedEra === era.name
+                                    ? 'bg-primary text-background shadow-md shadow-primary/30'
+                                    : 'bg-background border border-primary/60 text-primary/70 hover:border-primary hover:text-primary hover:bg-primary/10'
+                                  }
+                                  before:absolute before:w-8 before:h-8 before:bg-background before:-z-10 before:rounded-full
+                                  `}
+                                aria-label={`More info about ${era.name}`}
+                              >
+                                <span className="text-xs font-medium">?</span>
+                              </button>
+                            </PopoverTrigger>
+                          </TooltipTrigger>
+                          <TooltipContent side="top" className="text-xs">
+                            {selectedEra === era.name ? 'Active Era' : 'Era Details'}
+                          </TooltipContent>
+                        </Tooltip>
+                      ) : (
+                        <PopoverTrigger asChild>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleIconClick(era.id);
+                            }}
+                            className={`w-6 h-6 rounded-full flex items-center justify-center
+                              transition-all duration-300 ease-out relative
+                              ${selectedEra === era.name
+                                ? 'bg-primary text-background shadow-md shadow-primary/30'
+                                : 'bg-background border border-primary/60 text-primary/70 hover:border-primary hover:text-primary hover:bg-primary/10'
+                              }
+                              before:absolute before:w-8 before:h-8 before:bg-background before:-z-10 before:rounded-full
+                              `}
+                            aria-label={`More info about ${era.name}`}
+                          >
+                            <span className="text-xs font-medium">?</span>
+                          </button>
+                        </PopoverTrigger>
+                      )}
 
                       <PopoverContent className="relative max-w-sm p-2 shadow-xl overflow-hidden">
-                      <div className="absolute left-0 top-1.5 bottom-0.5 w-1.5 bg-primary rounded-r-md animate-[lineAnimation_0.3s_ease-in-out] origin-top" />  <div className="p-3"> {/* Adjust padding here */}
-                      <h4 className="text-lg font-semibold mb-2 text-primary">{era.name}</h4>
-                      <p className="text-sm text-muted-foreground">{era.description}</p>
-                    </div>
-                  </PopoverContent>
+                        <div className="absolute left-0 top-1.5 bottom-0.5 w-1.5 bg-primary rounded-r-md animate-[lineAnimation_0.3s_ease-in-out] origin-top" />
+                        <div className="p-3">
+                          <h4 className="text-lg font-semibold mb-2 text-primary">{era.name}</h4>
+                          <p className="text-sm text-muted-foreground">{era.description}</p>
+                        </div>
+                      </PopoverContent>
                     </Popover>
                   </div>
                 ))}
