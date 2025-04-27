@@ -67,7 +67,7 @@ export function ComposerList({
                   <span className="text-xs md:text-sm text-muted-foreground">
                     {selectedComposer.country}, {selectedComposer.years}
                   </span>
-                  <Badge variant="bio" className="md:ml-2 w-fit">
+                  <Badge variant="badge" className="md:ml-2 w-fit">
                     {era === Era.Modern ? '20th-21st Century' : era}
                   </Badge>
                 </div>

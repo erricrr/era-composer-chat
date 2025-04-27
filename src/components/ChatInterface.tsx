@@ -292,7 +292,7 @@ export function ChatInterface({
                   {composer.country}, {composer.years}
                 </p>
                 <Badge
-                  variant="badge" className="ml-2 bg-primary text-background">
+                  variant="badge" className="ml-2">
                   {getEraDisplayText(composer.era)}
                 </Badge>
               </div>
