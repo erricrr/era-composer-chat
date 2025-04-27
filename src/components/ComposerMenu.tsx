@@ -54,7 +54,7 @@ export function ComposerMenu({
   return (
     <div className="container mx-auto px-4 py-6 flex flex-col h-full overflow-y-auto">
       <div className="relative">
-        <h1 className="text-3xl font-bold text-center font-serif mt-2 mb-4 mx-[30px]">
+        <h1 className="text-3xl font-bold text-center font-serif mt-0 pt-6 pb-4 mx-[30px]">
           {selectedEra} Era Composers
         </h1>
       </div>
