@@ -6,102 +6,71 @@
 
 @layer base {
   :root {
-    /* Light mode theme: Nocturne in Purple & Gold */
-    --background: 0 0% 96%;
-    --foreground: 270 25% 15%;
-    --card: 0 0% 98%;
-    --card-foreground: 270 25% 15%;
-    --popover: 0 0% 98%;
-    --popover-foreground: 270 25% 15%;
-    --primary: 270 35% 25%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 88%;
-    --secondary-foreground: 270 25% 15%;
-    --muted: 0 0% 90%;
-    --muted-foreground: 270 20% 30%;
-    --accent: 40 40% 45%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 60% 45%;
-    --destructive-foreground: 0 0% 95%;
-    --border: 0 0% 85%;
-    --input: 0 0% 80%;
-    --ring: 270 35% 25%;
+    /* Light mode theme: Fine White Wine */
+    --background: 30 20% 97%;
+    --foreground: 30 15% 30%;
+    --card: 30 20% 98%;
+    --card-foreground: 30 15% 30%;
+    --popover: 30 20% 98%;
+    --popover-foreground: 30 15% 30%;
+    --primary: 30 25% 60%;
+    --primary-foreground: 30 20% 97%;
+    --secondary: 30 15% 85%;
+    --secondary-foreground: 30 25% 40%;
+    --muted: 30 15% 85%;
+    --muted-foreground: 30 20% 40%;
+    --accent: 30 25% 70%;
+    --accent-foreground: 30 20% 25%;
+    --destructive: 0 60% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 30 15% 80%;
+    --input: 30 15% 80%;
+    --ring: 30 25% 65%;
     --radius: 0.5rem;
+
     /* Sidebar (Light) */
-    --sidebar-background: 0 0% 94%;
-    --sidebar-foreground: 270 25% 15%;
-    --sidebar-primary: 270 35% 25%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 40 40% 45%;
-    --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 0 0% 85%;
-    --sidebar-ring: 270 35% 25%;
+    --sidebar-background: 30 20% 95%;
+    --sidebar-foreground: 30 15% 30%;
+    --sidebar-primary: 30 25% 60%;
+    --sidebar-primary-foreground: 30 20% 97%;
+    --sidebar-accent: 30 25% 70%;
+    --sidebar-accent-foreground: 30 20% 25%;
+    --sidebar-border: 30 15% 75%;
+    --sidebar-ring: 30 25% 65%;
   }
+
   .dark {
     /* Dark mode: Deeper Purple & Refined Accents */
     --background: 260 15% 18%;
-    --foreground: 200 10% 80%;
+    --foreground: 200 10% 80%; /* Lightened from 70% to 80% for better contrast */
     --card: 270 10% 22%;
-    --card-foreground: 200 10% 80%;
+    --card-foreground: 200 10% 80%; /* Lightened from 70% to 80% for better contrast */
     --popover: 270 10% 22%;
-    --popover-foreground: 200 10% 80%;
-    --primary: 45 35% 65%;
+    --popover-foreground: 200 10% 80%; /* Lightened from 70% to 80% for better contrast */
+    --primary: 45 35% 65%; /* Brightened from 15%/55% to 35%/65% for better contrast */
     --primary-foreground: 260 15% 18%;
     --secondary: 260 10% 25%;
-    --secondary-foreground: 200 10% 85%;
+    --secondary-foreground: 200 10% 85%; /* Lightened from 70% to 85% for better contrast */
     --muted: 260 10% 25%;
-    --muted-foreground: 200 5% 80%;
-    --accent: 210 30% 70%;
+    --muted-foreground: 200 5% 80%; /* Lightened from 65% to 80% for better contrast */
+    --accent: 210 30% 70%; /* Brightened from 10%/60% to 30%/70% for better contrast */
     --accent-foreground: 260 15% 18%;
-    --destructive: 0 70% 55%;
-    --destructive-foreground: 200 10% 90%;
+    --destructive: 0 70% 55%; /* Brightened from 30%/50% to 70%/55% for better contrast */
+    --destructive-foreground: 200 10% 90%; /* Lightened from 80% to 90% for better contrast */
     --border: 270 5% 28%;
     --input: 270 5% 28%;
-    --ring: 45 40% 70%;
+    --ring: 45 40% 70%; /* Brightened from 20%/60% to 40%/70% for better contrast */
     --sidebar-background: 260 12% 20%;
-    --sidebar-foreground: 200 10% 80%;
-    --sidebar-primary: 45 35% 65%;
+    --sidebar-foreground: 200 10% 80%; /* Lightened from 70% to 80% for better contrast */
+    --sidebar-primary: 45 35% 65%; /* Brightened from 15%/55% to 35%/65% for better contrast */
     --sidebar-primary-foreground: 260 15% 18%;
-    --sidebar-accent: 210 30% 70%;
+    --sidebar-accent: 210 30% 70%; /* Brightened from 10%/60% to 30%/70% for better contrast */
     --sidebar-accent-foreground: 260 15% 18%;
     --sidebar-border: 270 5% 35%;
-    --sidebar-ring: 45 40% 70%;
+    --sidebar-ring: 45 40% 70%; /* Brightened from 20%/60% to 40%/70% for better contrast */
   }
 
 
-  .dark {
-    /* Dark mode: Deeper Purple & Refined Accents */
-    --background: 260 15% 18%; /* Deeper, less vibrant purple (more indigo leaning) */
-    --foreground: 200 10% 70%; /* Muted silver (softer grey) */
-    --card: 270 10% 22%; /* Slightly lighter deep purple */
-    --card-foreground: 200 10% 70%;
-    --popover: 270 10% 22%;
-    --popover-foreground: 200 10% 70%;
-    --primary: 45 15% 55%; /* More antique gold (less bright) */
-    --primary-foreground: 260 15% 22%;
-    --secondary: 260 10% 25%; /* Slightly lighter deep purple */
-    --secondary-foreground: 200 10% 65%;
-    --muted: 260 10% 25%;
-    --muted-foreground: 200 5% 60%;
-    --accent: 210 10% 60%; /* Another muted silver variation */
-    --accent-foreground: 260 15% 22%;
-    --destructive: 0 30% 50%; /* Muted red */
-    --destructive-foreground: 200 10% 75%;
-    --border: 270 5% 28%; /* Darker deep purple */
-    --input: 270 5% 28%;
-    --ring: 45 20% 60%;
-    --radius: 0.5rem;
-
-    /* Sidebar (Dark) */
-    --sidebar-background: 260 12% 20%;
-    --sidebar-foreground: 200 10% 70%;
-    --sidebar-primary: 45 15% 55%;
-    --sidebar-primary-foreground: 260 15% 22%;
-    --sidebar-accent: 210 10% 60%;
-    --sidebar-accent-foreground: 260 15% 22%;
-    --sidebar-border: 270 3% 30%;
-    --sidebar-ring: 45 20% 60%;
-  }
 
 
 
