@@ -94,7 +94,7 @@ export function ComposerList({
               onClick={() => onStartChat(selectedComposer)}
               className="w-full bg-primary text-primary-foreground hover:bg-primary/90 transition-transform duration-300 hover:scale-[1.02] mt-auto text-sm md:text-base py-2 md:py-3"
             >
-              Start Conversation with {selectedComposer.name.split(' ').pop()}
+              Start a Chat with {selectedComposer.name.split(' ').pop()}
             </Button>
           </div>
         )}
