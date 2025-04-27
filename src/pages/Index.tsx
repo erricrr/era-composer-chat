@@ -114,7 +114,7 @@ const Index = () => {
             overflow-y-scroll
           `}
           style={{
-            maxHeight: `calc(100vh - clamp(2rem, 4vw, 2.5rem))`
+            maxHeight: `calc(100vh - 2.5rem)`
           }}
         >
           <div className="pb-14">
@@ -131,8 +131,8 @@ const Index = () => {
         <div
           className="fixed inset-x-0 bottom-0 overflow-y-auto"
           style={{
-            top: 'clamp(2rem, 4vw, 2.5rem)',
-            height: 'calc(100vh - clamp(2rem, 4vw, 2.5rem))',
+            top: '2.5rem',
+            height: 'calc(100vh - 2.5rem)',
             backdropFilter: 'blur(8px)',
             boxShadow: '0 -10px 25px rgba(0,0,0,0.1)',
           }}

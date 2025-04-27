@@ -122,15 +122,15 @@
   }
 
   .fixed-header {
-    @apply fixed top-0 left-0 right-0 bg-background/95 backdrop-blur-md z-50 border-b border-border/40 shadow-sm flex items-center transition-all duration-300;
-    height: clamp(2rem, 4vw, 2.5rem);
+    @apply fixed top-0 left-0 right-0 bg-background backdrop-blur-md z-50 border-b border-border/40 shadow-sm flex items-center transition-all duration-300;
+    height: 2.5rem;
   }
 
   /* Update the main content positioning to match header smoothly */
   main.content-main {
     @apply relative transition-[top] duration-300;
-    top: clamp(2rem, 4vw, 2.5rem);
-    min-height: calc(100vh - clamp(2rem, 4vw, 2.5rem));
+    top: 2.5rem;
+    min-height: calc(100vh - 2.5rem);
   }
 
   .content-below-header {
