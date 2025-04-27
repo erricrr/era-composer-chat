@@ -37,9 +37,9 @@ function ContainedImageModal({
   if (!isOpen && !isAnimating) return null;
 
   return (
-    // Backdrop - positioned absolutely below header within parent, lower z-index
+    // Full-screen backdrop - positioned to avoid header collision
     <div
-      className="absolute inset-x-0 top-[64px] bottom-0 z-5 flex items-center justify-center p-4 shadow-sm"
+      className="absolute inset-x-0 top-[73px] bottom-0 z-5 flex items-start justify-center overflow-auto"
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
       style={{
         backgroundColor: 'hsl(var(--background) / 0.8)',
@@ -47,47 +47,43 @@ function ContainedImageModal({
         transition: 'opacity 150ms ease-in-out',
       }}
     >
-      {/* Image container - centered, consistent rounding */}
-      <div
-        className="relative max-w-[90%] max-h-[90%] group rounded-lg overflow-hidden shadow-xl z-10"
-        onClick={e => e.stopPropagation()} // Prevent click from closing modal
-        style={{
-          backgroundColor: 'hsl(var(--background))', // Ensure bg for rounded corners
-          transform: isOpen ? 'scale(1)' : 'scale(0.95)',
-          transition: 'transform 150ms ease-in-out',
-        }}
-      >
-        {/* Close button */}
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={onClose}
-          className="absolute right-1 top-1 z-10 h-8 w-8 rounded-full bg-background/50 hover:bg-background/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-200"
-        >
-          <X className="h-4 w-4" />
-        </Button>
+  {/* Content container with proper spacing */}
+<div
+  className="relative bg-background rounded-lg shadow-xl z-10 overflow-hidden mt-5 max-w-[90%] group"
+  onClick={e => e.stopPropagation()} // Prevent click from closing modal
+  style={{
+    transform: isOpen ? 'scale(1)' : 'scale(0.95)',
+    transition: 'transform 150ms ease-in-out',
+  }}
+>
+  {/* Close button - only visible on hover */}
+  <Button
+    variant="ghost"
+    size="icon"
+    onClick={onClose}
+    className="absolute right-2 top-2 z-20 h-8 w-8 rounded-full bg-background/50 hover:bg-background/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+  >
+    <X className="h-4 w-4" />
+  </Button>
 
-        {/* Image */}
-        <div className="relative flex items-center justify-center">
-          <img
-            src={imageSrc}
-            alt={composerName}
-            className="block max-h-[calc(100vh-120px)] max-w-full w-auto h-auto object-contain"
-          />
+        <div className="flex flex-col">
+  <div className="flex justify-center items-center">
+    <img
+      src={imageSrc}
+      alt={composerName}
+      className="w-auto max-w-full max-h-[calc(100vh-220px)] object-contain"
+    />
+  </div>
 
-          {/* Gradient overlay */}
-          <div
-            className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-background to-transparent pointer-events-none"
-          />
+  {/* Footer */}
+  <div className="py-1 px-2 text-center bg-background dark:bg-secondary">
+    <div className="text-xs text-muted-foreground">
+      Image copyright
+    </div>
+  </div>
+</div>
 
-          {/* Copyright */}
-          <div className="absolute bottom-0 left-0 right-0 p-3 text-center pointer-events-none">
-            <div className="text-xs text-muted-foreground">
-              Image copyright
-            </div>
-          </div>
-        </div>
-      </div>
+    </div>
     </div>
   );
 }
