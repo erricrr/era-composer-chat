@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Era, eras } from '@/data/composers';
 import { HelpCircle, Check } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -11,7 +11,20 @@ interface TimelineProps {
 }
 
 export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
-  const [openPopoverId, setOpenPopoverId] = useState<string | null>(null);
+  const localStorageKey = 'timelineOpenPopoverId';
+
+  // Initialize state from localStorage or default to null
+  const [openPopoverId, setOpenPopoverId] = useState<string | null>(() => {
+    const storedValue = localStorage.getItem(localStorageKey);
+    // Ensure we parse only if the value is not null or undefined
+    return storedValue && storedValue !== 'null' ? JSON.parse(storedValue) : null;
+  });
+
+  // Effect to update localStorage when state changes
+  useEffect(() => {
+    // Store null directly or stringify the ID
+    localStorage.setItem(localStorageKey, openPopoverId ? JSON.stringify(openPopoverId) : 'null');
+  }, [openPopoverId]);
 
   const handleIconClick = (id: string) => {
     setOpenPopoverId(openPopoverId === id ? null : id);

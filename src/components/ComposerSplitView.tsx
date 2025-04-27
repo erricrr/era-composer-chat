@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode, useState, useEffect } from 'react';
 import { Composer } from '@/data/composers';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -97,7 +97,20 @@ interface ComposerSplitViewProps {
 
 export function ComposerSplitView({ composer, isOpen, onClose, children }: ComposerSplitViewProps) {
   const isMobile = useIsMobile();
-  const [imageModalOpen, setImageModalOpen] = useState(false);
+
+  // Construct a unique key for localStorage based on the composer's ID
+  const localStorageKey = `splitViewImageModalOpen_${composer.id}`;
+
+  // Initialize state from localStorage or default to false
+  const [imageModalOpen, setImageModalOpen] = useState(() => {
+    const storedValue = localStorage.getItem(localStorageKey);
+    return storedValue ? JSON.parse(storedValue) : false;
+  });
+
+  // Effect to update localStorage when state changes
+  useEffect(() => {
+    localStorage.setItem(localStorageKey, JSON.stringify(imageModalOpen));
+  }, [imageModalOpen, localStorageKey]);
 
   if (!isOpen) return null;
 

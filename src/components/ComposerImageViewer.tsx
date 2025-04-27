@@ -1,6 +1,6 @@
 import { Composer } from '@/data/composers';
 import { ImageModal } from './ImageModal';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 interface ComposerImageViewerProps {
@@ -18,8 +18,21 @@ export function ComposerImageViewer({
   onClick,
   allowModalOnDesktop = false
 }: ComposerImageViewerProps) {
-  const [imageModalOpen, setImageModalOpen] = useState(false);
+  // Construct a unique key for localStorage based on the composer's ID
+  const localStorageKey = `imageModalOpen_${composer.id}`;
+
+  // Initialize state from localStorage or default to false
+  const [imageModalOpen, setImageModalOpen] = useState(() => {
+    const storedValue = localStorage.getItem(localStorageKey);
+    return storedValue ? JSON.parse(storedValue) : false;
+  });
+
   const isMobile = useIsMobile();
+
+  // Effect to update localStorage when state changes
+  useEffect(() => {
+    localStorage.setItem(localStorageKey, JSON.stringify(imageModalOpen));
+  }, [imageModalOpen, localStorageKey]);
 
   const sizeClasses = {
     sm: 'w-20 h-20',
