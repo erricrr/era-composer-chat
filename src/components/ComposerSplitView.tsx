@@ -39,7 +39,7 @@ function ContainedImageModal({
   return (
     // Backdrop - positioned absolutely below header within parent, lower z-index
     <div
-      className="absolute inset-x-0 top-[64px] bottom-0 z-5 flex items-center justify-center p-4"
+      className="absolute inset-x-0 top-[64px] bottom-0 z-5 flex items-center justify-center p-4 shadow-sm"
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
       style={{
         backgroundColor: 'hsl(var(--background) / 0.8)',
