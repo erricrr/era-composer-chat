@@ -85,6 +85,7 @@ const Index = () => {
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
+              style={{ width: '1.25rem', height: '1.25rem' }}
             >
               {isMenuOpen ? (
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
@@ -102,7 +103,7 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Main Content */}
+      {/* Main Content - Conditionally render */}
       <main className="content-main">
         {/* Composer Selection Menu */}
         <div

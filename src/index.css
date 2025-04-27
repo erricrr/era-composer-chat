@@ -122,15 +122,35 @@
   }
 
   .fixed-header {
-    @apply fixed top-0 left-0 right-0 bg-background backdrop-blur-md z-50 border-b border-border/40 shadow-sm flex items-center transition-all duration-300;
+    @apply fixed top-0 left-0 right-0 bg-background backdrop-blur-md z-50 border-b border-border/40 shadow-sm flex items-center;
     height: 2.5rem;
+    transform: translateY(-100%);
   }
 
-  /* Update the main content positioning to match header smoothly */
+  html.ready .fixed-header {
+    transform: translateY(0);
+    transition: transform 0.3s ease-out;
+  }
+
+  /* Main content */
   main.content-main {
-    @apply relative transition-[top] duration-300;
-    top: 2.5rem;
-    min-height: calc(100vh - 2.5rem);
+    @apply relative;
+    transform: translateY(20px);
+  }
+
+  html.ready main.content-main {
+    transform: translateY(0);
+    transition: transform 0.3s ease-out;
+  }
+
+  /* Ensure other transitions are smooth */
+  .animate-fade-in {
+    opacity: 0;
+  }
+
+  html.ready .animate-fade-in {
+    opacity: 1;
+    transition: opacity 0.3s ease-out;
   }
 
   .content-below-header {
