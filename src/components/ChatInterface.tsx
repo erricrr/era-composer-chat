@@ -51,7 +51,7 @@ export function ChatInterface({
 
   // Format era display text
   const getEraDisplayText = (era: string): string => {
-    return era === Era.Modern ? '20th-21st Century' : era;
+    return era;
   };
 
   // Function to directly access localStorage to ensure we have the latest data

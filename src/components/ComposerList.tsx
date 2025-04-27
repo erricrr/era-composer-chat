@@ -68,7 +68,7 @@ export function ComposerList({
                     {selectedComposer.country}, {selectedComposer.years}
                   </span>
                   <Badge variant="badge" className="md:ml-2 w-fit">
-                    {era === Era.Modern ? '20th-21st Century' : era}
+                    {era}
                   </Badge>
                 </div>
               </div>

@@ -13,7 +13,7 @@ export enum Era {
   Baroque = "Baroque",
   Classical = "Classical",
   Romantic = "Romantic",
-  Modern = "Modern"
+  Modern = "20th-21st Century"
 }
 
 export const eras = [
