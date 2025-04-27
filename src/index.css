@@ -137,3 +137,21 @@
     @apply mt-8 md:mt-10;
   }
 }
+
+
+/* Add animations */
+@keyframes expandVertical {
+  from { height: 0; }
+  to { height: 100%; }
+}
+
+@keyframes lineAnimation {
+  from {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
