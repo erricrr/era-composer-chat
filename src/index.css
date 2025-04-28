@@ -6,7 +6,7 @@
 
 @layer base {
   :root {
-    /* Light Mode (Perfect, as you requested) */
+    /* Light Mode - Elegant Classical */
     --background: 42 30% 96%;
     --foreground: 300 20% 20%;
     --card: 42 30% 98%;
@@ -39,37 +39,38 @@
     --sidebar-ring: 340 35% 35%;
   }
   .dark {
-    /* Dark mode theme: Desaturated Royal Purple & Gold */
-    --background: 275 15% 12%;
-    --foreground: 45 25% 90%;
-    --card: 275 15% 15%;
-    --card-foreground: 45 25% 90%;
-    --popover: 275 15% 15%;
-    --popover-foreground: 45 25% 90%;
-    --primary: 45 30% 65%;
-    --primary-foreground: 275 20% 15%;
-    --secondary: 275 10% 20%;
-    --secondary-foreground: 45 25% 80%;
-    --muted: 275 10% 20%;
-    --muted-foreground: 45 20% 75%; /* updated for better contrast */
-    --accent: 45 35% 60%;
-    --accent-foreground: 275 20% 15%;
-    --destructive: 0 40% 60%;
+    /* Dark mode theme: Refined Deep Purple & Gold */
+    --background: 280 15% 10%;
+    --foreground: 40 25% 92%;
+    --card: 280 15% 13%;
+    --card-foreground: 40 25% 92%;
+    --popover: 280 15% 13%;
+    --popover-foreground: 40 25% 92%;
+    --primary: 40 35% 70%;
+    --primary-foreground: 280 20% 12%;
+    --secondary: 280 12% 18%;
+    --secondary-foreground: 40 25% 85%;
+    --muted: 280 12% 18%;
+    --muted-foreground: 40 20% 75%;
+    --accent: 40 40% 65%;
+    --accent-foreground: 280 20% 12%;
+    --destructive: 0 60% 50%;
     --destructive-foreground: 0 0% 98%;
-    --border: 275 15% 22%;
-    --input: 275 15% 22%;
-    --ring: 45 30% 65%;
+    --border: 280 15% 20%;
+    --input: 280 15% 20%;
+    --ring: 40 35% 70%;
 
     /* Sidebar (Dark) */
-    --sidebar-background: 275 15% 15%;
-    --sidebar-foreground: 45 25% 90%;
-    --sidebar-primary: 45 30% 65%;
-    --sidebar-primary-foreground: 275 20% 15%;
-    --sidebar-accent: 45 35% 60%;
-    --sidebar-accent-foreground: 275 20% 15%;
-    --sidebar-border: 275 15% 25%;
-    --sidebar-ring: 45 30% 65%;
+    --sidebar-background: 280 15% 13%;
+    --sidebar-foreground: 40 25% 92%;
+    --sidebar-primary: 40 35% 70%;
+    --sidebar-primary-foreground: 280 20% 12%;
+    --sidebar-accent: 40 40% 65%;
+    --sidebar-accent-foreground: 280 20% 12%;
+    --sidebar-border: 280 15% 22%;
+    --sidebar-ring: 40 35% 70%;
   }
+
 
 
 
