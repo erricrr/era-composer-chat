@@ -153,14 +153,14 @@ export function ComposerSplitView({ composer, isOpen, onClose, children }: Compo
                 className="cursor-pointer w-40 h-40 md:w-56 md:h-56 lg:w-64 lg:h-64 xl:w-72 xl:h-72 rounded-full overflow-hidden border-2 border-primary flex-shrink-0 transition-transform duration-300 ease-in-out hover:scale-[1.03]"
               >
                 <img
-                  src={composer.image}
+                  src={composer.imageUrl}
                   alt={composer.name}
                   className="w-full h-full object-cover"
                 />
               </div>
               <div className="flex items-center gap-2 mt-2">
                 <span className="text-sm md:text-base text-muted-foreground">
-                  {composer.country}, {composer.years}
+                  {composer.nationality}, {composer.birthYear}-{composer.deathYear || 'present'}
                 </span>
                 <Badge variant="badge">
                   {composer.era}
@@ -170,7 +170,7 @@ export function ComposerSplitView({ composer, isOpen, onClose, children }: Compo
 
             <div className="space-y-4 md:space-y-6 max-w-prose mx-auto">
               <div>
-                <p className="text-sm md:text-base text-foreground/90">{composer.bio}</p>
+                <p className="text-sm md:text-base text-foreground/90">{composer.longBio}</p>
               </div>
 
               <div>
@@ -190,7 +190,7 @@ export function ComposerSplitView({ composer, isOpen, onClose, children }: Compo
       <ContainedImageModal
         isOpen={imageModalOpen}
         onClose={() => setImageModalOpen(false)}
-        imageSrc={composer.image}
+        imageSrc={composer.imageUrl}
         composerName={composer.name}
       />
     </div>

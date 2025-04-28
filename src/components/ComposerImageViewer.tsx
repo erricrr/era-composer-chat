@@ -57,7 +57,7 @@ export function ComposerImageViewer({
         onClick={handleClick}
       >
         <img
-          src={composer.image}
+          src={composer.imageUrl}
           alt={composer.name}
           className="w-full h-full object-cover"
         />
@@ -67,10 +67,11 @@ export function ComposerImageViewer({
         <ImageModal
           isOpen={imageModalOpen}
           onClose={() => setImageModalOpen(false)}
-          imageSrc={composer.image}
+          imageSrc={composer.imageUrl}
           composerName={composer.name}
-          country={composer.country}
-          years={composer.years}
+          nationality={composer.nationality}
+          birthYear={composer.birthYear}
+          deathYear={composer.deathYear}
         />
       )}
     </>

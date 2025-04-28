@@ -65,7 +65,7 @@ export function ComposerList({
                 <h3 className="text-xl md:text-2xl lg:text-3xl font-bold font-serif">{selectedComposer.name}</h3>
                 <div className="flex flex-col md:flex-row md:items-center gap-2 mt-1">
                   <span className="text-xs md:text-sm text-muted-foreground">
-                    {selectedComposer.country}, {selectedComposer.years}
+                    {selectedComposer.nationality}, {selectedComposer.birthYear}-{selectedComposer.deathYear || 'present'}
                   </span>
                   <Badge variant="badge" className="md:ml-2 w-fit">
                     {era}
@@ -77,7 +77,7 @@ export function ComposerList({
             {/* Biography and works */}
             <ScrollArea className="flex-grow mb-4 md:mb-6 overflow-y-auto">
               <div className="space-y-4 md:space-y-6">
-                <p className="text-sm md:text-base text-foreground/90">{selectedComposer.bio}</p>
+                <p className="text-sm md:text-base text-foreground/90">{selectedComposer.longBio}</p>
                 <div>
                   <h4 className="font-semibold mb-2 text-base md:text-lg">Notable Works</h4>
                   <ul className="list-disc pl-5 space-y-1">

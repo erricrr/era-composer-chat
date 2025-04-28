@@ -1,0 +1,208 @@
+{
+  "composers": [
+    {
+      "id": "johann-sebastian-bach",
+      "name": "Johann Sebastian Bach",
+      "era": "Baroque",
+      "birthYear": 1685,
+      "deathYear": 1750,
+      "shortBio": "German composer and musician of the Baroque period, known for his mastery of counterpoint and sacred music.",
+      "longBio": "Bach was a German composer and musician of the Baroque period. He is known for instrumental compositions such as the Brandenburg Concertos and the Goldberg Variations, and for vocal music such as the St Matthew Passion and the Mass in B minor. His works are notable for their intellectual depth, technical command, and artistic beauty.",
+      "nationality": "German",
+      "location": "Leipzig, Germany",
+      "famousWorks": [
+        "Brandenburg Concertos",
+        "The Well-Tempered Clavier",
+        "St. Matthew Passion"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/6/6a/Johann_Sebastian_Bach.jpg"
+    },
+    {
+      "id": "george-frideric-handel",
+      "name": "George Frideric Handel",
+      "era": "Baroque",
+      "birthYear": 1685,
+      "deathYear": 1759,
+      "shortBio": "German-British Baroque composer renowned for his operas, oratorios, and instrumental compositions.",
+      "longBio": "Handel was a German-British Baroque composer well known for his operas, oratorios, anthems, concerti grossi, and organ concertos. His most famous work is the oratorio Messiah with its 'Hallelujah' chorus. He was strongly influenced both by the great composers of the Italian Baroque and the middle-German polyphonic choral tradition.",
+      "nationality": "German-British",
+      "location": "London, England",
+      "famousWorks": [
+        "Messiah",
+        "Water Music",
+        "Music for the Royal Fireworks"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/f/fa/George_Frideric_Handel_by_Balthasar_Denner.jpg"
+    },
+    {
+      "id": "antonio-vivaldi",
+      "name": "Antonio Vivaldi",
+      "era": "Baroque",
+      "birthYear": 1678,
+      "deathYear": 1741,
+      "shortBio": "Italian Baroque composer, virtuoso violinist, and priest known for his concertos and sacred music.",
+      "longBio": "Vivaldi was an Italian Baroque composer, virtuoso violinist, teacher, and cleric. He is known mainly for composing many instrumental concertos, especially for the violin, as well as sacred choral works and more than forty operas. His best-known work is a series of violin concertos known as The Four Seasons.",
+      "nationality": "Italian",
+      "location": "Venice, Italy",
+      "famousWorks": [
+        "The Four Seasons",
+        "Gloria",
+        "L'Olimpiade"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/b/bd/Vivaldi.jpg"
+    },
+    {
+      "id": "wolfgang-amadeus-mozart",
+      "name": "Wolfgang Amadeus Mozart",
+      "era": "Classical",
+      "birthYear": 1756,
+      "deathYear": 1791,
+      "shortBio": "Austrian composer and prodigy who defined the Classical era with his elegant and sophisticated compositions.",
+      "longBio": "Mozart was a prolific and influential composer of the Classical era. Born in Salzburg, he showed prodigious ability from his earliest childhood. Already competent on keyboard and violin, he composed from the age of five and performed before European royalty. His influence on Western music is profound, and he is considered among the greatest composers of classical music.",
+      "nationality": "Austrian",
+      "location": "Vienna, Austria",
+      "famousWorks": [
+        "The Magic Flute",
+        "Symphony No. 40",
+        "Requiem"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/4/47/Croce-Mozart-Detail.jpg"
+    },
+    {
+      "id": "ludwig-van-beethoven",
+      "name": "Ludwig van Beethoven",
+      "era": "Classical",
+      "birthYear": 1770,
+      "deathYear": 1827,
+      "shortBio": "German composer and pianist who bridged the Classical and Romantic eras, known for his revolutionary compositions.",
+      "longBio": "Beethoven was a German composer and pianist. He was a crucial figure in the transition between the Classical and Romantic eras in Western art music. He remains one of the most famous and influential of all composers. His best-known compositions include 9 symphonies, 5 piano concertos, 32 piano sonatas, and 16 string quartets.",
+      "nationality": "German",
+      "location": "Vienna, Austria",
+      "famousWorks": [
+        "Symphony No. 5",
+        "Symphony No. 9",
+        "Moonlight Sonata"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/6/6f/Beethoven.jpg"
+    },
+    {
+      "id": "joseph-haydn",
+      "name": "Joseph Haydn",
+      "era": "Classical",
+      "birthYear": 1732,
+      "deathYear": 1809,
+      "shortBio": "Austrian composer known as the 'Father of the Symphony' and 'Father of the String Quartet.'",
+      "longBio": "Haydn was an Austrian composer of the Classical period. He was instrumental in the development of chamber music such as the piano trio. His contributions to musical form have earned him the epithets 'Father of the Symphony' and 'Father of the String Quartet'. He was also instrumental in the development of the piano trio and in the evolution of sonata form.",
+      "nationality": "Austrian",
+      "location": "Vienna, Austria",
+      "famousWorks": [
+        "The Creation",
+        "Symphony No. 94 (Surprise)",
+        "String Quartets Op. 76"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/0/05/Joseph_Haydn.jpg"
+    },
+    {
+      "id": "frederic-chopin",
+      "name": "Frédéric Chopin",
+      "era": "Romantic",
+      "birthYear": 1810,
+      "deathYear": 1849,
+      "shortBio": "Polish composer and virtuoso pianist of the Romantic era, known for his solo piano works.",
+      "longBio": "Chopin was a Polish composer and virtuoso pianist of the Romantic era who wrote primarily for solo piano. He has maintained worldwide renown as a leading musician of his era, one whose 'poetic genius was based on a professional technique that was without equal in his generation.' All of his works include the piano.",
+      "nationality": "Polish-French",
+      "location": "Paris, France",
+      "famousWorks": [
+        "Nocturnes",
+        "Preludes",
+        "Polonaises"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/e/e8/Frederic_Chopin_photo.jpeg"
+    },
+    {
+      "id": "pyotr-ilyich-tchaikovsky",
+      "name": "Pyotr Ilyich Tchaikovsky",
+      "era": "Romantic",
+      "birthYear": 1840,
+      "deathYear": 1893,
+      "shortBio": "Russian composer known for his symphonies, concertos, operas, and ballets.",
+      "longBio": "Tchaikovsky was a Russian composer of the Romantic period. He was the first Russian composer whose music made a lasting impression internationally. He was honored in 1884 by Tsar Alexander III and awarded a lifetime pension. His works include symphonies, concertos, operas, ballets, chamber music, and a choral setting of the Russian Orthodox Divine Liturgy.",
+      "nationality": "Russian",
+      "location": "Saint Petersburg, Russia",
+      "famousWorks": [
+        "Swan Lake",
+        "The Nutcracker",
+        "Symphony No. 6 (Pathétique)"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/d/d7/Portr%C3%A4t_des_Komponisten_Pjotr_I._Tschaikowski_%281840-1893%29.jpg"
+    },
+    {
+      "id": "johannes-brahms",
+      "name": "Johannes Brahms",
+      "era": "Romantic",
+      "birthYear": 1833,
+      "deathYear": 1897,
+      "shortBio": "German composer and pianist known for his symphonies and chamber music.",
+      "longBio": "Brahms was a German composer, pianist, and conductor of the Romantic period. Born in Hamburg into a Lutheran family, Brahms spent much of his professional life in Vienna, Austria. His reputation and status as a composer are such that he is sometimes grouped with Bach and Beethoven as one of the 'Three Bs' of music.",
+      "nationality": "German",
+      "location": "Vienna, Austria",
+      "famousWorks": [
+        "Symphony No. 4",
+        "Ein deutsches Requiem",
+        "Hungarian Dances"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/1/15/JohannesBrahms.jpg"
+    },
+    {
+      "id": "claude-debussy",
+      "name": "Claude Debussy",
+      "era": "20th-21st Century",
+      "birthYear": 1862,
+      "deathYear": 1918,
+      "shortBio": "French composer associated with Impressionist music, known for his innovative harmonies and atmospheric works.",
+      "longBio": "Debussy was a French composer. He is sometimes seen as the first Impressionist composer, although he vigorously rejected the term. He was among the most influential composers of the late 19th and early 20th centuries. His music virtually defines the transition from late-Romantic to 20th century modernist music.",
+      "nationality": "French",
+      "location": "Paris, France",
+      "famousWorks": [
+        "Clair de Lune",
+        "Prélude à l'après-midi d'un faune",
+        "La Mer"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Claude_Debussy_ca_1908%2C_foto_av_F%C3%A9lix_Nadar.jpg"
+    },
+    {
+      "id": "igor-stravinsky",
+      "name": "Igor Stravinsky",
+      "era": "20th-21st Century",
+      "birthYear": 1882,
+      "deathYear": 1971,
+      "shortBio": "Russian-born composer known for his groundbreaking modern compositions and ballet music.",
+      "longBio": "Stravinsky was a Russian composer, pianist, and conductor, later of French and American citizenship. He is widely considered one of the most important and influential composers of the 20th century and a pivotal figure in modernist music. His work revolutionized musical thought and practice in the early 20th century.",
+      "nationality": "Russian-French-American",
+      "location": "Various (Russia, France, USA)",
+      "famousWorks": [
+        "The Rite of Spring",
+        "The Firebird",
+        "Petrushka"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/2/28/Igor_Stravinsky_LOC_37093u.jpg"
+    },
+    {
+      "id": "philip-glass",
+      "name": "Philip Glass",
+      "era": "20th-21st Century",
+      "birthYear": 1937,
+      "deathYear": null,
+      "shortBio": "American composer known for his minimalist compositions and innovative operas.",
+      "longBio": "Glass is an American composer and pianist. He is widely regarded as one of the most influential composers of the late 20th century. Glass's work has been associated with minimalism, being built up from repetitive phrases and shifting layers. His work includes operas, musical theatre works, symphonies, concertos, string quartets, and film scores.",
+      "nationality": "American",
+      "location": "New York City, USA",
+      "famousWorks": [
+        "Einstein on the Beach",
+        "Glassworks",
+        "Koyaanisqatsi"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/5/59/Philip_Glass_by_Pasquale_Salerno.jpg"
+    }
+  ]
+}

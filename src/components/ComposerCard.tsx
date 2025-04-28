@@ -7,6 +7,8 @@ interface ComposerCardProps {
 }
 
 export function ComposerCard({ composer, onClick, isSelected }: ComposerCardProps) {
+  const years = `${composer.birthYear}-${composer.deathYear || 'present'}`;
+
   return (
     <div
       className={`
@@ -40,7 +42,7 @@ export function ComposerCard({ composer, onClick, isSelected }: ComposerCardProp
 
       {/* Composer image */}
       <img
-        src={composer.image}
+        src={composer.imageUrl}
         alt={composer.name}
         className={`
           w-11 h-11 rounded-full object-cover flex-shrink-0 border-2
@@ -61,7 +63,7 @@ export function ComposerCard({ composer, onClick, isSelected }: ComposerCardProp
           text-xs text-muted-foreground transition-all duration-300 ease-out truncate
           ${isSelected ? 'scale-[1.02]' : 'group-hover:scale-[1.02]'}
         `}>
-          {composer.years}
+          {years}
         </p>
       </div>
     </div>

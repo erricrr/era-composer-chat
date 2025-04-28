@@ -225,10 +225,11 @@ export function ChatInterface({
       }, 1000);
     }
 
-    // Clear the input
+    // Clear the input and reset textarea height
     setInputMessage('');
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = '42px'; // Reset to min-height value
     }
   };
 
@@ -256,16 +257,18 @@ export function ChatInterface({
   };
 
   const generatePlaceholderResponse = (userMessage: string, composer: Composer): string => {
+    const years = `${composer.birthYear}-${composer.deathYear || 'present'}`;
+
     if (userMessage.toLowerCase().includes('work') || userMessage.toLowerCase().includes('composition')) {
       return `As ${composer.name}, my most famous works include ${composer.famousWorks.join(', ')}. Each composition reflects my style from the ${composer.era} period.`;
     }
     if (userMessage.toLowerCase().includes('life') || userMessage.toLowerCase().includes('born')) {
-      return `I was born in ${composer.years.split('-')[0]} in ${composer.country} and lived until ${composer.years.split('-')[1]}. ${composer.bio.split('.')[0]}.`;
+      return `I was born in ${composer.birthYear} in ${composer.nationality} and ${composer.deathYear ? `lived until ${composer.deathYear}` : 'am still composing'}. ${composer.shortBio}`;
     }
     if (userMessage.toLowerCase().includes('style') || userMessage.toLowerCase().includes('music')) {
-      return `My musical style is characteristic of the ${composer.era} era. ${composer.bio.split('.')[1] || 'My compositions were known for their technical innovation and emotional depth.'}.`;
+      return `My musical style is characteristic of the ${composer.era} era. ${composer.longBio.split('.')[1] || 'My compositions were known for their technical innovation and emotional depth.'}.`;
     }
-    return `Thank you for your interest in my work. I was a composer from the ${composer.era} era, known for ${composer.famousWorks[0]}. Is there anything specific about my compositions or life you would like to know?`;
+    return `Thank you for your interest in my work. I was a composer from the ${composer.era} era, known for ${composer.famousWorks[0]}. ${composer.shortBio}`;
   };
 
   const chatContent = (
@@ -291,13 +294,12 @@ export function ChatInterface({
               </div>
               <div className="flex flex-col items-start">
                 <h2 className="font-serif font-bold text-lg">{composer.name}</h2>
-                <div className="flex items-center gap-2 mt-1">
-                  <p className="text-sm text-muted-foreground">
-                    {composer.country}, {composer.years}
-                  </p>
-                  <Badge
-                    variant="badge" className="ml-2">
-                    {getEraDisplayText(composer.era)}
+                <div className="flex items-center gap-2 mt-2">
+                  <span className="text-sm md:text-base text-muted-foreground">
+                    {composer.nationality}, {composer.birthYear}-{composer.deathYear || 'present'}
+                  </span>
+                  <Badge variant="badge">
+                    {composer.era}
                   </Badge>
                 </div>
               </div>

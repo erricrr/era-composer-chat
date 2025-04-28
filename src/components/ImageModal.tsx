@@ -6,8 +6,9 @@ interface ImageModalProps {
   onClose: () => void;
   imageSrc: string;
   composerName: string;
-  country?: string;
-  years?: string;
+  nationality?: string;
+  birthYear?: number;
+  deathYear?: number | null;
   caption?: string;
   copyright?: string;
   sourceUrl?: string;
@@ -18,8 +19,9 @@ export function ImageModal({
   onClose,
   imageSrc,
   composerName,
-  country,
-  years,
+  nationality,
+  birthYear,
+  deathYear,
   caption,
   copyright = "Image copyright",
   sourceUrl
@@ -41,6 +43,8 @@ export function ImageModal({
 
   if (!isOpen && !isAnimating) return null;
 
+  const years = birthYear ? `${birthYear}${deathYear ? `-${deathYear}` : '-present'}` : '';
+
   const modalContent = (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
@@ -52,7 +56,7 @@ export function ImageModal({
       onClick={onClose}
     >
       <div
-        className="relative flex flex-col w-auto max-w-3xl rounded-lg" // Added rounded-lg here
+        className="relative flex flex-col w-auto max-w-3xl rounded-lg"
         style={{
           backgroundColor: 'hsl(var(--secondary))',
           transform: isOpen ? 'scale(1)' : 'scale(0.95)',
@@ -62,7 +66,7 @@ export function ImageModal({
       >
         {/* Header */}
         <div
-          className="flex justify-between items-center p-3 border-b rounded-t-lg" // Added rounded-t-lg here
+          className="flex justify-between items-center p-3 border-b rounded-t-lg"
           style={{ borderColor: 'hsl(var(--border))' }}
         >
           <div>
@@ -76,32 +80,30 @@ export function ImageModal({
               className="flex text-sm"
               style={{ color: 'hsl(var(--muted-foreground))' }}
             >
-              {country && <span>{country}</span>}
-              {country && years && <span className="mx-2">•</span>}
+              {nationality && <span>{nationality}</span>}
+              {nationality && years && <span className="mx-2">•</span>}
               {years && <span>{years}</span>}
             </div>
           </div>
 
           <button
-  onClick={onClose}
-  className="p-1 rounded-full hover:bg-[hsl(var(--card))]" // Use the --muted color for hover background
-  style={{ color: 'hsl(var(--muted-foreground))' }}
->
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    className="h-5 w-5"
-    viewBox="0 0 20 20"
-    fill="currentColor"
-  >
-    <path
-      fillRule="evenodd"
-      d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-      clipRule="evenodd"
-    />
-  </svg>
-</button>
-
-
+            onClick={onClose}
+            className="p-1 rounded-full hover:bg-[hsl(var(--card))]"
+            style={{ color: 'hsl(var(--muted-foreground))' }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </button>
         </div>
 
         {/* Image container */}

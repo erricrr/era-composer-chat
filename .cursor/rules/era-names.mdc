@@ -1,0 +1,11 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+Note that Eras are broken up into smaller periods, but we only want to focus on 4 eras: Baroque, Classical, Romantic, and 20th-21st Century.
+
+- For example, all "Modern", "Postmodern", "Contemporary", all falls under "20th-21st Century"
+- For example, all "Early Romantic", "Late Romantic", all falls under "Romantic"
+
+Some Composers will belong to more than one Era.
