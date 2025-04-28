@@ -378,13 +378,13 @@ export function ChatInterface({
             target.style.height = 'auto';
             target.style.height = `${Math.min(target.scrollHeight, 200)}px`;
           }}
-          disabled={isComposerMenuOpen}
+          disabled={isComposerListOpen || isComposerMenuOpen}
         />
       </div>
       <div className="self-end pb-3">
       <button
       type="submit"
-      disabled={!inputMessage.trim() || isComposerMenuOpen}
+      disabled={!inputMessage.trim() || isComposerListOpen || isComposerMenuOpen}
       className="h-9 w-9 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground
         flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed
         transition-all hover:scale-105 active:scale-95 shadow-sm"
