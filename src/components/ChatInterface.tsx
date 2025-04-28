@@ -270,31 +270,35 @@ export function ChatInterface({
 
   const chatContent = (
     <div
-      className={`relative flex flex-col h-full bg-background overflow-hidden pb-4${
-        isComposerListOpen ? ' pointer-events-none opacity-50' : ''
-      }`}
+      className={`relative flex flex-col h-full bg-background overflow-hidden pb-4 transition-all duration-300 ease-in-out ${
+        isComposerListOpen ? 'pointer-events-none opacity-50' : ''
+      } ${!isSplitViewOpen ? 'scale-100 opacity-100' : 'scale-100 opacity-100'}`}
     >
       <div className="flex items-center justify-between px-5 pt-6 pb-2 border-b shadow-sm bg-secondary">
         {(!isSplitViewOpen) ? (
           <div className="flex items-center space-x-6">
-
-            <div onClick={() => setIsSplitViewOpen(true)} className="cursor-pointer">
-              <ComposerImageViewer
-                composer={composer}
-                size="sm"
-                onClick={() => setIsSplitViewOpen(true)}
-              />
-            </div>
-            <div className="flex flex-col items-start">
-              <h2 className="font-serif font-bold text-lg">{composer.name}</h2>
-              <div className="flex items-center gap-2 mt-1">
-                <p className="text-sm text-muted-foreground">
-                  {composer.country}, {composer.years}
-                </p>
-                <Badge
-                  variant="badge" className="ml-2">
-                  {getEraDisplayText(composer.era)}
-                </Badge>
+            <div
+              onClick={() => setIsSplitViewOpen(true)}
+              className="flex items-center space-x-6 cursor-pointer hover:opacity-90 transition-all duration-300 ease-in-out transform hover:scale-[0.98]"
+            >
+              <div>
+                <ComposerImageViewer
+                  composer={composer}
+                  size="sm"
+                  onClick={() => setIsSplitViewOpen(true)}
+                />
+              </div>
+              <div className="flex flex-col items-start">
+                <h2 className="font-serif font-bold text-lg">{composer.name}</h2>
+                <div className="flex items-center gap-2 mt-1">
+                  <p className="text-sm text-muted-foreground">
+                    {composer.country}, {composer.years}
+                  </p>
+                  <Badge
+                    variant="badge" className="ml-2">
+                    {getEraDisplayText(composer.era)}
+                  </Badge>
+                </div>
               </div>
             </div>
           </div>
@@ -316,7 +320,7 @@ export function ChatInterface({
           size="icon"
           onClick={handleResetChat}
           title="Reset conversation"
-          className="ml-2 rounded-full hover:bg-primary/20 transition-colors"
+          className="ml-2 rounded-full hover:bg-primary/20 transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95"
         >
           <RefreshCcw className="h-4 w-4" />
         </Button>

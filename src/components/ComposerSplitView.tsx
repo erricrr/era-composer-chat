@@ -123,15 +123,21 @@ export function ComposerSplitView({ composer, isOpen, onClose, children }: Compo
       </div>
 
       {/* Fixed Header - Now outside ScrollArea */}
-      <div className="relative flex justify-between items-center border-b p-4 bg-secondary backdrop-blur-sm shadow-sm z-10 flex-shrink-0">
+      <div
+        onClick={onClose}
+        className="relative flex justify-between items-center border-b p-4 bg-secondary backdrop-blur-sm shadow-sm z-10 flex-shrink-0 cursor-pointer group hover:bg-secondary/80 transition-colors"
+      >
         <h2 className="font-bold font-serif text-xl">
           {composer.name}
         </h2>
         <Button
           variant="ghost"
           size="icon"
-          onClick={onClose}
-          className="rounded-full hover:bg-primary/20"
+          onClick={(e) => {
+            e.stopPropagation(); // Prevent double firing of close event
+            onClose();
+          }}
+          className="rounded-full hover:bg-primary/20 transition-colors group-hover:bg-primary/20"
         >
           <X className="h-4 w-4" />
         </Button>
@@ -144,7 +150,7 @@ export function ComposerSplitView({ composer, isOpen, onClose, children }: Compo
             <div className="flex flex-col items-center text-center space-y-3">
               <div
                 onClick={() => setImageModalOpen(true)}
-                className="cursor-pointer w-40 h-40 md:w-56 md:h-56 lg:w-64 lg:h-64 xl:w-72 xl:h-72 rounded-full overflow-hidden border-2 border-primary flex-shrink-0"
+                className="cursor-pointer w-40 h-40 md:w-56 md:h-56 lg:w-64 lg:h-64 xl:w-72 xl:h-72 rounded-full overflow-hidden border-2 border-primary flex-shrink-0 transition-transform duration-300 ease-in-out hover:scale-105"
               >
                 <img
                   src={composer.image}
@@ -193,13 +199,18 @@ export function ComposerSplitView({ composer, isOpen, onClose, children }: Compo
   if (isMobile) {
     return (
       <div className="fixed inset-0 z-40">
-        <ResizablePanelGroup direction="vertical" className="h-full">
-          {/* Composer Panel on Top */}
+        <ResizablePanelGroup
+          direction="vertical"
+          className={`h-full transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'}`}
+        >
+          {/* Composer Panel */}
           <ResizablePanel
             defaultSize={40}
-            minSize={30}     // Minimum 30% of the screen height
-            maxSize={60}     // Maximum 60% of the screen height
-            className="bg-secondary/50 backdrop-blur-sm flex flex-col"
+            minSize={30}
+            maxSize={60}
+            className={`bg-secondary/50 backdrop-blur-sm flex flex-col transition-all duration-300 ease-in-out ${
+              isOpen ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'
+            }`}
             id="composer-panel-mobile"
             aria-label="Composer Panel"
           >
@@ -208,15 +219,18 @@ export function ComposerSplitView({ composer, isOpen, onClose, children }: Compo
 
           <ResizableHandle
             withHandle
-            className="h-2 bg-secondary/10 hover:bg-secondary/20 transition-colors"
+            className={`transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'}`}
             aria-controls="composer-panel-mobile chat-panel-mobile"
           />
 
-          {/* Chat Panel on Bottom */}
+          {/* Chat Panel */}
           <ResizablePanel
             defaultSize={60}
-            minSize={40}     // Minimum 40% of the screen height
-            maxSize={70}     // Maximum 70% of the screen height
+            minSize={40}
+            maxSize={70}
+            className={`transition-all duration-300 ease-in-out ${
+              isOpen ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
+            }`}
             id="chat-panel-mobile"
             aria-label="Chat Panel"
           >
@@ -231,14 +245,26 @@ export function ComposerSplitView({ composer, isOpen, onClose, children }: Compo
 
   return (
     <div className="fixed inset-0 z-40">
-      <ResizablePanelGroup direction="horizontal" className="h-full">
-        {/* Composer Image Panel (Left) */}
+      <div
+        className={`absolute inset-0 bg-background/80 backdrop-blur-sm transition-opacity duration-500 ease-in-out ${
+          isOpen ? 'opacity-100' : 'opacity-0'
+        }`}
+      />
+      <ResizablePanelGroup
+        direction={isMobile ? "vertical" : "horizontal"}
+        className={`relative h-full transition-all duration-500 ease-in-out transform ${
+          isOpen ? 'translate-x-0 opacity-100 scale-100' : '-translate-x-4 opacity-0 scale-95'
+        }`}
+      >
+        {/* Composer Panel */}
         <ResizablePanel
-          defaultSize={38}
-          minSize={35}
-          maxSize={65}
-          className="bg-secondary/50 backdrop-blur-sm flex flex-col"
-          id="composer-panel-desktop"
+          defaultSize={isMobile ? 40 : 38}
+          minSize={isMobile ? 30 : 35}
+          maxSize={isMobile ? 60 : 65}
+          className={`bg-secondary/50 backdrop-blur-sm flex flex-col transition-all duration-500 ease-in-out transform ${
+            isOpen ? 'translate-x-0 opacity-100 scale-100' : '-translate-x-4 opacity-0 scale-95'
+          }`}
+          id={isMobile ? "composer-panel-mobile" : "composer-panel-desktop"}
           aria-label="Composer Panel"
           order={1}
         >
@@ -247,15 +273,19 @@ export function ComposerSplitView({ composer, isOpen, onClose, children }: Compo
 
         <ResizableHandle
           withHandle
-          aria-controls="composer-panel-desktop chat-panel-desktop"
+          className={`transition-all duration-500 ease-in-out ${isOpen ? 'opacity-100' : 'opacity-0'}`}
+          aria-controls={isMobile ? "composer-panel-mobile chat-panel-mobile" : "composer-panel-desktop chat-panel-desktop"}
         />
 
-        {/* Chat Panel (Right) */}
+        {/* Chat Panel */}
         <ResizablePanel
-          defaultSize={62}
-          minSize={35}
-          maxSize={65}
-          id="chat-panel-desktop"
+          defaultSize={isMobile ? 60 : 62}
+          minSize={isMobile ? 40 : 35}
+          maxSize={isMobile ? 70 : 65}
+          className={`transition-all duration-500 ease-in-out transform ${
+            isOpen ? 'translate-x-0 opacity-100 scale-100' : 'translate-x-4 opacity-0 scale-95'
+          }`}
+          id={isMobile ? "chat-panel-mobile" : "chat-panel-desktop"}
           aria-label="Chat Panel"
           order={2}
         >

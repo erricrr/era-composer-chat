@@ -51,7 +51,9 @@ export function ComposerImageViewer({
   return (
     <>
       <div
-        className={`${sizeClasses[size]} rounded-full overflow-hidden border-2 border-primary flex-shrink-0 cursor-pointer ${className}`}
+        className={`${sizeClasses[size]} rounded-full overflow-hidden border-2 border-primary flex-shrink-0 cursor-pointer transition-transform duration-300 ease-in-out ${
+          size !== 'sm' ? 'hover:scale-105' : ''
+        } ${className}`}
         onClick={handleClick}
       >
         <img
