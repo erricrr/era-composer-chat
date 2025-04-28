@@ -117,9 +117,34 @@ export default {
 						opacity: '0'
 					}
 				},
-				float: {
-					'0%, 100%': { transform: 'translateY(0)' },
-					'50%': { transform: 'translateY(-10px)' },
+				'float-1': {
+					'0%': { transform: 'translate(0, 0) rotate(0)' },
+					'25%': { transform: 'translate(-5px, -10px) rotate(3deg)' },
+					'50%': { transform: 'translate(0, -5px) rotate(0)' },
+					'75%': { transform: 'translate(5px, 10px) rotate(-3deg)' },
+					'100%': { transform: 'translate(0, 0) rotate(0)' }
+				},
+				'float-2': {
+					'0%': { transform: 'translate(0, 0) rotate(0)' },
+					'25%': { transform: 'translate(8px, -5px) rotate(-2deg)' },
+					'50%': { transform: 'translate(3px, -12px) rotate(0)' },
+					'75%': { transform: 'translate(-8px, 5px) rotate(2deg)' },
+					'100%': { transform: 'translate(0, 0) rotate(0)' }
+				},
+				'float-3': {
+					'0%': { transform: 'translate(0, 0) rotate(0)' },
+					'20%': { transform: 'translate(-7px, 6px) rotate(2deg)' },
+					'40%': { transform: 'translate(5px, -7px) rotate(-1deg)' },
+					'60%': { transform: 'translate(-3px, -10px) rotate(0)' },
+					'80%': { transform: 'translate(7px, 8px) rotate(1deg)' },
+					'100%': { transform: 'translate(0, 0) rotate(0)' }
+				},
+				'float-4': {
+					'0%': { transform: 'translate(0, 0) rotate(0)' },
+					'30%': { transform: 'translate(10px, -8px) rotate(-3deg)' },
+					'50%': { transform: 'translate(5px, 5px) rotate(0)' },
+					'70%': { transform: 'translate(-10px, -4px) rotate(3deg)' },
+					'100%': { transform: 'translate(0, 0) rotate(0)' }
 				}
 			},
 			animation: {
@@ -129,8 +154,10 @@ export default {
 				'slide-down': 'slide-down 0.5s ease-out forwards',
 				'fade-in': 'fade-in 0.3s ease-out',
 				'fade-out': 'fade-out 0.3s ease-out',
-				'float': 'float 3s ease-in-out infinite',
-				'float-delayed': 'float 3s ease-in-out infinite 1.5s',
+				'float-1': 'float-1 9s ease-in-out infinite',
+				'float-2': 'float-2 11s ease-in-out infinite',
+				'float-3': 'float-3 13s ease-in-out infinite',
+				'float-4': 'float-4 15s ease-in-out infinite',
 			},
 			fontFamily: {
 				'serif': ['Playfair Display', 'Georgia', 'serif'],
