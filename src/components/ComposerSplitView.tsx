@@ -150,7 +150,7 @@ export function ComposerSplitView({ composer, isOpen, onClose, children }: Compo
             <div className="flex flex-col items-center text-center space-y-3">
               <div
                 onClick={() => setImageModalOpen(true)}
-                className="cursor-pointer w-40 h-40 md:w-56 md:h-56 lg:w-64 lg:h-64 xl:w-72 xl:h-72 rounded-full overflow-hidden border-2 border-primary flex-shrink-0 transition-transform duration-300 ease-in-out hover:scale-105"
+                className="cursor-pointer w-40 h-40 md:w-56 md:h-56 lg:w-64 lg:h-64 xl:w-72 xl:h-72 rounded-full overflow-hidden border-2 border-primary flex-shrink-0 transition-transform duration-300 ease-in-out hover:scale-[1.03]"
               >
                 <img
                   src={composer.image}
