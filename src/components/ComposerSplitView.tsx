@@ -123,7 +123,7 @@ export function ComposerSplitView({ composer, isOpen, onClose, children }: Compo
       </div>
 
       {/* Fixed Header - Now outside ScrollArea */}
-      <div className="relative flex justify-between items-center p-4 bg-secondary backdrop-blur-sm shadow-sm z-10 flex-shrink-0">
+      <div className="relative flex justify-between items-center border-b p-4 bg-secondary backdrop-blur-sm shadow-sm z-10 flex-shrink-0">
         <h2 className="font-bold font-serif text-xl">
           {composer.name}
         </h2>
