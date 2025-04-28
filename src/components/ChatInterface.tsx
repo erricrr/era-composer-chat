@@ -270,9 +270,7 @@ export function ChatInterface({
 
   const chatContent = (
     <div
-      className={`relative flex flex-col h-full bg-background overflow-hidden pb-4 transition-all duration-300 ease-in-out ${
-        isComposerListOpen ? 'pointer-events-none opacity-50' : ''
-      } ${!isSplitViewOpen ? 'scale-100 opacity-100' : 'scale-100 opacity-100'}`}
+      className={`relative flex flex-col h-full bg-background overflow-hidden pb-4 transition-all duration-500 ease-in-out`}
     >
       <div className="flex items-center justify-between px-5 pt-6 pb-2 border-b shadow-sm bg-secondary">
         {(!isSplitViewOpen) ? (
@@ -394,19 +392,35 @@ export function ChatInterface({
   );
 
   return (
-    <>
-      {isSplitViewOpen ? (
-        <ComposerSplitView
-          composer={composer}
-          isOpen={isSplitViewOpen}
-          onClose={() => setIsSplitViewOpen(false)}
-        >
-          {chatContent}
-        </ComposerSplitView>
-      ) : (
-        chatContent
-      )}
-    </>
+    <div className="relative w-full h-full">
+      <div
+        className={`absolute inset-0 transition-all duration-300 ease-out ${
+          !isSplitViewOpen
+            ? 'opacity-100 translate-x-0'
+            : 'opacity-0 translate-x-4 pointer-events-none'
+        }`}
+      >
+        {chatContent}
+      </div>
+
+      <div
+        className={`fixed inset-0 transition-all duration-300 ease-out ${
+          isSplitViewOpen
+            ? 'opacity-100 translate-x-0'
+            : 'opacity-0 -translate-x-4 pointer-events-none'
+        }`}
+      >
+        {isSplitViewOpen && (
+          <ComposerSplitView
+            composer={composer}
+            isOpen={isSplitViewOpen}
+            onClose={() => setIsSplitViewOpen(false)}
+          >
+            {chatContent}
+          </ComposerSplitView>
+        )}
+      </div>
+    </div>
   );
 }
 

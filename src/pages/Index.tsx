@@ -77,25 +77,27 @@ const Index = () => {
         onClick={toggleMenu}
       >
         <div className="container mx-auto px-2 flex items-center justify-between h-full">
-          {/* Menu Toggle Button - Visual indicator only now */}
-          <div className="p-1 rounded-full hover:bg-muted transition-colors duration-200">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className={`h-5 w-5 transition-transform duration-500 ${isMenuOpen ? 'rotate-180' : 'rotate-0'}`}
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              style={{ width: '1.25rem', height: '1.25rem' }}
-            >
-              {isMenuOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              )}
-            </svg>
+          {/* Menu Toggle Button with its container - This part gets the group hover */}
+          <div className="flex-1 flex items-center group">
+            <div className="p-1 rounded-full transition-colors duration-200 group-hover:bg-muted">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className={`h-5 w-5 transition-all duration-500 ${isMenuOpen ? 'rotate-180' : 'rotate-0'} group-hover:text-primary`}
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                style={{ width: '1.25rem', height: '1.25rem' }}
+              >
+                {isMenuOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                )}
+              </svg>
+            </div>
           </div>
 
-          {/* Icons - These should not trigger the menu toggle */}
+          {/* Icons - These should not trigger the menu toggle or show group hover effects */}
           <div className="flex items-center gap-1" onClick={e => e.stopPropagation()}>
             <FooterDrawer />
             <ThemeToggle />
