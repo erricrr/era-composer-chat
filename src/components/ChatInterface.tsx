@@ -272,13 +272,16 @@ export function ChatInterface({
     <div
       className={`relative flex flex-col h-full bg-background overflow-hidden pb-4 transition-all duration-500 ease-in-out`}
     >
-      <div className="flex items-center justify-between px-5 pt-6 pb-2 border-b shadow-sm bg-secondary">
+      <div className="flex items-center justify-between px-5 pt-3 pb-2 border-b shadow-sm bg-secondary">
         {(!isSplitViewOpen) ? (
-          <div className="flex items-center space-x-6">
-            <div
-              onClick={() => setIsSplitViewOpen(true)}
-              className="flex items-center space-x-6 cursor-pointer hover:opacity-90 transition-all duration-300 ease-in-out transform hover:scale-[0.98]"
-            >
+          <div
+            onClick={() => setIsSplitViewOpen(true)}
+            className="flex-1 flex items-center cursor-pointer transition-all duration-300 ease-in-out transform
+              [&:not(:active)]:hover:opacity-90 [&:not(:active)]:hover:scale-[0.98]
+              motion-reduce:transition-none motion-reduce:transform-none
+              delay-[50ms]"
+          >
+            <div className="flex items-center space-x-6">
               <div>
                 <ComposerImageViewer
                   composer={composer}
@@ -301,17 +304,24 @@ export function ChatInterface({
             </div>
           </div>
         ) : (
-          <div className="flex items-center space-x-3 pb-3">
-          <Music className="h-4 w-4 text-primary" />
-          <span className="text-sm font-medium text-muted-foreground">
-            Chat with {composer.name.split(' ').pop()}
-          </span>
-          <div className="flex space-x-1">
-            <div className="h-1 w-1 rounded-full bg-primary"></div>
-            <div className="h-1 w-1 rounded-full bg-primary opacity-60"></div>
-            <div className="h-1 w-1 rounded-full bg-primary opacity-30"></div>
+          <div
+            onClick={() => setIsSplitViewOpen(false)}
+            className="flex-1 flex items-center space-x-3 pb-3 pt-5 cursor-pointer transition-all duration-300 ease-in-out
+              [&:not(:active)]:hover:opacity-90
+              motion-reduce:transition-none
+              delay-[50ms]
+              translate-y-[-4px]"
+          >
+            <Music className="h-4 w-4 text-primary" />
+            <span className="text-sm font-medium text-muted-foreground">
+              Chat with {composer.name.split(' ').pop()}
+            </span>
+            <div className="flex space-x-1">
+              <div className="h-1 w-1 rounded-full bg-primary"></div>
+              <div className="h-1 w-1 rounded-full bg-primary opacity-60"></div>
+              <div className="h-1 w-1 rounded-full bg-primary opacity-30"></div>
+            </div>
           </div>
-        </div>
         )}
         <Button
           variant="ghost"
