@@ -3,7 +3,6 @@ import { ComposerCard } from './ComposerCard';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { useEffect, useState } from 'react';
 import { ComposerImageViewer } from './ComposerImageViewer';
 
 
@@ -23,12 +22,6 @@ export function ComposerList({
   isOpen = false
 }: ComposerListProps) {
   const composers = getComposersByEra(era);
-
-  useEffect(() => {
-    if (!selectedComposer && composers.length > 0) {
-      onSelectComposer(composers[0]);
-    }
-  }, [composers, selectedComposer, onSelectComposer]);
 
   return (
     <div className="w-full mt-0">
