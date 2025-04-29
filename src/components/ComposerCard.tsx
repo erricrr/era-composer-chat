@@ -12,18 +12,18 @@ export function ComposerCard({ composer, onClick, isSelected }: ComposerCardProp
   return (
     <div
       className={`
-        w-full flex items-center gap-3 p-4 rounded-lg cursor-pointer select-none
-        transition-all duration-300 ease-out transform relative group
+        w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg cursor-pointer select-none
+        transition-all duration-300 ease-out transform relative group h-12
         ${isSelected
           ? 'bg-background shadow-md [&_h2]:text-primary [&_p]:opacity-90'
           : 'hover:bg-background/50 hover:shadow-sm'}
       `}
       onClick={() => onClick(composer)}
     >
-      {/* Hover state bar - adjusted width from w-2 to w-1.5 */}
+      {/* Hover state bar */}
       <div
         className={`
-          absolute left-0 top-1.5 bottom-1.5 w-1.5 rounded-r-md bg-primary/15
+          absolute left-0 top-0.5 bottom-0.5 w-1 rounded-r-md bg-primary/15
           transform origin-center transition-all duration-300 ease-out
           opacity-0 scale-y-0
           ${!isSelected && 'group-hover:opacity-100 group-hover:scale-y-100'}
@@ -33,7 +33,7 @@ export function ComposerCard({ composer, onClick, isSelected }: ComposerCardProp
       {/* Active state bar */}
       <div
         className={`
-          absolute left-0 top-1.5 bottom-1.5 w-1.5 rounded-r-md bg-primary
+          absolute left-0 top-0.5 bottom-0.5 w-1 rounded-r-md bg-primary
           transform origin-center transition-all duration-300 ease-out
           opacity-0 scale-y-0
           ${isSelected && 'opacity-100 scale-y-100'}
@@ -45,7 +45,7 @@ export function ComposerCard({ composer, onClick, isSelected }: ComposerCardProp
         src={composer.imageUrl}
         alt={composer.name}
         className={`
-          w-11 h-11 rounded-full object-cover flex-shrink-0 border-2
+          w-9 h-9 rounded-full object-cover flex-shrink-0 border-2
           transition-transform duration-300 ease-out
           ${isSelected ? 'border-primary scale-105' : 'border-white/10 group-hover:scale-105 group-hover:border-primary/80'}
         `}

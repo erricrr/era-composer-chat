@@ -111,7 +111,7 @@ const Index = () => {
           className={`
             fixed inset-x-0 z-40
             bg-background backdrop-blur-sm border-b border-border shadow-lg
-            transition-transform duration-700 ease-in-out
+            transition-transform duration-500 ease-out
             ${isMenuOpen ? 'translate-y-0' : '-translate-y-full pointer-events-none'}
             overflow-y-auto
           `}
