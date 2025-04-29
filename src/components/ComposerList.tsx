@@ -25,9 +25,9 @@ export function ComposerList({
 
   return (
     <div className="w-full mt-0">
-      <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] gap-4 md:gap-6 lg:gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] gap-4 md:gap-6 lg:gap-8 h-[70vh] md:h-[80vh] overflow-hidden">
         {/* Left side - Scrolling composers */}
-        <ScrollArea className="w-full bg-secondary/80 backdrop-blur-sm rounded-lg p-2 md:p-3">
+        <ScrollArea className="w-full h-full bg-secondary/80 backdrop-blur-sm rounded-lg p-2 md:p-3">
           <div className="flex flex-row md:flex-col space-x-3 md:space-x-0 md:space-y-2 w-max md:w-full pb-1">
             {composers.map(composer => (
               <ComposerCard
@@ -44,7 +44,7 @@ export function ComposerList({
 
         {/* Right side - Biography with responsive layout */}
         {selectedComposer && (
-          <div className="rounded-lg p-2 md:p-4 flex flex-col max-h-[70vh] md:max-h-none overflow-y-auto">
+          <div className="rounded-lg p-2 md:p-4 flex flex-col h-full overflow-y-auto">
             {/* Header with responsive layout */}
             <div className="flex items-center space-x-4 md:space-x-6 mb-3">
               <div className="cursor-pointer">
