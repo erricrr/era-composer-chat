@@ -31,7 +31,7 @@ export function ComposerList({
 
 {/* Mobile view: Horizontal scroll */}
 <div className="md:hidden">
-  <div className="h-20 px-3 mt-2">
+  <div className="h-20 px-3 mt-3 -mb-5">
     <ScrollArea className="w-full h-full">
       <div className="flex items-center gap-2">
         {composers.map((composer) => (
