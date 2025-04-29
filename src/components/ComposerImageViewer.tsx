@@ -69,6 +69,7 @@ export function ComposerImageViewer({
           onClose={() => setImageModalOpen(false)}
           imageSrc={composer.imageUrl}
           composerName={composer.name}
+          composerId={composer.id}
           nationality={composer.nationality}
           birthYear={composer.birthYear}
           deathYear={composer.deathYear}

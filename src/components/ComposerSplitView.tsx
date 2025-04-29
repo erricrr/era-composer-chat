@@ -1,5 +1,5 @@
 import React, { ReactNode, useState, useEffect } from 'react';
-import { Composer } from '@/data/composers';
+import { Composer, getCopyrightAttribution, CopyrightDetails } from '@/data/composers';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Badge } from '@/components/ui/badge';
@@ -15,11 +15,13 @@ function ContainedImageModal({
   onClose,
   imageSrc,
   composerName,
+  composerId
 }: {
   isOpen: boolean;
   onClose: () => void;
   imageSrc: string;
   composerName: string;
+  composerId: string;
 }) {
   const [isAnimating, setIsAnimating] = useState(false);
 
@@ -33,6 +35,9 @@ function ContainedImageModal({
       return () => clearTimeout(timer);
     }
   }, [isOpen]);
+
+  // Get copyright details
+  const copyrightDetails = getCopyrightAttribution(composerId);
 
   if (!isOpen && !isAnimating) return null;
 
@@ -78,7 +83,18 @@ function ContainedImageModal({
   {/* Footer */}
   <div className="py-1 px-2 text-left bg-background dark:bg-secondary">
     <div className="text-xs text-muted-foreground">
-      Image copyright
+      {copyrightDetails ? (
+        <>
+          Image by {copyrightDetails.author} via{' '}
+          <a href={copyrightDetails.sourceUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">
+            {copyrightDetails.source}
+          </a>
+          , licensed under{' '}
+          <a href={copyrightDetails.licenseUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">
+            {copyrightDetails.license}
+          </a>
+        </>
+      ) : null}
     </div>
   </div>
 </div>
@@ -190,12 +206,13 @@ export function ComposerSplitView({ composer, isOpen, onClose, children }: Compo
         </ScrollArea>
       </div>
 
-      {/* Contained Image Modal - Now inside relative parent */}
+      {/* Contained Image Modal - Pass composerId */}
       <ContainedImageModal
         isOpen={imageModalOpen}
         onClose={() => setImageModalOpen(false)}
         imageSrc={composer.imageUrl}
         composerName={composer.name}
+        composerId={composer.id}
       />
     </div>
   );

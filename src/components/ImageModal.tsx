@@ -1,16 +1,17 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
+import { getCopyrightAttribution, CopyrightDetails } from '@/data/composers';
 
 interface ImageModalProps {
   isOpen: boolean;
   onClose: () => void;
   imageSrc: string;
   composerName: string;
+  composerId: string;
   nationality?: string;
   birthYear?: number;
   deathYear?: number | null;
   caption?: string;
-  copyright?: string;
   sourceUrl?: string;
 }
 
@@ -19,11 +20,11 @@ export function ImageModal({
   onClose,
   imageSrc,
   composerName,
+  composerId,
   nationality,
   birthYear,
   deathYear,
   caption,
-  copyright = "Image copyright",
   sourceUrl
 }: ImageModalProps) {
   const [isAnimating, setIsAnimating] = React.useState(false);
@@ -40,6 +41,8 @@ export function ImageModal({
       return () => clearTimeout(timer);
     }
   }, [isOpen]);
+
+  const copyrightDetails = getCopyrightAttribution(composerId);
 
   if (!isOpen && !isAnimating) return null;
 
@@ -134,14 +137,25 @@ export function ImageModal({
           )}
           <div className="flex items-center justify-between text-xs">
             <span style={{ color: 'hsl(var(--muted-foreground))' }}>
-              {copyright}
+              {copyrightDetails ? (
+                <>
+                  Image by {copyrightDetails.author} via{' '}
+                  <a href={copyrightDetails.sourceUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">
+                    {copyrightDetails.source}
+                  </a>
+                  , licensed under{' '}
+                  <a href={copyrightDetails.licenseUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">
+                    {copyrightDetails.license}
+                  </a>
+                </>
+              ) : null}
             </span>
             {sourceUrl && (
               <a
                 href={sourceUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="underline"
+                className="underline hover:text-primary"
                 style={{ color: 'hsl(var(--primary))' }}
               >
                 Source
