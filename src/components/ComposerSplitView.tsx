@@ -163,7 +163,7 @@ export function ComposerSplitView({ composer, isOpen, onClose, children }: Compo
                   {composer.nationality}, {composer.birthYear}-{composer.deathYear || 'present'}
                 </span>
                 <Badge variant="badge">
-                  {composer.era}
+                  {Array.isArray(composer.era) ? composer.era.join(' / ') : composer.era}
                 </Badge>
               </div>
             </div>

@@ -68,7 +68,7 @@ export function ComposerList({
                     {selectedComposer.nationality}, {selectedComposer.birthYear}-{selectedComposer.deathYear || 'present'}
                   </span>
                   <Badge variant="badge" className="md:ml-2 w-fit">
-                    {era}
+                    {Array.isArray(selectedComposer.era) ? selectedComposer.era.join(' / ') : selectedComposer.era}
                   </Badge>
                 </div>
               </div>

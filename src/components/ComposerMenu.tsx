@@ -27,10 +27,14 @@ export function ComposerMenu({
   // Update the last selected composer for the current era whenever selectedComposer changes
   useEffect(() => {
     if (selectedComposer) {
-      setLastSelectedComposerPerEra(prevMap => ({
-        ...prevMap,
-        [selectedComposer.era]: selectedComposer
-      }));
+      setLastSelectedComposerPerEra(prevMap => {
+        const newMap = { ...prevMap };
+        const eras = Array.isArray(selectedComposer.era) ? selectedComposer.era : [selectedComposer.era];
+        eras.forEach(era => {
+          newMap[era] = selectedComposer;
+        });
+        return newMap;
+      });
     }
   }, [selectedComposer]);
 

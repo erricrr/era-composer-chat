@@ -3,7 +3,7 @@ import composersData from './composers.json';
 export interface Composer {
   id: string;
   name: string;
-  era: Era;
+  era: Era[];
   birthYear: number;
   deathYear: number | null;
   shortBio: string;
@@ -53,7 +53,14 @@ export const composers: Composer[] = composersData.composers as Composer[];
 
 // Function to get composers by era
 export const getComposersByEra = (era: Era): Composer[] => {
-  return composers.filter(composer => composer.era === era);
+  return composers.filter(composer => {
+    // Support legacy data where era might be a string
+    if (Array.isArray(composer.era)) {
+      return composer.era.includes(era);
+    } else {
+      return composer.era === era;
+    }
+  });
 };
 
 // Message interface for chat

@@ -1,9 +1,709 @@
 {
   "composers": [
     {
+      "id": "aaron-copland",
+      "name": "Aaron Copland",
+      "era": ["20th-21st Century"],
+      "birthYear": 1900,
+      "deathYear": 1990,
+      "shortBio": "American composer known for creating a distinctly American style of composition, incorporating folk music and jazz elements.",
+      "longBio": "Aaron Copland was one of the most respected American classical composers of the twentieth century. His music achieved a balance between modern music and American folk styles, and the open, slowly changing harmonies in much of his music are typical of what many people consider to be the sound of American classical music.",
+      "nationality": "American",
+      "location": "New York, USA",
+      "famousWorks": [
+        "Appalachian Spring",
+        "Fanfare for the Common Man",
+        "Rodeo"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/0/05/Aaron_Copland_1970.JPG"
+    },
+    {
+      "id": "adolphe-adam",
+      "name": "Adolphe Adam",
+      "era": ["Romantic"],
+      "birthYear": 1803,
+      "deathYear": 1856,
+      "shortBio": "French composer and music critic known for his ballets and operas.",
+      "longBio": "Adolphe Charles Adam was a French composer and music critic. A prolific composer for the Paris Opera and the Opéra-Comique, he is best known today for his ballets Giselle and Le Corsaire, and his Christmas carol 'O Holy Night'.",
+      "nationality": "French",
+      "location": "Paris, France",
+      "famousWorks": [
+        "Giselle",
+        "Le Corsaire",
+        "O Holy Night"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/2/26/Adolphe_Adam_by_Maurin.jpg"
+    },
+    {
+      "id": "alexander-glazunov",
+      "name": "Alexander Glazunov",
+      "era": ["Romantic"],
+      "birthYear": 1865,
+      "deathYear": 1936,
+      "shortBio": "Russian composer, music teacher, and conductor of the late Russian Romantic period.",
+      "longBio": "Alexander Konstantinovich Glazunov was a Russian composer, music teacher, and conductor of the late Russian Romantic period. He served as director of the Saint Petersburg Conservatory between 1905 and 1928 and was instrumental in the reorganization of the institute into the Petrograd Conservatory, then the Leningrad Conservatory.",
+      "nationality": "Russian",
+      "location": "Saint Petersburg, Russia",
+      "famousWorks": [
+        "The Seasons",
+        "Violin Concerto in A minor",
+        "Symphony No. 5"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/3/3d/Glazunov_by_Repin.jpg"
+    },
+    {
+      "id": "alma-mahler",
+      "name": "Alma Mahler",
+      "era": ["20th-21st Century"],
+      "birthYear": 1879,
+      "deathYear": 1964,
+      "shortBio": "Austrian composer, author, and socialite who was a key figure in Vienna's artistic scene.",
+      "longBio": "Alma Maria Mahler Gropius Werfel was an Austrian composer, author, and socialite. She became the wife, successively, of composer Gustav Mahler, architect Walter Gropius, and novelist Franz Werfel, and had several other prominent lovers. She composed several songs but was discouraged from pursuing composition by Gustav Mahler early in their marriage.",
+      "nationality": "Austrian",
+      "location": "Vienna, Austria",
+      "famousWorks": [
+        "Die stille Stadt",
+        "Fünf Lieder",
+        "Vier Lieder"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/1/14/Alma_Mahler_with_Maria_and_Anna.jpg"
+    },
+    {
+      "id": "amy-beach",
+      "name": "Amy Beach",
+      "era": ["Romantic"],
+      "birthYear": 1867,
+      "deathYear": 1944,
+      "shortBio": "American composer and pianist, the first successful American female composer of large-scale art music.",
+      "longBio": "Amy Marcy Cheney Beach was an American composer and pianist. She was the first successful American female composer of large-scale art music. Most of her compositions and performances came before 1910. She wrote the Gaelic Symphony, the first symphony composed and published by an American woman.",
+      "nationality": "American",
+      "location": "Boston, USA",
+      "famousWorks": [
+        "Gaelic Symphony",
+        "Piano Concerto in C-sharp minor",
+        "Mass in E-flat major"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/3/38/Amy_Beach_01.jpg"
+    },
+    {
+      "id": "antonio-salieri",
+      "name": "Antonio Salieri",
+      "era": ["Classical"],
+      "birthYear": 1750,
+      "deathYear": 1825,
+      "shortBio": "Italian classical composer, conductor, and teacher who had considerable influence on the development of late 18th-century opera.",
+      "longBio": "Antonio Salieri was an Italian classical composer, conductor, and teacher. He was a pivotal figure in the development of late 18th-century opera. As the Austrian imperial Kapellmeister from 1788 to 1824, he was one of the most important and famous musicians of his time. He taught many notable composers, including Beethoven, Liszt, and Schubert.",
+      "nationality": "Italian",
+      "location": "Vienna, Austria",
+      "famousWorks": [
+        "Europa riconosciuta",
+        "La grotta di Trofonio",
+        "Prima la musica e poi le parole"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/0/07/Antonio_Salieri_painted_by_Joseph_Willibrord_M%C3%A4hler.jpg"
+    },
+    {
+      "id": "antonin-dvorak",
+      "name": "Antonín Dvořák",
+      "era": ["Romantic"],
+      "birthYear": 1841,
+      "deathYear": 1904,
+      "shortBio": "Czech composer known for incorporating folk music elements into his classical compositions.",
+      "longBio": "Antonín Leopold Dvořák was one of the first Czech composers to achieve worldwide recognition. He was known for turning folk material into the language of 19th-century Romantic music. His time in America led to the composition of his most famous work, the Symphony No. 9 'From the New World', which was influenced by Native American and African-American music.",
+      "nationality": "Czech",
+      "location": "Prague, Czech Republic",
+      "famousWorks": [
+        "Symphony No. 9 'From the New World'",
+        "Rusalka",
+        "Slavonic Dances"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/1/12/Dvorak.jpg"
+    },
+    {
+      "id": "aram-khachaturian",
+      "name": "Aram Khachaturian",
+      "era": ["20th-21st Century"],
+      "birthYear": 1903,
+      "deathYear": 1978,
+      "shortBio": "Soviet Armenian composer known for his colorful orchestration and use of Armenian folk music elements.",
+      "longBio": "Aram Ilyich Khachaturian was a Soviet Armenian composer and conductor. He is considered one of the leading Soviet composers, known for his colorful orchestration and use of folk music elements from his Armenian heritage. His most famous works include the Sabre Dance from his ballet Gayane and the Adagio from Spartacus.",
+      "nationality": "Armenian",
+      "location": "Moscow, USSR",
+      "famousWorks": [
+        "Spartacus",
+        "Gayane (including Sabre Dance)",
+        "Violin Concerto"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/d/d6/Aankomst_Russische_dirigent_Khatsjatoerian_op_Schiphol%2C_Khatsjatorian%2C_Bestanddeelnr_916-6862.jpg"
+    },
+    {
+      "id": "arcangelo-corelli",
+      "name": "Arcangelo Corelli",
+      "era": ["Baroque"],
+      "birthYear": 1653,
+      "deathYear": 1713,
+      "shortBio": "Italian violinist and composer of the Baroque era known for developing the concerto grosso form.",
+      "longBio": "Arcangelo Corelli was an Italian violinist and composer of the Baroque era. His music was key in establishing the genres of sonata and concerto, in developing the notion of tonality, and in popularizing the violin. His influence on the development of violin style was immense.",
+      "nationality": "Italian",
+      "location": "Rome, Italy",
+      "famousWorks": [
+        "12 Concerti Grossi, Op. 6",
+        "12 Violin Sonatas, Op. 5",
+        "Christmas Concerto"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/e/e8/Arcangelo_Corelli%2C_portrait_by_Hugh_Howard_%281697%29.jpg"
+    },
+    {
+      "id": "arnold-schoenberg",
+      "name": "Arnold Schoenberg",
+      "era": ["20th-21st Century"],
+      "birthYear": 1874,
+      "deathYear": 1951,
+      "shortBio": "Austrian-American composer, music theorist, and painter who pioneered atonal and twelve-tone composition.",
+      "longBio": "Arnold Schoenberg was an Austrian-American composer, music theorist, teacher, writer, and painter. He is widely considered one of the most influential composers of the 20th century. He developed the twelve-tone technique, an influential compositional method of manipulating twelve-note sequences, and was associated with the expressionist movement in German poetry and art.",
+      "nationality": "Austrian-American",
+      "location": "Vienna, Austria and Los Angeles, USA",
+      "famousWorks": [
+        "Pierrot Lunaire",
+        "Verklärte Nacht",
+        "Moses und Aron"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/f/fe/%E9%98%BF%E8%AF%BA%E5%BE%B7%C2%B7%E5%8B%8B%E4%BC%AF%E6%A0%BC%E8%82%96%E5%83%8F.jpg"
+    },
+    {
+      "id": "bela-bartok",
+      "name": "Béla Bartók",
+      "era": ["20th-21st Century"],
+      "birthYear": 1881,
+      "deathYear": 1945,
+      "shortBio": "Hungarian composer, pianist, and ethnomusicologist known for his integration of folk music with classical traditions.",
+      "longBio": "Béla Viktor János Bartók was a Hungarian composer, pianist, and ethnomusicologist. He is considered one of the most important composers of the 20th century. Through his collection and analytical study of folk music, he was one of the founders of comparative musicology, which later became ethnomusicology.",
+      "nationality": "Hungarian",
+      "location": "Budapest, Hungary",
+      "famousWorks": [
+        "Music for Strings, Percussion and Celesta",
+        "Concerto for Orchestra",
+        "Mikrokosmos"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/d/d2/Bart%C3%B3k_B%C3%A9la_1927_%28cropped%29.jpg"
+    },
+    {
+      "id": "camille-saint-saens",
+      "name": "Camille Saint-Saëns",
+      "era": ["Romantic"],
+      "birthYear": 1835,
+      "deathYear": 1921,
+      "shortBio": "French composer, organist, conductor, and pianist of the Romantic era.",
+      "longBio": "Charles-Camille Saint-Saëns was a French composer, organist, conductor, and pianist of the Romantic era. He was a musical prodigy and made his concert debut at age ten. A conservative despite his interest in the most modern music of the day, he held the most important positions in French music and was regarded as the most distinguished French composer of his time.",
+      "nationality": "French",
+      "location": "Paris, France",
+      "famousWorks": [
+        "The Carnival of the Animals",
+        "Symphony No. 3 (Organ Symphony)",
+        "Danse Macabre"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/9/98/Saint-Sa%C3%ABns-circa-1880.jpg"
+    },
+    {
+      "id": "carl-philipp-emanuel-bach",
+      "name": "Carl Philipp Emanuel Bach",
+      "era": ["Classical"],
+      "birthYear": 1714,
+      "deathYear": 1788,
+      "shortBio": "German Classical period musician and composer, the second surviving son of Johann Sebastian Bach.",
+      "longBio": "Carl Philipp Emanuel Bach was a German Classical period musician and composer, the second of five sons of Johann Sebastian Bach and Maria Barbara Bach. He was a crucial composer in the transition between the Baroque and Classical periods, and one of the founders of the Classical style, composing in the Rococo and Classical periods.",
+      "nationality": "German",
+      "location": "Hamburg, Germany",
+      "famousWorks": [
+        "Magnificat",
+        "Keyboard Sonatas",
+        "Hamburg Symphonies"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/1/19/CPEB_by_L%C3%B6hr.jpg"
+    },
+    {
+      "id": "cecile-chaminade",
+      "name": "Cécile Chaminade",
+      "era": ["Romantic"],
+      "birthYear": 1857,
+      "deathYear": 1944,
+      "shortBio": "French composer and pianist known for her piano music and melodies.",
+      "longBio": "Cécile Louise Stéphanie Chaminade was a French composer and pianist. She wrote mostly character pieces for piano and salon songs, which were popular in America during her lifetime. Her compositions received good reviews from critics and she became the first female composer to receive the Legion of Honor.",
+      "nationality": "French",
+      "location": "Paris, France",
+      "famousWorks": [
+        "Concertino for Flute",
+        "Les Sylvains",
+        "Automne"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/a/ae/Cecile_chaminade.jpg"
+    },
+    {
+      "id": "chevalier-de-saint-georges",
+      "name": "Chevalier de Saint-Georges",
+      "era": ["Classical"],
+      "birthYear": 1745,
+      "deathYear": 1799,
+      "shortBio": "French classical composer, virtuoso violinist, and conductor of African ancestry.",
+      "longBio": "Joseph Bologne, Chevalier de Saint-Georges was a French classical composer, virtuoso violinist, conductor of the leading symphony orchestra in Paris, and extraordinary fencer. Born in Guadeloupe, he was one of the earliest musicians of African ancestry to achieve prominence in Western classical music.",
+      "nationality": "French",
+      "location": "Paris, France",
+      "famousWorks": [
+        "Symphony No. 1 in G major",
+        "Violin Concertos",
+        "L'Amant anonyme"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/0/02/Mather_Brown%2C_William_Ward_-_Monsieur_de_St_George%2C_1788%2C_NPG_D4132%2C_London.png"
+    },
+    {
+      "id": "christoph-willibald-gluck",
+      "name": "Christoph Willibald Gluck",
+      "era": ["Classical"],
+      "birthYear": 1714,
+      "deathYear": 1787,
+      "shortBio": "German composer of the early Classical period, known for his operatic reforms.",
+      "longBio": "Christoph Willibald Gluck was a composer of Italian and French opera in the early classical period. He is known for his reforms of opera seria, which introduced more drama and emotional content to the form. His most famous works include Orfeo ed Euridice and Alceste.",
+      "nationality": "German",
+      "location": "Vienna, Austria",
+      "famousWorks": [
+        "Orfeo ed Euridice",
+        "Alceste",
+        "Iphigénie en Tauride"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/9/91/Joseph_Siffred_Duplessis_-_Christoph_Willibald_Gluck_-_Google_Art_Project.jpg"
+    },
+    {
+      "id": "clara-schumann",
+      "name": "Clara Schumann",
+      "era": ["Romantic"],
+      "birthYear": 1819,
+      "deathYear": 1896,
+      "shortBio": "German pianist, composer, and piano teacher of the Romantic era.",
+      "longBio": "Clara Schumann was a German musician and composer, considered one of the most distinguished pianists of the Romantic era. She exerted her influence over a 61-year concert career, changing the format and repertoire of the piano recital while also composing and serving as an inspiration to composers including Johannes Brahms.",
+      "nationality": "German",
+      "location": "Leipzig, Germany",
+      "famousWorks": [
+        "Piano Concerto in A minor",
+        "Piano Trio in G minor",
+        "Three Romances for Violin and Piano"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/b/bc/Robert_and_Clara_Schumann_Daguerrotype_%28cropped%29.jpg"
+    },
+    {
+      "id": "claudio-monteverdi",
+      "name": "Claudio Monteverdi",
+      "era": ["Baroque"],
+      "birthYear": 1567,
+      "deathYear": 1643,
+      "shortBio": "Italian composer, string player, and choirmaster who marked the transition from Renaissance to Baroque music.",
+      "longBio": "Claudio Giovanni Antonio Monteverdi was an Italian composer, string player, choirmaster, and priest. A pioneer of opera, he is considered a crucial transitional figure between the Renaissance and Baroque periods of music history. His work, including the dawn of opera with L'Orfeo, helped establish the techniques and forms that marked the beginning of the Baroque style.",
+      "nationality": "Italian",
+      "location": "Venice, Italy",
+      "famousWorks": [
+        "L'Orfeo",
+        "Vespers of 1610",
+        "L'incoronazione di Poppea"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/0/02/Bernardo_Strozzi_-_Claudio_Monteverdi_%28c.1630%29.jpg"
+    },
+    {
+      "id": "dieterich-buxtehude",
+      "name": "Dieterich Buxtehude",
+      "era": ["Baroque"],
+      "birthYear": 1637,
+      "deathYear": 1707,
+      "shortBio": "Danish-German organist and composer of the Baroque period.",
+      "longBio": "Dieterich Buxtehude was a Danish-German organist and composer of the Baroque period. His organ works represent a central part of the standard organ repertoire and are frequently performed at recitals and church services. He composed in a wide variety of vocal and instrumental idioms, and his style strongly influenced many composers, including Johann Sebastian Bach.",
+      "nationality": "Danish-German",
+      "location": "Lübeck, Germany",
+      "famousWorks": [
+        "Membra Jesu Nostri",
+        "Praeludium in G minor",
+        "Passacaglia in D minor"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/4/46/Dieterich_Buxtehude.png"
+    },
+    {
+      "id": "schutz",
+      "name": "Heinrich Schütz",
+      "era": ["Baroque"],
+      "birthYear": 1585,
+      "deathYear": 1672,
+      "shortBio":
+        "German composer and organist, generally regarded as the most important German composer before Johann Sebastian Bach.",
+      "longBio":
+        "Heinrich Schütz was a German composer and organist, regarded as the most important German composer before Johann Sebastian Bach and a key figure of 17th-century music. He introduced the Italian musical style to Germany and laid the foundations for the German tradition that culminated in Bach's works. Although he composed in various genres and wrote the first German opera, Dafne, his main focus was sacred choral music, especially motets and pieces for special occasions.",
+      "nationality": "German",
+      "location": "Dresden, Germany",
+      "famousWorks": [
+        "Symphoniae Sacrae",
+        "Psalmen Davids",
+        "Christmas Oratorio"
+      ],
+      "imageUrl":
+        "https://upload.wikimedia.org/wikipedia/commons/2/28/Schutz.jpg"
+    },
+    {
+      "id": "dmitri-shostakovich",
+      "name": "Dmitri Shostakovich",
+      "era": ["20th-21st Century"],
+      "birthYear": 1906,
+      "deathYear": 1975,
+      "shortBio": "Soviet composer and pianist, known for his symphonies and string quartets.",
+      "longBio": "Dmitri Dmitriyevich Shostakovich was a Soviet composer and pianist who created music under the Soviet regime. He is regarded as one of the major composers of the 20th century, with a unique style marked by ambivalent tonality, grotesque elements, and complex formal structures. His work includes 15 symphonies and 15 string quartets.",
+      "nationality": "Russian",
+      "location": "Saint Petersburg/Leningrad, USSR",
+      "famousWorks": [
+        "Symphony No. 5",
+        "Symphony No. 7 'Leningrad'",
+        "String Quartet No. 8"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/6/6c/%D0%94%D0%BC%D0%B8%D1%82%D1%80%D0%B8%D0%B9_%D0%94%D0%BC%D0%B8%D1%82%D1%80%D0%B8%D0%B5%D0%B2%D0%B8%D1%87_%D0%A8%D0%BE%D1%81%D1%82%D0%B0%D0%BA%D0%BE%D0%B2%D0%B8%D1%87.jpg"
+    },
+    {
+      "id": "domenico-scarlatti",
+      "name": "Domenico Scarlatti",
+      "era": ["Baroque"],
+      "birthYear": 1685,
+      "deathYear": 1757,
+      "shortBio": "Italian composer who spent much of his life in Spain, known for his keyboard sonatas.",
+      "longBio": "Domenico Scarlatti was an Italian composer who spent much of his life in the service of the Portuguese and Spanish royal families. He is classified primarily as a Baroque composer chronologically, although his music was influential in the development of the Classical style. He is best known for his 555 keyboard sonatas.",
+      "nationality": "Italian",
+      "location": "Madrid, Spain",
+      "famousWorks": [
+        "Keyboard Sonata in D minor, K.1",
+        "Keyboard Sonata in E major, K.380",
+        "Keyboard Sonata in G major, K.146"
+      ],
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Domenico_Scarlatti.jpg"
+    },
+    {
+      "id": "elisabeth-jacquet-de-la-guerre",
+      "name": "Elisabeth Jacquet de La Guerre",
+      "era": ["Baroque"],
+      "birthYear": 1665,
+      "deathYear": 1729,
+      "shortBio": "French harpsichordist and composer who was one of the few well-known female composers of her time.",
+      "longBio": "Elisabeth Jacquet de La Guerre was a French musician, harpsichordist and composer. She was a child prodigy and performed at the court of Louis XIV. One of the few well-known female composers of her era, she was noted for her compositions for harpsichord, violin sonatas, and opera, being one of the first French women to compose operas.",
+      "nationality": "French",
+      "location": "Paris, France",
+      "famousWorks": [
+        "Céphale et Procris",
+        "Suites for Harpsichord",
+        "Sonates pour le Viollon"
+      ],
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Elisabeth_Jacquet_de_La_Guerre.jpg"
+    },
+    {
+      "id": "erik-satie",
+      "name": "Erik Satie",
+      "era": ["20th-21st Century"],
+      "birthYear": 1866,
+      "deathYear": 1925,
+      "shortBio": "French composer and pianist known for his unconventional and often humorous works.",
+      "longBio": "Erik Satie was a French composer and pianist who was a leading figure in the early 20th century Parisian avant-garde. His work was a precursor to later artistic movements including minimalism, repetitive music, and the Theatre of the Absurd. He is best known for his piano pieces, particularly the Gymnopédies.",
+      "nationality": "French",
+      "location": "Paris, France",
+      "famousWorks": [
+        "Gymnopédies",
+        "Gnossiennes",
+        "Parade"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/5/58/Ericsatie.jpg"
+    },
+    {
+      "id": "fanny-mendelssohn",
+      "name": "Fanny Mendelssohn",
+      "era": ["Romantic"],
+      "birthYear": 1805,
+      "deathYear": 1847,
+      "shortBio": "German composer and pianist of the early Romantic era, sister of Felix Mendelssohn.",
+      "longBio": "Fanny Mendelssohn, later Fanny Hensel, was a German composer and pianist of the early Romantic era. She composed over 460 pieces of music, including a piano trio, a piano quartet, an orchestral overture, four cantatas, and over 250 lieder, but many of her works were published under her brother Felix's name due to social constraints of the time.",
+      "nationality": "German",
+      "location": "Berlin, Germany",
+      "famousWorks": [
+        "Das Jahr",
+        "Piano Trio in D minor",
+        "Overture in C major"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/f/f1/Fanny_Hensel_1842.jpg"
+    },
+    {
+      "id": "felix-mendelssohn",
+      "name": "Felix Mendelssohn",
+      "era": ["Romantic"],
+      "birthYear": 1809,
+      "deathYear": 1847,
+      "shortBio": "German composer, pianist, and conductor of the early Romantic period.",
+      "longBio": "Felix Mendelssohn was a German composer, pianist, and conductor of the early Romantic period. He was particularly well-regarded for his concert overtures and oratorios. His work includes symphonies, concertos, piano music, organ music and chamber music. He led the Leipzig Gewandhaus Orchestra and founded the Leipzig Conservatory.",
+      "nationality": "German",
+      "location": "Leipzig, Germany",
+      "famousWorks": [
+        "A Midsummer Night's Dream",
+        "Symphony No. 4 (Italian)",
+        "Violin Concerto in E minor"
+      ],
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Felix_Mendelssohn_Bartholdy.jpg"
+    },
+    {
+      "id": "francis-johnson",
+      "name": "Francis Johnson",
+      "era": ["Romantic"],
+      "birthYear": 1792,
+      "deathYear": 1844,
+      "shortBio": "African-American composer and musician who was the first African-American composer to have his works published as sheet music.",
+      "longBio": "Francis 'Frank' Johnson was an American composer and musician who achieved both national and international fame as a performer before dying at the age of 52. He was the first African-American composer to have his works published as sheet music and the first to give public concerts in racially mixed settings in the United States.",
+      "nationality": "American",
+      "location": "Philadelphia, USA",
+      "famousWorks": [
+        "Collection of New Cotillions",
+        "The Princeton Grand March",
+        "The Recognition March"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c7/Frank_Johnson.jpg"
+    },
+    {
+      "id": "franz-liszt",
+      "name": "Franz Liszt",
+      "era": ["Romantic"],
+      "birthYear": 1811,
+      "deathYear": 1886,
+      "shortBio": "Hungarian composer, virtuoso pianist, conductor, and teacher of the Romantic era.",
+      "longBio": "Franz Liszt was a Hungarian composer, virtuoso pianist, conductor, music teacher, arranger, and organist of the Romantic era. He was also a writer, philanthropist, Hungarian nationalist, and Franciscan tertiary. He gained renown in Europe during the early nineteenth century for his prodigious virtuosic skill as a pianist.",
+      "nationality": "Hungarian",
+      "location": "Weimar, Germany",
+      "famousWorks": [
+        "Hungarian Rhapsodies",
+        "Piano Sonata in B minor",
+        "Liebestraum No. 3"
+      ],
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Franz_Liszt_2.jpg"
+    },
+    {
+      "id": "franz-schubert",
+      "name": "Franz Schubert",
+      "era": ["Romantic"],
+      "birthYear": 1797,
+      "deathYear": 1828,
+      "shortBio": "Austrian composer of the late Classical and early Romantic eras, particularly noted for his art songs (lieder) and chamber music.",
+      "longBio": "Franz Peter Schubert was an Austrian composer of the late Classical and early Romantic eras. Despite his short life, he left behind a vast body of work, including more than 600 secular vocal works, seven complete symphonies, sacred music, operas, incidental music, and a large body of piano and chamber music. He is particularly noted for his original melodic and harmonic writing.",
+      "nationality": "Austrian",
+      "location": "Vienna, Austria",
+      "famousWorks": [
+        "Symphony No. 8 (Unfinished)",
+        "Winterreise",
+        "Ave Maria"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Franz_Schubert_by_Wilhelm_August_Rieder_1875.jpg/800px-Franz_Schubert_by_Wilhelm_August_Rieder_1875.jpg"
+    },
+    {
+      "id": "george-bridgetower",
+      "name": "George Bridgetower",
+      "era": ["Classical"],
+      "birthYear": 1778,
+      "deathYear": 1860,
+      "shortBio": "Afro-European virtuoso violinist and composer who collaborated with Beethoven.",
+      "longBio": "George Augustus Polgreen Bridgetower was an Afro-European virtuoso violinist and composer. He is best remembered as the original dedicatee of Beethoven's Kreutzer Sonata, which they premiered together. A child prodigy, he performed at the royal courts of Europe and later became a well-known musician in England.",
+      "nationality": "Polish-West Indian",
+      "location": "London, England",
+      "famousWorks": [
+        "Henry: A Ballad",
+        "Diatonica Armonica",
+        "Violin Performances with Beethoven"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/8/86/Bridgetower2.jpg"
+    },
+    {
+      "id": "georg-philipp-telemann",
+      "name": "Georg Philipp Telemann",
+      "era": ["Baroque"],
+      "birthYear": 1681,
+      "deathYear": 1767,
+      "shortBio": "German Baroque composer and multi-instrumentalist, one of the most prolific composers in history.",
+      "longBio": "Georg Philipp Telemann was a German Baroque composer and multi-instrumentalist. Almost completely self-taught in music, he became a composer against his family's wishes. He was one of the most prolific composers in history and was considered by his contemporaries to be one of the leading German composers of the time.",
+      "nationality": "German",
+      "location": "Hamburg, Germany",
+      "famousWorks": [
+        "Tafelmusik",
+        "Paris Quartets",
+        "Der Tag des Gerichts"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/d/d5/Telemann.jpg"
+    },
+    {
+      "id": "giacomo-puccini",
+      "name": "Giacomo Puccini",
+      "era": ["Romantic"],
+      "birthYear": 1858,
+      "deathYear": 1924,
+      "shortBio": "Italian composer known primarily for his operas, including La bohème, Tosca, and Madama Butterfly.",
+      "longBio": "Giacomo Antonio Domenico Michele Secondo Maria Puccini was an Italian composer known primarily for his operas. He is considered among the greatest composers of Italian opera and is called 'the greatest composer of Italian opera after Verdi'. His operas are among the most frequently performed in the standard repertoire.",
+      "nationality": "Italian",
+      "location": "Lucca, Italy",
+      "famousWorks": [
+        "La bohème",
+        "Madama Butterfly",
+        "Tosca"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/9/9b/GiacomoPuccini.jpg"
+    },
+    {
+      "id": "giuseppe-verdi",
+      "name": "Giuseppe Verdi",
+      "era": ["Romantic"],
+      "birthYear": 1813,
+      "deathYear": 1901,
+      "shortBio": "Italian composer of the Romantic era, one of the most influential composers of Italian opera.",
+      "longBio": "Giuseppe Fortunino Francesco Verdi was an Italian opera composer. He was one of the most influential composers of the 19th century. His works are frequently performed in opera houses throughout the world and, transcending the boundaries of the genre, some of his themes have long since taken root in popular culture.",
+      "nationality": "Italian",
+      "location": "Busseto, Italy",
+      "famousWorks": [
+        "Rigoletto",
+        "La traviata",
+        "Aida"
+      ],
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Giuseppe_Verdi.jpg"
+    },
+    {
+      "id": "gustav-mahler",
+      "name": "Gustav Mahler",
+      "era": ["Romantic"],
+      "birthYear": 1860,
+      "deathYear": 1911,
+      "shortBio": "Austrian composer and conductor of the late Romantic era, known for his expansive symphonies and song cycles.",
+      "longBio": "Gustav Mahler was an Austrian composer and conductor of the late Romantic era. His symphonies and song cycles helped bridge the transition from 19th-century Austro-German traditions to the modernism of the early 20th century. During his lifetime, he was better known as a conductor than a composer, but his music gained wide popularity after his death.",
+      "nationality": "Austrian",
+      "location": "Vienna, Austria",
+      "famousWorks": [
+        "Symphony No. 2 (Resurrection)",
+        "Symphony No. 5",
+        "Das Lied von der Erde"
+      ],
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Photo_of_Gustav_Mahler_by_Moritz_N%C3%A4hr_01.jpg"
+    },
+    {
+      "id": "hector-berlioz",
+      "name": "Hector Berlioz",
+      "era": ["Romantic"],
+      "birthYear": 1803,
+      "deathYear": 1869,
+      "shortBio": "French Romantic composer known for his innovative orchestration and program music.",
+      "longBio": "Hector Berlioz was a French Romantic composer, best known for his compositions Symphonie fantastique and Grande messe des morts (Requiem). Berlioz made significant contributions to the modern orchestra with his Treatise on Instrumentation. He specified huge orchestral forces for some of his works, and conducted several concerts with more than 1,000 musicians.",
+      "nationality": "French",
+      "location": "Paris, France",
+      "famousWorks": [
+        "Symphonie fantastique",
+        "Les Troyens",
+        "Harold en Italie"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/f/fd/Hector-Berlioz-1845.png"
+    },
+    {
+      "id": "henry-purcell",
+      "name": "Henry Purcell",
+      "era": ["Baroque"],
+      "birthYear": 1659,
+      "deathYear": 1695,
+      "shortBio": "English composer of the Baroque period, considered one of Britain's greatest composers.",
+      "longBio": "Henry Purcell was an English composer of the Baroque period. He incorporated Italian and French stylistic elements into his compositions, written during the Restoration period of Charles II. He is generally considered to be one of the greatest English composers, writing operas, religious music, instrumental works, and songs.",
+      "nationality": "English",
+      "location": "London, England",
+      "famousWorks": [
+        "Dido and Aeneas",
+        "Come Ye Sons of Art",
+        "Music for the Funeral of Queen Mary"
+      ],
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Henry_Purcell.jpg"
+    },
+    {
+      "id": "hugo-wolf",
+      "name": "Hugo Wolf",
+      "era": ["Romantic"],
+      "birthYear": 1860,
+      "deathYear": 1903,
+      "shortBio": "Austrian composer known primarily for his art songs (Lieder).",
+      "longBio": "Hugo Wolf was an Austrian composer of Slovene origin, particularly noted for his art songs, or Lieder. He brought to this form a concentrated expressive intensity which was unique in late Romantic music, especially in his settings of Goethe, Mörike, Eichendorff and other poets.",
+      "nationality": "Austrian",
+      "location": "Vienna, Austria",
+      "famousWorks": [
+        "Mörike-Lieder",
+        "Spanisches Liederbuch",
+        "Italienisches Liederbuch"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/7/7d/Hugo_Wolf.jpg"
+    },
+    {
+      "id": "iannis-xenakis",
+      "name": "Iannis Xenakis",
+      "era": ["20th-21st Century"],
+      "birthYear": 1922,
+      "deathYear": 2001,
+      "shortBio": "Greek-French composer, music theorist, and architect who pioneered the use of mathematical models in music.",
+      "longBio": "Iannis Xenakis was a Greek-French composer, music theorist, architect, and engineer. After studying engineering in Athens, he fled to France where he studied composition with Olivier Messiaen. He is considered an important pioneer in the use of mathematical models in music such as applications of set theory, stochastic processes and game theory.",
+      "nationality": "Greek-French",
+      "location": "Paris, France",
+      "famousWorks": [
+        "Metastasis",
+        "Pithoprakta",
+        "Pleiades"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/5/58/XenakisMDaniel_crop.jpg"
+    },
+    {
+      "id": "ignatius-sancho",
+      "name": "Ignatius Sancho",
+      "era": ["Classical"],
+      "birthYear": 1729,
+      "deathYear": 1780,
+      "shortBio": "British composer, writer, and businessman, the first known person of African descent to vote in a British election.",
+      "longBio": "Ignatius Sancho was a British composer, actor, and writer who was born on a slave ship but rose to prominence in 18th century London. He is the first known Briton of African descent to vote in a British election and to have a portrait painted. His compositions include country dances, minuets, and other pieces that blend African rhythms with European styles.",
+      "nationality": "British",
+      "location": "London, England",
+      "famousWorks": [
+        "Minuets, Cotillons & Country Dances",
+        "A Collection of New Songs",
+        "Twelve Country Dances for the Year 1779"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/3/38/Ignatius_Sancho%2C_1768.jpg"
+    },
+    {
+      "id": "igor-stravinsky",
+      "name": "Igor Stravinsky",
+      "era": ["20th-21st Century"],
+      "birthYear": 1882,
+      "deathYear": 1971,
+      "shortBio": "Russian-born composer known for his groundbreaking modern compositions and ballet music.",
+      "longBio": "Igor Fyodorovich Stravinsky was a Russian-born composer, pianist, and conductor, later of French and American citizenship. He is widely considered one of the most important and influential composers of the 20th century. His work revolutionized musical thought and his three early ballets - The Firebird, Petrushka, and The Rite of Spring - transformed the world of dance.",
+      "nationality": "Russian-French-American",
+      "location": "Various (Russia, France, USA)",
+      "famousWorks": [
+        "The Rite of Spring",
+        "The Firebird",
+        "Petrushka"
+      ],
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Igor_Stravinsky_LOC_32392u.jpg"
+    },
+    {
+      "id": "jean-philippe-rameau",
+      "name": "Jean-Philippe Rameau",
+      "era": ["Baroque"],
+      "birthYear": 1683,
+      "deathYear": 1764,
+      "shortBio": "French composer and music theorist of the Baroque era known for his revolutionary treatise on harmony.",
+      "longBio": "Jean-Philippe Rameau was one of the most important French composers and music theorists of the Baroque era. He developed a revolutionary theory of harmony that influenced classical music for centuries. His operas and ballets were innovative in their rich harmonies, complex orchestration, and expressive power.",
+      "nationality": "French",
+      "location": "Paris, France",
+      "famousWorks": [
+        "Hippolyte et Aricie",
+        "Les Indes galantes",
+        "Traité de l'harmonie"
+      ],
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Jean-Philippe_Rameau_by_Jacques_Aved.jpg"
+    },
+    {
       "id": "johann-sebastian-bach",
       "name": "Johann Sebastian Bach",
-      "era": "Baroque",
+      "era": ["Baroque"],
       "birthYear": 1685,
       "deathYear": 1750,
       "shortBio": "German composer and musician of the Baroque period, known for his mastery of counterpoint and sacred music.",
@@ -20,7 +720,7 @@
     {
       "id": "george-frideric-handel",
       "name": "George Frideric Handel",
-      "era": "Baroque",
+      "era": ["Baroque"],
       "birthYear": 1685,
       "deathYear": 1759,
       "shortBio": "German-British Baroque composer renowned for his operas, oratorios, and instrumental compositions.",
@@ -37,7 +737,7 @@
     {
       "id": "antonio-vivaldi",
       "name": "Antonio Vivaldi",
-      "era": "Baroque",
+      "era": ["Baroque"],
       "birthYear": 1678,
       "deathYear": 1741,
       "shortBio": "Italian Baroque composer, virtuoso violinist, and priest known for his concertos and sacred music.",
@@ -52,9 +752,26 @@
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/b/bd/Vivaldi.jpg"
     },
     {
+      "id": "alessandro-scarlatti",
+      "name": "Alessandro Scarlatti",
+      "era": ["Baroque"],
+      "birthYear": 1660,
+      "deathYear": 1725,
+      "shortBio": "Italian Baroque composer known for his significant contributions to opera and the development of Neapolitan school of opera.",
+      "longBio": "Alessandro Scarlatti was a Baroque composer especially famous for his operas and chamber cantatas. He is considered the founder of the Neapolitan school of opera. His work forms an important link between the early Baroque Italian vocal styles and the classical school of the 18th century. He was the father of two other composers, Domenico Scarlatti and Pietro Filippo Scarlatti.",
+      "nationality": "Italian",
+      "location": "Naples, Italy",
+      "famousWorks": [
+        "La Griselda",
+        "Il Mitridate Eupatore",
+        "Il Trionfo dell'Onore"
+      ],
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Alessandro_Scarlatti.jpg"
+    },
+    {
       "id": "wolfgang-amadeus-mozart",
       "name": "Wolfgang Amadeus Mozart",
-      "era": "Classical",
+      "era": ["Classical"],
       "birthYear": 1756,
       "deathYear": 1791,
       "shortBio": "Austrian composer and prodigy who defined the Classical era with his elegant and sophisticated compositions.",
@@ -66,29 +783,29 @@
         "Symphony No. 40",
         "Requiem"
       ],
-      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/4/47/Croce-Mozart-Detail.jpg"
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/1/1e/Wolfgang-amadeus-mozart_1.jpg"
     },
     {
       "id": "ludwig-van-beethoven",
       "name": "Ludwig van Beethoven",
-      "era": "Classical",
+      "era": ["Classical", "Romantic"],
       "birthYear": 1770,
       "deathYear": 1827,
       "shortBio": "German composer and pianist who bridged the Classical and Romantic eras, known for his revolutionary compositions.",
-      "longBio": "Beethoven was a German composer and pianist. He was a crucial figure in the transition between the Classical and Romantic eras in Western art music. He remains one of the most famous and influential of all composers. His best-known compositions include 9 symphonies, 5 piano concertos, 32 piano sonatas, and 16 string quartets.",
+      "longBio": "Ludwig van Beethoven was a German composer and virtuoso pianist, widely considered one of the most important figures in Western classical music. He was a crucial figure in the transition between the Classical and Romantic eras and remains one of the most recognized and influential musicians of this period. Despite his increasing deafness beginning in his late 20s, he continued to compose, conduct, and perform, creating some of his most admired works after becoming completely deaf.",
       "nationality": "German",
       "location": "Vienna, Austria",
       "famousWorks": [
-        "Symphony No. 5",
-        "Symphony No. 9",
+        "Symphony No. 5 in C Minor",
+        "Symphony No. 9 (Choral)",
         "Moonlight Sonata"
       ],
-      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/6/6f/Beethoven.jpg"
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Beethoven.jpg"
     },
     {
       "id": "joseph-haydn",
       "name": "Joseph Haydn",
-      "era": "Classical",
+      "era": ["Classical"],
       "birthYear": 1732,
       "deathYear": 1809,
       "shortBio": "Austrian composer known as the 'Father of the Symphony' and 'Father of the String Quartet.'",
@@ -100,12 +817,12 @@
         "Symphony No. 94 (Surprise)",
         "String Quartets Op. 76"
       ],
-      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/0/05/Joseph_Haydn.jpg"
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Joseph_Haydn.jpg"
     },
     {
       "id": "frederic-chopin",
       "name": "Frédéric Chopin",
-      "era": "Romantic",
+      "era": ["Romantic"],
       "birthYear": 1810,
       "deathYear": 1849,
       "shortBio": "Polish composer and virtuoso pianist of the Romantic era, known for his solo piano works.",
@@ -117,33 +834,33 @@
         "Preludes",
         "Polonaises"
       ],
-      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/e/e8/Frederic_Chopin_photo.jpeg"
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Frederic_Chopin_photo.jpeg"
     },
     {
       "id": "pyotr-ilyich-tchaikovsky",
       "name": "Pyotr Ilyich Tchaikovsky",
-      "era": "Romantic",
+      "era": ["Romantic"],
       "birthYear": 1840,
       "deathYear": 1893,
-      "shortBio": "Russian composer known for his symphonies, concertos, operas, and ballets.",
-      "longBio": "Tchaikovsky was a Russian composer of the Romantic period. He was the first Russian composer whose music made a lasting impression internationally. He was honored in 1884 by Tsar Alexander III and awarded a lifetime pension. His works include symphonies, concertos, operas, ballets, chamber music, and a choral setting of the Russian Orthodox Divine Liturgy.",
+      "shortBio": "Russian composer of the Romantic period, known for his symphonies, concertos, operas, and ballets.",
+      "longBio": "Pyotr Ilyich Tchaikovsky was a Russian composer of the Romantic period whose works are among the most popular music in the classical repertoire. Despite his many popular successes, his life was marked by personal crises and depression. His most famous compositions include ballets like Swan Lake and The Nutcracker, the 1812 Overture, his First Piano Concerto, several symphonies, and the opera Eugene Onegin.",
       "nationality": "Russian",
       "location": "Saint Petersburg, Russia",
       "famousWorks": [
-        "Swan Lake",
         "The Nutcracker",
-        "Symphony No. 6 (Pathétique)"
+        "Swan Lake",
+        "1812 Overture"
       ],
-      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/d/d7/Portr%C3%A4t_des_Komponisten_Pjotr_I._Tschaikowski_%281840-1893%29.jpg"
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Portr%C3%A4t_des_Komponisten_Pjotr_I._Tschaikowski_%281840-1893%29.jpg"
     },
     {
       "id": "johannes-brahms",
       "name": "Johannes Brahms",
-      "era": "Romantic",
+      "era": ["Romantic"],
       "birthYear": 1833,
       "deathYear": 1897,
-      "shortBio": "German composer and pianist known for his symphonies and chamber music.",
-      "longBio": "Brahms was a German composer, pianist, and conductor of the Romantic period. Born in Hamburg into a Lutheran family, Brahms spent much of his professional life in Vienna, Austria. His reputation and status as a composer are such that he is sometimes grouped with Bach and Beethoven as one of the 'Three Bs' of music.",
+      "shortBio": "German composer and pianist of the Romantic period known for his symphonies and chamber music.",
+      "longBio": "Johannes Brahms was a German composer, pianist, and conductor of the Romantic period. Born in Hamburg into a Lutheran family, Brahms spent much of his professional life in Vienna. His reputation and status as a composer are such that he is sometimes grouped with Bach and Beethoven as one of the 'Three Bs' of music. He wrote symphonies, concertos, piano works, chamber music and choral compositions.",
       "nationality": "German",
       "location": "Vienna, Austria",
       "famousWorks": [
@@ -151,12 +868,12 @@
         "Ein deutsches Requiem",
         "Hungarian Dances"
       ],
-      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/1/15/JohannesBrahms.jpg"
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/JohannesBrahms.jpg"
     },
     {
       "id": "claude-debussy",
       "name": "Claude Debussy",
-      "era": "20th-21st Century",
+      "era": ["20th-21st Century"],
       "birthYear": 1862,
       "deathYear": 1918,
       "shortBio": "French composer associated with Impressionist music, known for his innovative harmonies and atmospheric works.",
@@ -171,26 +888,9 @@
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Claude_Debussy_ca_1908%2C_foto_av_F%C3%A9lix_Nadar.jpg"
     },
     {
-      "id": "igor-stravinsky",
-      "name": "Igor Stravinsky",
-      "era": "20th-21st Century",
-      "birthYear": 1882,
-      "deathYear": 1971,
-      "shortBio": "Russian-born composer known for his groundbreaking modern compositions and ballet music.",
-      "longBio": "Stravinsky was a Russian composer, pianist, and conductor, later of French and American citizenship. He is widely considered one of the most important and influential composers of the 20th century and a pivotal figure in modernist music. His work revolutionized musical thought and practice in the early 20th century.",
-      "nationality": "Russian-French-American",
-      "location": "Various (Russia, France, USA)",
-      "famousWorks": [
-        "The Rite of Spring",
-        "The Firebird",
-        "Petrushka"
-      ],
-      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/2/28/Igor_Stravinsky_LOC_37093u.jpg"
-    },
-    {
       "id": "philip-glass",
       "name": "Philip Glass",
-      "era": "20th-21st Century",
+      "era": ["20th-21st Century"],
       "birthYear": 1937,
       "deathYear": null,
       "shortBio": "American composer known for his minimalist compositions and innovative operas.",
@@ -202,7 +902,279 @@
         "Glassworks",
         "Koyaanisqatsi"
       ],
-      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/5/59/Philip_Glass_by_Pasquale_Salerno.jpg"
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/3/33/Philip_Glass_in_Florence%2C_Italy_-_1993_%28cropped%29.jpg"
+    },
+    {
+      "id": "leonard-bernstein",
+      "name": "Leonard Bernstein",
+      "era": ["20th-21st Century"],
+      "birthYear": 1918,
+      "deathYear": 1990,
+      "shortBio": "American composer, conductor, pianist, and educator known for bridging classical and popular music.",
+      "longBio": "Leonard Bernstein was an American composer, conductor, pianist, music educator, author, and lifelong humanitarian. He was among the first conductors born and educated in the US to receive worldwide acclaim. His fame derived from his long tenure as the music director of the New York Philharmonic, conducting concerts with most of the world's leading orchestras, and his music composition, including West Side Story, as well as his role as a teacher.",
+      "nationality": "American",
+      "location": "New York City, USA",
+      "famousWorks": [
+        "West Side Story",
+        "Candide",
+        "On the Town"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/e/e1/Leonard_Bernstein_1971.jpg"
+    },
+    {
+      "id": "leo-delibes",
+      "name": "Léo Delibes",
+      "era": ["Romantic"],
+      "birthYear": 1836,
+      "deathYear": 1891,
+      "shortBio": "French composer of the Romantic era, known for his ballets and operas.",
+      "longBio": "Clément Philibert Léo Delibes was a French composer of the Romantic era, who specialized in ballets, operas, and other works for the stage. He is best known for his ballets Coppélia and Sylvia, as well as his opera Lakmé. His music is characterized by its charm, elegance, and theatrical effectiveness.",
+      "nationality": "French",
+      "location": "Paris, France",
+      "famousWorks": [
+        "Coppélia",
+        "Sylvia",
+        "Lakmé"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/en/4/46/L%C3%A9o-Delibes-1875.png"
+    },
+    {
+      "id": "luigi-boccherini",
+      "name": "Luigi Boccherini",
+      "era": ["Classical"],
+      "birthYear": 1743,
+      "deathYear": 1805,
+      "shortBio": "Italian composer and cellist of the Classical era known for his chamber music.",
+      "longBio": "Luigi Rodolfo Boccherini was an Italian composer and cellist of the Classical era. He is best known for one particular minuet from his String Quintet in E, Op. 11, No. 5, and the Cello Concerto in B flat major. He wrote a large amount of chamber music, including over 100 string quintets for two violins, viola and two cellos, a form which he pioneered.",
+      "nationality": "Italian",
+      "location": "Madrid, Spain",
+      "famousWorks": [
+        "String Quintet in E major (Minuet)",
+        "Cello Concerto in B flat major",
+        "Guitar Quintet No. 4 in D major"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/0/08/Luigi_Boccherini.jpg"
+    },
+    {
+      "id": "manuel-de-falla",
+      "name": "Manuel de Falla",
+      "era": ["20th-21st Century"],
+      "birthYear": 1876,
+      "deathYear": 1946,
+      "shortBio": "Spanish composer who was one of the most important Spanish musicians of the early 20th century.",
+      "longBio": "Manuel de Falla was one of Spain's most important musicians of the first half of the 20th century. His music combines elements of Spanish folk music, especially Andalusian flamenco, with classical traditions. While his early works were influenced by Spanish musical nationalism, his later compositions showed a deeper engagement with both modernism and Spanish folk traditions.",
+      "nationality": "Spanish",
+      "location": "Granada, Spain",
+      "famousWorks": [
+        "The Three-Cornered Hat",
+        "Nights in the Gardens of Spain",
+        "El Amor Brujo"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/1/19/ManuelDeFalla.JPG"
+    },
+    {
+      "id": "marianna-martines",
+      "name": "Marianna Martines",
+      "era": ["Classical"],
+      "birthYear": 1744,
+      "deathYear": 1812,
+      "shortBio": "Austrian composer, singer and pianist of the Classical period who hosted influential musical salons in Vienna.",
+      "longBio": "Marianna Martines was an Austrian composer, singer and pianist of the Classical period. She was one of the few women composers of her time to gain recognition in Vienna's musical society. She studied with Porpora and Haydn, and hosted regular musical salons attended by notable musicians including Mozart. Her compositions include masses, oratorios, and keyboard sonatas.",
+      "nationality": "Austrian",
+      "location": "Vienna, Austria",
+      "famousWorks": [
+        "Dixit Dominus",
+        "Il primo amore",
+        "Keyboard Sonatas"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/6/6c/Marianna_Martines%2C_Pupil_of_P._Metastasio%3B_born_in_Vienna%2C_4th_day_of_May_1744%2C_Member_Academia_Filarmonica.jpg"
+    },
+    {
+      "id": "maurice-ravel",
+      "name": "Maurice Ravel",
+      "era": ["20th-21st Century"],
+      "birthYear": 1875,
+      "deathYear": 1937,
+      "shortBio": "French composer, pianist and conductor known for his masterful orchestration and impressionistic style.",
+      "longBio": "Maurice Ravel was a French composer, pianist and conductor. He is often associated with impressionism along with his elder contemporary Claude Debussy, although both composers rejected the term. His orchestral works, piano compositions, and chamber music are known for their innovative harmonies, timbres, and orchestration. His most famous composition, Boléro, was premiered in 1928.",
+      "nationality": "French",
+      "location": "Paris, France",
+      "famousWorks": [
+        "Boléro",
+        "Daphnis et Chloé",
+        "Piano Concerto in G"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/7/78/Maurice_Ravel_1925.jpg"
+    },
+    {
+      "id": "muzio-clementi",
+      "name": "Muzio Clementi",
+      "era": ["Classical"],
+      "birthYear": 1752,
+      "deathYear": 1832,
+      "shortBio": "Italian composer and pianist of the Classical period, known for his piano compositions.",
+      "longBio": "Muzio Clementi was an Italian composer and pianist of the Classical period. He is best known for his piano compositions, which include concertos, sonatas, and other works for solo piano. Clementi was a prominent figure in the development of the piano concerto and sonata form during the Classical period.",
+      "nationality": "Italian",
+      "location": "Naples, Italy",
+      "famousWorks": [
+        "Piano Concerto in D minor",
+        "Piano Sonata in G minor",
+        "Piano Sonata in A minor"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c9/Muzio_Clementi.jpeg"
+    },
+    {
+      "id": "nikolai-rimsky-korsakov",
+      "name": "Nikolai Rimsky-Korsakov",
+      "era": ["Romantic"],
+      "birthYear": 1844,
+      "deathYear": 1908,
+      "shortBio": "Russian composer known for his orchestral works and his influence on the development of the symphony orchestra.",
+      "longBio": "Nikolai Rimsky-Korsakov was a Russian composer known for his orchestral works and his influence on the development of the symphony orchestra. He was a prominent figure in the Romantic period and is known for his orchestral compositions, including Scheherazade and Capriccio Espagnol.",
+      "nationality": "Russian",
+      "location": "St. Petersburg, Russia",
+      "famousWorks": [
+        "Scheherazade",
+        "Capriccio Espagnol",
+        "Flight of the Bumblebee"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c0/Walentin_Alexandrowitsch_Serow_004_%28cropped_3x4%29.jpg"
+    },
+    {
+      "id": "reinhold-gliere",
+      "name": "Reinhold Glière",
+      "era": ["20th-21st Century"],
+      "birthYear": 1875,
+      "deathYear": 1956,
+      "shortBio": "Soviet composer of German-Polish descent known for his symphonies and works for ballet.",
+      "longBio": "Reinhold Moritsevich Glière was a Soviet composer of German-Polish descent. He composed in a romantic style that incorporated elements of Russian and Ukrainian folk music. While serving as a professor at the Kiev and Moscow Conservatories, he taught many notable composers including Sergei Prokofiev and Aram Khachaturian. His most famous works include the ballet The Red Poppy and his Third Symphony 'Ilya Muromets'.",
+      "nationality": "Russian",
+      "location": "Kiev, Ukraine and Moscow, Russia",
+      "famousWorks": [
+        "Symphony No. 3 'Ilya Muromets'",
+        "The Red Poppy",
+        "Horn Concerto"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/2/21/Reinhold_Gli%C3%A8re.jpg"
+    },
+    {
+      "id": "ricardo-castro",
+      "name": "Ricardo Castro",
+      "era": ["Romantic"],
+      "birthYear": 1864,
+      "deathYear": 1907,
+      "shortBio": "Mexican pianist and composer known for his contributions to Mexican classical music.",
+      "longBio": "Ricardo Castro was a Mexican pianist and composer who played a significant role in the development of classical music in Mexico. He was one of the first Mexican composers to achieve international recognition. His compositions combine European Romantic style with elements of Mexican musical traditions. He served as director of the National Conservatory of Music and was known for his piano works and orchestral compositions.",
+      "nationality": "Mexican",
+      "location": "Mexico City, Mexico",
+      "famousWorks": [
+        "Piano Concerto in A minor",
+        "Vals Capricho",
+        "Atzimba (opera)"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/e/e5/Ricardo-castro-herrera.jpg"
+    },
+    {
+      "id": "richard-strauss",
+      "name": "Richard Strauss",
+      "era": ["20th-21st Century"],
+      "birthYear": 1864,
+      "deathYear": 1949,
+      "shortBio": "German composer and conductor known for his orchestral works, operas, and pioneering contributions to modernism.",
+      "longBio": "Richard Georg Strauss was a German composer, conductor, pianist, and violinist of the late Romantic and early modern eras. He is known for his operas, which include Der Rosenkavalier and Salome; his tone poems, including Don Juan and Also sprach Zarathustra; and other orchestral works. His compositions are noted for their complex modernist harmonies while maintaining late-romantic era's rich orchestration.",
+      "nationality": "German",
+      "location": "Munich, Germany",
+      "famousWorks": [
+        "Also sprach Zarathustra",
+        "Der Rosenkavalier",
+        "Four Last Songs"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/2/27/Strauss_1898_by_Fritz_Erler.jpg"
+    },
+    {
+      "id": "richard-wagner",
+      "name": "Richard Wagner",
+      "era": ["Romantic"],
+      "birthYear": 1813,
+      "deathYear": 1883,
+      "shortBio": "German composer, theatre director, and conductor known for his revolutionary operas and complex musical dramas.",
+      "longBio": "Richard Wagner was a German composer, theatre director, polemicist, and conductor primarily known for his operas. His compositions, particularly those of his later period, are notable for their complex textures, rich harmonies and orchestration, and elaborate use of leitmotifs—musical phrases associated with individual characters, places, ideas, or plot elements. His advances in musical language greatly influenced the development of classical music, and his Tristan und Isolde is sometimes described as marking the start of modern music.",
+      "nationality": "German",
+      "location": "Bayreuth, Germany",
+      "famousWorks": [
+        "Der Ring des Nibelungen",
+        "Tristan und Isolde",
+        "Die Meistersinger von Nürnberg"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/9/9d/RichardWagner.jpg"
+    },
+    {
+      "id": "ruth-crawford-seeger",
+      "name": "Ruth Crawford Seeger",
+      "era": ["20th-21st Century"],
+      "birthYear": 1901,
+      "deathYear": 1953,
+      "shortBio": "American modernist composer and folk music specialist who was the first woman to receive a Guggenheim Fellowship.",
+      "longBio": "Ruth Crawford Seeger was an American modernist composer and folk music scholar. She was a member of a group of American composers known as the 'ultramodernists' and was the first woman to receive a Guggenheim Fellowship in composition. After marrying Charles Seeger, she became deeply involved in folk music research and transcription, making significant contributions to American music scholarship.",
+      "nationality": "American",
+      "location": "Washington, D.C., USA",
+      "famousWorks": [
+        "String Quartet 1931",
+        "Piano Study in Mixed Accents",
+        "Three Songs to Poems by Carl Sandburg"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/6/63/Ruth_Crawford_Seeger_early_1920s.jpg"
+    },
+    {
+      "id": "samuel-coleridge-taylor",
+      "name": "Samuel Coleridge-Taylor",
+      "era": ["Romantic"],
+      "birthYear": 1875,
+      "deathYear": 1912,
+      "shortBio": "English composer and conductor of mixed race known for his choral work Hiawatha's Wedding Feast.",
+      "longBio": "Samuel Coleridge-Taylor was an English composer and conductor of mixed race heritage who achieved great success in his lifetime. His cantata Hiawatha's Wedding Feast was widely performed, and he was often referred to as the 'African Mahler'. He made several tours of the United States and was received at the White House by President Theodore Roosevelt. His music incorporates elements of African music with the classical tradition.",
+      "nationality": "English",
+      "location": "London, England",
+      "famousWorks": [
+        "Hiawatha's Wedding Feast",
+        "Violin Concerto in G minor",
+        "Petite Suite de Concert"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/b/b6/Samuel_Coleridge-Taylor.jpg"
+    },
+    {
+      "id": "sergei-prokofiev",
+      "name": "Sergei Prokofiev",
+      "era": ["20th-21st Century"],
+      "birthYear": 1891,
+      "deathYear": 1953,
+      "shortBio": "Russian composer, pianist and conductor who created many of the most beloved works of the 20th century.",
+      "longBio": "Sergei Sergeyevich Prokofiev was a Russian Soviet composer, pianist and conductor. As the creator of acknowledged masterpieces across numerous music genres, he is regarded as one of the major composers of the 20th century. His works include such widely heard pieces as the March from The Love for Three Oranges, the suite Lieutenant Kijé, the ballet Romeo and Juliet, and Peter and the Wolf.",
+      "nationality": "Russian",
+      "location": "Moscow, USSR",
+      "famousWorks": [
+        "Peter and the Wolf",
+        "Romeo and Juliet",
+        "Symphony No. 1 (Classical)"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/0/03/Sergei_Prokofiev_circa_1918_over_Chair_Bain.jpg"
+    },
+    {
+      "id": "sergei-rachmaninoff",
+      "name": "Sergei Rachmaninoff",
+      "era": ["Romantic"],
+      "birthYear": 1873,
+      "deathYear": 1943,
+      "shortBio": "Russian composer, virtuoso pianist, and conductor of the late Romantic period.",
+      "longBio": "Sergei Vasilyevich Rachmaninoff was a Russian composer, virtuoso pianist, and conductor. He is widely considered one of the finest pianists of his day and, as a composer, one of the last great representatives of Romanticism in Russian classical music. His music is characterized by sweeping melodies, virtuosic piano writing, and emotional expressiveness. After the Russian Revolution, he relocated to the United States, where he continued his career as a concert pianist and conductor.",
+      "nationality": "Russian",
+      "location": "Beverly Hills, USA",
+      "famousWorks": [
+        "Piano Concerto No. 2",
+        "Rhapsody on a Theme of Paganini",
+        "Symphony No. 2"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/b/be/Sergei_Rachmaninoff_cph.3a40575.jpg"
     }
   ]
 }
