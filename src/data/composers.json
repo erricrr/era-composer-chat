@@ -37,7 +37,7 @@
     {
       "id": "alexander-glazunov",
       "name": "Alexander Glazunov",
-      "era": ["Romantic"],
+      "era": ["Romantic", "20th-21st Century"],
       "birthYear": 1865,
       "deathYear": 1936,
       "shortBio": "Russian composer, music teacher, and conductor of the late Russian Romantic period.",
@@ -54,7 +54,7 @@
     {
       "id": "alma-mahler",
       "name": "Alma Mahler",
-      "era": ["20th-21st Century"],
+      "era": ["Romantic", "20th-21st Century"],
       "birthYear": 1879,
       "deathYear": 1964,
       "shortBio": "Austrian composer, author, and socialite who was a key figure in Vienna's artistic scene.",
@@ -222,6 +222,26 @@
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/1/19/CPEB_by_L%C3%B6hr.jpg"
     },
     {
+      "id": "carl-nielsen",
+      "name": "Carl Nielsen",
+      "era": ["Romantic", "20th-21st Century"],
+      "birthYear": 1865,
+      "deathYear": 1931,
+      "shortBio":
+        "Danish composer and conductor, one of the most important Scandinavian composers, known for his six symphonies.",
+      "longBio":
+        "Carl August Nielsen was a Danish composer, conductor and violinist, widely recognized as his country's most prominent composer. Brought up by poor but musically talented parents on the island of Funen, he demonstrated his musical abilities at an early age. He initially played in a military band before attending the Royal Danish Academy of Music in Copenhagen. He premiered his Op. 1, Suite for Strings, in 1888, at the age of 23. The following year, Nielsen began a 16-year stint as a second violinist in the prestigious Royal Danish Orchestra, during which he played under the baton of Hans von Bülow and came into contact with the music of Richard Wagner.",
+      "nationality": "Danish",
+      "location": "Copenhagen, Denmark",
+      "famousWorks": [
+        "Symphony No. 4 (The Inextinguishable)",
+        "Symphony No. 5",
+        "Wind Quintet"
+      ],
+      "imageUrl":
+        "https://upload.wikimedia.org/wikipedia/commons/5/5d/Carl_Nielsen_c._1908_-_Restoration.jpg"
+    },
+    {
       "id": "cecile-chaminade",
       "name": "Cécile Chaminade",
       "era": ["Romantic"],
@@ -288,6 +308,23 @@
         "Three Romances for Violin and Piano"
       ],
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/b/bc/Robert_and_Clara_Schumann_Daguerrotype_%28cropped%29.jpg"
+    },
+    {
+      "id": "claude-debussy",
+      "name": "Claude Debussy",
+      "era": ["20th-21st Century"],
+      "birthYear": 1862,
+      "deathYear": 1918,
+      "shortBio": "French composer associated with Impressionist music, known for his innovative harmonies and atmospheric works.",
+      "longBio": "Debussy was a French composer. He is sometimes seen as the first Impressionist composer, although he vigorously rejected the term. He was among the most influential composers of the late 19th and early 20th centuries. His music virtually defines the transition from late-Romantic to 20th century modernist music.",
+      "nationality": "French",
+      "location": "Paris, France",
+      "famousWorks": [
+        "Clair de Lune",
+        "Prélude à l'après-midi d'un faune",
+        "La Mer"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Claude_Debussy_ca_1908%2C_foto_av_F%C3%A9lix_Nadar.jpg"
     },
     {
       "id": "claudio-monteverdi",
@@ -482,7 +519,7 @@
     {
       "id": "franz-schubert",
       "name": "Franz Schubert",
-      "era": ["Romantic"],
+      "era": ["Classical", "Romantic"],
       "birthYear": 1797,
       "deathYear": 1828,
       "shortBio": "Austrian composer of the late Classical and early Romantic eras, particularly noted for his art songs (lieder) and chamber music.",
@@ -499,7 +536,7 @@
     {
       "id": "george-bridgetower",
       "name": "George Bridgetower",
-      "era": ["Classical"],
+      "era": ["Classical", "Romantic"],
       "birthYear": 1778,
       "deathYear": 1860,
       "shortBio": "Afro-European virtuoso violinist and composer who collaborated with Beethoven.",
@@ -529,6 +566,26 @@
         "Der Tag des Gerichts"
       ],
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/d/d5/Telemann.jpg"
+    },
+    {
+      "id": "gershwin",
+      "name": "George Gershwin",
+      "era": ["20th-21st Century"],
+      "birthYear": 1898,
+      "deathYear": 1937,
+      "shortBio":
+        "American composer and pianist who combined classical music with jazz influences in works like Rhapsody in Blue.",
+      "longBio":
+        "George Jacob Gershwin was an American composer and pianist whose compositions spanned both popular and classical genres. Among his best-known works are the orchestral compositions Rhapsody in Blue (1924) and An American in Paris (1928), the songs Swanee (1919) and Fascinating Rhythm (1924), the jazz standards I Got Rhythm (1930) and Embraceable You (1930), and the opera Porgy and Bess (1935), which gave birth to the hit Summertime. Gershwin studied piano under Charles Hambitzer and composition with Rubin Goldmark, Henry Cowell, and Joseph Brody. He began his career as a song plugger but soon started composing Broadway theater works with his brother Ira Gershwin and with Buddy DeSylva.",
+      "nationality": "American",
+      "location": "New York City, United States",
+      "famousWorks": [
+        "Rhapsody in Blue",
+        "An American in Paris",
+        "Porgy and Bess"
+      ],
+      "imageUrl":
+        "https://upload.wikimedia.org/wikipedia/commons/7/72/Portrait_of_George_Gershwin_LCCN2004662906.jpg"
     },
     {
       "id": "giacomo-puccini",
@@ -567,7 +624,7 @@
     {
       "id": "gustav-mahler",
       "name": "Gustav Mahler",
-      "era": ["Romantic"],
+      "era": ["Romantic", "20th-21st Century"],
       "birthYear": 1860,
       "deathYear": 1911,
       "shortBio": "Austrian composer and conductor of the late Romantic era, known for his expansive symphonies and song cycles.",
@@ -718,6 +775,22 @@
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/6/6a/Johann_Sebastian_Bach.jpg"
     },
     {
+      "id": "cage",
+      "name": "John Cage",
+      "era": ["20th-21st Century"],
+      "birthYear": 1912,
+      "deathYear": 1992,
+      "shortBio":
+        "American composer, music theorist, and artist known for his experimental approach and pioneering work in non-standard use of instruments.",
+      "longBio":
+        "John Milton Cage Jr. was an American composer, music theorist, artist, and philosopher. A pioneer of indeterminacy in music, electroacoustic music, and non-standard use of musical instruments, Cage was one of the leading figures of the post-war avant-garde. Critics have lauded him as one of the most influential composers of the 20th century. He was also instrumental in the development of modern dance, mostly through his association with choreographer Merce Cunningham, who was also Cage's romantic partner for most of their lives. Cage is perhaps best known for his 1952 composition 4′33″, which is performed in the absence of deliberate sound; musicians who present the work do nothing aside from being present for the duration specified by the title.",
+      "nationality": "American",
+      "location": "New York City, United States",
+      "famousWorks": ["4′33″", "Sonatas and Interludes", "Music of Changes"],
+      "imageUrl":
+        "https://upload.wikimedia.org/wikipedia/commons/2/23/John_Cage_%281988%29.jpg"
+    },
+    {
       "id": "george-frideric-handel",
       "name": "George Frideric Handel",
       "era": ["Baroque"],
@@ -767,6 +840,42 @@
         "Il Trionfo dell'Onore"
       ],
       "imageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Alessandro_Scarlatti.jpg"
+    },
+    {
+      "id": "robert-schumann",
+      "name": "Robert Schumann",
+      "era": ["Romantic"],
+      "birthYear": 1810,
+      "deathYear": 1856,
+      "shortBio":
+        "German composer, pianist, and influential music critic who was one of the most famous and important Romantic composers.",
+      "longBio":
+        "Robert Schumann was a German composer, pianist, and influential music critic. He is widely regarded as one of the greatest composers of the Romantic era. Schumann left the study of law, intending to pursue a career as a virtuoso pianist. His teacher, Friedrich Wieck, a German pianist, had assured him that he could become the finest pianist in Europe, but a hand injury ended this dream. Schumann then focused his musical energies on composing. Schumann's published compositions were written exclusively for the piano until 1840; he later composed works for piano and orchestra, many lieder (songs for voice and piano), four symphonies, an opera, and other orchestral, choral, and chamber works. His writings about music appeared mostly in the Neue Zeitschrift für Musik (New Journal for Music), a Leipzig-based publication that he co-founded. In 1840, he married pianist Clara Wieck, daughter of his former teacher, after a long and acrimonious legal battle with her father.",
+      "nationality": "German",
+      "location": "Düsseldorf, Germany",
+      "famousWorks": ["Carnaval", "Kinderszenen", "Piano Concerto in A minor"],
+      "imageUrl":
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Robert_Schumann_1839.jpg/800px-Robert_Schumann_1839.jpg"
+    },
+    {
+      "id": "johann-strauss-ii",
+      "name": "Johann Strauss II",
+      "era": ["Romantic"],
+      "birthYear": 1825,
+      "deathYear": 1899,
+      "shortBio":
+        "Austrian composer of dance music and operettas, known as 'The Waltz King', famous for 'The Blue Danube' and 'Tales from the Vienna Woods'.",
+      "longBio":
+        "Johann Strauss II was an Austrian composer of light music, particularly dance music and operettas. Part of the Strauss dynasty, he was known as 'The Waltz King' and was largely responsible for the popularity of the waltz in Vienna during the 19th century. Strauss composed over 500 waltzes, polkas, quadrilles, and other types of dance music, as well as several operettas and a ballet. In his lifetime, he was seen as the successor to his father Johann Strauss I, but his works have enjoyed greater posthumous fame than those of his father.",
+      "nationality": "Austrian",
+      "location": "Vienna, Austria",
+      "famousWorks": [
+        "The Blue Danube",
+        "Tales from the Vienna Woods",
+        "Die Fledermaus"
+      ],
+      "imageUrl":
+        "https://upload.wikimedia.org/wikipedia/commons/6/67/Johann_Strauss_II_by_Fritz_Luckhardt.jpg"
     },
     {
       "id": "wolfgang-amadeus-mozart",
@@ -871,38 +980,20 @@
       "imageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/JohannesBrahms.jpg"
     },
     {
-      "id": "claude-debussy",
-      "name": "Claude Debussy",
+      "id": "saariaho",
+      "name": "Kaija Saariaho",
       "era": ["20th-21st Century"],
-      "birthYear": 1862,
-      "deathYear": 1918,
-      "shortBio": "French composer associated with Impressionist music, known for his innovative harmonies and atmospheric works.",
-      "longBio": "Debussy was a French composer. He is sometimes seen as the first Impressionist composer, although he vigorously rejected the term. He was among the most influential composers of the late 19th and early 20th centuries. His music virtually defines the transition from late-Romantic to 20th century modernist music.",
-      "nationality": "French",
+      "birthYear": 1952,
+      "deathYear": 2023,
+      "shortBio":
+        "Finnish composer of contemporary classical music who combined electronic and acoustic instruments to create ethereal soundscapes.",
+      "longBio":
+        "Kaija Saariaho was a Finnish composer based in Paris, France. She was acclaimed as one of the major international figures of contemporary classical music. Her research at IRCAM (a Paris-based institution dedicated to contemporary music) enabled her to combine computer-generated elements with traditional instruments and voices. Her style can be characterized as spectralist or post-spectral, focused on a detailed attention to timbre and a spacious quality in her music. Her major works include the operas L'Amour de loin, Adriana Mater, Émilie, and Only the Sound Remains, the oratorio La Passion de Simone, as well as numerous orchestral, chamber, and vocal compositions.",
+      "nationality": "Finnish",
       "location": "Paris, France",
-      "famousWorks": [
-        "Clair de Lune",
-        "Prélude à l'après-midi d'un faune",
-        "La Mer"
-      ],
-      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Claude_Debussy_ca_1908%2C_foto_av_F%C3%A9lix_Nadar.jpg"
-    },
-    {
-      "id": "philip-glass",
-      "name": "Philip Glass",
-      "era": ["20th-21st Century"],
-      "birthYear": 1937,
-      "deathYear": null,
-      "shortBio": "American composer known for his minimalist compositions and innovative operas.",
-      "longBio": "Glass is an American composer and pianist. He is widely regarded as one of the most influential composers of the late 20th century. Glass's work has been associated with minimalism, being built up from repetitive phrases and shifting layers. His work includes operas, musical theatre works, symphonies, concertos, string quartets, and film scores.",
-      "nationality": "American",
-      "location": "New York City, USA",
-      "famousWorks": [
-        "Einstein on the Beach",
-        "Glassworks",
-        "Koyaanisqatsi"
-      ],
-      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/3/33/Philip_Glass_in_Florence%2C_Italy_-_1993_%28cropped%29.jpg"
+      "famousWorks": ["L'Amour de loin", "Graal théâtre", "D'Om le Vrai Sens"],
+      "imageUrl":
+        "https://upload.wikimedia.org/wikipedia/commons/2/2b/Kaija_Saariaho_in_2022.png"
     },
     {
       "id": "leonard-bernstein",
@@ -1041,6 +1132,23 @@
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c0/Walentin_Alexandrowitsch_Serow_004_%28cropped_3x4%29.jpg"
     },
     {
+      "id": "philip-glass",
+      "name": "Philip Glass",
+      "era": ["20th-21st Century"],
+      "birthYear": 1937,
+      "deathYear": null,
+      "shortBio": "American composer known for his minimalist compositions and innovative operas.",
+      "longBio": "Glass is an American composer and pianist. He is widely regarded as one of the most influential composers of the late 20th century. Glass's work has been associated with minimalism, being built up from repetitive phrases and shifting layers. His work includes operas, musical theatre works, symphonies, concertos, string quartets, and film scores.",
+      "nationality": "American",
+      "location": "New York City, USA",
+      "famousWorks": [
+        "Einstein on the Beach",
+        "Glassworks",
+        "Koyaanisqatsi"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/3/33/Philip_Glass_in_Florence%2C_Italy_-_1993_%28cropped%29.jpg"
+    },
+    {
       "id": "reinhold-gliere",
       "name": "Reinhold Glière",
       "era": ["20th-21st Century"],
@@ -1077,7 +1185,7 @@
     {
       "id": "richard-strauss",
       "name": "Richard Strauss",
-      "era": ["20th-21st Century"],
+      "era": ["Romantic", "20th-21st Century"],
       "birthYear": 1864,
       "deathYear": 1949,
       "shortBio": "German composer and conductor known for his orchestral works, operas, and pioneering contributions to modernism.",
@@ -1162,7 +1270,7 @@
     {
       "id": "sergei-rachmaninoff",
       "name": "Sergei Rachmaninoff",
-      "era": ["Romantic"],
+      "era": ["Romantic", "20th-21st Century"],
       "birthYear": 1873,
       "deathYear": 1943,
       "shortBio": "Russian composer, virtuoso pianist, and conductor of the late Romantic period.",
