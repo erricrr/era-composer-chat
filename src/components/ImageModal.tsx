@@ -69,8 +69,9 @@ export function ImageModal({
       >
         {/* Header */}
         <div
-          className="flex justify-between items-center p-3 border-b rounded-t-lg"
+          className="flex justify-between items-center p-3 border-b rounded-t-lg group cursor-pointer"
           style={{ borderColor: 'hsl(var(--border))' }}
+          onClick={onClose}
         >
           <div>
             <h2
@@ -90,9 +91,10 @@ export function ImageModal({
           </div>
 
           <button
-            onClick={onClose}
-            className="p-1 rounded-full hover:bg-[hsl(var(--card))]"
+            onClick={(e) => { e.stopPropagation(); onClose(); }}
+            className="p-1 rounded-full transition-opacity duration-200 opacity-0 group-hover:opacity-100 hover:bg-[hsl(var(--card))]"
             style={{ color: 'hsl(var(--muted-foreground))' }}
+            aria-label="Close modal"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
