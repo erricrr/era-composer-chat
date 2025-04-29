@@ -92,6 +92,12 @@ export const getLastName = (fullName: string): string => {
   return parts[n - 1];
 };
 
+// Function to check if composer is likely in the public domain (died <= 1954)
+export const isComposerInPublicDomain = (composer: Composer): boolean => {
+  const PUBLIC_DOMAIN_DEATH_YEAR_THRESHOLD = 1954;
+  return composer.deathYear !== null && composer.deathYear <= PUBLIC_DOMAIN_DEATH_YEAR_THRESHOLD;
+};
+
 // Message interface for chat
 export interface Message {
   id: string;

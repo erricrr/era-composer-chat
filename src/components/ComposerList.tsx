@@ -1,4 +1,4 @@
-import { Composer, Era, getComposersByEra, getLastName } from '@/data/composers';
+import { Composer, Era, getComposersByEra, getLastName, isComposerInPublicDomain } from '@/data/composers';
 import { ComposerCard } from './ComposerCard';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
@@ -120,10 +120,25 @@ export function ComposerList({
             {/* Chat button */}
             <div className="absolute bottom-0 left-0 right-0 h-14 md:h-16 px-3 md:px-4 py-2 bg-background border-t">
               <Button
-                onClick={() => onStartChat(selectedComposer)}
-                className="w-full h-full bg-primary text-primary-foreground hover:bg-primary/90 transition-transform duration-300 hover:scale-[1.02] text-sm md:text-base"
+                onClick={() => {
+                  if (isComposerInPublicDomain(selectedComposer)) {
+                    onStartChat(selectedComposer);
+                  }
+                }}
+                disabled={!isComposerInPublicDomain(selectedComposer)}
+                className={`
+                  w-full h-full text-sm md:text-base transition-transform duration-300
+                  ${
+                    isComposerInPublicDomain(selectedComposer)
+                      ? 'bg-primary text-primary-foreground hover:bg-primary/90 hover:scale-[1.02]'
+                      : 'bg-muted text-muted-foreground opacity-70 cursor-not-allowed'
+                  }
+                `}
+                title={isComposerInPublicDomain(selectedComposer) ? `Chat with ${getLastName(selectedComposer.name)}` : 'Chat unavailable due to rights restrictions'}
               >
-                Start a Chat with {getLastName(selectedComposer.name)}
+                {isComposerInPublicDomain(selectedComposer)
+                  ? `Start a Chat with ${getLastName(selectedComposer.name)}`
+                  : 'Chat unavailable due to rights restrictions'}
               </Button>
             </div>
           </div>

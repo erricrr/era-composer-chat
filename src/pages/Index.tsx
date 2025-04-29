@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Composer, Era } from '@/data/composers';
+import { Composer, Era, isComposerInPublicDomain } from '@/data/composers';
 import { ComposerMenu } from '@/components/ComposerMenu';
 import { ChatInterface } from '@/components/ChatInterface';
 import { ThemeToggle } from '@/components/ThemeToggle';
@@ -139,13 +139,23 @@ const Index = () => {
             boxShadow: '0 -10px 25px rgba(0,0,0,0.1)',
           }}
         >
-          {selectedComposer && (
+          {selectedComposer && isComposerInPublicDomain(selectedComposer) && (
             <div className="container mx-auto px-4 h-full">
               <ChatInterface
                 composer={selectedComposer}
                 onUserTyping={() => {}}
                 isComposerListOpen={isMenuOpen}
               />
+            </div>
+          )}
+          {selectedComposer && !isComposerInPublicDomain(selectedComposer) && (
+            <div className="container mx-auto px-4 h-full flex items-center justify-center">
+              <div className="text-center p-6 bg-muted/50 rounded-lg shadow">
+                <h2 className="text-xl font-semibold mb-2">Chat Unavailable</h2>
+                <p className="text-muted-foreground">
+                  Chatting with {selectedComposer.name} is unavailable due to copyright restrictions.
+                </p>
+              </div>
             </div>
           )}
         </div>
