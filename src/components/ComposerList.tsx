@@ -74,7 +74,7 @@ export function ComposerList({
             {/* Biography and works */}
             <ScrollArea className="flex-grow mb-4 md:mb-6 overflow-y-auto">
               <div className="space-y-4 md:space-y-6">
-                <p className="text-sm md:text-base text-foreground/90">{selectedComposer.longBio}</p>
+                <p className="text-sm md:text-base text-foreground/90">{selectedComposer.shortBio}</p>
                 <div>
                   <h4 className="font-semibold mb-2 text-base md:text-lg">Notable Works</h4>
                   <ul className="list-disc pl-5 space-y-1">

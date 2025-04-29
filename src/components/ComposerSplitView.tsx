@@ -76,7 +76,7 @@ function ContainedImageModal({
   </div>
 
   {/* Footer */}
-  <div className="py-1 px-2 text-center bg-background dark:bg-secondary">
+  <div className="py-1 px-2 text-left bg-background dark:bg-secondary">
     <div className="text-xs text-muted-foreground">
       Image copyright
     </div>
