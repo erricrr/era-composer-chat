@@ -1,10 +1,9 @@
-import { Composer, Era, getComposersByEra } from '@/data/composers';
+import { Composer, Era, getComposersByEra, getLastName } from '@/data/composers';
 import { ComposerCard } from './ComposerCard';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ComposerImageViewer } from './ComposerImageViewer';
-
 
 interface ComposerListProps {
   era: Era;
@@ -25,74 +24,108 @@ export function ComposerList({
 
   return (
     <div className="w-full mt-0">
-      <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] gap-4 md:gap-6 lg:gap-8 h-[70vh] md:h-[80vh] overflow-hidden">
-        {/* Left side - Scrolling composers */}
-        <ScrollArea className="w-full h-full bg-secondary/80 backdrop-blur-sm rounded-lg p-2 md:p-3">
-          <div className="flex flex-row md:flex-col space-x-3 md:space-x-0 md:space-y-2 w-max md:w-full pb-1">
-            {composers.map(composer => (
-              <ComposerCard
-                key={composer.id}
-                composer={composer}
-                onClick={onSelectComposer}
-                isSelected={selectedComposer?.id === composer.id}
-              />
-            ))}
-          </div>
-          <ScrollBar orientation="horizontal" className="md:hidden" />
-          <ScrollBar orientation="vertical" className="hidden md:flex" />
-        </ScrollArea>
-
-        {/* Right side - Biography with responsive layout */}
-        {selectedComposer && (
-          <div className="rounded-lg p-2 md:p-4 flex flex-col h-full overflow-y-auto">
-            {/* Header with responsive layout */}
-            <div className="flex items-center space-x-4 md:space-x-6 mb-3">
-              <div className="cursor-pointer">
-                <ComposerImageViewer
-                  composer={selectedComposer}
-                  allowModalOnDesktop={true}
-                  className="w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28"
-                />
+      <div
+        className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] gap-5 md:gap-6 lg:gap-8"
+        style={{ height: "65vh" }}
+      >
+        {/* Left side - Composers list */}
+        <div className="bg-secondary/80 rounded-lg overflow-hidden h-full">
+          {/* Mobile view */}
+          <div className="md:hidden rounded-lg bg-secondary/80 backdrop-blur-sm h-[150px]">
+            <ScrollArea className="h-[150px]">
+              <div className="flex space-x-4 px-3 py-3">
+                {composers.map((composer) => (
+                  <div
+                    key={composer.id}
+                    className="flex-shrink-0 w-60"
+                  >
+                    <ComposerCard
+                      composer={composer}
+                      onClick={onSelectComposer}
+                      isSelected={selectedComposer?.id === composer.id}
+                    />
+                  </div>
+                ))}
               </div>
-              <div className="flex flex-col items-start">
-                <h3 className="text-xl md:text-2xl lg:text-3xl font-bold font-serif">{selectedComposer.name}</h3>
-                <div className="flex flex-col md:flex-row md:items-center gap-2 mt-1">
-                  <span className="text-xs md:text-sm text-muted-foreground">
-                    {selectedComposer.nationality}, {selectedComposer.birthYear}-{selectedComposer.deathYear || 'present'}
-                  </span>
-                  <div className="flex flex-wrap gap-1 md:ml-2">
-                    {Array.isArray(selectedComposer.era)
-                      ? selectedComposer.era.map((era, idx) => (
-                          <Badge key={era + idx} variant="badge">{era}</Badge>
-                        ))
-                      : <Badge variant="badge">{selectedComposer.era}</Badge>}
+              <ScrollBar orientation="horizontal" />
+            </ScrollArea>
+          </div>
+
+          {/* Desktop view */}
+          <div className="hidden md:block h-full">
+            <ScrollArea className="h-full">
+              <div className="flex flex-col space-y-2 p-[10px]">
+                {composers.map((composer) => (
+                  <ComposerCard
+                    key={composer.id}
+                    composer={composer}
+                    onClick={onSelectComposer}
+                    isSelected={selectedComposer?.id === composer.id}
+                  />
+                ))}
+              </div>
+              <ScrollBar orientation="vertical" />
+            </ScrollArea>
+          </div>
+        </div>
+
+        {/* Right side - Biography with button */}
+        {selectedComposer && (
+          <div className="relative h-[calc(65vh-6rem)] md:h-full overflow-hidden">
+            <div className="absolute inset-0 bottom-14 md:bottom-16 md:pt-0 pt-5">
+              <ScrollArea className="h-full">
+                <div className="p-3 md:p-4">
+                  {/* Header */}
+                  <div className="flex items-start md:items-center space-x-3 md:space-x-6 mb-3 md:mb-4">
+                    <ComposerImageViewer
+                      composer={selectedComposer}
+                      allowModalOnDesktop={true}
+                      className="w-16 h-16 md:w-24 md:h-24 lg:w-28 lg:h-28 flex-shrink-0 cursor-pointer"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-lg md:text-2xl lg:text-3xl font-bold font-serif truncate">
+                        {selectedComposer.name}
+                      </h3>
+                      <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-2 mt-1">
+                        <span className="text-xs md:text-sm text-muted-foreground">
+                          {selectedComposer.nationality}, {selectedComposer.birthYear}-{selectedComposer.deathYear || 'present'}
+                        </span>
+                        <div className="flex flex-wrap gap-1 md:ml-2">
+                          {Array.isArray(selectedComposer.era)
+                            ? selectedComposer.era.map((era, idx) => (
+                                <Badge key={era + idx} variant="badge" className="text-xs">{era}</Badge>
+                              ))
+                            : <Badge variant="badge" className="text-xs">{selectedComposer.era}</Badge>}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Biography and works */}
+                  <div className="space-y-2 md:space-y-4">
+                    <p className="text-sm md:text-base text-foreground/90">{selectedComposer.shortBio}</p>
+                    <div>
+                      <h4 className="font-semibold mb-1 md:mb-2 text-base md:text-lg">Notable Works</h4>
+                      <ul className="list-disc pl-5 space-y-1">
+                        {selectedComposer.famousWorks.slice(0, 3).map((work, index) => (
+                          <li key={index} className="text-sm md:text-base text-foreground/80">{work}</li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </ScrollArea>
             </div>
 
-            {/* Biography and works */}
-            <ScrollArea className="flex-grow mb-4 md:mb-6 overflow-y-auto">
-              <div className="space-y-4 md:space-y-6">
-                <p className="text-sm md:text-base text-foreground/90">{selectedComposer.shortBio}</p>
-                <div>
-                  <h4 className="font-semibold mb-2 text-base md:text-lg">Notable Works</h4>
-                  <ul className="list-disc pl-5 space-y-1">
-                    {selectedComposer.famousWorks.slice(0, 3).map((work, index) => (
-                      <li key={index} className="text-sm md:text-base text-foreground/80">{work}</li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </ScrollArea>
-
-            {/* Start Conversation button with responsive sizing */}
-            <Button
-              onClick={() => onStartChat(selectedComposer)}
-              className="w-full bg-primary text-primary-foreground hover:bg-primary/90 transition-transform duration-300 hover:scale-[1.02] mt-auto text-sm md:text-base py-2 md:py-3"
-            >
-              Start a Chat with {selectedComposer.name.split(' ').pop()}
-            </Button>
+            {/* Chat button */}
+            <div className="absolute bottom-0 left-0 right-0 h-14 md:h-16 px-3 md:px-4 py-2 bg-background border-t">
+              <Button
+                onClick={() => onStartChat(selectedComposer)}
+                className="w-full h-full bg-primary text-primary-foreground hover:bg-primary/90 transition-transform duration-300 hover:scale-[1.02] text-sm md:text-base"
+              >
+                Start a Chat with {getLastName(selectedComposer.name)}
+              </Button>
+            </div>
           </div>
         )}
       </div>

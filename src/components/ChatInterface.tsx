@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, KeyboardEvent, useCallback } from 'react';
-import { Composer, Message, Era, Conversation } from '@/data/composers';
+import { Composer, Message, Era, Conversation, getLastName } from '@/data/composers';
 import { useConversations } from '@/hooks/useConversations';
 import { Button } from '@/components/ui/button';
 import { RefreshCcw, ArrowUp, Music } from 'lucide-react';
@@ -320,7 +320,7 @@ export function ChatInterface({
           >
             <Music className="h-4 w-4 text-primary" />
             <span className="text-sm font-medium text-muted-foreground">
-              Chat with {composer.name.split(' ').pop()}
+              Chat with {getLastName(composer.name)}
             </span>
             <div className="flex space-x-1">
               <div className="h-1 w-1 rounded-full bg-primary"></div>
@@ -344,7 +344,7 @@ export function ChatInterface({
         <div className="flex flex-col min-h-[calc(100%-2rem)]">
           {currentMessages.length === 0 ? (
             <div className="flex-1 flex items-center justify-center text-muted-foreground text-sm">
-              <p>Start a conversation with {composer.name.split(' ').pop()}. Ask them about their music.</p>
+              <p>Start a conversation with {getLastName(composer.name)}. Ask them about their music.</p>
             </div>
           ) : (
             <div className="space-y-4 w-full">
@@ -376,7 +376,7 @@ export function ChatInterface({
             onUserTyping(true);
           }}
           onKeyDown={handleKeyPress}
-          placeholder={`Ask ${composer.name.split(' ').pop()} a question...`}
+          placeholder={`Ask ${getLastName(composer.name)} a question...`}
           className="w-full rounded-xl border border-input bg-background p-3 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary resize-none overflow-hidden min-h-[42px] max-h-[200px] overflow-y-auto"
           rows={1}
           onInput={e => {
@@ -400,7 +400,7 @@ export function ChatInterface({
       </div>
     </div>
     <p className="text-xs text-muted-foreground text-center mt-2">
-      AI-generated conversation from verified sources. Does not reflect {composer.name.split(' ').pop()}&apos;s personal views.
+      AI-generated conversation from verified sources. Does not reflect {getLastName(composer.name)}&apos;s personal views.
     </p>
   </div>
 </form>

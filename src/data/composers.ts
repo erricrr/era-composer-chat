@@ -63,6 +63,35 @@ export const getComposersByEra = (era: Era): Composer[] => {
   });
 };
 
+// Function to extract the last name, handling prefixes like "de" and "de La"
+export const getLastName = (fullName: string): string => {
+  if (!fullName) {
+    return "";
+  }
+  const parts = fullName.trim().split(' ');
+  const n = parts.length;
+
+  if (n === 0) {
+    return "";
+  }
+  if (n === 1) {
+    return parts[0];
+  }
+
+  // Check for "de La Xyz" (case-insensitive)
+  if (n >= 3 && parts[n - 2].toLowerCase() === 'la' && parts[n - 3].toLowerCase() === 'de') {
+    return parts.slice(n - 3).join(' ');
+  }
+
+  // Check for "de Xyz" (case-insensitive)
+  if (n >= 2 && parts[n - 2].toLowerCase() === 'de') {
+    return parts.slice(n - 2).join(' ');
+  }
+
+  // Default: last word
+  return parts[n - 1];
+};
+
 // Message interface for chat
 export interface Message {
   id: string;
