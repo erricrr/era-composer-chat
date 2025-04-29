@@ -298,9 +298,13 @@ export function ChatInterface({
                   <span className="text-sm md:text-base text-muted-foreground">
                     {composer.nationality}, {composer.birthYear}-{composer.deathYear || 'present'}
                   </span>
-                  <Badge variant="badge">
-                    {Array.isArray(composer.era) ? composer.era.join(' / ') : composer.era}
-                  </Badge>
+                  <div className="flex flex-wrap gap-1">
+                    {Array.isArray(composer.era)
+                      ? composer.era.map((era, idx) => (
+                          <Badge key={era + idx} variant="badge">{era}</Badge>
+                        ))
+                      : <Badge variant="badge">{composer.era}</Badge>}
+                  </div>
                 </div>
               </div>
             </div>

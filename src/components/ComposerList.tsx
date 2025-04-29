@@ -67,9 +67,13 @@ export function ComposerList({
                   <span className="text-xs md:text-sm text-muted-foreground">
                     {selectedComposer.nationality}, {selectedComposer.birthYear}-{selectedComposer.deathYear || 'present'}
                   </span>
-                  <Badge variant="badge" className="md:ml-2 w-fit">
-                    {Array.isArray(selectedComposer.era) ? selectedComposer.era.join(' / ') : selectedComposer.era}
-                  </Badge>
+                  <div className="flex flex-wrap gap-1 md:ml-2">
+                    {Array.isArray(selectedComposer.era)
+                      ? selectedComposer.era.map((era, idx) => (
+                          <Badge key={era + idx} variant="badge">{era}</Badge>
+                        ))
+                      : <Badge variant="badge">{selectedComposer.era}</Badge>}
+                  </div>
                 </div>
               </div>
             </div>
