@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { Composer } from '@/data/composers';
 import {
   Command,
@@ -8,7 +8,9 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
-import { X } from 'lucide-react';
+import { X, Search } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 interface ComposerSearchProps {
   composers: Composer[];
@@ -20,6 +22,9 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredComposers, setFilteredComposers] = useState<Composer[]>([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [isMobileSearchActive, setIsMobileSearchActive] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const commandRef = useRef<HTMLDivElement>(null);
 
   // Debounce function (simple implementation)
   const debounce = (func: Function, delay: number) => {
@@ -71,70 +76,120 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
 
   // Handle input changes
   const handleInputChange = useCallback((value: string) => {
-    console.log("[Search] Input changed:", value);
     setSearchQuery(value);
     debouncedFilter(value);
   }, [debouncedFilter]);
 
-  // Handle clearing the search
+  // Handle clearing the search - also deactivates mobile search view
   const handleClear = useCallback(() => {
-    console.log("[Search] Clearing search");
+    console.log("[Search] Clearing search & mobile active state");
     setSearchQuery('');
     setFilteredComposers([]);
     setIsOpen(false);
+    setIsMobileSearchActive(false);
   }, []);
 
-  // Handle selecting a composer from results
+  // Handle selecting a composer from results - uses handleClear now
   const handleSelect = useCallback((composer: Composer) => {
     console.log("[Search] Selecting composer:", composer.name);
     try {
       onSelectComposer(composer); // Notify parent
       console.log("[Search] Notified parent of selection");
-
-      // Clear the search UI *after* the current event loop tick
-      setTimeout(() => {
-        console.log("[Search] Clearing search UI via setTimeout");
-        handleClear();
-      }, 0);
-
+      // Use handleClear which now also resets mobile state
+      handleClear();
     } catch (error) {
       console.error("[Search] Error during selection notification or clear:", error);
     }
   }, [onSelectComposer, handleClear]);
 
-  console.log("[Search] Rendering with query:", searchQuery, "isOpen:", isOpen);
+  // Handler to activate mobile search input
+  const activateMobileSearch = useCallback(() => {
+    setIsMobileSearchActive(true);
+  }, []);
+
+  // Focus input when mobile search becomes active
+  useEffect(() => {
+    if (isMobileSearchActive) {
+      // Use timeout to ensure input is visible before focusing
+      setTimeout(() => inputRef.current?.focus(), 0);
+    }
+  }, [isMobileSearchActive]);
+
+  // Close dropdown if clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (commandRef.current && !commandRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  console.log("[Search] Rendering - MobileActive:", isMobileSearchActive, "Query:", searchQuery, "isOpen:", isOpen);
 
   return (
-    <div className="relative w-[280px]">
-      {/* Input part - Command wrapper now includes results logic */}
-      <Command className="rounded-lg border border-border bg-card shadow-sm overflow-visible">
-        <div className="flex items-center border-b border-border px-3" cmdk-input-wrapper="">
+    <div className="relative flex items-center md:w-[280px]">
+      {/* Mobile-Only Search Icon Button */}
+      <Button
+        variant="ghost"
+        size="icon"
+        className={`flex-shrink-0 md:hidden ${isMobileSearchActive ? 'hidden' : 'flex'}`}
+        onClick={activateMobileSearch}
+        aria-label="Open search bar"
+      >
+        <Search className="h-5 w-5 text-muted-foreground" />
+      </Button>
+
+      {/* Command component - Always rendered, conditional styling */}
+      <Command
+        ref={commandRef}
+        className={cn(
+          "rounded-lg border border-border bg-card shadow-sm overflow-visible transition-all duration-200 ease-out relative",
+          isMobileSearchActive ? "w-full" : "hidden",
+          "md:block md:w-full"
+        )}
+      >
+        {/* Input Wrapper */}
+        <div
+          className={"flex items-center border-b border-border px-3"}
+          cmdk-input-wrapper=""
+        >
           <CommandInput
+            ref={inputRef}
+            id="composer-search-input"
             placeholder="Search all composers..."
             className="h-9 flex-1 bg-transparent font-serif text-sm placeholder:text-muted-foreground/70 outline-none border-none ring-0 focus:ring-0"
             value={searchQuery}
             onValueChange={handleInputChange}
             autoComplete="off"
             aria-label="Search composers"
+            onFocus={() => setIsOpen(true)}
           />
-          {searchQuery && (
+          {(isMobileSearchActive || searchQuery) && (
             <button
               onClick={handleClear}
               className="p-1 hover:bg-secondary/80 rounded-full text-muted-foreground hover:text-foreground"
               type="button"
-              aria-label="Clear search"
+              aria-label="Clear or close search"
             >
               <X className="h-4 w-4 shrink-0" />
             </button>
           )}
         </div>
 
-        {/* Results List - Rendered inside Command, hidden when not open */}
-        {/* Added absolute positioning container for floating effect */}
-        <div className={`absolute top-[calc(100%+4px)] left-0 right-0 z-50 ${!isOpen ? 'hidden' : ''}`}>
+        {/* Results List - Directly inside Command, visibility controlled by CSS */}
+        <div
+          className={cn(
+             "absolute top-[calc(100%+4px)] left-0 right-0 z-50 w-full",
+             !isOpen && "hidden"
+          )}
+        >
           <div className="rounded-lg border border-border bg-card shadow-md">
             <CommandList className="max-h-[200px] overflow-y-auto p-1">
-              {filteredComposers.length === 0 && searchQuery ? (
+               {filteredComposers.length === 0 && searchQuery ? (
                  <CommandEmpty className="py-2 px-3 text-center text-sm text-muted-foreground">
                    No composers found.
                  </CommandEmpty>
@@ -146,6 +201,7 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
                       key={composer.id}
                       onSelect={() => handleSelect(composer)}
                       className="py-1.5 px-3 font-serif text-sm text-foreground rounded-md hover:bg-secondary/80 cursor-pointer data-[selected='true']:bg-accent data-[selected=true]:text-accent-foreground"
+                      value={composer.name}
                     >
                       {composer.name}
                     </CommandItem>
