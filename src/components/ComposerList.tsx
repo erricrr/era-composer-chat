@@ -84,7 +84,7 @@ export function ComposerList({
               className="w-16 h-16 md:w-24 md:h-24 lg:w-28 lg:h-28 flex-shrink-0 cursor-pointer"
             />
             <div className="flex-1 min-w-0">
-              <h3 className="text-lg md:text-2xl lg:text-3xl font-bold font-serif truncate">
+              <h3 className="text-lg md:text-2xl lg:text-3xl font-bold font-serif break-words">
                 {selectedComposer.name}
               </h3>
               <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-2 mt-1">
