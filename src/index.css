@@ -76,11 +76,12 @@
 
 
   html, body {
-    @apply h-full overflow-hidden;
+    @apply min-h-screen overflow-hidden;
   }
 
+
   #root {
-    @apply h-full;
+    @apply min-h-screen;
   }
 }
 

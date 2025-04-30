@@ -67,8 +67,8 @@ const Index = () => {
   };
 
   return (
-    <div className="h-full overflow-hidden bg-background">
-      {/* Removed Background Decoration */}
+<div className="min-h-screen overflow-hidden bg-background">
+{/* Removed Background Decoration */}
       {/* <MusicNoteDecoration /> */}
 
       {/* Fixed Header */}
@@ -116,7 +116,7 @@ const Index = () => {
             overflow-y-auto
           `}
           style={{
-            maxHeight: `calc(100vh - 2.5rem)`
+            maxHeight: `calc(100vh - 1.5rem)`
           }}
         >
           <div className="pb-14">
@@ -134,7 +134,8 @@ const Index = () => {
           className="fixed inset-x-0 bottom-0 overflow-y-auto bg-background"
           style={{
             top: '2.5rem',
-            height: 'calc(100vh - 2.5rem)',
+            height: 'calc(95vh - 2.5rem)',
+            maxHeight: 'calc(95vh - 2.5rem)',
             backdropFilter: 'blur(8px)',
             boxShadow: '0 -10px 25px rgba(0,0,0,0.1)',
           }}
