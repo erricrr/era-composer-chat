@@ -35,13 +35,17 @@ const Index = () => {
 
   const handleSelectComposer = useCallback((composer: Composer, options?: { source?: string }) => {
     console.log(`[Index] handleSelectComposer called for ${composer.name} from ${options?.source}`);
+
     setSelectedComposer(composer);
     localStorage.setItem('selectedComposer', JSON.stringify(composer));
 
-    const composerEra = composer.era[0];
-    if (composerEra && composerEra !== selectedEra) {
-      setSelectedEra(composerEra);
-      localStorage.setItem('selectedEra', composerEra);
+    if (options?.source === 'search') {
+        const composerEra = composer.era[0];
+        if (composerEra && composerEra !== selectedEra) {
+          console.log(`[Index] Source is search, changing era to ${composerEra}`);
+          setSelectedEra(composerEra);
+          localStorage.setItem('selectedEra', composerEra);
+        }
     }
 
     setShouldScrollToComposer(options?.source === 'search');
