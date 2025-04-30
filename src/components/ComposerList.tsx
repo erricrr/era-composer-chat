@@ -27,7 +27,7 @@ export function ComposerList({
       <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] gap-5 md:gap-6 lg:gap-8 h-full">
 
        {/* Left side - Composers list Container */}
-<div className="bg-secondary/90 rounded-lg border border-primary/20 shadow-inner overflow-hidden h-full flex flex-col">
+<div className="bg-secondary rounded-lg border border-primary/10 shadow-inner overflow-hidden h-full flex flex-col">
 
 {/* Mobile view: Horizontal scroll */}
 <div className="md:hidden">
