@@ -91,7 +91,6 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
                     {/* Active underline */}
                     <div className={`
                       absolute -bottom-1.5 left-0 right-0 h-1.5 rounded-b-md bg-primary
-                      transform origin-left transition-all duration-300 ease-out w-full
                       ${selectedEra === era.name ? 'scale-x-100' : 'scale-x-0'}
                     `} />
                   </div>
