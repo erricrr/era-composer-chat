@@ -12,12 +12,13 @@ export function ComposerCard({ composer, onClick, isSelected, compact = false }:
     <div
       onClick={() => onClick(composer)}
       className={`
-        p-2 rounded-md cursor-pointer select-none
-        transition-all duration-200 relative group
+        p-2 rounded-md cursor-pointer select-none transition-transform duration-500 ease-in-out relative group
         ${isSelected
           ? 'bg-background shadow-md border border-primary/10'
-          : 'hover:bg-primary/5 border border-transparent hover:shadow-sm hover:border-primary/5 active:bg-primary/10 active:scale-[0.99]'}
+          : 'hover:bg-primary/5 border border-transparent hover:shadow-sm hover:border-primary/5 active:bg-primary/10 active:scale-[0.99]'
+        }
       `}
+
     >
       {/* Hover state bar */}
       <div
@@ -29,14 +30,15 @@ export function ComposerCard({ composer, onClick, isSelected, compact = false }:
         `}
       />
 
-      {/* Active state bar */}
-      <div
-        className={`
-          absolute left-0 top-0.5 bottom-0.5 w-1.5 rounded-r-md bg-primary
-          opacity-0 scale-y-0
-          ${isSelected && 'opacity-100 scale-y-100'}
-        `}
-      />
+     {/* Active state bar */}
+<div
+  className={`
+    absolute left-0 top-0.5 bottom-0.5 w-1.5 rounded-r-md bg-primary
+    opacity-0 scale-y-0
+    ${isSelected && 'opacity-100 scale-y-100'}
+  `}
+/>
+
 
       <div className="flex items-center gap-2 pl-1">
         {/* Composer Image */}
