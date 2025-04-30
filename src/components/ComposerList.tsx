@@ -8,10 +8,12 @@ import { useCallback, useEffect } from 'react';
 
 interface ComposerListProps {
   era: Era;
-  onSelectComposer: (composer: Composer) => void;
+  onSelectComposer: (composer: Composer, options?: { source?: string }) => void;
   selectedComposer: Composer | null;
   onStartChat: (composer: Composer) => void;
   isOpen?: boolean;
+  shouldScrollToComposer: boolean;
+  onScrollComplete: () => void;
 }
 
 export function ComposerList({
@@ -19,48 +21,65 @@ export function ComposerList({
   onSelectComposer,
   selectedComposer,
   onStartChat,
-  isOpen = false
+  isOpen = false,
+  shouldScrollToComposer,
+  onScrollComplete
 }: ComposerListProps) {
-  console.log("[List] Rendering for era:", era, "Selected:", selectedComposer?.name);
+  console.log("[List] Rendering for era:", era, "Selected:", selectedComposer?.name, "ShouldScroll:", shouldScrollToComposer);
   const allComposers = getComposersByEra(era);
 
   // Simple selection handler
   const handleComposerSelect = useCallback((composer: Composer) => {
     console.log("[List] handleComposerSelect called for:", composer.name);
     try {
-      onSelectComposer(composer);
+      onSelectComposer(composer, { source: 'list' });
       console.log("[List] onSelectComposer called successfully");
     } catch (error) {
       console.error("[List] Error calling onSelectComposer:", error);
     }
   }, [onSelectComposer]);
 
-  // Effect to scroll selected composer into view on desktop
+  // Effect to scroll selected composer into view *if needed*
   useEffect(() => {
-    if (selectedComposer) {
-      // Timeout ensures the DOM has updated after selection
+    if (selectedComposer && shouldScrollToComposer) {
+      console.log(`[List] Scroll triggered for ${selectedComposer.name}`);
+      let scrolled = false;
       setTimeout(() => {
-        const element = document.getElementById(`composer-card-${selectedComposer.id}`);
-        if (element) {
-          console.log(`[List] Scrolling to ${selectedComposer.name}`);
-          element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        const desktopElement = document.getElementById(`composer-card-${selectedComposer.id}`);
+        if (desktopElement) {
+          console.log(`[List] Scrolling desktop to ${selectedComposer.name}`);
+          desktopElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          scrolled = true;
+        }
+
+        const mobileElement = document.getElementById(`mobile-composer-card-${selectedComposer.id}`);
+        if (mobileElement) {
+          console.log(`[List] Scrolling mobile to ${selectedComposer.name}`);
+          mobileElement.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+          scrolled = true;
+        }
+
+        if (scrolled) {
+            console.log("[List] Calling onScrollComplete");
+            onScrollComplete();
         }
       }, 0);
     }
-  }, [selectedComposer]);
+  }, [selectedComposer, shouldScrollToComposer, onScrollComplete]);
 
   return (
     <div className="w-full mt-0 relative" style={{ height: "65vh" }}>
-      {/* Grid container - Use full height now */}
       <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] gap-4 h-full">
-        {/* Left side - Composers list Container */}
         <div className="bg-secondary rounded-lg border border-primary/10 shadow-inner overflow-hidden h-full flex flex-col">
-          {/* Mobile view: Horizontal scroll */}
           <div className="md:hidden p-3 h-24 flex-shrink-0">
             <ScrollArea className="w-full h-full whitespace-nowrap">
               <div className="inline-flex gap-2 h-full items-center">
                 {allComposers.map((composer) => (
-                  <div key={composer.id} className="flex-shrink-0 w-60">
+                  <div
+                    key={composer.id}
+                    id={`mobile-composer-card-${composer.id}`}
+                    className="flex-shrink-0 w-60 h-full"
+                  >
                     <ComposerCard
                       composer={composer}
                       onClick={() => handleComposerSelect(composer)}
@@ -73,7 +92,6 @@ export function ComposerList({
             </ScrollArea>
           </div>
 
-          {/* Desktop view: Vertical scroll */}
           <div className="hidden md:flex flex-col flex-1 p-3 overflow-hidden">
             <ScrollArea className="h-full w-full">
               <div className="flex flex-col space-y-2">
@@ -92,14 +110,11 @@ export function ComposerList({
           </div>
         </div>
 
-        {/* Right side - Biography with button */}
         {selectedComposer && (
           <div className="flex flex-col h-full overflow-hidden">
-            {/* Scrollable Content Area */}
             <div className="flex-1 min-h-0 flex flex-col">
               <ScrollArea className="flex-1 min-h-0">
                 <div className="p-3 md:p-4">
-                  {/* Header */}
                   <div className="flex items-start md:items-center space-x-3 md:space-x-6 mb-3 md:mb-4">
                     <ComposerImageViewer
                       composer={selectedComposer}
@@ -122,7 +137,6 @@ export function ComposerList({
                       </div>
                     </div>
                   </div>
-                  {/* Biography and works */}
                   <div className="space-y-2 md:space-y-4">
                     <p className="text-sm md:text-base text-foreground/90">{selectedComposer.shortBio}</p>
                     <div>
@@ -137,7 +151,6 @@ export function ComposerList({
                 </div>
               </ScrollArea>
             </div>
-            {/* Chat button Area */}
             <div className="flex-shrink-0 h-14 md:h-16 px-3 md:px-4 py-2 bg-background border-t">
               <Button
                 onClick={() => {
@@ -163,7 +176,6 @@ export function ComposerList({
             </div>
           </div>
         )}
-        {/* Placeholder */}
         {!selectedComposer && (
           <div className="hidden md:flex items-center justify-center h-full text-muted-foreground p-4 text-center">
             Select a composer from the list to see their details and chat availability.

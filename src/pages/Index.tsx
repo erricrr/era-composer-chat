@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { Composer, Era, isComposerInPublicDomain, composers as allComposersData } from '@/data/composers';
+import { Composer, Era, isComposerInPublicDomain, composers as allComposersData, getComposersByEra } from '@/data/composers';
 import { ComposerMenu } from '@/components/ComposerMenu';
 import { ChatInterface } from '@/components/ChatInterface';
 import { ThemeToggle } from '@/components/ThemeToggle';
@@ -29,9 +29,12 @@ const Index = () => {
     return saved ? JSON.parse(saved) : false;
   });
 
+  const [shouldScrollToComposer, setShouldScrollToComposer] = useState(false);
+
   const { startConversation, getConversationsForComposer } = useConversations();
 
-  const handleSelectComposer = useCallback((composer: Composer) => {
+  const handleSelectComposer = useCallback((composer: Composer, options?: { source?: string }) => {
+    console.log(`[Index] handleSelectComposer called for ${composer.name} from ${options?.source}`);
     setSelectedComposer(composer);
     localStorage.setItem('selectedComposer', JSON.stringify(composer));
 
@@ -40,14 +43,30 @@ const Index = () => {
       setSelectedEra(composerEra);
       localStorage.setItem('selectedEra', composerEra);
     }
+
+    setShouldScrollToComposer(options?.source === 'search');
+
   }, [selectedEra]);
 
   const handleSelectEra = useCallback((newEra: Era) => {
     if (newEra !== selectedEra) {
+      console.log(`[Index] handleSelectEra called for ${newEra}`);
       setSelectedEra(newEra);
       localStorage.setItem('selectedEra', newEra);
+
+      const composersInNewEra = getComposersByEra(newEra);
+      if (composersInNewEra.length > 0) {
+         setSelectedComposer(composersInNewEra[0]);
+         localStorage.setItem('selectedComposer', JSON.stringify(composersInNewEra[0]));
+         setShouldScrollToComposer(false);
+      }
     }
   }, [selectedEra]);
+
+  const handleScrollComplete = useCallback(() => {
+    console.log("[Index] handleScrollComplete called, resetting scroll flag.");
+    setShouldScrollToComposer(false);
+  }, []);
 
   const handleStartChat = (composer: Composer) => {
     if (composer) {
@@ -116,7 +135,7 @@ const Index = () => {
              <div className="max-w-xs">
                <ComposerSearch
                  composers={allComposersData}
-                 onSelectComposer={handleSelectComposer}
+                 onSelectComposer={(composer) => handleSelectComposer(composer, { source: 'search' })}
                  selectedComposer={selectedComposer}
                />
              </div>
@@ -143,12 +162,14 @@ const Index = () => {
         >
           <div className="pb-14">
             <ComposerMenu
-              onSelectComposer={handleSelectComposer}
+              onSelectComposer={(composer) => handleSelectComposer(composer, { source: 'list' })}
               onStartChat={handleStartChat}
               selectedComposer={selectedComposer}
               isOpen={isMenuOpen}
               selectedEra={selectedEra}
               onSelectEra={handleSelectEra}
+              shouldScrollToComposer={shouldScrollToComposer}
+              onScrollComplete={handleScrollComplete}
             />
           </div>
         </div>

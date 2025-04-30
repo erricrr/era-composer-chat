@@ -4,12 +4,14 @@ import { ComposerList } from './ComposerList';
 import { Composer, Era, getComposersByEra } from '@/data/composers';
 
 interface ComposerMenuProps {
-  onSelectComposer: (composer: Composer) => void;
+  onSelectComposer: (composer: Composer, options?: { source?: string }) => void;
   onStartChat: (composer: Composer) => void;
   selectedComposer: Composer | null;
   isOpen: boolean;
   selectedEra: Era;
   onSelectEra: (era: Era) => void;
+  shouldScrollToComposer: boolean;
+  onScrollComplete: () => void;
 }
 
 export function ComposerMenu({
@@ -18,7 +20,9 @@ export function ComposerMenu({
   selectedComposer,
   isOpen,
   selectedEra,
-  onSelectEra
+  onSelectEra,
+  shouldScrollToComposer,
+  onScrollComplete
 }: ComposerMenuProps) {
   // State to remember the last selected composer for each era
   const [lastSelectedComposerPerEra, setLastSelectedComposerPerEra] = useState<Partial<Record<Era, Composer>>>({});
@@ -39,11 +43,11 @@ export function ComposerMenu({
 
     const rememberedComposer = lastSelectedComposerPerEra[newEra];
     if (rememberedComposer) {
-      onSelectComposer(rememberedComposer);
+      onSelectComposer(rememberedComposer, { source: 'timeline' });
     } else {
       const composersInEra = getComposersByEra(newEra);
       if (composersInEra.length > 0) {
-        onSelectComposer(composersInEra[0]);
+        onSelectComposer(composersInEra[0], { source: 'timeline' });
       }
     }
   }, [onSelectEra, lastSelectedComposerPerEra, onSelectComposer]);
@@ -59,7 +63,14 @@ export function ComposerMenu({
       <Timeline selectedEra={selectedEra} onSelectEra={handleEraChange} />
 
       <div className="px-2 md:px-6 pb-8 flex-grow overflow-y-auto">
-        <ComposerList era={selectedEra} onSelectComposer={onSelectComposer} selectedComposer={selectedComposer} onStartChat={onStartChat} />
+        <ComposerList
+          era={selectedEra}
+          onSelectComposer={onSelectComposer}
+          selectedComposer={selectedComposer}
+          onStartChat={onStartChat}
+          shouldScrollToComposer={shouldScrollToComposer}
+          onScrollComplete={onScrollComplete}
+        />
       </div>
     </div>
   );
