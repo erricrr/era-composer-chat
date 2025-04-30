@@ -82,25 +82,32 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
 
   // Handle clearing the search - also deactivates mobile search view
   const handleClear = useCallback(() => {
-    console.log("[Search] Clearing search & mobile active state");
-    setSearchQuery('');
-    setFilteredComposers([]);
-    setIsOpen(false);
-    setIsMobileSearchActive(false);
-  }, []);
+    if (searchQuery) {
+      console.log("[Search] Clearing query only");
+      setSearchQuery('');
+      setFilteredComposers([]);
+      setIsOpen(false);
+    } else {
+      console.log("[Search] Closing mobile search");
+      setIsMobileSearchActive(false);
+    }
+  }, [searchQuery]);
+
 
   // Handle selecting a composer from results - uses handleClear now
   const handleSelect = useCallback((composer: Composer) => {
     console.log("[Search] Selecting composer:", composer.name);
     try {
-      onSelectComposer(composer); // Notify parent
-      console.log("[Search] Notified parent of selection");
-      // Use handleClear which now also resets mobile state
-      handleClear();
+      onSelectComposer(composer);
+      setSearchQuery('');
+      setFilteredComposers([]);
+      setIsOpen(false);
+      // DO NOT call setIsMobileSearchActive(false); here
     } catch (error) {
-      console.error("[Search] Error during selection notification or clear:", error);
+      console.error("[Search] Error during selection:", error);
     }
-  }, [onSelectComposer, handleClear]);
+  }, [onSelectComposer]);
+
 
   // Handler to activate mobile search input
   const activateMobileSearch = useCallback(() => {
@@ -131,7 +138,7 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
 const shouldShowDropdown = isOpen && (searchQuery || filteredComposers.length > 0);
 console.log("[Search] Rendering - MobileActive:", isMobileSearchActive, "Query:", searchQuery, "isOpen:", isOpen, "ShowDropdown:", shouldShowDropdown);
 return (
-  <div className="relative flex items-center md:w-[230px]">
+<div className="relative flex items-center md:w-[230px]">
   {/* Mobile-Only Search Icon Button */}
   <Button
     variant="ghost"
@@ -142,42 +149,56 @@ return (
   >
     <Search className="h-5 w-5 text-muted-foreground" />
   </Button>
-  {/* Command component - Always rendered, conditional styling */}
-  <Command
-    ref={commandRef}
-    className={cn(
-      "overflow-visible transition-all duration-200 ease-out relative bg-background focus-within:bg-primary/5",
-      isMobileSearchActive ? "w-full" : "hidden",
-      "md:block md:w-full"
+
+  {/* Command Component */}
+  {/* Command Component */}
+<Command
+  ref={commandRef}
+  onKeyDown={(e) => {
+    if (e.key === "Escape" && isMobileSearchActive) {
+      e.stopPropagation(); // Prevent auto-close
+    }
+  }}
+  className={cn(
+    "overflow-visible transition-all duration-200 ease-out relative bg-background focus-within:bg-primary/5 rounded-full",
+    isMobileSearchActive ? "w-full" : "hidden",
+    "md:block md:w-full"
+  )}
+>
+  {/* Input Wrapper */}
+  <div className="flex items-center px-3 rounded-full" cmdk-input-wrapper="">
+    <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+    <CommandInput
+      ref={inputRef}
+      id="composer-search-input"
+      placeholder="Search all composers..."
+      className="flex-1"
+      value={searchQuery}
+      onValueChange={handleInputChange}
+      autoComplete="off"
+      aria-label="Search composers"
+      onFocus={() => setIsOpen(true)}
+    />
+    {(isMobileSearchActive || searchQuery) && (
+      <button
+        onClick={() => {
+          if (searchQuery) {
+            setSearchQuery('');
+            setFilteredComposers([]);
+            setIsOpen(false);
+          } else {
+            setIsMobileSearchActive(false);
+          }
+        }}
+        className="p-0 hover:bg-secondary/30 rounded-full text-muted-foreground/60 hover:text-muted-foreground"
+        type="button"
+        aria-label="Clear or close search"
+      >
+        <X className="h-3.5 w-3.5 shrink-0" />
+      </button>
     )}
-  >
-    {/* Input Wrapper */}
-    <div
-      className={"flex items-center border-b border-border/30 px-3"}
-      cmdk-input-wrapper=""
-    >
-      <CommandInput
-        ref={inputRef}
-        id="composer-search-input"
-        placeholder="Search all composers..."
-        className="h-9 flex-1 bg-transparent font-serif text-xs placeholder:text-muted-foreground/50 outline-none border-none ring-0 focus:ring-0"
-        value={searchQuery}
-        onValueChange={handleInputChange}
-        autoComplete="off"
-        aria-label="Search composers"
-        onFocus={() => setIsOpen(true)}
-      />
-      {(isMobileSearchActive || searchQuery) && (
-        <button
-          onClick={handleClear}
-          className="p-0 hover:bg-secondary/30 rounded-full text-muted-foreground/60 hover:text-muted-foreground"
-          type="button"
-          aria-label="Clear or close search"
-        >
-          <X className="h-3.5 w-3.5 shrink-0" />
-        </button>
-      )}
-    </div>
+  </div>
+
 
 
         {/* Floating results list Container - Visibility controlled by shouldShowDropdown */}
@@ -202,7 +223,7 @@ return (
                     <CommandItem
                       key={composer.id}
                       onSelect={() => handleSelect(composer)}
-                      className="py-1.5 px-3 font-serif text-sm text-foreground rounded-md hover:bg-secondary/80 cursor-pointer data-[selected='true']:bg-secondary data-[selected=true]:text-primary"
+                      className="py-1.5 px-3 font-serif text-sm text-foreground rounded-full hover:bg-secondary/80 cursor-pointer data-[selected='true']:bg-secondary data-[selected=true]:text-primary"
                       value={composer.name}
                     >
                       {composer.name}
