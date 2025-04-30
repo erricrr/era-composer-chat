@@ -47,15 +47,27 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
     setIsLoading(true);
     console.log("[Search] Performing filter for:", query);
     const lowerQuery = query.trim().toLowerCase();
+
     if (!lowerQuery) {
       setFilteredComposers([]);
       setIsOpen(false);
+      setHasSearched(false); // Reset this too!
       return;
     }
-    setHasSearched(true); // Mark search as active
+
+    // 👇 Optional: only activate "hasSearched" if query is long enough
+    if (lowerQuery.length < 2) {
+      setFilteredComposers([]);
+      setIsOpen(true);
+      setHasSearched(false); // Don't show "No composers found" yet
+      setIsLoading(false);
+      return;
+    }
+
+    setHasSearched(true); // Set only after enough characters
+
     try {
       const filtered = composers.filter((composer) => {
-        // Add checks for undefined properties before accessing methods
         const name = composer.name || '';
         const nationality = composer.nationality || '';
         const eras = Array.isArray(composer.era) ? composer.era : [];
@@ -68,7 +80,7 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
 
         return matchesName || matchesNationality || matchesEra || matchesWorks;
       });
-      console.log("[Search] Filtered results:", filtered.length);
+
       setFilteredComposers(filtered);
       setIsOpen(true);
     } catch (error) {
@@ -76,8 +88,10 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
       setFilteredComposers([]);
       setIsOpen(false);
     }
-    setIsLoading(false); // End loading after filter completes
+
+    setIsLoading(false);
   }, [composers]);
+
 
   // Debounced filter
   const debouncedFilter = useCallback(debounce(performFilter, 200), [performFilter]);
@@ -143,10 +157,11 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
   };
 }, []);
 // Determine if the results dropdown should be visually open
-const shouldShowDropdown = isOpen && (searchQuery || filteredComposers.length > 0);
-console.log("[Search] Rendering - MobileActive:", isMobileSearchActive, "Query:", searchQuery, "isOpen:", isOpen, "ShowDropdown:", shouldShowDropdown);
-return (
-<div className="relative flex items-center md:w-[230px]">
+const shouldShowDropdown =
+  isOpen && (filteredComposers.length > 0 || hasSearched || isLoading);
+  console.log("[Search] Rendering - MobileActive:", isMobileSearchActive, "Query:", searchQuery, "isOpen:", isOpen, "ShowDropdown:", shouldShowDropdown);
+  return (
+    <div className="relative flex items-center md:w-[230px]">
   {/* Mobile-Only Search Icon Button */}
   <Button
     variant="ghost"
@@ -198,39 +213,39 @@ return (
 )}
   </div>
 
-
-
-        {/* Floating results list Container - Visibility controlled by shouldShowDropdown */}
-        <div
-          className={cn(
-             "absolute top-[calc(100%+4px)] left-0 right-0 z-50 w-full",
-             !shouldShowDropdown && "hidden"
+{/* Floating results list Container - Visibility controlled by shouldShowDropdown */}
+<div
+      className={cn(
+        "absolute top-[calc(100%+4px)] left-0 right-0 z-50 w-full",
+        !shouldShowDropdown && "hidden"
+      )}
+    >
+      <div className="rounded-lg border border-border bg-card shadow-md">
+        <CommandList className="max-h-[200px] overflow-y-auto p-1">
+          {/* Show "No composers found" message only when the search is done and no results are found */}
+          {hasSearched && !isLoading && filteredComposers.length === 0 && (
+            <CommandEmpty className="py-2 px-3 text-center text-sm text-muted-foreground">
+              No composers found.
+            </CommandEmpty>
           )}
-        >
-          <div className="rounded-lg border border-border bg-card shadow-md">
-            <CommandList className="max-h-[200px] overflow-y-auto p-1">
-               {/* Show "No Results" only if query exists and results are empty */}
-               {hasSearched && !isLoading && filteredComposers.length === 0 ? (
-                <CommandEmpty className="py-2 px-3 text-center text-sm text-muted-foreground">
-                  No composers found.
-                </CommandEmpty>
-              ) : null}
-               {/* Render results if they exist */}
-               {filteredComposers.length > 0 && (
-                 <CommandGroup>
-                  {filteredComposers.map((composer) => (
-                    <CommandItem
-                      key={composer.id}
-                      onSelect={() => handleSelect(composer)}
-                      className="py-1.5 px-3 font-serif text-foreground rounded-full hover:bg-secondary/80 cursor-pointer data-[selected='true']:bg-secondary data-[selected=true]:text-primary text-xs md:text-sm"
-                      value={composer.name}
-                    >
-                      {composer.name}
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              )}
-            </CommandList>
+
+          {/* Render results if they exist */}
+          {filteredComposers.length > 0 && (
+            <CommandGroup>
+              {filteredComposers.map((composer) => (
+                <CommandItem
+                  key={composer.id}
+                  onSelect={() => handleSelect(composer)}
+                  className="py-1.5 px-3 font-serif text-foreground rounded-full hover:bg-secondary/80 cursor-pointer data-[selected='true']:bg-secondary data-[selected=true]:text-primary text-xs md:text-sm"
+                  value={composer.name}
+                >
+                  {composer.name}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          )}
+        </CommandList>
+
           </div>
         </div>
       </Command>
