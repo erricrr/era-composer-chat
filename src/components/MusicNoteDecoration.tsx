@@ -3,7 +3,7 @@ import React from 'react';
 
 export function MusicNoteDecoration() {
   return (
-    <div className="absolute inset-0 pointer-events-none opacity-10 dark:opacity-5">
+    <div className="absolute inset-0 pointer-events-none opacity-[5%] dark:opacity-[4%]">
       {/* Musical notes with multi-directional floating animations */}
       <div className="absolute top-[10%] left-[5%] text-2xl rotate-12 animate-float-1" style={{ animationDelay: "0.3s" }}>♩</div>
       <div className="absolute top-[25%] right-[15%] text-4xl -rotate-6 animate-float-2" style={{ animationDelay: "1.2s" }}>♪</div>
