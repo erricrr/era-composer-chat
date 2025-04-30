@@ -128,7 +128,10 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
     };
   }, []);
 
-  console.log("[Search] Rendering - MobileActive:", isMobileSearchActive, "Query:", searchQuery, "isOpen:", isOpen);
+  // Determine if the results dropdown should be visually open
+  const shouldShowDropdown = isOpen && (searchQuery || filteredComposers.length > 0);
+
+  console.log("[Search] Rendering - MobileActive:", isMobileSearchActive, "Query:", searchQuery, "isOpen:", isOpen, "ShowDropdown:", shouldShowDropdown);
 
   return (
     <div className="relative flex items-center md:w-[280px]">
@@ -180,22 +183,24 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
           )}
         </div>
 
-        {/* Results List - Directly inside Command, visibility controlled by CSS */}
+        {/* Floating results list Container - Visibility controlled by shouldShowDropdown */}
         <div
           className={cn(
              "absolute top-[calc(100%+4px)] left-0 right-0 z-50 w-full",
-             !isOpen && "hidden"
+             !shouldShowDropdown && "hidden"
           )}
         >
           <div className="rounded-lg border border-border bg-card shadow-md">
             <CommandList className="max-h-[200px] overflow-y-auto p-1">
-               {filteredComposers.length === 0 && searchQuery ? (
+               {/* Show "No Results" only if query exists and results are empty */}
+               {searchQuery && filteredComposers.length === 0 ? (
                  <CommandEmpty className="py-2 px-3 text-center text-sm text-muted-foreground">
                    No composers found.
                  </CommandEmpty>
                ) : null}
-              {filteredComposers.length > 0 && (
-                <CommandGroup>
+               {/* Render results if they exist */}
+               {filteredComposers.length > 0 && (
+                 <CommandGroup>
                   {filteredComposers.map((composer) => (
                     <CommandItem
                       key={composer.id}
