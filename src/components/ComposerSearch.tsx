@@ -186,24 +186,16 @@ return (
       aria-label="Search composers"
       onFocus={() => setIsOpen(true)}
     />
-    {(isMobileSearchActive || searchQuery) && (
-      <button
-        onClick={() => {
-          if (searchQuery) {
-            setSearchQuery('');
-            setFilteredComposers([]);
-            setIsOpen(false);
-          } else {
-            setIsMobileSearchActive(false);
-          }
-        }}
-        className="p-0 hover:bg-secondary/30 rounded-full text-muted-foreground/60 hover:text-muted-foreground"
-        type="button"
-        aria-label="Clear or close search"
-      >
-        <X className="h-3.5 w-3.5 shrink-0" />
-      </button>
-    )}
+    {isMobileSearchActive && (
+  <button
+    onClick={handleClear}
+    className="md:hidden p-0 hover:bg-secondary/30 rounded-full text-muted-foreground/60 hover:text-muted-foreground"
+    type="button"
+    aria-label="Clear or close search"
+  >
+    <X className="h-3.5 w-3.5 shrink-0" />
+  </button>
+)}
   </div>
 
 
