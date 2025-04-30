@@ -72,36 +72,33 @@ const Index = () => {
       {/* Removed Background Decoration */}
       {/* <MusicNoteDecoration /> */}
 
-      {/* Fixed Header */}
-      <div className="fixed-header">
+      {/* Fixed Header - Add onClick back, make it a hotspot */}
+      <div
+        className="fixed-header cursor-pointer group"
+        onClick={toggleMenu}
+      >
         <div className="container mx-auto px-2 flex items-center justify-between h-full">
-          {/* Left Side: Menu Toggle ONLY */}
-          <div className="flex-shrink-0">
-            <div
-              className="p-1 rounded-full transition-colors duration-200 hover:bg-muted cursor-pointer group"
-              onClick={toggleMenu}
-              aria-label={isMenuOpen ? "Close composer menu" : "Open composer menu"}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className={`h-5 w-5 transition-all duration-500 ${isMenuOpen ? 'rotate-180' : 'rotate-0'} group-hover:text-primary`}
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                style={{ width: '1.25rem', height: '1.25rem' }}
-              >
+          {/* Left Side: Menu Toggle Button */}
+          <div className="flex-shrink-0 p-1 rounded-full transition-colors duration-200 group-hover:bg-muted">
+             <svg
+               xmlns="http://www.w3.org/2000/svg"
+               className={`h-5 w-5 transition-all duration-500 ${isMenuOpen ? 'rotate-180' : 'rotate-0'} text-foreground group-hover:text-primary`}
+               fill="none"
+               viewBox="0 0 24 24"
+               stroke="currentColor"
+               style={{ width: '1.25rem', height: '1.25rem' }}
+             >
                 {isMenuOpen ? (
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
                 ) : (
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 )}
-              </svg>
-            </div>
+             </svg>
           </div>
 
-          {/* Right Side: Search + Icons */}
+          {/* Right Side: Search + Icons - Keep stopping propagation */}
           <div className="flex items-center gap-2 flex-shrink-0" onClick={e => e.stopPropagation()}>
-             {/* Search Bar - Moved here */}
+             {/* Search Bar */}
              <div className="max-w-xs">
                <ComposerSearch
                  composers={allComposersData}
