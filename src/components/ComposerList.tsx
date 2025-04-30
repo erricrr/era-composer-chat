@@ -4,7 +4,7 @@ import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ComposerImageViewer } from './ComposerImageViewer';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 
 interface ComposerListProps {
   era: Era;
@@ -35,6 +35,20 @@ export function ComposerList({
     }
   }, [onSelectComposer]);
 
+  // Effect to scroll selected composer into view on desktop
+  useEffect(() => {
+    if (selectedComposer) {
+      // Timeout ensures the DOM has updated after selection
+      setTimeout(() => {
+        const element = document.getElementById(`composer-card-${selectedComposer.id}`);
+        if (element) {
+          console.log(`[List] Scrolling to ${selectedComposer.name}`);
+          element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      }, 0);
+    }
+  }, [selectedComposer]);
+
   return (
     <div className="w-full mt-0 relative" style={{ height: "65vh" }}>
       {/* Grid container - Use full height now */}
@@ -64,12 +78,13 @@ export function ComposerList({
             <ScrollArea className="h-full w-full">
               <div className="flex flex-col space-y-2">
                 {allComposers.map((composer) => (
-                  <ComposerCard
-                    key={composer.id}
-                    composer={composer}
-                    onClick={() => handleComposerSelect(composer)}
-                    isSelected={selectedComposer?.id === composer.id}
-                  />
+                  <div key={composer.id} id={`composer-card-${composer.id}`}>
+                    <ComposerCard
+                      composer={composer}
+                      onClick={() => handleComposerSelect(composer)}
+                      isSelected={selectedComposer?.id === composer.id}
+                    />
+                  </div>
                 ))}
               </div>
               <ScrollBar orientation="vertical" />
