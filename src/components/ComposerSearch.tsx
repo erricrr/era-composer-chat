@@ -115,73 +115,70 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
     }
   }, [isMobileSearchActive]);
 
-  // Close dropdown if clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (commandRef.current && !commandRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  // Determine if the results dropdown should be visually open
-  const shouldShowDropdown = isOpen && (searchQuery || filteredComposers.length > 0);
-
-  console.log("[Search] Rendering - MobileActive:", isMobileSearchActive, "Query:", searchQuery, "isOpen:", isOpen, "ShowDropdown:", shouldShowDropdown);
-
-  return (
-    <div className="relative flex items-center md:w-[280px]">
-      {/* Mobile-Only Search Icon Button */}
-      <Button
-        variant="ghost"
-        size="icon"
-        className={`flex-shrink-0 md:hidden ${isMobileSearchActive ? 'hidden' : 'flex'}`}
-        onClick={activateMobileSearch}
-        aria-label="Open search bar"
-      >
-        <Search className="h-5 w-5 text-muted-foreground" />
-      </Button>
-
-      {/* Command component - Always rendered, conditional styling */}
-      <Command
-        ref={commandRef}
-        className={cn(
-          "rounded-lg border border-border bg-card shadow-sm overflow-visible transition-all duration-200 ease-out relative",
-          isMobileSearchActive ? "w-full" : "hidden",
-          "md:block md:w-full"
-        )}
-      >
-        {/* Input Wrapper */}
-        <div
-          className={"flex items-center border-b border-border px-3"}
-          cmdk-input-wrapper=""
+ // Close dropdown if clicking outside
+ useEffect(() => {
+  const handleClickOutside = (event: MouseEvent) => {
+    if (commandRef.current && !commandRef.current.contains(event.target as Node)) {
+      setIsOpen(false);
+    }
+  };
+  document.addEventListener("mousedown", handleClickOutside);
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+  };
+}, []);
+// Determine if the results dropdown should be visually open
+const shouldShowDropdown = isOpen && (searchQuery || filteredComposers.length > 0);
+console.log("[Search] Rendering - MobileActive:", isMobileSearchActive, "Query:", searchQuery, "isOpen:", isOpen, "ShowDropdown:", shouldShowDropdown);
+return (
+  <div className="relative flex items-center md:w-[230px]">
+  {/* Mobile-Only Search Icon Button */}
+  <Button
+    variant="ghost"
+    size="icon"
+    className={`w-7 h-7 flex-shrink-0 md:hidden ${isMobileSearchActive ? 'hidden' : 'flex'} rounded-full hover:bg-muted`}
+    onClick={activateMobileSearch}
+    aria-label="Open search bar"
+  >
+    <Search className="h-5 w-5 text-muted-foreground" />
+  </Button>
+  {/* Command component - Always rendered, conditional styling */}
+  <Command
+    ref={commandRef}
+    className={cn(
+      "overflow-visible transition-all duration-200 ease-out relative bg-background focus-within:bg-primary/5",
+      isMobileSearchActive ? "w-full" : "hidden",
+      "md:block md:w-full"
+    )}
+  >
+    {/* Input Wrapper */}
+    <div
+      className={"flex items-center border-b border-border/30 px-3"}
+      cmdk-input-wrapper=""
+    >
+      <CommandInput
+        ref={inputRef}
+        id="composer-search-input"
+        placeholder="Search all composers..."
+        className="h-9 flex-1 bg-transparent font-serif text-xs placeholder:text-muted-foreground/50 outline-none border-none ring-0 focus:ring-0"
+        value={searchQuery}
+        onValueChange={handleInputChange}
+        autoComplete="off"
+        aria-label="Search composers"
+        onFocus={() => setIsOpen(true)}
+      />
+      {(isMobileSearchActive || searchQuery) && (
+        <button
+          onClick={handleClear}
+          className="p-0 hover:bg-secondary/30 rounded-full text-muted-foreground/60 hover:text-muted-foreground"
+          type="button"
+          aria-label="Clear or close search"
         >
-          <CommandInput
-            ref={inputRef}
-            id="composer-search-input"
-            placeholder="Search all composers..."
-            className="h-9 flex-1 bg-transparent font-serif text-sm placeholder:text-muted-foreground/70 outline-none border-none ring-0 focus:ring-0"
-            value={searchQuery}
-            onValueChange={handleInputChange}
-            autoComplete="off"
-            aria-label="Search composers"
-            onFocus={() => setIsOpen(true)}
-          />
-          {(isMobileSearchActive || searchQuery) && (
-            <button
-              onClick={handleClear}
-              className="p-1 hover:bg-secondary/80 rounded-full text-muted-foreground hover:text-foreground"
-              type="button"
-              aria-label="Clear or close search"
-            >
-              <X className="h-4 w-4 shrink-0" />
-            </button>
-          )}
-        </div>
+          <X className="h-3.5 w-3.5 shrink-0" />
+        </button>
+      )}
+    </div>
+
 
         {/* Floating results list Container - Visibility controlled by shouldShowDropdown */}
         <div
@@ -205,7 +202,7 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
                     <CommandItem
                       key={composer.id}
                       onSelect={() => handleSelect(composer)}
-                      className="py-1.5 px-3 font-serif text-sm text-foreground rounded-md hover:bg-secondary/80 cursor-pointer data-[selected='true']:bg-accent data-[selected=true]:text-accent-foreground"
+                      className="py-1.5 px-3 font-serif text-sm text-foreground rounded-md hover:bg-secondary/80 cursor-pointer data-[selected='true']:bg-secondary data-[selected=true]:text-primary"
                       value={composer.name}
                     >
                       {composer.name}
