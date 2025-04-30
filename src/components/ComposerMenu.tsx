@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Timeline } from './Timeline';
 import { ComposerList } from './ComposerList';
 import { Composer, Era, getComposersByEra } from '@/data/composers';
@@ -8,19 +8,18 @@ interface ComposerMenuProps {
   onStartChat: (composer: Composer) => void;
   selectedComposer: Composer | null;
   isOpen: boolean;
+  selectedEra: Era;
+  onSelectEra: (era: Era) => void;
 }
 
 export function ComposerMenu({
   onSelectComposer,
   onStartChat,
   selectedComposer,
-  isOpen
+  isOpen,
+  selectedEra,
+  onSelectEra
 }: ComposerMenuProps) {
-  // Initialize era from localStorage or default to Baroque
-  const [selectedEra, setSelectedEra] = useState<Era>(() => {
-    const saved = localStorage.getItem('selectedEra');
-    return saved ? (saved as Era) : Era.Baroque;
-  });
   // State to remember the last selected composer for each era
   const [lastSelectedComposerPerEra, setLastSelectedComposerPerEra] = useState<Partial<Record<Era, Composer>>>({});
 
@@ -35,10 +34,8 @@ export function ComposerMenu({
   }, [selectedComposer, selectedEra]);
 
   // Handle era changes
-  const handleEraChange = (newEra: Era) => {
-    setSelectedEra(newEra);
-    // Save to localStorage
-    localStorage.setItem('selectedEra', newEra);
+  const handleEraChange = useCallback((newEra: Era) => {
+    onSelectEra(newEra);
 
     const rememberedComposer = lastSelectedComposerPerEra[newEra];
     if (rememberedComposer) {
@@ -49,7 +46,7 @@ export function ComposerMenu({
         onSelectComposer(composersInEra[0]);
       }
     }
-  };
+  }, [onSelectEra, lastSelectedComposerPerEra, onSelectComposer]);
 
   return (
     <div className="container mx-auto px-4 py-6 flex flex-col h-full overflow-y-auto">

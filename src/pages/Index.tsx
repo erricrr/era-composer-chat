@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Composer, Era, isComposerInPublicDomain, composers as allComposersData } from '@/data/composers';
 import { ComposerMenu } from '@/components/ComposerMenu';
 import { ChatInterface } from '@/components/ChatInterface';
@@ -14,6 +14,11 @@ const Index = () => {
     return saved ? JSON.parse(saved) : null;
   });
 
+  const [selectedEra, setSelectedEra] = useState<Era>(() => {
+    const saved = localStorage.getItem('selectedEra');
+    return saved ? (saved as Era) : Era.Baroque;
+  });
+
   const [isMenuOpen, setIsMenuOpen] = useState(() => {
     const saved = localStorage.getItem('isMenuOpen');
     return saved ? JSON.parse(saved) : true;
@@ -26,30 +31,39 @@ const Index = () => {
 
   const { startConversation, getConversationsForComposer } = useConversations();
 
-  const handleSelectComposer = (composer: Composer) => {
+  const handleSelectComposer = useCallback((composer: Composer) => {
     setSelectedComposer(composer);
     localStorage.setItem('selectedComposer', JSON.stringify(composer));
-  };
+
+    const composerEra = composer.era[0];
+    if (composerEra && composerEra !== selectedEra) {
+      setSelectedEra(composerEra);
+      localStorage.setItem('selectedEra', composerEra);
+    }
+  }, [selectedEra]);
+
+  const handleSelectEra = useCallback((newEra: Era) => {
+    if (newEra !== selectedEra) {
+      setSelectedEra(newEra);
+      localStorage.setItem('selectedEra', newEra);
+    }
+  }, [selectedEra]);
 
   const handleStartChat = (composer: Composer) => {
     if (composer) {
-      // Get existing conversations for this composer
       const composerConversations = getConversationsForComposer(composer.id);
 
-      // Only start a new conversation if there are no existing ones
       if (composerConversations.length === 0) {
         startConversation(composer);
       }
 
-      // First start the menu sliding animation
       setIsMenuOpen(false);
       localStorage.setItem('isMenuOpen', 'false');
 
-      // After the menu slides up, show the chat interface
       setTimeout(() => {
         setIsChatting(true);
         localStorage.setItem('isChatting', 'true');
-      }, 500); // This matches the menu slide duration
+      }, 500);
     }
   };
 
@@ -60,7 +74,7 @@ const Index = () => {
       setIsMenuOpen(true);
       localStorage.setItem('isMenuOpen', 'true');
     } else {
-      setIsChatting(false); // Ensure chat is hidden when closing menu
+      setIsChatting(false);
       localStorage.setItem('isChatting', 'false');
       setIsMenuOpen(false);
       localStorage.setItem('isMenuOpen', 'false');
@@ -133,6 +147,8 @@ const Index = () => {
               onStartChat={handleStartChat}
               selectedComposer={selectedComposer}
               isOpen={isMenuOpen}
+              selectedEra={selectedEra}
+              onSelectEra={handleSelectEra}
             />
           </div>
         </div>

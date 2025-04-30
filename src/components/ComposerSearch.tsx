@@ -90,8 +90,13 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
     try {
       onSelectComposer(composer); // Notify parent
       console.log("[Search] Notified parent of selection");
-      handleClear(); // Clear the search UI
-      console.log("[Search] Cleared search UI after selection");
+
+      // Clear the search UI *after* the current event loop tick
+      setTimeout(() => {
+        console.log("[Search] Clearing search UI via setTimeout");
+        handleClear();
+      }, 0);
+
     } catch (error) {
       console.error("[Search] Error during selection notification or clear:", error);
     }
