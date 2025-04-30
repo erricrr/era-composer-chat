@@ -26,6 +26,11 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
   const inputRef = useRef<HTMLInputElement>(null);
   const commandRef = useRef<HTMLDivElement>(null);
 
+  // Search state
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
+
+
   // Debounce function (simple implementation)
   const debounce = (func: Function, delay: number) => {
     let timeoutId: NodeJS.Timeout;
@@ -39,6 +44,7 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
 
   // Filter logic
   const performFilter = useCallback((query: string) => {
+    setIsLoading(true);
     console.log("[Search] Performing filter for:", query);
     const lowerQuery = query.trim().toLowerCase();
     if (!lowerQuery) {
@@ -46,6 +52,7 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
       setIsOpen(false);
       return;
     }
+    setHasSearched(true); // Mark search as active
     try {
       const filtered = composers.filter((composer) => {
         // Add checks for undefined properties before accessing methods
@@ -69,6 +76,7 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
       setFilteredComposers([]);
       setIsOpen(false);
     }
+    setIsLoading(false); // End loading after filter completes
   }, [composers]);
 
   // Debounced filter
@@ -151,7 +159,6 @@ return (
   </Button>
 
   {/* Command Component */}
-  {/* Command Component */}
 <Command
   ref={commandRef}
   onKeyDown={(e) => {
@@ -211,11 +218,11 @@ return (
           <div className="rounded-lg border border-border bg-card shadow-md">
             <CommandList className="max-h-[200px] overflow-y-auto p-1">
                {/* Show "No Results" only if query exists and results are empty */}
-               {searchQuery && filteredComposers.length === 0 ? (
-                 <CommandEmpty className="py-2 px-3 text-center text-sm text-muted-foreground">
-                   No composers found.
-                 </CommandEmpty>
-               ) : null}
+               {hasSearched && !isLoading && filteredComposers.length === 0 ? (
+                <CommandEmpty className="py-2 px-3 text-center text-sm text-muted-foreground">
+                  No composers found.
+                </CommandEmpty>
+              ) : null}
                {/* Render results if they exist */}
                {filteredComposers.length > 0 && (
                  <CommandGroup>
@@ -223,7 +230,7 @@ return (
                     <CommandItem
                       key={composer.id}
                       onSelect={() => handleSelect(composer)}
-                      className="py-1.5 px-3 font-serif text-sm text-foreground rounded-full hover:bg-secondary/80 cursor-pointer data-[selected='true']:bg-secondary data-[selected=true]:text-primary"
+                      className="py-1.5 px-3 font-serif text-foreground rounded-full hover:bg-secondary/80 cursor-pointer data-[selected='true']:bg-secondary data-[selected=true]:text-primary text-xs md:text-sm"
                       value={composer.name}
                     >
                       {composer.name}
