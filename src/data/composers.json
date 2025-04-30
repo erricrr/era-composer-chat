@@ -103,6 +103,41 @@
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/0/07/Antonio_Salieri_painted_by_Joseph_Willibrord_M%C3%A4hler.jpg"
     },
     {
+      "id": "alessandro-scarlatti",
+      "name": "Alessandro Scarlatti",
+      "era": ["Baroque"],
+      "birthYear": 1660,
+      "deathYear": 1725,
+      "shortBio": "Alessandro Scarlatti was an Italian Baroque composer and a key figure in the development of opera. He founded the Neapolitan school and composed over 60 operas. Scarlatti's influence shaped the evolution of Italian vocal music.",
+      "longBio": "Alessandro Scarlatti (1660–1725) was a leading Italian composer of the Baroque era. He is best known for founding the Neapolitan school of opera. Scarlatti composed more than 60 operas and hundreds of cantatas. His works bridged early Baroque vocal styles and the emerging Classical tradition. Scarlatti's music is noted for its expressive melodies and dramatic flair. He was the father of Domenico Scarlatti, another renowned composer. Alessandro Scarlatti's legacy endures in both opera and sacred music.",
+
+      "nationality": "Italian",
+      "location": "Naples, Italy",
+      "famousWorks": [
+        "La Griselda",
+        "Il Mitridate Eupatore",
+        "Il Trionfo dell'Onore"
+      ],
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Alessandro_Scarlatti.jpg"
+    },
+    {
+      "id": "antonio-vivaldi",
+      "name": "Antonio Vivaldi",
+      "era": ["Baroque"],
+      "birthYear": 1678,
+      "deathYear": 1741,
+      "shortBio": "Antonio Vivaldi was an Italian Baroque composer, violinist, and priest. He is famous for his vibrant concertos and sacred choral music. Vivaldi's The Four Seasons is among the most popular pieces in classical music.",
+      "longBio": "Antonio Vivaldi (1678–1741) was a prolific Italian composer and virtuoso violinist. Ordained as a priest, he was nicknamed 'The Red Priest' due to his hair color. Vivaldi composed over 500 concertos, many for the violin. His best-known work, The Four Seasons, vividly depicts scenes from nature. Vivaldi also wrote operas, sacred choral pieces, and chamber music. He spent much of his career working at a girls' orphanage in Venice, directing its renowned orchestra. Vivaldi's music fell into obscurity after his death but was revived in the 20th century.",
+      "nationality": "Italian",
+      "location": "Venice, Italy",
+      "famousWorks": [
+        "The Four Seasons",
+        "Gloria",
+        "L'Olimpiade"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/b/bd/Vivaldi.jpg"
+    },
+    {
       "id": "antonin-dvorak",
       "name": "Antonín Dvořák",
       "era": ["Romantic"],
@@ -510,6 +545,23 @@
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/8/86/Bridgetower2.jpg"
     },
     {
+      "id": "george-frideric-handel",
+      "name": "George Frideric Handel",
+      "era": ["Baroque"],
+      "birthYear": 1685,
+      "deathYear": 1759,
+      "shortBio": "George Frideric Handel was a German-British Baroque composer. He is celebrated for his operas, oratorios, and instrumental works. Handel's Messiah remains one of the most beloved choral pieces in history.",
+      "longBio": "George Frideric Handel (1685–1759) was born in Germany and later became a British citizen. He achieved fame as a composer of Italian operas in London. Handel's oratorios, especially Messiah, are renowned for their dramatic power and memorable melodies. He also composed concerti grossi, organ concertos, and anthems. Handel's music blended German, Italian, and English influences. He was a prominent figure in London's musical life and enjoyed royal patronage. Handel's works are still widely performed and admired today.",
+      "nationality": "German-British",
+      "location": "London, England",
+      "famousWorks": [
+        "Messiah",
+        "Water Music",
+        "Music for the Royal Fireworks"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/f/fa/George_Frideric_Handel_by_Balthasar_Denner.jpg"
+    },
+    {
       "id": "georg-philipp-telemann",
       "name": "Georg Philipp Telemann",
       "era": ["Baroque"],
@@ -749,72 +801,6 @@
         "https://upload.wikimedia.org/wikipedia/commons/2/23/John_Cage_%281988%29.jpg"
     },
     {
-      "id": "george-frideric-handel",
-      "name": "George Frideric Handel",
-      "era": ["Baroque"],
-      "birthYear": 1685,
-      "deathYear": 1759,
-      "shortBio": "George Frideric Handel was a German-British Baroque composer. He is celebrated for his operas, oratorios, and instrumental works. Handel's Messiah remains one of the most beloved choral pieces in history.",
-      "longBio": "George Frideric Handel (1685–1759) was born in Germany and later became a British citizen. He achieved fame as a composer of Italian operas in London. Handel's oratorios, especially Messiah, are renowned for their dramatic power and memorable melodies. He also composed concerti grossi, organ concertos, and anthems. Handel's music blended German, Italian, and English influences. He was a prominent figure in London's musical life and enjoyed royal patronage. Handel's works are still widely performed and admired today.",
-      "nationality": "German-British",
-      "location": "London, England",
-      "famousWorks": [
-        "Messiah",
-        "Water Music",
-        "Music for the Royal Fireworks"
-      ],
-      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/f/fa/George_Frideric_Handel_by_Balthasar_Denner.jpg"
-    },
-    {
-      "id": "antonio-vivaldi",
-      "name": "Antonio Vivaldi",
-      "era": ["Baroque"],
-      "birthYear": 1678,
-      "deathYear": 1741,
-      "shortBio": "Antonio Vivaldi was an Italian Baroque composer, violinist, and priest. He is famous for his vibrant concertos and sacred choral music. Vivaldi's The Four Seasons is among the most popular pieces in classical music.",
-      "longBio": "Antonio Vivaldi (1678–1741) was a prolific Italian composer and virtuoso violinist. Ordained as a priest, he was nicknamed 'The Red Priest' due to his hair color. Vivaldi composed over 500 concertos, many for the violin. His best-known work, The Four Seasons, vividly depicts scenes from nature. Vivaldi also wrote operas, sacred choral pieces, and chamber music. He spent much of his career working at a girls' orphanage in Venice, directing its renowned orchestra. Vivaldi's music fell into obscurity after his death but was revived in the 20th century.",
-      "nationality": "Italian",
-      "location": "Venice, Italy",
-      "famousWorks": [
-        "The Four Seasons",
-        "Gloria",
-        "L'Olimpiade"
-      ],
-      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/b/bd/Vivaldi.jpg"
-    },
-    {
-      "id": "alessandro-scarlatti",
-      "name": "Alessandro Scarlatti",
-      "era": ["Baroque"],
-      "birthYear": 1660,
-      "deathYear": 1725,
-      "shortBio": "Alessandro Scarlatti was an Italian Baroque composer and a key figure in the development of opera. He founded the Neapolitan school and composed over 60 operas. Scarlatti's influence shaped the evolution of Italian vocal music.",
-      "longBio": "Alessandro Scarlatti (1660–1725) was a leading Italian composer of the Baroque era. He is best known for founding the Neapolitan school of opera. Scarlatti composed more than 60 operas and hundreds of cantatas. His works bridged early Baroque vocal styles and the emerging Classical tradition. Scarlatti's music is noted for its expressive melodies and dramatic flair. He was the father of Domenico Scarlatti, another renowned composer. Alessandro Scarlatti's legacy endures in both opera and sacred music.",
-
-      "nationality": "Italian",
-      "location": "Naples, Italy",
-      "famousWorks": [
-        "La Griselda",
-        "Il Mitridate Eupatore",
-        "Il Trionfo dell'Onore"
-      ],
-      "imageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Alessandro_Scarlatti.jpg"
-    },
-    {
-      "id": "robert-schumann",
-      "name": "Robert Schumann",
-      "era": ["Romantic"],
-      "birthYear": 1810,
-      "deathYear": 1856,
-      "shortBio": "Robert Schumann was a German Romantic composer, pianist, and influential music critic. He is celebrated for his expressive piano music and lieder. Schumann's works and writings shaped 19th-century musical thought.",
-      "longBio": "Robert Schumann (1810–1856) was a leading figure of the Romantic era in music. Originally aspiring to be a virtuoso pianist, he turned to composition after a hand injury. Schumann wrote extensively for piano, chamber ensembles, and orchestra. His lieder, or art songs, are particularly renowned for their poetic depth. He also founded the influential journal Neue Zeitschrift für Musik, shaping critical discourse. Schumann married the celebrated pianist Clara Wieck, who championed his music. His later years were marked by mental illness, but his legacy endures through his innovative and emotive works.",
-      "nationality": "German",
-      "location": "Düsseldorf, Germany",
-      "famousWorks": ["Carnaval", "Kinderszenen", "Piano Concerto in A minor"],
-      "imageUrl":
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Robert_Schumann_1839.jpg/800px-Robert_Schumann_1839.jpg"
-    },
-    {
       "id": "johann-strauss-ii",
       "name": "Johann Strauss II",
       "era": ["Romantic"],
@@ -831,40 +817,6 @@
       ],
       "imageUrl":
         "https://upload.wikimedia.org/wikipedia/commons/6/67/Johann_Strauss_II_by_Fritz_Luckhardt.jpg"
-    },
-    {
-      "id": "wolfgang-amadeus-mozart",
-      "name": "Wolfgang Amadeus Mozart",
-      "era": ["Classical"],
-      "birthYear": 1756,
-      "deathYear": 1791,
-      "shortBio": "Wolfgang Amadeus Mozart was an Austrian Classical composer and child prodigy. He wrote over 600 works, including symphonies, operas, and chamber music. Mozart's genius and influence define the Classical era.",
-      "longBio": "Wolfgang Amadeus Mozart (1756–1791) was one of the most gifted composers in history. Born in Salzburg, he displayed extraordinary musical talent from a young age. Mozart toured Europe as a child, performing for royalty and composing prolifically. His mature works include masterpieces such as 'The Magic Flute,' 'Symphony No. 41,' and 'Requiem.' Mozart excelled in every musical genre of his time, from opera to chamber music. He spent his later years in Vienna, where he achieved both fame and financial difficulties. Mozart's music remains a cornerstone of the Western classical tradition.",
-      "nationality": "Austrian",
-      "location": "Vienna, Austria",
-      "famousWorks": [
-        "The Magic Flute",
-        "Symphony No. 40",
-        "Requiem"
-      ],
-      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/1/1e/Wolfgang-amadeus-mozart_1.jpg"
-    },
-    {
-      "id": "ludwig-van-beethoven",
-      "name": "Ludwig van Beethoven",
-      "era": ["Classical", "Romantic"],
-      "birthYear": 1770,
-      "deathYear": 1827,
-      "shortBio": "Ludwig van Beethoven was a German composer and pianist who transformed Western music. He bridged the Classical and Romantic eras with his bold, innovative works. Beethoven continued to compose masterpieces even after losing his hearing.",
-      "longBio": "Ludwig van Beethoven (1770–1827) is regarded as one of the greatest composers in history. He was born in Bonn and spent much of his career in Vienna. Beethoven's music marked the transition from the Classical to the Romantic era. His works include nine symphonies, piano sonatas, string quartets, and concertos. Beethoven began to lose his hearing in his late 20s but continued to compose groundbreaking music. His Ninth Symphony, with its 'Ode to Joy,' is a symbol of human aspiration. Beethoven's legacy endures as a revolutionary force in music.",
-      "nationality": "German",
-      "location": "Vienna, Austria",
-      "famousWorks": [
-        "Symphony No. 5 in C Minor",
-        "Symphony No. 9 (Choral)",
-        "Moonlight Sonata"
-      ],
-      "imageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Beethoven.jpg"
     },
     {
       "id": "joseph-haydn",
@@ -984,6 +936,23 @@
         "Lakmé"
       ],
       "imageUrl": "https://upload.wikimedia.org/wikipedia/en/4/46/L%C3%A9o-Delibes-1875.png"
+    },
+    {
+      "id": "ludwig-van-beethoven",
+      "name": "Ludwig van Beethoven",
+      "era": ["Classical", "Romantic"],
+      "birthYear": 1770,
+      "deathYear": 1827,
+      "shortBio": "Ludwig van Beethoven was a German composer and pianist who transformed Western music. He bridged the Classical and Romantic eras with his bold, innovative works. Beethoven continued to compose masterpieces even after losing his hearing.",
+      "longBio": "Ludwig van Beethoven (1770–1827) is regarded as one of the greatest composers in history. He was born in Bonn and spent much of his career in Vienna. Beethoven's music marked the transition from the Classical to the Romantic era. His works include nine symphonies, piano sonatas, string quartets, and concertos. Beethoven began to lose his hearing in his late 20s but continued to compose groundbreaking music. His Ninth Symphony, with its 'Ode to Joy,' is a symbol of human aspiration. Beethoven's legacy endures as a revolutionary force in music.",
+      "nationality": "German",
+      "location": "Vienna, Austria",
+      "famousWorks": [
+        "Symphony No. 5 in C Minor",
+        "Symphony No. 9 (Choral)",
+        "Moonlight Sonata"
+      ],
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Beethoven.jpg"
     },
     {
       "id": "luigi-boccherini",
@@ -1156,6 +1125,20 @@
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/9/9d/RichardWagner.jpg"
     },
     {
+      "id": "robert-schumann",
+      "name": "Robert Schumann",
+      "era": ["Romantic"],
+      "birthYear": 1810,
+      "deathYear": 1856,
+      "shortBio": "Robert Schumann was a German Romantic composer, pianist, and influential music critic. He is celebrated for his expressive piano music and lieder. Schumann's works and writings shaped 19th-century musical thought.",
+      "longBio": "Robert Schumann (1810–1856) was a leading figure of the Romantic era in music. Originally aspiring to be a virtuoso pianist, he turned to composition after a hand injury. Schumann wrote extensively for piano, chamber ensembles, and orchestra. His lieder, or art songs, are particularly renowned for their poetic depth. He also founded the influential journal Neue Zeitschrift für Musik, shaping critical discourse. Schumann married the celebrated pianist Clara Wieck, who championed his music. His later years were marked by mental illness, but his legacy endures through his innovative and emotive works.",
+      "nationality": "German",
+      "location": "Düsseldorf, Germany",
+      "famousWorks": ["Carnaval", "Kinderszenen", "Piano Concerto in A minor"],
+      "imageUrl":
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Robert_Schumann_1839.jpg/800px-Robert_Schumann_1839.jpg"
+    },
+    {
       "id": "ruth-crawford-seeger",
       "name": "Ruth Crawford Seeger",
       "era": ["20th-21st Century"],
@@ -1222,6 +1205,23 @@
         "Symphony No. 2"
       ],
       "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/b/be/Sergei_Rachmaninoff_cph.3a40575.jpg"
+    },
+    {
+      "id": "wolfgang-amadeus-mozart",
+      "name": "Wolfgang Amadeus Mozart",
+      "era": ["Classical"],
+      "birthYear": 1756,
+      "deathYear": 1791,
+      "shortBio": "Wolfgang Amadeus Mozart was an Austrian Classical composer and child prodigy. He wrote over 600 works, including symphonies, operas, and chamber music. Mozart's genius and influence define the Classical era.",
+      "longBio": "Wolfgang Amadeus Mozart (1756–1791) was one of the most gifted composers in history. Born in Salzburg, he displayed extraordinary musical talent from a young age. Mozart toured Europe as a child, performing for royalty and composing prolifically. His mature works include masterpieces such as 'The Magic Flute,' 'Symphony No. 41,' and 'Requiem.' Mozart excelled in every musical genre of his time, from opera to chamber music. He spent his later years in Vienna, where he achieved both fame and financial difficulties. Mozart's music remains a cornerstone of the Western classical tradition.",
+      "nationality": "Austrian",
+      "location": "Vienna, Austria",
+      "famousWorks": [
+        "The Magic Flute",
+        "Symphony No. 40",
+        "Requiem"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/1/1e/Wolfgang-amadeus-mozart_1.jpg"
     }
   ]
 }
