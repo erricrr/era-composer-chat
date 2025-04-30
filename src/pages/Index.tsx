@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { Composer, Era, isComposerInPublicDomain } from '@/data/composers';
+import { Composer, Era, isComposerInPublicDomain, composers as allComposersData } from '@/data/composers';
 import { ComposerMenu } from '@/components/ComposerMenu';
 import { ChatInterface } from '@/components/ChatInterface';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { MusicNoteDecoration } from '@/components/MusicNoteDecoration';
 import { useConversations } from '@/hooks/useConversations';
 import FooterDrawer from '@/components/ui/footerDrawer';
+import { ComposerSearch } from '@/components/ComposerSearch';
 
 const Index = () => {
   const [selectedComposer, setSelectedComposer] = useState<Composer | null>(() => {
@@ -67,19 +68,20 @@ const Index = () => {
   };
 
   return (
-<div className="min-h-screen overflow-hidden bg-background">
-{/* Removed Background Decoration */}
+    <div className="min-h-screen overflow-hidden bg-background">
+      {/* Removed Background Decoration */}
       {/* <MusicNoteDecoration /> */}
 
       {/* Fixed Header */}
-      <div
-        className="fixed-header cursor-pointer"
-        onClick={toggleMenu}
-      >
+      <div className="fixed-header">
         <div className="container mx-auto px-2 flex items-center justify-between h-full">
-          {/* Menu Toggle Button with its container - This part gets the group hover */}
-          <div className="flex-1 flex items-center group">
-            <div className="p-1 rounded-full transition-colors duration-200 group-hover:bg-muted">
+          {/* Left Side: Menu Toggle ONLY */}
+          <div className="flex-shrink-0">
+            <div
+              className="p-1 rounded-full transition-colors duration-200 hover:bg-muted cursor-pointer group"
+              onClick={toggleMenu}
+              aria-label={isMenuOpen ? "Close composer menu" : "Open composer menu"}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className={`h-5 w-5 transition-all duration-500 ${isMenuOpen ? 'rotate-180' : 'rotate-0'} group-hover:text-primary`}
@@ -97,8 +99,17 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Icons - These should not trigger the menu toggle or show group hover effects */}
-          <div className="flex items-center gap-1" onClick={e => e.stopPropagation()}>
+          {/* Right Side: Search + Icons */}
+          <div className="flex items-center gap-2 flex-shrink-0" onClick={e => e.stopPropagation()}>
+             {/* Search Bar - Moved here */}
+             <div className="max-w-xs">
+               <ComposerSearch
+                 composers={allComposersData}
+                 onSelectComposer={handleSelectComposer}
+                 selectedComposer={selectedComposer}
+               />
+             </div>
+             {/* Icons */}
             <FooterDrawer />
             <ThemeToggle />
           </div>

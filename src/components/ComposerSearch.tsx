@@ -43,10 +43,17 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
     }
     try {
       const filtered = composers.filter((composer) => {
-        const matchesName = composer.name.toLowerCase().includes(lowerQuery);
-        const matchesNationality = composer.nationality.toLowerCase().includes(lowerQuery);
-        const matchesEra = composer.era.some(era => era.toLowerCase().includes(lowerQuery));
-        const matchesWorks = composer.famousWorks.some(work => work.toLowerCase().includes(lowerQuery));
+        // Add checks for undefined properties before accessing methods
+        const name = composer.name || '';
+        const nationality = composer.nationality || '';
+        const eras = Array.isArray(composer.era) ? composer.era : [];
+        const works = Array.isArray(composer.famousWorks) ? composer.famousWorks : [];
+
+        const matchesName = name.toLowerCase().includes(lowerQuery);
+        const matchesNationality = nationality.toLowerCase().includes(lowerQuery);
+        const matchesEra = eras.some(era => era.toLowerCase().includes(lowerQuery));
+        const matchesWorks = works.some(work => work.toLowerCase().includes(lowerQuery));
+
         return matchesName || matchesNationality || matchesEra || matchesWorks;
       });
       console.log("[Search] Filtered results:", filtered.length);
@@ -98,7 +105,7 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
       <Command className="rounded-lg border border-border bg-card shadow-sm overflow-visible">
         <div className="flex items-center border-b border-border px-3" cmdk-input-wrapper="">
           <CommandInput
-            placeholder="Search composers..."
+            placeholder="Search all composers..."
             className="h-9 flex-1 bg-transparent font-serif text-sm placeholder:text-muted-foreground/70 outline-none border-none ring-0 focus:ring-0"
             value={searchQuery}
             onValueChange={handleInputChange}

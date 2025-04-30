@@ -4,7 +4,6 @@ import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ComposerImageViewer } from './ComposerImageViewer';
-import { ComposerSearch } from './ComposerSearch';
 import { useCallback } from 'react';
 
 interface ComposerListProps {
@@ -38,20 +37,11 @@ export function ComposerList({
 
   return (
     <div className="w-full mt-0 relative" style={{ height: "65vh" }}>
-      {/* Search bar - Above the grid */}
-      <div className="mb-3 relative z-10"> {/* Ensure search is above grid content */}
-        <ComposerSearch
-          composers={allComposers}
-          onSelectComposer={handleComposerSelect}
-          selectedComposer={selectedComposer}
-        />
-      </div>
-
-      {/* Grid container - adjusted height */}
-      <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] gap-4 h-[calc(100%-44px)]">
+      {/* Grid container - Use full height now */}
+      <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] gap-4 h-full">
         {/* Left side - Composers list Container */}
         <div className="bg-secondary rounded-lg border border-primary/10 shadow-inner overflow-hidden h-full flex flex-col">
-          {/* Mobile view: Horizontal scroll - Always shows allComposers */}
+          {/* Mobile view: Horizontal scroll */}
           <div className="md:hidden p-3 h-24 flex-shrink-0">
             <ScrollArea className="w-full h-full whitespace-nowrap">
               <div className="inline-flex gap-2 h-full items-center">
@@ -69,7 +59,7 @@ export function ComposerList({
             </ScrollArea>
           </div>
 
-          {/* Desktop view: Vertical scroll - Always shows allComposers */}
+          {/* Desktop view: Vertical scroll */}
           <div className="hidden md:flex flex-col flex-1 p-3 overflow-hidden">
             <ScrollArea className="h-full w-full">
               <div className="flex flex-col space-y-2">
