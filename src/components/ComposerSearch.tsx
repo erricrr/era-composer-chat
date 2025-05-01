@@ -30,6 +30,72 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
 
+  // Check if a string contains consecutive characters from the search query
+  const containsConsecutiveChars = (str: string, query: string): boolean => {
+    if (!str || !query) return false;
+
+    const lowerStr = str.toLowerCase();
+    const lowerQuery = query.toLowerCase();
+
+    let strIndex = 0;
+    for (let queryIndex = 0; queryIndex < lowerQuery.length; queryIndex++) {
+      // Try to find the current query character in the remaining part of the string
+      const charIndex = lowerStr.indexOf(lowerQuery[queryIndex], strIndex);
+
+      // If character not found, return false
+      if (charIndex === -1) return false;
+
+      // Move forward in the string for the next iteration
+      strIndex = charIndex + 1;
+    }
+
+    return true;
+  };
+
+  // Filter logic
+  const performFilter = useCallback((query: string) => {
+    setIsLoading(true);
+    console.log("[Search] Performing filter for:", query);
+    const trimmedQuery = query.trim();
+
+    // Only show dropdown if there's a query
+    if (!trimmedQuery) {
+      setFilteredComposers([]);
+      setIsOpen(false);
+      setHasSearched(false);
+      setIsLoading(false);
+      return;
+    }
+
+    setHasSearched(true);
+
+    try {
+      const filtered = composers.filter((composer) => {
+        const name = composer.name || '';
+        const nationality = composer.nationality || '';
+        const eras = Array.isArray(composer.era) ? composer.era : [];
+        const works = Array.isArray(composer.famousWorks) ? composer.famousWorks : [];
+
+        // Use the new consecutive character matching function
+        const matchesName = containsConsecutiveChars(name, trimmedQuery);
+        const matchesNationality = containsConsecutiveChars(nationality, trimmedQuery);
+        const matchesEra = eras.some(era => containsConsecutiveChars(era, trimmedQuery));
+        const matchesWorks = works.some(work => containsConsecutiveChars(work, trimmedQuery));
+
+        return matchesName || matchesNationality || matchesEra || matchesWorks;
+      });
+
+      setFilteredComposers(filtered);
+      setIsOpen(trimmedQuery.length > 0);
+    } catch (error) {
+      console.error("[Search] Error during filtering:", error);
+      setFilteredComposers([]);
+      setIsOpen(false);
+    }
+
+    setIsLoading(false);
+  }, [composers]);
+
 
   // Debounce function (simple implementation)
   const debounce = (func: Function, delay: number) => {
@@ -41,57 +107,6 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
       }, delay);
     };
   };
-
-  // Filter logic
-  const performFilter = useCallback((query: string) => {
-    setIsLoading(true);
-    console.log("[Search] Performing filter for:", query);
-    const lowerQuery = query.trim().toLowerCase();
-
-    if (!lowerQuery) {
-      setFilteredComposers([]);
-      setIsOpen(false);
-      setHasSearched(false); // Reset this too!
-      return;
-    }
-
-    // 👇 Optional: only activate "hasSearched" if query is long enough
-    if (lowerQuery.length < 2) {
-      setFilteredComposers([]);
-      setIsOpen(true);
-      setHasSearched(false); // Don't show "No composers found" yet
-      setIsLoading(false);
-      return;
-    }
-
-    setHasSearched(true); // Set only after enough characters
-
-    try {
-      const filtered = composers.filter((composer) => {
-        const name = composer.name || '';
-        const nationality = composer.nationality || '';
-        const eras = Array.isArray(composer.era) ? composer.era : [];
-        const works = Array.isArray(composer.famousWorks) ? composer.famousWorks : [];
-
-        const matchesName = name.toLowerCase().includes(lowerQuery);
-        const matchesNationality = nationality.toLowerCase().includes(lowerQuery);
-        const matchesEra = eras.some(era => era.toLowerCase().includes(lowerQuery));
-        const matchesWorks = works.some(work => work.toLowerCase().includes(lowerQuery));
-
-        return matchesName || matchesNationality || matchesEra || matchesWorks;
-      });
-
-      setFilteredComposers(filtered);
-      setIsOpen(true);
-    } catch (error) {
-      console.error("[Search] Error during filtering:", error);
-      setFilteredComposers([]);
-      setIsOpen(false);
-    }
-
-    setIsLoading(false);
-  }, [composers]);
-
 
   // Debounced filter
   const debouncedFilter = useCallback(debounce(performFilter, 200), [performFilter]);
@@ -156,10 +171,12 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
     document.removeEventListener("mousedown", handleClickOutside);
   };
 }, []);
+
 // Determine if the results dropdown should be visually open
 const shouldShowDropdown =
-  isOpen && (filteredComposers.length > 0 || hasSearched || isLoading);
-  console.log("[Search] Rendering - MobileActive:", isMobileSearchActive, "Query:", searchQuery, "isOpen:", isOpen, "ShowDropdown:", shouldShowDropdown);
+  isOpen && (filteredComposers.length > 0 || (hasSearched && searchQuery.trim().length > 0 && filteredComposers.length === 0));
+
+console.log("[Search] Rendering - MobileActive:", isMobileSearchActive, "Query:", searchQuery, "isOpen:", isOpen, "ShowDropdown:", shouldShowDropdown);
   return (
     <div className="relative flex items-center md:w-[230px]">
   {/* Mobile-Only Search Icon Button */}
@@ -199,7 +216,11 @@ const shouldShowDropdown =
       onValueChange={handleInputChange}
       autoComplete="off"
       aria-label="Search composers"
-      onFocus={() => setIsOpen(true)}
+      onFocus={() => {
+        if (searchQuery.trim().length > 0) {
+          setIsOpen(true);
+        }
+      }}
     />
     {isMobileSearchActive && (
   <button
@@ -223,10 +244,17 @@ const shouldShowDropdown =
       <div className="rounded-lg border border-border bg-card shadow-md">
         <CommandList className="max-h-[200px] overflow-y-auto p-1">
           {/* Show "No composers found" message only when the search is done and no results are found */}
-          {hasSearched && !isLoading && filteredComposers.length === 0 && (
+          {hasSearched && !isLoading && filteredComposers.length === 0 && searchQuery.trim().length > 0 && (
             <CommandEmpty className="py-2 px-3 text-center text-sm text-muted-foreground">
               No composers found.
             </CommandEmpty>
+          )}
+
+          {/* Show loading indicator */}
+          {isLoading && (
+            <div className="py-2 px-3 text-center text-sm text-muted-foreground">
+              Searching...
+            </div>
           )}
 
           {/* Render results if they exist */}
