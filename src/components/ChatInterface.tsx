@@ -325,7 +325,7 @@ export function ChatInterface({
               <p>Start a conversation with {getLastName(composer.name)}. Ask them about their music.</p>
             </div>
           ) : (
-            <div className="space-y-4 w-full">
+            <div className="space-y-4 w-full pr-7">
               {currentMessages.map((message: Message) => (
                 <div key={message.id} className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
                   <div className={message.sender === 'user'
