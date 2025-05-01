@@ -54,7 +54,7 @@ function ContainedImageModal({
     >
   {/* Content container with proper spacing */}
 <div
-  className="relative bg-background rounded-lg shadow-xl z-10 overflow-hidden mt-5 max-w-[90%] group"
+  className="relative bg-background rounded-lg shadow-xl z-10 overflow-hidden mt-5 max-w-[90%]"
   onClick={e => e.stopPropagation()} // Prevent click from closing modal
   style={{
     transform: isOpen ? 'scale(1)' : 'scale(0.95)',
@@ -66,7 +66,10 @@ function ContainedImageModal({
     variant="ghost"
     size="icon"
     onClick={onClose}
-    className="absolute right-2 top-2 z-20 h-8 w-8 rounded-full bg-background/50 hover:bg-background/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+    className="absolute right-2 top-2 z-20 h-8 w-8 rounded-full
+    duration-200 opacity-0 hover:opacity-100
+    hover:bg-muted/20
+    text-foreground/70 hover:text-foreground"
   >
     <X className="h-4 w-4" />
   </Button>
@@ -143,7 +146,7 @@ export function ComposerSplitView({ composer, isOpen, onClose, children }: Compo
         onClick={onClose}
         className="relative flex justify-between items-center border-b p-4 bg-secondary backdrop-blur-sm shadow-sm z-10 flex-shrink-0 cursor-pointer group hover:bg-secondary/80 transition-colors"
       >
-        <h2 className="font-bold font-serif text-xl">
+        <h2 className="font-bold font-serif text-lg md:text-xl">
           {composer.name}
         </h2>
         <Button
@@ -153,8 +156,15 @@ export function ComposerSplitView({ composer, isOpen, onClose, children }: Compo
             e.stopPropagation(); // Prevent double firing of close event
             onClose();
           }}
-          className="rounded-full hover:bg-primary/20 transition-colors group-hover:bg-primary/20"
-        >
+          className="rounded-full
+          hover:bg-primary/20
+          transition-all
+          duration-200
+          group-hover:bg-primary/20
+          w-8 h-8
+          hover:w-8 hover:h-8
+          text-foreground/70 hover:text-foreground/90"
+          >
           <X className="h-4 w-4" />
         </Button>
       </div>

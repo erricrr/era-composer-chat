@@ -280,10 +280,7 @@ export function ChatInterface({
           <div className="flex items-center justify-between px-5 py-3 w-full">
             <div
               onClick={() => setIsSplitViewOpen(true)}
-              className="flex items-center space-x-6 cursor-pointer transition-all duration-300 ease-in-out transform
-                [&:not(:active)]:hover:opacity-90 [&:not(:active)]:hover:scale-[0.98]
-                motion-reduce:transition-none motion-reduce:transform-none
-                delay-[50ms] group"
+              className="flex items-center space-x-6 cursor-pointer group hover:opacity-90 hover:scale-[0.98] transition-all duration-300"
             >
               <div>
                 <ComposerImageViewer
@@ -315,8 +312,8 @@ export function ChatInterface({
           size="icon"
           onClick={handleResetChat}
           title="Reset conversation"
-          className="absolute top-1 right-1 z-10 rounded-full hover:bg-primary/20 transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95"
-        >
+          className="absolute top-1 right-1 z-10 rounded-full hover:bg-muted hover:scale-90 transition-all duration-300 ease-in-out"
+          >
           <RefreshCcw className="h-4 w-4" />
         </Button>
       </div>

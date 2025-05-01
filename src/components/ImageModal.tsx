@@ -92,8 +92,7 @@ export function ImageModal({
 
           <button
             onClick={(e) => { e.stopPropagation(); onClose(); }}
-            className="p-1 rounded-full transition-opacity duration-200 opacity-0 group-hover:opacity-100 hover:bg-[hsl(var(--card))]"
-            style={{ color: 'hsl(var(--muted-foreground))' }}
+            className="p-1 rounded-full transition-opacity duration-200 opacity-0 group-hover:opacity-100 group-hover:bg-primary/20"
             aria-label="Close modal"
           >
             <svg
@@ -169,5 +168,11 @@ export function ImageModal({
     </div>
   );
 
-  return createPortal(modalContent, document.body);
+  return createPortal(
+    <>
+      <div className="fixed inset-0 z-50 bg-black/50" onClick={onClose}></div>
+      {modalContent}
+    </>,
+    document.body
+  );
 }
