@@ -3,6 +3,7 @@ import composersData from './composers.json';
 export interface Composer {
   id: string;
   name: string;
+  searchableName: string;
   era: Era[];
   birthYear: number;
   deathYear: number | null;

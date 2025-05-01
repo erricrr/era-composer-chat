@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { Composer } from '@/data/composers';
 import {
   Command,
@@ -28,29 +28,16 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
+  const [activeResultIndex, setActiveResultIndex] = useState(-1);
 
   // Refs
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-
-  // Check if a string contains consecutive characters from the search query
-  const containsConsecutiveChars = useCallback((str: string, query: string): boolean => {
-    if (!str || !query) return false;
-
-    const lowerStr = str.toLowerCase();
-    const lowerQuery = query.toLowerCase();
-
-    let strIndex = 0;
-    for (let queryIndex = 0; queryIndex < lowerQuery.length; queryIndex++) {
-      const charIndex = lowerStr.indexOf(lowerQuery[queryIndex], strIndex);
-      if (charIndex === -1) return false;
-      strIndex = charIndex + 1;
-    }
-
-    return true;
-  }, []);
+  const resultRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   // Filter logic
+
+
   const performFilter = useCallback((query: string) => {
     setIsLoading(true);
     console.log("[Search] Performing filter for:", query);
@@ -69,19 +56,33 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
     setHasSearched(true);
 
     try {
-      const filtered = composers.filter((composer) => {
-        const name = composer.name || '';
-        const nationality = composer.nationality || '';
-        const eras = Array.isArray(composer.era) ? composer.era : [];
-        const works = Array.isArray(composer.famousWorks) ? composer.famousWorks : [];
+      const normalizedQuery = trimmedQuery.toLowerCase();
+      const filtered = composers
+        .filter((composer) => {
+          // Use searchableName if available, otherwise fall back to name
+          const searchName = (composer.searchableName || composer.name || '').toLowerCase();
+          return searchName.includes(normalizedQuery);
+        })
+        .sort((a, b) => {
+          // Use searchableName if available, otherwise fall back to name
+          const aName = (a.searchableName || a.name || '').toLowerCase();
+          const bName = (b.searchableName || b.name || '').toLowerCase();
 
-        const matchesName = containsConsecutiveChars(name, trimmedQuery);
-        const matchesNationality = containsConsecutiveChars(nationality, trimmedQuery);
-        const matchesEra = eras.some(era => containsConsecutiveChars(era, trimmedQuery));
-        const matchesWorks = works.some(work => containsConsecutiveChars(work, trimmedQuery));
+          // Exact match
+          if (aName === normalizedQuery) return -1;
+          if (bName === normalizedQuery) return 1;
 
-        return matchesName || matchesNationality || matchesEra || matchesWorks;
-      });
+          // Starts with query
+          const aStartsWith = aName.startsWith(normalizedQuery);
+          const bStartsWith = bName.startsWith(normalizedQuery);
+          if (aStartsWith && !bStartsWith) return -1;
+          if (bStartsWith && !aStartsWith) return 1;
+
+          // If both or neither start with query, sort by how early the match occurs
+          const aIndex = aName.indexOf(normalizedQuery);
+          const bIndex = bName.indexOf(normalizedQuery);
+          return aIndex - bIndex;
+        });
 
       setFilteredComposers(filtered);
       setIsOpen(true);
@@ -91,7 +92,7 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
     }
 
     setIsLoading(false);
-  }, [composers, containsConsecutiveChars]);
+  }, [composers]);
 
   // Debounced filter
   const debouncedFilter = useCallback((query: string) => {
@@ -132,6 +133,7 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
     setFilteredComposers([]);
     setIsOpen(false);
     setHasSearched(false);
+    setActiveResultIndex(-1);
   }, [onSelectComposer]);
 
   // Activate mobile search
@@ -141,11 +143,53 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
     setTimeout(() => inputRef.current?.focus(), 0);
   }, []);
 
+  // Keyboard navigation for search results
+  const handleKeyDown = useCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!isOpen || filteredComposers.length === 0) return;
+
+    switch (event.key) {
+      case 'ArrowDown':
+        event.preventDefault();
+        setActiveResultIndex((prevIndex) =>
+          prevIndex < filteredComposers.length - 1 ? prevIndex + 1 : prevIndex
+        );
+        break;
+      case 'ArrowUp':
+        event.preventDefault();
+        setActiveResultIndex((prevIndex) =>
+          prevIndex > 0 ? prevIndex - 1 : -1
+        );
+        break;
+      case 'Enter':
+        event.preventDefault();
+        if (activeResultIndex >= 0 && activeResultIndex < filteredComposers.length) {
+          handleSelect(filteredComposers[activeResultIndex]);
+        }
+        break;
+      case 'Escape':
+        event.preventDefault();
+        setIsOpen(false);
+        setActiveResultIndex(-1);
+        break;
+    }
+  }, [isOpen, filteredComposers, activeResultIndex, handleSelect]);
+
+  // Scroll active result into view
+  useEffect(() => {
+    if (activeResultIndex >= 0 && resultRefs.current[activeResultIndex]) {
+      resultRefs.current[activeResultIndex]?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest'
+      });
+    }
+  }, [activeResultIndex]);
+
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setIsOpen(false);
+        setActiveResultIndex(-1);
       }
     };
 
@@ -196,6 +240,7 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
             className="flex-1 py-2 outline-none bg-transparent text-sm"
             value={searchQuery}
             onChange={(e) => handleInputChange(e.target.value)}
+            onKeyDown={handleKeyDown}
             onFocus={() => {
               if (searchQuery.trim().length > 0) {
                 setIsOpen(true);
@@ -206,7 +251,7 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
           {(searchQuery || isMobileSearchActive) && (
             <button
               onClick={handleClear}
-              className="p-1 hover:bg-secondary/30 rounded-full text-muted-foreground/60 hover:text-muted-foreground"
+              className="p-1 hover:bg-secondary/30 rounded-full text-muted-foreground/60 hover:text-muted-foreground md:hidden"
               type="button"
               aria-label="Clear or close search"
             >
@@ -237,15 +282,34 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
                 {/* Results list */}
                 {!isLoading && filteredComposers.length > 0 && (
                   <div>
-                    {filteredComposers.map((composer) => (
-                      <div
-                        key={composer.id}
-                        onClick={() => handleSelect(composer)}
-                        className="py-1.5 px-3 font-serif text-foreground rounded-full hover:bg-secondary/80 cursor-pointer text-xs md:text-sm"
-                      >
-                        {composer.name}
-                      </div>
-                    ))}
+                    {filteredComposers.map((composer, index) => {
+                      const isActive = index === activeResultIndex;
+                      return (
+                        <div
+                          ref={(el) => resultRefs.current[index] = el}
+                          key={composer.id}
+                          onClick={() => handleSelect(composer)}
+                          onMouseDown={() => {
+                            // Explicitly reset state to prevent lingering highlights
+                            setActiveResultIndex(-1);
+                          }}
+                          onMouseEnter={() => {
+                            // Reset keyboard navigation when using mouse
+                            setActiveResultIndex(index);
+                          }}
+                          onMouseLeave={() => {
+                            // Completely clear active state
+                            setActiveResultIndex(-1);
+                          }}
+                          className={cn(
+                            'py-1.5 px-3 font-serif text-foreground rounded-full cursor-pointer text-xs md:text-sm',
+                            isActive ? 'bg-secondary/80' : 'hover:bg-secondary/30'
+                          )}
+                        >
+                          {composer.name}
+                        </div>
+                      );
+                    })}
                   </div>
                 )}
               </div>

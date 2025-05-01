@@ -140,6 +140,7 @@
     {
       "id": "antonin-dvorak",
       "name": "Antonín Dvořák",
+      "searchableName": "Antonin Dvorak",
       "era": ["Romantic"],
       "birthYear": 1841,
       "deathYear": 1904,
@@ -206,6 +207,7 @@
     {
       "id": "camille-saint-saens",
       "name": "Camille Saint-Saëns",
+      "searchableName": "Camille Saint-Saens",
       "era": ["Romantic"],
       "birthYear": 1835,
       "deathYear": 1921,
@@ -838,6 +840,7 @@
     {
       "id": "frederic-chopin",
       "name": "Frédéric Chopin",
+      "searchableName": "Frederic Chopin",
       "era": ["Romantic"],
       "birthYear": 1810,
       "deathYear": 1849,
@@ -923,6 +926,7 @@
     {
       "id": "leo-delibes",
       "name": "Léo Delibes",
+      "searchableName": "Leo Delibes",
       "era": ["Romantic"],
       "birthYear": 1836,
       "deathYear": 1891,
@@ -1059,6 +1063,7 @@
     {
       "id": "reinhold-gliere",
       "name": "Reinhold Glière",
+      "searchableName": "Reinhold Gliere",
       "era": ["20th-21st Century"],
       "birthYear": 1875,
       "deathYear": 1956,
