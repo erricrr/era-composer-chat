@@ -282,34 +282,22 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
                 {/* Results list */}
                 {!isLoading && filteredComposers.length > 0 && (
                   <div>
-                    {filteredComposers.map((composer, index) => {
-                      const isActive = index === activeResultIndex;
-                      return (
-                        <div
-                          ref={(el) => resultRefs.current[index] = el}
-                          key={composer.id}
-                          onClick={() => handleSelect(composer)}
-                          onMouseDown={() => {
-                            // Explicitly reset state to prevent lingering highlights
-                            setActiveResultIndex(-1);
-                          }}
-                          onMouseEnter={() => {
-                            // Reset keyboard navigation when using mouse
-                            setActiveResultIndex(index);
-                          }}
-                          onMouseLeave={() => {
-                            // Completely clear active state
-                            setActiveResultIndex(-1);
-                          }}
-                          className={cn(
-                            'py-1.5 px-3 font-serif text-foreground rounded-full cursor-pointer text-xs md:text-sm',
-                            isActive ? 'bg-secondary/80' : 'hover:bg-secondary/30'
-                          )}
-                        >
-                          {composer.name}
-                        </div>
-                      );
-                    })}
+                    {filteredComposers.map((composer, index) => (
+                      <div
+                        ref={(el) => resultRefs.current[index] = el}
+                        key={composer.id}
+                        onClick={() => handleSelect(composer)}
+                        onMouseEnter={() => setActiveResultIndex(index)}
+                        onMouseLeave={() => setActiveResultIndex(-1)}
+                        className={`py-1.5 px-3 font-serif text-foreground rounded-full cursor-pointer text-xs md:text-sm
+                          ${index === activeResultIndex
+                            ? 'bg-secondary/80'
+                            : 'hover:bg-secondary/30'}
+                        `}
+                      >
+                        {composer.name}
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>
