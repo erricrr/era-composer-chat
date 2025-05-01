@@ -228,8 +228,8 @@ export function ChatInterface({
     // Clear the input and reset textarea height
     setInputMessage('');
     if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
       textareaRef.current.style.height = '42px'; // Reset to min-height value
+      textareaRef.current.rows = 1; // Ensure rows is reset
     }
   };
 
@@ -275,16 +275,16 @@ export function ChatInterface({
     <div
       className={`relative flex flex-col h-full bg-background overflow-hidden pb-4 transition-all duration-500 ease-in-out`}
     >
-      <div className="flex items-center justify-between px-5 pt-3 pb-2 border-b shadow-sm bg-secondary">
+      <div className="flex items-center justify-between px-5 pt-3 pb-2 bg-secondary border-b shadow-sm">
         {(!isSplitViewOpen) ? (
-          <div
-            onClick={() => setIsSplitViewOpen(true)}
-            className="flex-1 flex items-center cursor-pointer transition-all duration-300 ease-in-out transform
-              [&:not(:active)]:hover:opacity-90 [&:not(:active)]:hover:scale-[0.98]
-              motion-reduce:transition-none motion-reduce:transform-none
-              delay-[50ms]"
-          >
-            <div className="flex items-center space-x-6">
+          <div className="flex items-center justify-between px-5 pt-3 pb-2 bg-secondary w-full">
+            <div
+              onClick={() => setIsSplitViewOpen(true)}
+              className="flex items-center space-x-6 cursor-pointer transition-all duration-300 ease-in-out transform
+                [&:not(:active)]:hover:opacity-90 [&:not(:active)]:hover:scale-[0.98]
+                motion-reduce:transition-none motion-reduce:transform-none
+                delay-[50ms] group"
+            >
               <div>
                 <ComposerImageViewer
                   composer={composer}
@@ -293,9 +293,9 @@ export function ChatInterface({
                 />
               </div>
               <div className="flex flex-col items-start">
-                <h2 className="font-serif font-bold text-lg">{composer.name}</h2>
+                <h2 className="font-serif font-bold text-lg group-hover:text-primary transition-colors">{composer.name}</h2>
                 <div className="flex items-center gap-2 mt-2">
-                  <span className="text-sm md:text-base text-muted-foreground">
+                  <span className="text-sm md:text-base text-muted-foreground group-hover:text-primary transition-colors">
                     {composer.nationality}, {composer.birthYear}-{composer.deathYear || 'present'}
                   </span>
                   <div className="flex flex-wrap gap-1">
@@ -310,23 +310,8 @@ export function ChatInterface({
             </div>
           </div>
         ) : (
-          <div
-            onClick={() => setIsSplitViewOpen(false)}
-            className="flex-1 flex items-center space-x-3 pb-3 pt-5 cursor-pointer transition-all duration-300 ease-in-out
-              [&:not(:active)]:hover:opacity-90
-              motion-reduce:transition-none
-              delay-[50ms]
-              translate-y-[-4px]"
-          >
-            <Music className="h-4 w-4 text-primary" />
-            <span className="text-sm font-medium text-muted-foreground">
-              Chat with {getLastName(composer.name)}
-            </span>
-            <div className="flex space-x-1">
-              <div className="h-1 w-1 rounded-full bg-primary"></div>
-              <div className="h-1 w-1 rounded-full bg-primary opacity-60"></div>
-              <div className="h-1 w-1 rounded-full bg-primary opacity-30"></div>
-            </div>
+          <div className="flex-1 flex items-center space-x-3 pb-3 pt-5">
+            <div className="h-[1.25rem] w-full"></div>
           </div>
         )}
         <Button
@@ -432,7 +417,7 @@ export function ChatInterface({
             isOpen={isSplitViewOpen}
             onClose={() => setIsSplitViewOpen(false)}
           >
-            {chatContent}
+            <div className="h-full">{chatContent}</div>
           </ComposerSplitView>
         )}
       </div>
