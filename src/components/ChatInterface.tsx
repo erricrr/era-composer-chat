@@ -273,11 +273,11 @@ export function ChatInterface({
 
   const chatContent = (
     <div
-      className={`relative flex flex-col h-full bg-background overflow-hidden pb-4 transition-all duration-500 ease-in-out`}
+      className={`relative flex flex-col h-full bg-background overflow-hidden transition-all duration-500 ease-in-out`}
     >
-      <div className="flex items-center justify-between px-5 pt-3 pb-2 bg-secondary border-b shadow-sm">
+      <div className="relative flex items-center justify-end px-2 py-1 bg-secondary">
         {(!isSplitViewOpen) ? (
-          <div className="flex items-center justify-between px-5 pt-3 pb-2 bg-secondary w-full">
+          <div className="flex items-center justify-between px-5 py-3 w-full">
             <div
               onClick={() => setIsSplitViewOpen(true)}
               className="flex items-center space-x-6 cursor-pointer transition-all duration-300 ease-in-out transform
@@ -309,17 +309,13 @@ export function ChatInterface({
               </div>
             </div>
           </div>
-        ) : (
-          <div className="flex-1 flex items-center space-x-3 pb-3 pt-5">
-            <div className="h-[1.25rem] w-full"></div>
-          </div>
-        )}
+        ) : null}
         <Button
           variant="ghost"
           size="icon"
           onClick={handleResetChat}
           title="Reset conversation"
-          className="ml-2 rounded-full hover:bg-primary/20 transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95"
+          className="absolute top-1 right-1 z-10 rounded-full hover:bg-primary/20 transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95"
         >
           <RefreshCcw className="h-4 w-4" />
         </Button>
