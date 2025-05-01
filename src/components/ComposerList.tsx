@@ -177,7 +177,7 @@ export function ComposerList({
           </div>
         )}
         {!selectedComposer && (
-          <div className="hidden md:flex items-center justify-center h-full text-muted-foreground p-4 text-center">
+          <div className="md:flex items-center justify-center h-full text-muted-foreground p-4 text-center">
             Select a composer from the list to see their details and chat availability.
           </div>
         )}
