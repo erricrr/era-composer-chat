@@ -68,17 +68,17 @@ export function ComposerList({
   }, [selectedComposer, shouldScrollToComposer, onScrollComplete]);
 
   return (
-    <div className="w-full mt-0 relative" style={{ height: "65vh" }}>
-      <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] gap-4 h-full">
-        <div className="bg-secondary rounded-lg border border-primary/10 shadow-inner overflow-hidden h-full flex flex-col">
-          <div className="md:hidden p-3 h-24 flex-shrink-0">
-            <ScrollArea className="w-full h-full whitespace-nowrap">
-              <div className="inline-flex gap-2 h-full items-center">
+    <div className="w-full mt-5 relative" style={{ height: "65vh" }}>
+      <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] gap-4 md:gap-5 h-full">
+        <div className="overflow-hidden h-full flex flex-col">
+          <div className="md:hidden flex-shrink-0">
+            <ScrollArea className="w-full h-full">
+              <div className="inline-flex h-full items-center">
                 {allComposers.map((composer) => (
                   <div
                     key={composer.id}
                     id={`mobile-composer-card-${composer.id}`}
-                    className="flex-shrink-0 w-60 h-full"
+                    className="flex-shrink-0 w-56 h-full"
                   >
                     <ComposerCard
                       composer={composer}
@@ -92,9 +92,9 @@ export function ComposerList({
             </ScrollArea>
           </div>
 
-          <div className="hidden md:flex flex-col flex-1 p-3 overflow-hidden">
+          <div className="hidden md:flex flex-col flex-1 overflow-hidden">
             <ScrollArea className="h-full w-full">
-              <div className="flex flex-col space-y-2">
+              <div className="flex flex-col">
                 {allComposers.map((composer) => (
                   <div key={composer.id} id={`composer-card-${composer.id}`}>
                     <ComposerCard
@@ -112,9 +112,9 @@ export function ComposerList({
 
         {selectedComposer && (
           <div className="flex flex-col h-full overflow-hidden">
-            <div className="flex-1 min-h-0 flex flex-col">
+            <div className="flex-1 min-h-0 flex flex-col border-b">
               <ScrollArea className="flex-1 min-h-0">
-                <div className="p-3 md:p-4">
+                <div className="px-3 md:px-4">
                   <div className="flex items-start md:items-center space-x-3 md:space-x-6 mb-3 md:mb-4">
                     <ComposerImageViewer
                       composer={selectedComposer}
@@ -122,7 +122,7 @@ export function ComposerList({
                       className="w-16 h-16 md:w-24 md:h-24 lg:w-28 lg:h-28 flex-shrink-0 cursor-pointer"
                     />
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-lg md:text-2xl lg:text-3xl font-bold font-serif break-words">
+                      <h3 className="text-xl md:text-2xl font-bold font-serif break-words">
                         {selectedComposer.name}
                       </h3>
                       <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-2 mt-1">
@@ -151,7 +151,7 @@ export function ComposerList({
                 </div>
               </ScrollArea>
             </div>
-            <div className="flex-shrink-0 h-14 md:h-16 px-3 md:px-4 py-2 bg-background border-t">
+            <div className="flex-shrink-0 h-14 md:h-16 px-3 md:px-4 py-2 bg-background">
               <Button
                 onClick={() => {
                   if (selectedComposer && isComposerInPublicDomain(selectedComposer)) {

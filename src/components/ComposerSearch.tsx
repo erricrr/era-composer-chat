@@ -237,7 +237,7 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
             ref={inputRef}
             type="text"
             placeholder="Search all composers..."
-            className="flex-1 py-2 outline-none bg-transparent text-sm"
+            className="flex-1 py-2 outline-none bg-transparent text-xs"
             value={searchQuery}
             onChange={(e) => handleInputChange(e.target.value)}
             onKeyDown={handleKeyDown}

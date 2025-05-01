@@ -166,7 +166,7 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
                     )}
 
                     <PopoverContent className="relative max-w-sm p-2 shadow-xl overflow-hidden">
-                      <div className="absolute left-0 top-1.5 bottom-0.5 w-1.5 bg-primary rounded-r-md animate-[expandVertical_0.3s_ease-in-out] origin-top" />
+                      <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-primary rounded-l-md animate-[expandVertical_0.3s_ease-in-out] origin-top" />
                       <div className="p-3">
                         <h4 className="text-lg font-semibold mb-2 text-primary">{era.name}</h4>
                         <p className="text-sm text-muted-foreground">{era.description}</p>
