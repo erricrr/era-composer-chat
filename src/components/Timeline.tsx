@@ -59,7 +59,7 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
                     {/* Era name */}
                     <h3 className={`
                       text-center transition-all duration-300 ease-out whitespace-nowrap
-                      text-base sm:text-lg md:text-xl
+                      text-[10px] xs:text-xs sm:text-sm md:text-base lg:text-lg
                       ${selectedEra === era.name
                         ? 'text-primary font-medium scale-[1.02]'
                         : 'text-muted-foreground group-hover:text-primary/80 group-hover:scale-[1.02]'
@@ -168,8 +168,8 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
                     <PopoverContent className="relative max-w-sm p-2 shadow-xl overflow-hidden">
                       <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-primary rounded-l-md animate-[expandVertical_0.3s_ease-in-out] origin-top" />
                       <div className="p-3">
-                        <h4 className="text-lg font-semibold mb-2 text-primary">{era.name}</h4>
-                        <p className="text-sm text-muted-foreground">{era.description}</p>
+                        <h4 className="text-xs xs:text-sm sm:text-base md:text-lg lg:text-xl font-semibold mb-2 text-primary">{era.name}</h4>
+                        <p className="text-[10px] xs:text-xs sm:text-sm text-muted-foreground">{era.description}</p>
                       </div>
                     </PopoverContent>
                   </Popover>
