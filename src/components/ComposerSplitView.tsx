@@ -144,7 +144,7 @@ export function ComposerSplitView({ composer, isOpen, onClose, children }: Compo
       {/* Fixed Header - Now outside ScrollArea */}
       <div
         onClick={onClose}
-        className="relative flex justify-between items-center border-b p-4 bg-secondary backdrop-blur-sm shadow-sm z-10 flex-shrink-0 cursor-pointer group hover:bg-secondary/80 transition-colors"
+        className="relative flex justify-between items-center border-b px-4 py-2 bg-secondary backdrop-blur-sm shadow-sm z-10 flex-shrink-0 cursor-pointer group hover:bg-secondary/80 transition-colors"
       >
         <h2 className="font-bold font-serif text-lg md:text-xl">
           {composer.name}
