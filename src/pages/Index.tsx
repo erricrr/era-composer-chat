@@ -7,6 +7,7 @@ import { MusicNoteDecoration } from '@/components/MusicNoteDecoration';
 import { useConversations } from '@/hooks/useConversations';
 import FooterDrawer from '@/components/ui/footerDrawer';
 import { ComposerSearch } from '@/components/ComposerSearch';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 const Index = () => {
   const [selectedComposer, setSelectedComposer] = useState<Composer | null>(() => {
@@ -32,6 +33,11 @@ const Index = () => {
   const [shouldScrollToComposer, setShouldScrollToComposer] = useState(false);
 
   const { startConversation, getConversationsForComposer } = useConversations();
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  const handleThemeChange = (newMode: boolean) => {
+    setIsDarkMode(newMode);
+  };
 
   const handleSelectComposer = useCallback((composer: Composer, options?: { source?: string }) => {
     console.log(`[Index] handleSelectComposer called for ${composer.name} from ${options?.source}`);
@@ -135,22 +141,42 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Right Side: Search + Icons */}
-          <div className="flex items-center gap-2">
-             {/* Search Bar */}
-             <div className="max-w-xs">
-               <ComposerSearch
-                 composers={allComposersData}
-                 onSelectComposer={(composer) => handleSelectComposer(composer, { source: 'search' })}
-                 selectedComposer={selectedComposer}
-               />
-             </div>
-             {/* Icons */}
-            <FooterDrawer />
-            <ThemeToggle />
+         {/* Right Side: Search + Icons */}
+        <div className="flex items-center gap-2">
+          {/* Search Bar */}
+          <div className="max-w-xs">
+            <ComposerSearch
+              composers={allComposersData}
+              onSelectComposer={(composer) => handleSelectComposer(composer, { source: 'search' })}
+              selectedComposer={selectedComposer}
+            />
           </div>
+
+          {/* Icons */}
+          <Tooltip delayDuration={200}>
+            <TooltipTrigger asChild>
+              <div onClick={(e) => e.stopPropagation()}>
+                <FooterDrawer />
+              </div>
+            </TooltipTrigger>
+            <TooltipContent side="bottom" className="text-xs">
+              About
+            </TooltipContent>
+          </Tooltip>
+
+          <Tooltip delayDuration={200}>
+            <TooltipTrigger asChild>
+              <div onClick={(e) => e.stopPropagation()}>
+                <ThemeToggle onThemeChange={handleThemeChange} />
+              </div>
+            </TooltipTrigger>
+            <TooltipContent side="bottom" className="text-xs">
+              {isDarkMode ? 'Toggle light mode' : 'Toggle dark mode'}
+            </TooltipContent>
+          </Tooltip>
         </div>
-      </div>
+        </div>
+        </div>
 
       <main className="content-main h-full">
         {/* Composer Selection Menu */}

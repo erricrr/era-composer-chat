@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { v4 as uuidv4 } from 'uuid';
 import { ComposerImageViewer } from './ComposerImageViewer';
 import { ComposerSplitView } from './ComposerSplitView';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface ChatInterfaceProps {
   composer: Composer;
@@ -282,41 +283,66 @@ export function ChatInterface({
               onClick={() => setIsSplitViewOpen(true)}
               className="flex items-center space-x-6 cursor-pointer group hover:opacity-90 hover:scale-[0.98] transition-all duration-300"
             >
-              <div>
-                <ComposerImageViewer
-                  composer={composer}
-                  size="sm"
-                  onClick={() => setIsSplitViewOpen(true)}
-                />
-              </div>
-              <div className="flex flex-col items-start">
-                <h2 className="font-serif font-bold text-lg group-hover:text-primary transition-colors">{composer.name}</h2>
-                <div className="flex items-center gap-2 mt-2">
-                  <span className="text-sm md:text-base text-muted-foreground group-hover:text-primary transition-colors">
-                    {composer.nationality}, {composer.birthYear}-{composer.deathYear || 'present'}
-                  </span>
-                  <div className="flex flex-wrap gap-1">
-                    {Array.isArray(composer.era)
-                      ? composer.era.map((era, idx) => (
-                          <Badge key={era + idx} variant="badge">{era}</Badge>
-                        ))
-                      : <Badge variant="badge">{composer.era}</Badge>}
-                  </div>
-                </div>
-              </div>
+
+<Tooltip delayDuration={200}>
+  <TooltipTrigger asChild>
+    <div
+      className="flex items-center space-x-6 cursor-pointer group hover:opacity-90 hover:scale-[0.98] transition-all duration-300"
+      onClick={(e) => {
+        e.stopPropagation();
+        setIsSplitViewOpen(true);
+      }}
+    >
+      <div className="flex items-center gap-4 group">
+        <div className="flex-shrink-0">
+          <ComposerImageViewer
+            composer={composer}
+            size="sm"
+            // Remove this onClick to avoid double-triggering
+          />
+        </div>
+        <div className="flex flex-col justify-center">
+          <h2 className="font-serif font-bold text-lg text-left group-hover:text-primary transition-colors">{composer.name}</h2>
+          <div className="flex items-center gap-2 mt-1">
+            <span className="text-sm md:text-base text-muted-foreground group-hover:text-primary transition-colors">
+              {composer.nationality}, {composer.birthYear}-{composer.deathYear || 'present'}
+            </span>
+            <div className="flex flex-wrap gap-1">
+              {Array.isArray(composer.era)
+                ? composer.era.map((era, idx) => (
+                    <Badge key={era + idx} variant="badge">{era}</Badge>
+                  ))
+                : <Badge variant="badge">{composer.era}</Badge>}
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  </TooltipTrigger>
+  <TooltipContent side="bottom" align="start" alignOffset={-50} className="text-xs">
+    More about {getLastName(composer.name)}
+  </TooltipContent>
+</Tooltip>
+            </div>
+
+          </div>
         ) : null}
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={handleResetChat}
-          title="Reset conversation"
-          className="absolute right-3 top-1 z-10 rounded-full
-          hover:bg-muted dark:hover:bg-muted-foreground/10 text-foreground/70 hover:text-foreground"
-          >
-          <RefreshCcw/>
-        </Button>
+        <Tooltip delayDuration={200}>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleResetChat}
+              className="absolute right-3 top-1 z-10 rounded-full
+              hover:bg-muted dark:hover:bg-muted-foreground/10 text-foreground/70 hover:text-foreground"
+            >
+              <RefreshCcw/>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="bottom" className="text-xs">
+            Reset chat
+          </TooltipContent>
+        </Tooltip>
       </div>
 
       <div className="flex-1 overflow-y-auto p-4 relative">
