@@ -300,17 +300,16 @@ export function ChatInterface({
         <div className="flex-shrink-0">
           <ComposerImageViewer
             composer={composer}
-            size="sm"
-            // Remove this onClick to avoid double-triggering
+            size="md"
           />
         </div>
         <div className="flex flex-col justify-center">
-          <h2 className="font-serif font-bold text-lg text-left group-hover:text-primary transition-colors">{composer.name}</h2>
+          <h2 className="font-serif font-bold text-base md:text-lg text-left group-hover:text-primary transition-colors">{composer.name}</h2>
           <div className="flex items-center gap-2 mt-1">
-            <span className="text-sm md:text-base text-muted-foreground group-hover:text-primary transition-colors">
+            <span className="text-xs md:text-base text-muted-foreground group-hover:text-primary transition-colors">
               {composer.nationality}, {composer.birthYear}-{composer.deathYear || 'present'}
             </span>
-            <div className="flex flex-wrap gap-1">
+            <div className="flex flex-wrap gap-1 truncate">
               {Array.isArray(composer.era)
                 ? composer.era.map((era, idx) => (
                     <Badge key={era + idx} variant="badge">{era}</Badge>
