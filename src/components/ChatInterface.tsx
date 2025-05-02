@@ -284,13 +284,13 @@ export function ChatInterface({
           <div className="flex items-center justify-between px-5 py-4 -mt-1 w-full bg-secondary">
             <div
               onClick={() => setIsSplitViewOpen(true)}
-              className="flex items-center space-x-6 cursor-pointer group hover:opacity-90 hover:scale-[0.98] transition-all duration-300"
+              className="flex items-center space-x-6 cursor-pointer group hover:opacity-90 transition-all duration-300"
             >
 
 <Tooltip delayDuration={200}>
   <TooltipTrigger asChild>
     <div
-      className="flex items-center space-x-6 cursor-pointer group hover:opacity-90 hover:scale-[0.98] transition-all duration-300"
+      className="flex items-center space-x-6 cursor-pointer group hover:opacity-90 transition-all duration-300"
       onClick={(e) => {
         e.stopPropagation();
         setIsSplitViewOpen(true);
@@ -301,6 +301,7 @@ export function ChatInterface({
           <ComposerImageViewer
             composer={composer}
             size="md"
+            className="!scale-100"
           />
         </div>
         <div className="flex flex-col justify-center">
