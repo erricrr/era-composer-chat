@@ -122,7 +122,7 @@ export function ComposerList({
                       className="w-16 h-16 md:w-24 md:h-24 lg:w-28 lg:h-28 flex-shrink-0 cursor-pointer"
                     />
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-xl lg:text-2xl font-bold font-serif break-words">
+                      <h3 className="text-xl md:text-2xl font-bold font-serif break-words">
                         {selectedComposer.name}
                       </h3>
                       <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-2 mt-1">
@@ -131,7 +131,7 @@ export function ComposerList({
                         </span>
                         <div className="flex flex-wrap gap-1 md:ml-2">
                           {selectedComposer.era.map((era, idx) => (
-                            <Badge key={era + idx} variant="badge" className="text-xs">{era}</Badge>
+                            <Badge key={era + idx} variant="badge" className="text-xs truncate">{era}</Badge>
                           ))}
                         </div>
                       </div>
