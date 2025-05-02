@@ -8,6 +8,7 @@ import { useConversations } from '@/hooks/useConversations';
 import FooterDrawer from '@/components/ui/footerDrawer';
 import { ComposerSearch } from '@/components/ComposerSearch';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { useIsTouch } from '@/hooks/useIsTouch';
 
 const Index = () => {
   const [selectedComposer, setSelectedComposer] = useState<Composer | null>(() => {
@@ -34,6 +35,8 @@ const Index = () => {
 
   const { startConversation, getConversationsForComposer } = useConversations();
   const [isDarkMode, setIsDarkMode] = useState(false);
+
+  const isTouch = useIsTouch();
 
   const handleThemeChange = (newMode: boolean) => {
     setIsDarkMode(newMode);
@@ -153,27 +156,39 @@ const Index = () => {
           </div>
 
           {/* Icons */}
-          <Tooltip delayDuration={200}>
-            <TooltipTrigger asChild>
-              <div onClick={(e) => e.stopPropagation()}>
-                <FooterDrawer />
-              </div>
-            </TooltipTrigger>
-            <TooltipContent side="bottom" className="text-xs">
-              About
-            </TooltipContent>
-          </Tooltip>
+          {!isTouch ? (
+            <Tooltip delayDuration={200}>
+              <TooltipTrigger asChild>
+                <div onClick={(e) => e.stopPropagation()}>
+                  <FooterDrawer />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="text-xs">
+                About
+              </TooltipContent>
+            </Tooltip>
+          ) : (
+            <div onClick={(e) => e.stopPropagation()}>
+              <FooterDrawer />
+            </div>
+          )}
 
-          <Tooltip delayDuration={200}>
-            <TooltipTrigger asChild>
-              <div onClick={(e) => e.stopPropagation()}>
-                <ThemeToggle onThemeChange={handleThemeChange} />
-              </div>
-            </TooltipTrigger>
-            <TooltipContent side="bottom" className="text-xs">
-              {isDarkMode ? 'Toggle light mode' : 'Toggle dark mode'}
-            </TooltipContent>
-          </Tooltip>
+          {!isTouch ? (
+            <Tooltip delayDuration={200}>
+              <TooltipTrigger asChild>
+                <div onClick={(e) => e.stopPropagation()}>
+                  <ThemeToggle onThemeChange={handleThemeChange} />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="text-xs">
+                {isDarkMode ? 'Toggle light mode' : 'Toggle dark mode'}
+              </TooltipContent>
+            </Tooltip>
+          ) : (
+            <div onClick={(e) => e.stopPropagation()}>
+              <ThemeToggle onThemeChange={handleThemeChange} />
+            </div>
+          )}
         </div>
         </div>
         </div>

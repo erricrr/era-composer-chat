@@ -12,6 +12,7 @@ import { X, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { useIsTouch } from '@/hooks/useIsTouch';
 
 interface ComposerSearchProps {
   composers: Composer[];
@@ -24,6 +25,7 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredComposers, setFilteredComposers] = useState<Composer[]>([]);
   const [isMobileSearchActive, setIsMobileSearchActive] = useState(false);
+  const isTouch = useIsTouch();
 
   // UI states
   const [isOpen, setIsOpen] = useState(false);
@@ -213,22 +215,34 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
   return (
     <div className="relative flex items-center md:w-[230px]" ref={containerRef}>
       {/* Mobile-Only Search Icon Button */}
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            className={`w-7 h-7 flex-shrink-0 md:hidden ${isMobileSearchActive ? 'hidden' : 'flex'} rounded-full hover:bg-muted`}
-            onClick={activateMobileSearch}
-            aria-label="Open search bar"
-          >
-            <Search className="h-5 w-5 text-muted-foreground" />
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent side="bottom" className="text-xs">
-          Search composers
-        </TooltipContent>
-      </Tooltip>
+      {!isTouch ? (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className={`w-7 h-7 flex-shrink-0 md:hidden ${isMobileSearchActive ? 'hidden' : 'flex'} rounded-full hover:bg-muted`}
+              onClick={activateMobileSearch}
+              aria-label="Open search bar"
+            >
+              <Search className="h-5 w-5 text-muted-foreground" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="bottom" className="text-xs">
+            Search composers
+          </TooltipContent>
+        </Tooltip>
+      ) : (
+        <Button
+          variant="ghost"
+          size="icon"
+          className={`w-7 h-7 flex-shrink-0 md:hidden ${isMobileSearchActive ? 'hidden' : 'flex'} rounded-full hover:bg-muted`}
+          onClick={activateMobileSearch}
+          aria-label="Open search bar"
+        >
+          <Search className="h-5 w-5 text-muted-foreground" />
+        </Button>
+      )}
 
       {/* Search Input Container */}
       <div

@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { ComposerImageViewer } from './ComposerImageViewer';
 import { ComposerSplitView } from './ComposerSplitView';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { useIsTouch } from '@/hooks/useIsTouch';
 
 interface ChatInterfaceProps {
   composer: Composer;
@@ -49,6 +50,8 @@ export function ChatInterface({
     getConversationsForComposer,
     setActiveConversationId
   } = useConversations();
+
+  const isTouch = useIsTouch();
 
   // Format era display text
   const getEraDisplayText = (era: string): string => {
@@ -327,22 +330,34 @@ export function ChatInterface({
 
           </div>
         ) : null}
-        <Tooltip delayDuration={200}>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleResetChat}
-              className="absolute right-3 top-1 z-10 rounded-full
-              hover:bg-muted dark:hover:bg-muted-foreground/10 text-foreground/70 hover:text-foreground"
-            >
-              <RefreshCcw/>
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent side="bottom" className="text-xs">
-            Reset chat
-          </TooltipContent>
-        </Tooltip>
+        {!isTouch ? (
+          <Tooltip delayDuration={200}>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleResetChat}
+                className="absolute right-3 top-1 z-10 rounded-full
+                hover:bg-muted dark:hover:bg-muted-foreground/10 text-foreground/70 hover:text-foreground"
+              >
+                <RefreshCcw/>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom" className="text-xs">
+              Reset chat
+            </TooltipContent>
+          </Tooltip>
+        ) : (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleResetChat}
+            className="absolute right-3 top-1 z-10 rounded-full
+            hover:bg-muted dark:hover:bg-muted-foreground/10 text-foreground/70 hover:text-foreground"
+          >
+            <RefreshCcw/>
+          </Button>
+        )}
       </div>
 
       <div className="flex-1 overflow-y-auto p-4 relative">
