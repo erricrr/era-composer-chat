@@ -115,7 +115,7 @@ export function ComposerList({
             <div className="flex-1 min-h-0 flex flex-col border-b">
               <ScrollArea className="flex-1 min-h-0">
                 <div className="px-3 md:px-4">
-                  <div className="flex items-start md:items-center space-x-3 md:space-x-6 mb-3 md:mb-4">
+                  <div className="flex items-start md:items-center space-x-3 pt-1 md:space-x-6 mb-3 md:mb-4">
                     <ComposerImageViewer
                       composer={selectedComposer}
                       allowModalOnDesktop={true}
