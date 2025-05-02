@@ -15,7 +15,7 @@ export function ComposerCard({ composer, onClick, isSelected, compact = false }:
         p-4 cursor-pointer select-none transition-transform duration-500 ease-in-out relative group
         ${isSelected
           ? 'bg-background'
-          : 'bg-primary/5 hover:bg-background'
+          : 'bg-secondary hover:bg-secondary/70'
         }
       `}
 
@@ -40,46 +40,53 @@ export function ComposerCard({ composer, onClick, isSelected, compact = false }:
 />
 
 
-      <div className="flex items-center gap-2 pl-1">
-        {/* Composer Image */}
-        <div
-          className={`rounded-full overflow-hidden bg-muted flex-shrink-0 ${
-            compact ? 'w-10 h-10' : 'w-12 h-12'
-          }`}
-        >
-          {composer.imageUrl && (
-            <img
-              src={composer.imageUrl}
-              alt={composer.name}
-              className={`
-                w-full h-full object-cover
-                transition-transform duration-200
-                ${isSelected ? 'scale-105' : 'group-hover:scale-105'}
-              `}
-            />
-          )}
-        </div>
+<div className="flex items-center gap-4 pl-1">
+  {/* Composer Image */}
+  <div
+    className={`rounded-full overflow-hidden bg-muted flex-shrink-0 ${
+      compact ? 'w-10 h-10' : 'w-12 h-12'
+    }`}
+  >
+    {composer.imageUrl && (
+      <img
+        src={composer.imageUrl}
+        alt={composer.name}
+        className={`
+          w-full h-full object-cover
+          transition-transform duration-200
+          ${isSelected ? 'scale-105' : 'group-hover:scale-105'}
+        `}
+      />
+    )}
+  </div>
 
-        {/* Composer Info */}
-        <div className="flex-1 min-w-0">
-          <h3 className={`
-            font-medium leading-tight truncate
-            transition-colors duration-200
-            ${compact ? 'text-sm' : 'text-base'}
-            ${isSelected ? 'text-primary' : 'group-hover:text-primary/90'}
-          `}>
-            {composer.name}
-          </h3>
-          <p className={`
-            text-muted-foreground truncate
-            transition-opacity duration-200
-            ${compact ? 'text-xs' : 'text-sm'}
-            ${isSelected ? 'opacity-90' : 'group-hover:opacity-80'}
-          `}>
-            {composer.birthYear}-{composer.deathYear || 'present'}
-          </p>
-        </div>
-      </div>
+  {/* Composer Info */}
+  <div className="flex-1 min-w-0">
+    <div className={`
+      transition-transform duration-200
+      ${isSelected ? 'scale-105' : 'group-hover:scale-105'}
+    `}>
+      <h3 className={`
+        font-medium leading-tight truncate
+        transition-colors duration-200
+        ${compact ? 'text-sm' : 'text-base'}
+        ${isSelected ? 'text-primary' : 'group-hover:text-primary'}
+      `}>
+        {composer.name}
+      </h3>
+      <p className={`
+        text-muted-foreground truncate
+        transition-opacity duration-200
+        ${compact ? 'text-xs' : 'text-sm'}
+        ${isSelected ? 'opacity-90' : 'group-hover:opacity-90'}
+      `}>
+        {composer.birthYear}-{composer.deathYear || 'present'}
+      </p>
     </div>
+  </div>
+</div>
+
+      </div>
+
   );
 }

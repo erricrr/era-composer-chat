@@ -27,25 +27,25 @@ export const eras = [
     id: "baroque",
     name: Era.Baroque,
     period: "1600-1750",
-    description: "A period of grandeur and drama in music, known for its intricate polyphony (counterpoint), ornate melodic decorations, use of the basso continuo for harmonic foundation, and the flourishing of opera, concerto, and fugue."
+    description: "Spanning the Early, Middle, and Late Baroque, this era brings grandeur and drama through intricate counterpoint, ornate melodies, and basso continuo. It marks the emergence of opera, the development of the concerto and fugue, and a growing focus on expressive structure."
   },
   {
     id: "classical",
     name: Era.Classical,
     period: "1750-1820",
-    description: "This era emphasized clarity, balance, elegance, and formal structure, particularly sonata form. It saw the refinement of the symphony, string quartet, and piano sonata, featuring well-defined melodies and clear harmonic progressions."
+    description: "From the Galant style to the late Classical period, this era values clarity, balance, and formal structure. It refines the symphony and sonata, emphasizing elegant melodies, clear harmonies, and forms like sonata-allegro and rondo, marking a shift from Baroque complexity."
   },
   {
     id: "romantic",
     name: Era.Romantic,
     period: "1820-1900",
-    description: "Characterized by heightened emotional expression, individualism, and often drawing inspiration from literature, nature, and national identity. Music features lyrical melodies, rich and often chromatic harmonies, expanded orchestras, and greater dynamic contrasts."
+    description: "Divided into Early, High, and Late Romantic periods, this era emphasized emotion, individuality, and imagination. Composers explored lyrical melodies, rich chromaticism, national identity, and larger orchestras, with program music and expressive nuance taking center stage."
   },
   {
     id: "modern",
     name: Era.Modern,
     period: "1900-Present",
-    description: "A time of immense experimentation and stylistic diversity, challenging traditional tonality and form. Encompasses Impressionism's focus on atmosphere, Neoclassicism's return to earlier forms, the structured atonality of serialism, the repetitive patterns of Minimalism, and the advent of electronic music."
+    description: "From Impressionism and Neoclassicism to Serialism, Minimalism, and beyond, this era embraces innovation and diversity. Composers challenge traditional tonality and form, explore new textures, and expand sonic palettes with electronics, chance operations, and global influences."
   }
 ];
 
