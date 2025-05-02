@@ -275,9 +275,9 @@ export function ChatInterface({
     <div
       className={`relative flex flex-col h-full bg-background overflow-hidden transition-all duration-500 ease-in-out`}
     >
-      <div className="relative flex items-center justify-end px-2 py-1 bg-secondary">
+      <div className="relative flex items-center justify-end px-2 py-1">
         {(!isSplitViewOpen) ? (
-          <div className="flex items-center justify-between px-5 py-3 w-full">
+          <div className="flex items-center justify-between px-5 py-4 -mt-1 w-full bg-secondary">
             <div
               onClick={() => setIsSplitViewOpen(true)}
               className="flex items-center space-x-6 cursor-pointer group hover:opacity-90 hover:scale-[0.98] transition-all duration-300"
@@ -312,9 +312,10 @@ export function ChatInterface({
           size="icon"
           onClick={handleResetChat}
           title="Reset conversation"
-          className="absolute top-1 right-1 z-10 rounded-full hover:bg-muted hover:scale-90 transition-all duration-300 ease-in-out"
+          className="absolute right-3 top-1 z-10 rounded-full
+          hover:bg-muted dark:hover:bg-muted-foreground/10 text-foreground/70 hover:text-foreground"
           >
-          <RefreshCcw className="h-4 w-4" />
+          <RefreshCcw/>
         </Button>
       </div>
 
