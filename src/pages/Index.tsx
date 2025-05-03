@@ -100,17 +100,16 @@ const Index = () => {
   };
 
   const toggleMenu = () => {
-    if (!isMenuOpen) {
-      setIsChatting(false);
+    // Batch state updates
+    const newIsMenuOpen = !isMenuOpen;
+    setIsMenuOpen(newIsMenuOpen);
+    setIsChatting(false);
+
+    // Batch localStorage updates in a single requestAnimationFrame
+    requestAnimationFrame(() => {
+      localStorage.setItem('isMenuOpen', String(newIsMenuOpen));
       localStorage.setItem('isChatting', 'false');
-      setIsMenuOpen(true);
-      localStorage.setItem('isMenuOpen', 'true');
-    } else {
-      setIsChatting(false);
-      localStorage.setItem('isChatting', 'false');
-      setIsMenuOpen(false);
-      localStorage.setItem('isMenuOpen', 'false');
-    }
+    });
   };
 
   return (
@@ -129,17 +128,24 @@ const Index = () => {
             <div className="flex-shrink-0 p-1 rounded-full transition-colors duration-200 group-hover:bg-muted">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className={`h-5 w-5 transition-all duration-500 ${isMenuOpen ? 'rotate-180' : 'rotate-0'} text-foreground group-hover:text-primary`}
+                className="h-5 w-5 transform transition-transform duration-500 ease-out will-change-transform"
+                style={{
+                  transform: isMenuOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                  width: '1.25rem',
+                  height: '1.25rem',
+                  backfaceVisibility: 'hidden',
+                  WebkitBackfaceVisibility: 'hidden'
+                }}
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
-                style={{ width: '1.25rem', height: '1.25rem' }}
               >
-                {isMenuOpen ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
-                ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                )}
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d={isMenuOpen ? "M5 15l7-7 7 7" : "M19 9l-7 7-7-7"}
+                />
               </svg>
             </div>
           </div>
@@ -199,12 +205,15 @@ const Index = () => {
           className={`
             fixed inset-x-0 z-40
             bg-background backdrop-blur-sm border-b border-border shadow-lg
-            transition-transform duration-500 ease-out
+            transition-transform duration-500 ease-out will-change-transform
             ${isMenuOpen ? 'translate-y-0' : '-translate-y-full pointer-events-none'}
             overflow-y-auto
           `}
           style={{
-            maxHeight: `calc(100vh - 1.5rem)`
+            maxHeight: `calc(100vh - 1.5rem)`,
+            transform: isMenuOpen ? 'translate3d(0, 0, 0)' : 'translate3d(0, -100%, 0)',
+            backfaceVisibility: 'hidden',
+            WebkitBackfaceVisibility: 'hidden'
           }}
         >
           <div className="pb-14">
