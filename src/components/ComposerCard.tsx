@@ -43,7 +43,9 @@ export function ComposerCard({ composer, onClick, isSelected, compact = false }:
 <div className="flex items-center gap-4 pl-1">
   {/* Composer Image */}
   <div
-    className={`rounded-full overflow-hidden bg-muted flex-shrink-0 ${
+    className={`rounded-full overflow-hidden ${
+      isSelected ? 'border-2 border-primary' : 'border-2 border-primary/15'
+    } flex-shrink-0 ${
       compact ? 'w-10 h-10' : 'w-12 h-12'
     }`}
   >
