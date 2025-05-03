@@ -229,12 +229,16 @@ export function ChatInterface({
       }, 1000);
     }
 
-    // Clear the input and reset textarea height
+    // Clear the input and reset textarea height - IMPROVED RESET LOGIC
     setInputMessage('');
-    if (textareaRef.current) {
-      textareaRef.current.style.height = '42px'; // Reset to min-height value
-      textareaRef.current.rows = 1; // Ensure rows is reset
-    }
+
+    // Use a small timeout to ensure React state is updated before manipulating the DOM
+    setTimeout(() => {
+      if (textareaRef.current) {
+        textareaRef.current.style.height = '42px'; // Reset to min-height value
+        textareaRef.current.rows = 1; // Ensure rows is reset
+      }
+    }, 0);
   };
 
   const handleSendMessage = (e: React.FormEvent) => {
@@ -257,6 +261,15 @@ export function ChatInterface({
       // Start a new conversation
       const newConversationId = startConversation(composer);
       currentConversationIdRef.current = newConversationId;
+
+      // Reset input field and textarea height when resetting chat
+      setInputMessage('');
+      setTimeout(() => {
+        if (textareaRef.current) {
+          textareaRef.current.style.height = '42px';
+          textareaRef.current.rows = 1;
+        }
+      }, 0);
     }
   };
 
@@ -324,105 +337,103 @@ export function ChatInterface({
   </TooltipTrigger>
   <TooltipContent side="bottom" align="start" alignOffset={-50} className="text-xs">
     More about {getLastName(composer.name)}
-  </TooltipContent>
+</TooltipContent>
 </Tooltip>
-            </div>
+</div>
 
+</div>
+) : null}
+
+      </div>
+      <div className="flex-1 overflow-y-auto p-4 relative">
+  <div className="flex flex-col min-h-[calc(100%-2rem)]">
+    {currentMessages.length === 0 ? (
+      <div className="flex-1 flex items-center justify-center text-muted-foreground text-sm">
+        <p>Start a conversation with {getLastName(composer.name)}. Ask them about their music.</p>
+      </div>
+    ) : (
+      <div className="space-y-4 w-full pr-7">
+        {currentMessages.map((message: Message) => (
+          <div key={message.id} className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+            <div className={message.sender === 'user'
+              ? 'max-w-[80%] rounded-2xl px-4 py-2 bg-primary text-background ml-auto shadow-sm'
+              : 'max-w-[80%] rounded-2xl px-4 py-2 text-foreground bg-background'
+            }>
+              {message.text}
+            </div>
           </div>
-        ) : null}
+        ))}
+      </div>
+    )}
+    <div ref={messagesEndRef} />
+  </div>
+</div>
+
+<form onSubmit={handleSendMessage} className="sticky bottom-0 border-t bg-background/80 backdrop-blur-sm">
+  <div className="pt-4 relative mx-10">
+    <div className="relative flex gap-2">
+      <div className="flex-1 relative">
+      <textarea
+  ref={textareaRef}
+  value={inputMessage}
+  onChange={(e) => {
+    setInputMessage(e.target.value);
+    onUserTyping(true);
+  }}
+  onKeyDown={handleKeyPress}
+  placeholder={`Ask ${getLastName(composer.name)} a question...`}
+  className="mb-10 w-full rounded-3xl border border-input bg-background pl-5 pr-5 py-2.5 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary resize-none overflow-hidden min-h-[42px] max-h-[200px] overflow-y-auto"
+  rows={1}
+  onInput={(e) => {
+    const target = e.target as HTMLTextAreaElement;
+    target.style.height = 'auto';
+    target.style.height = `${Math.min(target.scrollHeight, 200)}px`;
+  }}
+  disabled={isComposerListOpen || isComposerMenuOpen}
+/>
+        {/* Send Button (bottom-right inside textarea) */}
+        <button
+          type="submit"
+          disabled={!inputMessage.trim() || isComposerListOpen || isComposerMenuOpen}
+          className="absolute bottom-2 right-2 h-8 w-8 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-105 active:scale-95 shadow-sm"
+        >
+          <ArrowUp className="w-5 h-5" strokeWidth={3} />
+        </button>
+
+        {/* Reset Button (bottom-left inside input container) */}
         {!isTouch ? (
-          <Tooltip delayDuration={200}>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={handleResetChat}
-                className="absolute right-3 top-1 z-10 rounded-full
-                hover:bg-muted dark:hover:bg-muted-foreground/10 text-foreground/70 hover:text-foreground"
-              >
-                <RefreshCcw/>
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="bottom" className="text-xs">
-              Reset chat
-            </TooltipContent>
-          </Tooltip>
+        <Tooltip delayDuration={200}>
+          <TooltipTrigger asChild>
+            <button
+              type="button"
+              onClick={handleResetChat}
+              className="absolute bottom-3 left-2 h-8 w-8 rounded-full flex items-center justify-center text-primary transition-all hover:scale-105 active:scale-95"
+              aria-label="Reset chat"
+            >
+              <RefreshCcw className="w-5 h-5" strokeWidth={2.5} />
+            </button>
+          </TooltipTrigger>
+          <TooltipContent side="right" align="center" className="text-xs">
+            Reset chat
+          </TooltipContent>
+        </Tooltip>
         ) : (
-          <Button
-            variant="ghost"
-            size="icon"
+          <button
+            type="button"
             onClick={handleResetChat}
-            className="absolute right-3 top-1 z-10 rounded-full
-            hover:bg-muted dark:hover:bg-muted-foreground/10 text-foreground/70 hover:text-foreground"
+            className="absolute bottom-1 left-2 h-8 w-8 rounded-full flex items-center justify-center text-primary-foreground transition-all hover:scale-105 active:scale-95 shadow-sm"
           >
-            <RefreshCcw/>
-          </Button>
+            <RefreshCcw className="w-5 h-5" strokeWidth={3} />
+          </button>
         )}
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 relative">
-        <div className="flex flex-col min-h-[calc(100%-2rem)]">
-          {currentMessages.length === 0 ? (
-            <div className="flex-1 flex items-center justify-center text-muted-foreground text-sm">
-              <p>Start a conversation with {getLastName(composer.name)}. Ask them about their music.</p>
-            </div>
-          ) : (
-            <div className="space-y-4 w-full pr-7">
-              {currentMessages.map((message: Message) => (
-                <div key={message.id} className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-                  <div className={message.sender === 'user'
-                    ? 'max-w-[80%] rounded-2xl px-4 py-2 bg-primary text-background ml-auto shadow-sm'
-                    : 'max-w-[80%] rounded-2xl px-4 py-2 text-foreground bg-background'
-                  }>
-                    {message.text}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-          <div ref={messagesEndRef} />
-        </div>
-      </div>
-
-      <form onSubmit={handleSendMessage} className="sticky bottom-0 border-t bg-background/80 backdrop-blur-sm">
-  <div className="p-4">
-    <div className="relative flex gap-2">
-      <div className="flex-1">
-        <textarea
-          ref={textareaRef}
-          value={inputMessage}
-          onChange={(e) => {
-            setInputMessage(e.target.value);
-            onUserTyping(true);
-          }}
-          onKeyDown={handleKeyPress}
-          placeholder={`Ask ${getLastName(composer.name)} a question...`}
-          className="w-full rounded-xl border border-input bg-background p-3 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary resize-none overflow-hidden min-h-[42px] max-h-[200px] overflow-y-auto"
-          rows={1}
-          onInput={e => {
-            const target = e.target as HTMLTextAreaElement;
-            target.style.height = 'auto';
-            target.style.height = `${Math.min(target.scrollHeight, 200)}px`;
-          }}
-          disabled={isComposerListOpen || isComposerMenuOpen}
-        />
-      </div>
-      <div className="self-end pb-3">
-      <button
-      type="submit"
-      disabled={!inputMessage.trim() || isComposerListOpen || isComposerMenuOpen}
-      className="h-9 w-9 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground
-        flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed
-        transition-all hover:scale-105 active:scale-95 shadow-sm"
-    >
-      <ArrowUp className="w-5 h-5" strokeWidth={3} />
-    </button>
-      </div>
     </div>
-    <p className="text-xs text-muted-foreground text-center mt-2">
-      AI-generated conversation from verified sources. Does not reflect {getLastName(composer.name)}&apos;s personal views.
-    </p>
   </div>
+  <p className="text-xs text-muted-foreground text-center mx-11">
+    AI-generated conversation from verified sources. Does not reflect {getLastName(composer.name)}&apos;s personal views.
+  </p>
+
 </form>
     </div>
   );
