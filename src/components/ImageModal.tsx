@@ -193,39 +193,46 @@ export function ImageModal({
   caption,
   sourceUrl,
 }: ImageModalProps) {
-  // State to manage the mounting/unmounting animation without abruptly removing the component
   const [isMounted, setIsMounted] = useState(false);
   const copyrightDetails = useMemo(() => getCopyrightAttribution(composerId), [composerId]);
 
   useEffect(() => {
+    // Check if modal was open before refresh
+    const wasModalOpen = sessionStorage.getItem('modalOpen');
+    if (wasModalOpen === 'true') {
+      // Clear the storage and call onClose to ensure modal starts closed
+      sessionStorage.removeItem('modalOpen');
+      onClose();
+      return;
+    }
+
     let timeoutId: ReturnType<typeof setTimeout>;
     if (isOpen) {
       setIsMounted(true);
-      document.body.style.overflow = 'hidden'; // Prevent background scroll
+      document.body.style.overflow = 'hidden';
+      // Store modal state
+      sessionStorage.setItem('modalOpen', 'true');
     } else {
-      // Start fade-out animation, then unmount after duration
       timeoutId = setTimeout(() => {
         setIsMounted(false);
-        document.body.style.overflow = 'unset'; // Restore background scroll
+        document.body.style.overflow = 'unset';
+        // Clear modal state
+        sessionStorage.removeItem('modalOpen');
       }, ANIMATION_DURATION_MS);
     }
 
-    // Cleanup function
     return () => {
       clearTimeout(timeoutId);
-      // Ensure body overflow is reset if component unmounts unexpectedly while open
       if (document.body.style.overflow === 'hidden') {
-         document.body.style.overflow = 'unset';
+        document.body.style.overflow = 'unset';
       }
     };
-  }, [isOpen]);
-
+  }, [isOpen, onClose]);
 
   // Render nothing if the modal is closed and the unmount animation is finished
   if (!isMounted && !isOpen) { // Check both to handle the delay
       return null;
   }
-
 
   // Use createPortal to render the modal into document.body
   // This avoids CSS stacking context issues
