@@ -44,7 +44,7 @@ function ContainedImageModal({
   return (
     // Full-screen backdrop - positioned to avoid header collision
     <div
-      className="absolute inset-x-0 top-[73px] bottom-0 z-5 flex items-start justify-center overflow-auto"
+      className="absolute inset-x-0 top-[55px] bottom-0 z-5 flex items-start justify-center overflow-auto"
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
       style={{
         backgroundColor: 'hsl(var(--background) / 0.8)',
@@ -143,31 +143,27 @@ export function ComposerSplitView({ composer, isOpen, onClose, children }: Compo
 
       {/* Fixed Header - Now outside ScrollArea */}
       <div
-        onClick={onClose}
-        className="relative flex justify-between items-center border-b px-4 py-2 bg-secondary backdrop-blur-sm shadow-sm z-10 flex-shrink-0 cursor-pointer group hover:bg-secondary/80 transition-colors"
-      >
-        <h2 className="font-bold font-serif text-lg md:text-xl">
-          {composer.name}
-        </h2>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={(e) => {
-            e.stopPropagation(); // Prevent double firing of close event
-            onClose();
-          }}
-          className="rounded-full
-          hover:bg-primary/20
-          transition-all
-          duration-200
-          group-hover:bg-primary/20
-          w-8 h-8
-          hover:w-8 hover:h-8
-          text-foreground/70 hover:text-foreground/90"
-          >
-          <X className="h-4 w-4" />
-        </Button>
-      </div>
+  onClick={onClose}
+  className="relative flex items-center justify-center border-b py-7 bg-secondary backdrop-blur-sm shadow-sm z-10 flex-shrink-0 cursor-pointer group hover:bg-secondary/80 transition-colors"
+>
+  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+    <h2 className="font-bold font-serif text-lg md:text-xl pointer-events-none">
+      {composer.name}
+    </h2>
+  </div>
+  <Button
+    variant="ghost"
+    size="icon"
+    onClick={(e) => {
+      e.stopPropagation();
+      onClose();
+    }}
+    className="absolute right-4 rounded-full hover:bg-primary/20 transition-all duration-200 group-hover:bg-primary/20 w-8 h-8 text-foreground/70 hover:text-foreground/90"
+  >
+    <X className="h-4 w-4" />
+  </Button>
+</div>
+
 
       {/* Scrollable Content Area */}
       <div className="flex-1 overflow-hidden">
