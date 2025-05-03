@@ -407,7 +407,7 @@ export function ChatInterface({
             <button
               type="button"
               onClick={handleResetChat}
-              className="absolute bottom-3 left-2 h-8 w-8 rounded-full flex items-center justify-center text-primary transition-all hover:scale-105 active:scale-95"
+              className="absolute bottom-3 left-2 h-8 w-8 rounded-full flex items-center justify-center text-primary transition-all hover:scale-105 active:scale-95 shadow-sm"
               aria-label="Reset chat"
             >
               <RefreshCcw className="w-5 h-5" strokeWidth={2.5} />
