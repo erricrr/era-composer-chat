@@ -38,7 +38,7 @@ export function ComposerImageViewer({
     sm: 'w-20 h-20',
     lg: 'w-24 h-24',
     md: 'w-20 h-20 md:w-24 md:h-24',
-    xl: 'w-24 h-24 md:w-28 md:h-28 lg:w-32 lg:h-32'  // Progressive scaling
+    xl: 'w-20 h-20 md:w-28 md:h-28 lg:w-32 lg:h-32'  // Progressive scaling
   };
 
   const handleClick = () => {
