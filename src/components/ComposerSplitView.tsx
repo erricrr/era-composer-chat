@@ -44,7 +44,7 @@ function ContainedImageModal({
   return (
     // Full-screen backdrop - positioned to avoid header collision
     <div
-      className="absolute inset-x-0 top-[55px] bottom-0 z-5 flex items-start justify-center overflow-auto"
+      className="absolute inset-x-0 top-[55px] bottom-0 z-10 flex items-start justify-center overflow-auto"
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
       style={{
         backgroundColor: 'hsl(var(--background) / 0.8)',
@@ -66,10 +66,7 @@ function ContainedImageModal({
     variant="ghost"
     size="icon"
     onClick={onClose}
-    className="absolute right-2 top-2 z-20 h-8 w-8 rounded-full
-    duration-200 opacity-0 hover:opacity-100
-    hover:bg-muted/20
-    text-foreground/70 hover:text-foreground"
+    className="absolute right-2 top-2 z-20 h-8 w-8"
   >
     <X className="h-4 w-4" />
   </Button>
