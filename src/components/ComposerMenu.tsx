@@ -53,7 +53,7 @@ export function ComposerMenu({
   }, [onSelectEra, lastSelectedComposerPerEra, onSelectComposer]);
 
   return (
-    <div className="container mx-auto px-4 mt-6 flex flex-col h-full overflow-y-auto">
+    <div className="container mx-auto px-4 flex flex-col h-full overflow-y-auto">
       <div className="relative">
       <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-3xl font-bold text-center font-serif mt-0 pt-6 pb-4 mx-4 sm:mx-[30px]">
       {selectedEra} Era Composers

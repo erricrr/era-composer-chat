@@ -279,9 +279,9 @@ export function ChatInterface({
     <div
       className={`relative flex flex-col h-full bg-background overflow-hidden transition-all duration-500 ease-in-out`}
     >
-      <div className="relative flex items-center justify-end px-2 py-1">
+      <div className="relative flex items-center justify-end px-2">
         {(!isSplitViewOpen) ? (
-          <div className="flex items-center justify-between px-5 py-4 -mt-1 w-full bg-secondary">
+          <div className="flex items-center justify-between px-5 py-4 -mt-1 w-full bg-secondary border-b shadow-md z-10">
             <div
               onClick={() => setIsSplitViewOpen(true)}
               className="flex items-center space-x-6 cursor-pointer group hover:opacity-90 transition-all duration-300"

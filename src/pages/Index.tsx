@@ -216,7 +216,7 @@ const Index = () => {
             WebkitBackfaceVisibility: 'hidden'
           }}
         >
-          <div className="pb-14">
+          <div className="pb-0 mt-5">
             <ComposerMenu
               onSelectComposer={(composer) => handleSelectComposer(composer, { source: 'list' })}
               onStartChat={handleStartChat}

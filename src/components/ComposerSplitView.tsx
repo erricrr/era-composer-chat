@@ -141,7 +141,7 @@ export function ComposerSplitView({ composer, isOpen, onClose, children }: Compo
       {/* Fixed Header - Now outside ScrollArea */}
       <div
         onClick={onClose}
-        className="relative flex items-center justify-center border-b py-7 bg-secondary backdrop-blur-sm shadow-sm z-10 flex-shrink-0 cursor-pointer group hover:bg-secondary/80 transition-colors"
+        className="relative flex items-center justify-center border-b py-7 bg-secondary backdrop-blur-sm shadow-md z-10 flex-shrink-0 cursor-pointer group hover:bg-secondary/80 transition-colors"
       >
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <h2 className="font-bold font-serif text-lg md:text-xl pointer-events-none">
@@ -164,32 +164,36 @@ export function ComposerSplitView({ composer, isOpen, onClose, children }: Compo
 
       {/* Scrollable Content Area */}
       <div className="flex-1 overflow-hidden">
-        <ScrollArea className="h-full">
-          <div className="p-4 md:p-6 space-y-4 md:space-y-6">
-            <div className="flex flex-col items-center text-center space-y-3">
-              <div
-                onClick={() => setImageModalOpen(true)}
-                className="cursor-pointer w-40 h-40 md:w-56 md:h-56 lg:w-64 lg:h-64 xl:w-72 xl:h-72 rounded-full overflow-hidden border-2 border-primary flex-shrink-0 transition-transform duration-300 ease-in-out hover:scale-[1.03]"
-              >
-                <img
-                  src={composer.imageUrl}
-                  alt={composer.name}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="flex items-center gap-2 mt-2">
-                <span className="text-sm md:text-base text-muted-foreground">
-                  {composer.nationality}, {composer.birthYear}-{composer.deathYear || 'present'}
-                </span>
-                <div className="flex flex-wrap gap-1">
-                  {Array.isArray(composer.era)
-                    ? composer.era.map((era, idx) => (
-                        <Badge key={era + idx} variant="badge">{era}</Badge>
-                      ))
-                    : <Badge variant="badge">{composer.era}</Badge>}
-                </div>
-              </div>
-            </div>
+  <ScrollArea className="h-full">
+    <div className="p-4 md:p-6 space-y-4 md:space-y-6">
+      <div className="flex flex-col items-center text-center space-y-3">
+        <div
+          onClick={() => setImageModalOpen(true)}
+          className="cursor-pointer w-40 h-40 md:w-56 md:h-56 lg:w-64 lg:h-64 xl:w-72 xl:h-72 rounded-full overflow-hidden border-2 border-primary flex-shrink-0 transition-transform duration-300 ease-in-out hover:scale-[1.03]"
+        >
+          <img
+            src={composer.imageUrl}
+            alt={composer.name}
+            className="w-full h-full object-cover"
+          />
+        </div>
+
+        {/* Composer info (nationality, years, era badges) */}
+        <div className="flex flex-col md:flex-col items-center gap-2 mt-2 text-center">
+          <span className="text-sm md:text-base text-muted-foreground">
+            {composer.nationality}, {composer.birthYear}-{composer.deathYear || 'present'}
+          </span>
+          <div className="flex flex-wrap justify-center gap-1">
+            {Array.isArray(composer.era)
+              ? composer.era.map((era, idx) => (
+                  <Badge key={era + idx} variant="badge">
+                    {era}
+                  </Badge>
+                ))
+              : <Badge variant="badge">{composer.era}</Badge>}
+          </div>
+        </div>
+      </div>
 
             <div className="space-y-4 md:space-y-6 max-w-prose mx-auto">
               <div>
