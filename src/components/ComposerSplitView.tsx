@@ -52,54 +52,53 @@ function ContainedImageModal({
         transition: 'opacity 150ms ease-in-out',
       }}
     >
-  {/* Content container with proper spacing */}
-<div
-  className="relative bg-background rounded-lg shadow-xl z-10 overflow-hidden mt-5 max-w-[90%]"
-  onClick={e => e.stopPropagation()} // Prevent click from closing modal
-  style={{
-    transform: isOpen ? 'scale(1)' : 'scale(0.95)',
-    transition: 'transform 150ms ease-in-out',
-  }}
->
-  {/* Close button - only visible on hover */}
-  <Button
-    variant="ghost"
-    size="icon"
-    onClick={onClose}
-    className="absolute right-2 top-2 z-20 h-8 w-8"
-  >
-    <X className="h-4 w-4" />
-  </Button>
+      {/* Content container with proper spacing */}
+      <div
+        className="relative bg-background rounded-lg shadow-xl z-10 overflow-hidden mt-5 max-w-[90%]"
+        onClick={e => e.stopPropagation()} // Prevent click from closing modal
+        style={{
+          transform: isOpen ? 'scale(1)' : 'scale(0.95)',
+          transition: 'transform 150ms ease-in-out',
+        }}
+      >
+        {/* Close button - only visible on hover */}
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onClose}
+          className="absolute right-2 top-2 z-20 h-8 w-8"
+        >
+          <X className="h-4 w-4" />
+        </Button>
 
         <div className="flex flex-col">
-  <div className="flex justify-center items-center">
-    <img
-      src={imageSrc}
-      alt={composerName}
-      className="w-auto max-w-full max-h-[calc(100vh-220px)] object-contain"
-    />
-  </div>
+          <div className="flex justify-center items-center">
+            <img
+              src={imageSrc}
+              alt={composerName}
+              className="w-auto max-w-full max-h-[calc(100vh-220px)] object-contain"
+            />
+          </div>
 
-  {/* Footer */}
-  <div className="py-1 px-2 text-left bg-background dark:bg-secondary">
-    <div className="text-xs text-muted-foreground">
-      {copyrightDetails ? (
-        <>
-          Image by {copyrightDetails.author} via{' '}
-          <a href={copyrightDetails.sourceUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">
-            {copyrightDetails.source}
-          </a>
-          , licensed under{' '}
-          <a href={copyrightDetails.licenseUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">
-            {copyrightDetails.license}
-          </a>
-        </>
-      ) : null}
-    </div>
-  </div>
-</div>
-
-    </div>
+          {/* Footer */}
+          <div className="py-1 px-2 text-left bg-background dark:bg-secondary">
+            <div className="text-xs text-muted-foreground">
+              {copyrightDetails ? (
+                <>
+                  Image by {copyrightDetails.author} via{' '}
+                  <a href={copyrightDetails.sourceUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">
+                    {copyrightDetails.source}
+                  </a>
+                  , licensed under{' '}
+                  <a href={copyrightDetails.licenseUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">
+                    {copyrightDetails.license}
+                  </a>
+                </>
+              ) : null}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -114,21 +113,22 @@ interface ComposerSplitViewProps {
 export function ComposerSplitView({ composer, isOpen, onClose, children }: ComposerSplitViewProps) {
   const isMobile = useIsMobile();
 
-  // Construct a unique key for localStorage based on the composer's ID
-  const localStorageKey = `splitViewImageModalOpen_${composer.id}`;
+  // SIMPLIFIED: Don't use localStorage at all, just a simple state
+  const [imageModalOpen, setImageModalOpen] = useState(false);
 
-  // Initialize state from localStorage or default to false
-  const [imageModalOpen, setImageModalOpen] = useState(() => {
-    const storedValue = localStorage.getItem(localStorageKey);
-    return storedValue ? JSON.parse(storedValue) : false;
-  });
-
-  // Effect to update localStorage when state changes
+  // IMPORTANT: This effect ensures the image modal is ALWAYS closed when the split view closes
   useEffect(() => {
-    localStorage.setItem(localStorageKey, JSON.stringify(imageModalOpen));
-  }, [imageModalOpen, localStorageKey]);
+    if (!isOpen) {
+      setImageModalOpen(false);
+    }
+  }, [isOpen]);
 
+  // Clean early return - don't render anything when closed
   if (!isOpen) return null;
+
+  const handleCloseImageModal = () => {
+    setImageModalOpen(false);
+  };
 
   const composerContent = (
     // Add relative positioning context for the modal
@@ -140,26 +140,26 @@ export function ComposerSplitView({ composer, isOpen, onClose, children }: Compo
 
       {/* Fixed Header - Now outside ScrollArea */}
       <div
-  onClick={onClose}
-  className="relative flex items-center justify-center border-b py-7 bg-secondary backdrop-blur-sm shadow-sm z-10 flex-shrink-0 cursor-pointer group hover:bg-secondary/80 transition-colors"
->
-  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-    <h2 className="font-bold font-serif text-lg md:text-xl pointer-events-none">
-      {composer.name}
-    </h2>
-  </div>
-  <Button
-    variant="ghost"
-    size="icon"
-    onClick={(e) => {
-      e.stopPropagation();
-      onClose();
-    }}
-    className="absolute right-4 rounded-full hover:bg-primary/20 transition-all duration-200 group-hover:bg-primary/20 w-8 h-8 text-foreground/70 hover:text-foreground/90"
-  >
-    <X className="h-4 w-4" />
-  </Button>
-</div>
+        onClick={onClose}
+        className="relative flex items-center justify-center border-b py-7 bg-secondary backdrop-blur-sm shadow-sm z-10 flex-shrink-0 cursor-pointer group hover:bg-secondary/80 transition-colors"
+      >
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <h2 className="font-bold font-serif text-lg md:text-xl pointer-events-none">
+            {composer.name}
+          </h2>
+        </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={(e) => {
+            e.stopPropagation();
+            onClose();
+          }}
+          className="absolute right-4 rounded-full hover:bg-primary/20 transition-all duration-200 group-hover:bg-primary/20 w-8 h-8 text-foreground/70 hover:text-foreground/90"
+        >
+          <X className="h-4 w-4" />
+        </Button>
+      </div>
 
 
       {/* Scrollable Content Area */}
@@ -209,14 +209,16 @@ export function ComposerSplitView({ composer, isOpen, onClose, children }: Compo
         </ScrollArea>
       </div>
 
-      {/* Contained Image Modal - Pass composerId */}
-      <ContainedImageModal
-        isOpen={imageModalOpen}
-        onClose={() => setImageModalOpen(false)}
-        imageSrc={composer.imageUrl}
-        composerName={composer.name}
-        composerId={composer.id}
-      />
+      {/* Conditional rendering of the image modal */}
+      {imageModalOpen && (
+        <ContainedImageModal
+          isOpen={true}
+          onClose={handleCloseImageModal}
+          imageSrc={composer.imageUrl}
+          composerName={composer.name}
+          composerId={composer.id}
+        />
+      )}
     </div>
   );
 
