@@ -68,11 +68,11 @@ export function ComposerList({
   }, [selectedComposer, shouldScrollToComposer, onScrollComplete]);
 
   return (
-    <div className="w-full mt-5 relative" style={{ height: "65vh" }}>
+    <div className="w-full mt-3 relative" style={{ height: "65vh" }}>
       <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] gap-1 md:gap-2 h-full">
         <div className="overflow-hidden h-full flex flex-col">
           <div className="md:hidden flex-shrink-0">
-            <ScrollArea className="w-full h-full pb-3.5">
+            <ScrollArea className="w-full h-full">
               <div className="inline-flex h-full items-center">
                 {allComposers.map((composer) => (
                   <div
@@ -113,8 +113,8 @@ export function ComposerList({
         {selectedComposer && (
         <div className="flex flex-col h-full overflow-hidden">
           <div className="relative flex-1 min-h-0 flex flex-col">
-            <div className="px-3 md:px-4">
-              <div className="flex items-start md:items-center space-x-2 md:space-x-6 border-b" style={{ paddingBottom: '16px' }}>
+            <div className="px-3 md:px-4 pt-1">
+              <div className="flex items-start md:items-center space-x-2 md:space-x-6 border-b pt-2 md:pt-0" style={{ paddingBottom: '16px' }}>
                 <ComposerImageViewer
                   composer={selectedComposer}
                   size="xl"
