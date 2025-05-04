@@ -373,7 +373,7 @@ export function ChatInterface({
 
 <form onSubmit={handleSendMessage} className="sticky bottom-0 border-t bg-background/80 backdrop-blur-sm">
   <div className="pt-4 relative mx-10">
-    <div className="relative flex gap-2">
+    <div className="relative flex gap-2 border border-input ">
       <div className="flex-1 relative">
       <textarea
   ref={textareaRef}
@@ -384,7 +384,7 @@ export function ChatInterface({
   }}
   onKeyDown={handleKeyPress}
   placeholder={`Ask ${getLastName(composer.name)} a question...`}
-  className="mb-10 w-full rounded-3xl border border-input bg-background pl-5 pr-5 py-2.5 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary resize-none overflow-hidden min-h-[42px] max-h-[200px] overflow-y-auto"
+  className="mb-10 w-full bg-background pl-5 pr-5 py-2.5 text-sm overflow-hidden text-foreground focus:outline-none focus:ring-1 focus:ring-primary min-h-[42px] max-h-[250px] overflow-y-auto"
   rows={1}
   onInput={(e) => {
     const target = e.target as HTMLTextAreaElement;
