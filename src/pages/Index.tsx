@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Composer, Era, isComposerInPublicDomain, composers as allComposersData, getComposersByEra } from '@/data/composers';
 import { ComposerMenu } from '@/components/ComposerMenu';
 import { ChatInterface } from '@/components/ChatInterface';
@@ -41,6 +41,13 @@ const Index = () => {
   const handleThemeChange = (newMode: boolean) => {
     setIsDarkMode(newMode);
   };
+
+  // Add effect to clean up overflow style when component unmounts
+  useEffect(() => {
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, []);
 
   const handleSelectComposer = useCallback((composer: Composer, options?: { source?: string }) => {
     console.log(`[Index] handleSelectComposer called for ${composer.name} from ${options?.source}`);
@@ -100,16 +107,24 @@ const Index = () => {
   };
 
   const toggleMenu = () => {
-    // Batch state updates
+    // Toggle menu state
     const newIsMenuOpen = !isMenuOpen;
     setIsMenuOpen(newIsMenuOpen);
-    setIsChatting(false);
 
-    // Batch localStorage updates in a single requestAnimationFrame
-    requestAnimationFrame(() => {
-      localStorage.setItem('isMenuOpen', String(newIsMenuOpen));
+    if (newIsMenuOpen) {
+      // If opening menu, stop chat
+      setIsChatting(false);
       localStorage.setItem('isChatting', 'false');
-    });
+
+      // Prevent body scrolling when menu is open
+      document.body.style.overflow = 'hidden';
+    } else {
+      // Restore body scrolling when menu is closed
+      document.body.style.overflow = '';
+    }
+
+    // Update localStorage for menu state
+    localStorage.setItem('isMenuOpen', String(newIsMenuOpen));
   };
 
   return (
@@ -118,23 +133,19 @@ const Index = () => {
       {/* <MusicNoteDecoration /> */}
 
       {/* Fixed Header */}
-      <div className="fixed-header">
+      <div className="fixed-header z-50">
         <div className="container mx-auto px-2 flex items-center justify-between h-full">
           {/* Left Side: Menu Toggle Area */}
           <div
             onClick={toggleMenu}
-            className="flex items-center flex-1 cursor-pointer group"
+            className="flex items-center cursor-pointer group"
           >
-            <div className="flex-shrink-0 p-1 rounded-full transition-colors duration-200 group-hover:bg-muted">
+            <div className="flex-shrink-0 p-2 rounded transition-colors duration-200 group-hover:bg-muted">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 transform transition-transform duration-500 ease-out will-change-transform"
+                className="h-5 w-5 transform transition-transform duration-500 ease-out"
                 style={{
-                  transform: isMenuOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                  width: '1.25rem',
-                  height: '1.25rem',
-                  backfaceVisibility: 'hidden',
-                  WebkitBackfaceVisibility: 'hidden'
+                  transform: isMenuOpen ? 'rotate(90deg)' : 'rotate(0deg)',
                 }}
                 fill="none"
                 viewBox="0 0 24 24"
@@ -144,7 +155,7 @@ const Index = () => {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth={2}
-                  d={isMenuOpen ? "M5 15l7-7 7 7" : "M19 9l-7 7-7-7"}
+                  d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
                 />
               </svg>
             </div>
@@ -197,26 +208,26 @@ const Index = () => {
           )}
         </div>
         </div>
-        </div>
+      </div>
 
       <main className="content-main h-full">
-        {/* Composer Selection Menu */}
-        <div
+        {/* Composer Selection Menu - Now slides from left and overlays chat, no fade, better overflow handling */}
+        <aside
           className={`
-            fixed inset-x-0 z-40
-            bg-background backdrop-blur-sm border-b border-border shadow-lg
+            fixed inset-y-0 left-0 z-50
+            bg-background backdrop-blur-sm border-r border-border shadow-lg
             transition-transform duration-500 ease-out will-change-transform
-            ${isMenuOpen ? 'translate-y-0' : '-translate-y-full pointer-events-none'}
-            overflow-y-auto
+            flex flex-col
           `}
           style={{
-            maxHeight: `calc(100vh - 1.5rem)`,
-            transform: isMenuOpen ? 'translate3d(0, 0, 0)' : 'translate3d(0, -100%, 0)',
-            backfaceVisibility: 'hidden',
-            WebkitBackfaceVisibility: 'hidden'
+            width: '100%', // Full width overlay
+            top: '2.5rem', // Adjust based on your header height
+            height: 'calc(100vh - 2.5rem)',
+            transform: isMenuOpen ? 'translateX(0)' : 'translateX(-100%)',
+            transition: 'transform 500ms ease-out'
           }}
         >
-          <div className="pb-0 mt-5">
+          <div className="flex-1 overflow-hidden">
             <ComposerMenu
               onSelectComposer={(composer) => handleSelectComposer(composer, { source: 'list' })}
               onStartChat={handleStartChat}
@@ -228,7 +239,7 @@ const Index = () => {
               onScrollComplete={handleScrollComplete}
             />
           </div>
-        </div>
+        </aside>
 
         {/* Chat Interface */}
         <div
@@ -239,6 +250,7 @@ const Index = () => {
             maxHeight: 'calc(95vh - 2.5rem)',
             backdropFilter: 'blur(8px)',
             boxShadow: '0 -10px 25px rgba(0,0,0,0.1)',
+            zIndex: 40
           }}
         >
           {selectedComposer && isComposerInPublicDomain(selectedComposer) && (
