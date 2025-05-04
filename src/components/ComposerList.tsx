@@ -72,7 +72,7 @@ export function ComposerList({
       <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] gap-1 md:gap-2 h-full">
         <div className="overflow-hidden h-full flex flex-col">
           <div className="md:hidden flex-shrink-0">
-            <ScrollArea className="w-full h-full">
+            <ScrollArea className="w-full h-full pb-3.5">
               <div className="inline-flex h-full items-center">
                 {allComposers.map((composer) => (
                   <div
