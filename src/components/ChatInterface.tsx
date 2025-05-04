@@ -483,7 +483,7 @@ export function ChatInterface({
               <button
                 type="submit"
                 disabled={!inputMessage.trim() || isComposerListOpen || isComposerMenuOpen}
-                className="absolute bottom-3 right-10 h-8 w-8 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-105 active:scale-95 shadow-sm"
+                className="absolute bottom-3.5 right-10 h-8 w-8 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-105 active:scale-95 shadow-sm"
               >
                 <ArrowUp className="w-5 h-5" strokeWidth={3} />
               </button>
@@ -495,7 +495,7 @@ export function ChatInterface({
                     <button
                       type="button"
                       onClick={handleResetChat}
-                      className="absolute bottom-3 right-1 h-8 w-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-primary transition-colors duration-200 hover:scale-105 active:scale-95 shadow-sm"
+                      className="absolute bottom-3.5 right-1 h-8 w-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-primary transition-colors duration-200 hover:scale-105 active:scale-95 shadow-sm"
                       aria-label="Reset chat"
                     >
                       <RefreshCcw className="w-5 h-5" strokeWidth={2} />
@@ -509,7 +509,7 @@ export function ChatInterface({
                 <button
                   type="button"
                   onClick={handleResetChat}
-                  className="absolute bottom-3 right-1 h-8 w-8 rounded-full flex items-center justify-center text-muted-foreground transition-all active:scale-95"
+                  className="absolute bottom-3.5 right-1 h-8 w-8 rounded-full flex items-center justify-center text-muted-foreground transition-all active:scale-95"
                   aria-label="Reset chat"
                 >
                   <RefreshCcw className="w-5 h-5" strokeWidth={2} />
