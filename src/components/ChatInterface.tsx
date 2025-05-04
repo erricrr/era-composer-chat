@@ -143,33 +143,40 @@ export function ChatInterface({
     }
   }, [composer.id, getConversationsForComposer, startConversation, setActiveConversationId]);
 
-  // Scroll function inspired by chat-panel.tsx
+  // Function to scroll user messages to bottom
   const scrollToBottom = useCallback(() => {
     if (!shouldAutoScroll) return;
-
-    const chatMessagesDiv = chatContainerRef.current;
-    if (!chatMessagesDiv) return;
-
-    // Use a small delay to allow the DOM to update
+    // Scroll to the end sentinel to show latest message
     setTimeout(() => {
-      // Get all message elements
-      const messageBubbles = chatMessagesDiv.querySelectorAll('.message-bubble');
-      if (messageBubbles.length > 0) {
-        const lastMessage = messageBubbles[messageBubbles.length - 1];
-        // Scroll the last message into view
-        lastMessage.scrollIntoView({ behavior: 'smooth', block: 'end' });
-      }
-    }, 100); // Delay to ensure rendering is complete
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
   }, [shouldAutoScroll]);
+
+  // Function to scroll composer messages top into view on mobile
+  const scrollComposerTop = useCallback(() => {
+    const container = chatContainerRef.current;
+    if (!container) return;
+    setTimeout(() => {
+      const composerBubbles = container.querySelectorAll('.message-bubble[data-sender="composer"]');
+      if (composerBubbles.length > 0) {
+        const lastComposerEl = composerBubbles[composerBubbles.length - 1] as HTMLElement;
+        lastComposerEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
+  }, []);
 
   // Scroll effect based on messages
   useEffect(() => {
-    // Scroll when new messages are added
     if (currentMessages.length > prevMessagesLengthRef.current) {
-      scrollToBottom();
+      const lastMessage = currentMessages[currentMessages.length - 1];
+      if (lastMessage.sender === 'composer' && isMobile) {
+        scrollComposerTop();
+      } else {
+        scrollToBottom();
+      }
     }
     prevMessagesLengthRef.current = currentMessages.length;
-  }, [currentMessages, scrollToBottom]);
+  }, [currentMessages, isMobile, scrollToBottom, scrollComposerTop]);
 
   // Add scroll listener to detect user scrolling
   useEffect(() => {
@@ -426,8 +433,13 @@ export function ChatInterface({
           ) : (
             <div className="space-y-4 w-full pr-7">
               {currentMessages.map((message: Message) => (
-                // Add class for easier selection
-                <div key={message.id} className={`message-bubble flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+                <div
+                  key={message.id}
+                  className={`message-bubble flex ${
+                    message.sender === 'user' ? 'justify-end' : 'justify-start'
+                  }`}
+                  data-sender={message.sender}
+                >
                   <div
                     className={message.sender === 'user'
                       ? 'max-w-[85%] rounded-2xl px-4 py-2 bg-primary text-background ml-auto shadow-sm'
