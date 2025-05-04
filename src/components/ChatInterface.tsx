@@ -365,10 +365,10 @@ export function ChatInterface({
     >
       <div className="relative flex items-center justify-end px-2">
         {(!isSplitViewOpen) ? (
-          <div className="flex items-center justify-between px-5 py-4 -mt-1 w-full bg-secondary border-b shadow-md z-10">
+          <div className="flex items-center justify-between px-2 py-3 md:px-5 md:py-4 -mt-1 w-full bg-secondary border-b shadow-md z-10">
             <div
               onClick={() => setIsSplitViewOpen(true)}
-              className="flex items-center space-x-6 cursor-pointer group hover:opacity-90 transition-all duration-300"
+              className="flex items-center space-x-3 sm:space-x-6 cursor-pointer group hover:opacity-90 transition-all duration-300"
             >
 
 <Tooltip delayDuration={200}>
@@ -390,7 +390,7 @@ export function ChatInterface({
         </div>
         <div className="flex flex-col justify-center">
           <h2 className="font-serif font-bold text-base md:text-lg text-left group-hover:text-primary transition-colors">{composer.name}</h2>
-          <div className="flex items-center gap-2 mt-1">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-1">
             <span className="text-xs md:text-base text-muted-foreground group-hover:text-primary transition-colors">
               {composer.nationality}, {composer.birthYear}-{composer.deathYear || 'present'}
             </span>
@@ -447,8 +447,8 @@ export function ChatInterface({
       </div>
 
       <form onSubmit={handleSendMessage} className="sticky bottom-0 border-t bg-background/80 backdrop-blur-sm">
-        <div className="pt-4 relative mx-10">
-          <div className="relative flex gap-2 border border-input ">
+        <div className="pt-4 relative mx-5">
+          <div className="relative flex gap-2">
             <div key={`input-${isSplitViewOpen}`} className="flex-1 relative">
               <textarea
                 key={`textarea-${isSplitViewOpen}`}
@@ -463,7 +463,7 @@ export function ChatInterface({
                 }}
                 onKeyDown={handleKeyPress}
                 placeholder={`Ask ${getLastName(composer.name)} a question...`}
-                className="w-full bg-background pl-14 pr-12 py-3 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary min-h-[48px] max-h-[300px] overflow-y-auto resize-none"
+                className="w-full bg-background pl-5 py-3 border border-input text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary min-h-[48px] max-h-[300px] overflow-y-auto resize-none"
                 rows={1}
                 disabled={isComposerListOpen || isComposerMenuOpen}
               />
@@ -471,7 +471,7 @@ export function ChatInterface({
               <button
                 type="submit"
                 disabled={!inputMessage.trim() || isComposerListOpen || isComposerMenuOpen}
-                className="absolute bottom-2 right-2 h-8 w-8 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-105 active:scale-95 shadow-sm"
+                className="absolute bottom-3 right-10 h-8 w-8 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-105 active:scale-95 shadow-sm"
               >
                 <ArrowUp className="w-5 h-5" strokeWidth={3} />
               </button>
@@ -483,13 +483,13 @@ export function ChatInterface({
                     <button
                       type="button"
                       onClick={handleResetChat}
-                      className="absolute bottom-3 left-3 h-8 w-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-primary transition-colors duration-200 hover:scale-105 active:scale-95"
+                      className="absolute bottom-3 right-1 h-8 w-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-primary transition-colors duration-200 hover:scale-105 active:scale-95 shadow-sm"
                       aria-label="Reset chat"
                     >
                       <RefreshCcw className="w-5 h-5" strokeWidth={2} />
                     </button>
                   </TooltipTrigger>
-                  <TooltipContent side="right" align="center" className="text-xs">
+                  <TooltipContent side="bottom" align="center" className="text-xs">
                     Reset chat
                   </TooltipContent>
                 </Tooltip>
@@ -497,7 +497,8 @@ export function ChatInterface({
                 <button
                   type="button"
                   onClick={handleResetChat}
-                  className="absolute bottom-3 left-3 h-8 w-8 rounded-full flex items-center justify-center text-muted-foreground transition-all active:scale-95"
+                  className="absolute bottom-3 right-1 h-8 w-8 rounded-full flex items-center justify-center text-muted-foreground transition-all active:scale-95"
+                  aria-label="Reset chat"
                 >
                   <RefreshCcw className="w-5 h-5" strokeWidth={2} />
                 </button>
