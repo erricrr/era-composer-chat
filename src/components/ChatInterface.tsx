@@ -459,70 +459,72 @@ export function ChatInterface({
       </div>
 
       <form onSubmit={handleSendMessage} className="sticky bottom-0 border-t bg-background/80 backdrop-blur-sm">
-        <div className="pt-4 relative mx-5">
-          <div className="relative flex gap-2">
-            <div key={`input-${isSplitViewOpen}`} className="flex-1 relative">
-              <textarea
-                key={`textarea-${isSplitViewOpen}`}
-                ref={textareaRef}
-                value={inputMessage}
-                onChange={(e) => {
-                  setInputMessage(e.target.value);
-                  onUserTyping(true);
-                  // Reset then resize
-                  e.target.style.height = '48px';
-                  e.target.style.height = `${Math.min(e.target.scrollHeight, 300)}px`;
-                }}
-                onKeyDown={handleKeyPress}
-                placeholder={`Ask ${getLastName(composer.name)} a question...`}
-                className="w-full bg-background pl-5 pr-16 py-3 border border-input text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary min-h-[48px] max-h-[300px] overflow-y-auto resize-none"
-                rows={1}
-                disabled={isComposerListOpen || isComposerMenuOpen}
-              />
-              {/* Send Button */}
+  <div className="pt-4 relative mx-5">
+    <div className="relative flex gap-2">
+      <div key={`input-${isSplitViewOpen}`} className="flex-1 relative">
+        <textarea
+          key={`textarea-${isSplitViewOpen}`}
+          ref={textareaRef}
+          value={inputMessage}
+          onChange={(e) => {
+            setInputMessage(e.target.value);
+            onUserTyping(true);
+            // Reset then resize
+            e.target.style.height = '48px';
+            e.target.style.height = `${Math.min(e.target.scrollHeight, 300)}px`;
+          }}
+          onKeyDown={handleKeyPress}
+          placeholder={`Ask ${getLastName(composer.name)} a question...`}
+          className="w-full bg-background pl-5 pr-20 py-3 border border-input text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary min-h-[48px] max-h-[300px] overflow-y-auto resize-none"
+          rows={1}
+          disabled={isComposerListOpen || isComposerMenuOpen}
+        />
+        {/* Send Button */}
+        <button
+          type="submit"
+          disabled={!inputMessage.trim() || isComposerListOpen || isComposerMenuOpen}
+          className="absolute bottom-3.5 right-10 h-8 w-8 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-105 active:scale-95 shadow-sm"
+        >
+          <ArrowUp className="w-5 h-5" strokeWidth={3} />
+        </button>
+
+        {/* Reset Button */}
+        {!isTouch ? (
+          <Tooltip delayDuration={200}>
+            <TooltipTrigger asChild>
               <button
-                type="submit"
-                disabled={!inputMessage.trim() || isComposerListOpen || isComposerMenuOpen}
-                className="absolute bottom-3.5 right-10 h-8 w-8 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-105 active:scale-95 shadow-sm"
+                type="button"
+                disabled={isComposerListOpen || isComposerMenuOpen}
+                onClick={handleResetChat}
+                className="absolute bottom-3.5 right-1 h-8 w-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-primary transition-colors duration-200 hover:scale-105 active:scale-95 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                aria-label="Reset chat"
               >
-                <ArrowUp className="w-5 h-5" strokeWidth={3} />
+                <RefreshCcw className="w-5 h-5" strokeWidth={2} />
               </button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom" align="center" className="text-xs">
+              Reset chat
+            </TooltipContent>
+          </Tooltip>
+        ) : (
+          <button
+            type="button"
+            disabled={isComposerListOpen || isComposerMenuOpen}
+            onClick={handleResetChat}
+            className="absolute bottom-3.5 right-1 h-8 w-8 rounded-full flex items-center justify-center text-muted-foreground transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+            aria-label="Reset chat"
+          >
+            <RefreshCcw className="w-5 h-5" strokeWidth={2} />
+          </button>
+        )}
+      </div>
+    </div>
+  </div>
+  <p className="text-xs text-muted-foreground text-center mx-11 pb-2 pt-2">
+    AI-generated conversation from verified sources. Does not reflect {getLastName(composer.name)}&apos;s personal views.
+  </p>
+</form>
 
-              {/* Reset Button */}
-              {!isTouch ? (
-                <Tooltip delayDuration={200}>
-                  <TooltipTrigger asChild>
-                    <button
-                      type="button"
-                      onClick={handleResetChat}
-                      className="absolute bottom-3.5 right-1 h-8 w-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-primary transition-colors duration-200 hover:scale-105 active:scale-95 shadow-sm"
-                      aria-label="Reset chat"
-                    >
-                      <RefreshCcw className="w-5 h-5" strokeWidth={2} />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent side="bottom" align="center" className="text-xs">
-                    Reset chat
-                  </TooltipContent>
-                </Tooltip>
-              ) : (
-                <button
-                  type="button"
-                  onClick={handleResetChat}
-                  className="absolute bottom-3.5 right-1 h-8 w-8 rounded-full flex items-center justify-center text-muted-foreground transition-all active:scale-95"
-                  aria-label="Reset chat"
-                >
-                  <RefreshCcw className="w-5 h-5" strokeWidth={2} />
-                </button>
-              )}
-            </div>
-
-          </div>
-        </div>
-        <p className="text-xs text-muted-foreground text-center mx-11 pb-2 pt-2">
-          AI-generated conversation from verified sources. Does not reflect {getLastName(composer.name)}&apos;s personal views.
-        </p>
-      </form>
     </div>
   );
 
