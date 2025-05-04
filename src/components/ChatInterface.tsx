@@ -356,9 +356,11 @@ export function ChatInterface({
         {currentMessages.map((message: Message) => (
           <div key={message.id} className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
             <div className={message.sender === 'user'
-              ? 'max-w-[80%] rounded-2xl px-4 py-2 bg-primary text-background ml-auto shadow-sm'
-              : 'max-w-[80%] rounded-2xl px-4 py-2 text-foreground bg-background'
-            }>
+              ? 'max-w-[85%] rounded-2xl px-4 py-2 bg-primary text-background ml-auto shadow-sm'
+              : 'max-w-[85%] rounded-2xl px-4 py-2 text-foreground bg-background'
+            }
+             style={{ whiteSpace: 'pre-line' }}
+             >
               {message.text}
             </div>
           </div>
