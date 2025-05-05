@@ -133,7 +133,7 @@ const Index = () => {
       {/* <MusicNoteDecoration /> */}
 
       {/* Fixed Header */}
-      <div className="fixed-header z-50">
+      <div className="fixed-header">
         <div className="container mx-auto px-2 flex items-center justify-between h-full">
           {/* Left Side: Menu Toggle Area */}
           <div
