@@ -44,6 +44,8 @@ const Index = () => {
   // Active chats (up to 5) persisted in localStorage
   const [activeChatIds, setActiveChatIds] = useLocalStorage<string[]>('activeChats', []);
   const [isActiveChatsOpen, setIsActiveChatsOpen] = useState(false);
+  // Track split view open state to adjust layout
+  const [isSplitViewOpenFromChat, setIsSplitViewOpenFromChat] = useState(false);
 
   const handleThemeChange = (newMode: boolean) => {
     setIsDarkMode(newMode);
@@ -128,7 +130,7 @@ const Index = () => {
 
   // Handler for clicking an active chat entry
   const handleActiveChatClick = useCallback((composer: Composer) => {
-    // Re-open chat on click keep list open
+    // Switch to the selected composer chat without closing the slider
     setSelectedComposer(composer);
     localStorage.setItem('selectedComposer', JSON.stringify(composer));
     // Ensure chat view is open
@@ -308,8 +310,10 @@ const Index = () => {
 
         {/* Chat Interface */}
         <div
-          className="fixed inset-x-0 bottom-0 overflow-y-auto bg-background"
+          className="fixed bottom-0 overflow-y-auto bg-background"
           style={{
+            left: 0,
+            right: isSplitViewOpenFromChat ? '0' : isActiveChatsOpen ? '16rem' : '0',
             top: '2.5rem',
             height: 'calc(95vh - 2.5rem)',
             maxHeight: 'calc(95vh - 2.5rem)',
@@ -324,6 +328,7 @@ const Index = () => {
                 composer={selectedComposer}
                 onUserTyping={() => {}}
                 onUserSend={handleAddActiveChat}
+                onSplitViewToggle={setIsSplitViewOpenFromChat}
                 isComposerListOpen={isMenuOpen}
               />
             </div>

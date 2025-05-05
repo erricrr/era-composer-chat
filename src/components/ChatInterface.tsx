@@ -14,6 +14,7 @@ interface ChatInterfaceProps {
   composer: Composer;
   onUserTyping: (isTyping: boolean) => void;
   onUserSend?: (composer: Composer) => void;
+  onSplitViewToggle?: (isOpen: boolean) => void;
   isComposerListOpen?: boolean;
 }
 
@@ -21,6 +22,7 @@ export function ChatInterface({
   composer,
   onUserTyping,
   onUserSend,
+  onSplitViewToggle,
   isComposerListOpen = false,
 }: ChatInterfaceProps) {
   const [inputMessage, setInputMessage] = useState('');
@@ -214,6 +216,11 @@ export function ChatInterface({
     localStorage.setItem('splitViewOpen', JSON.stringify(isSplitViewOpen));
   }, [isSplitViewOpen]);
 
+  // Add effect to notify parent of split view toggle
+  useEffect(() => {
+    onSplitViewToggle?.(isSplitViewOpen);
+  }, [isSplitViewOpen, onSplitViewToggle]);
+
   // Add effect to reset textarea height on closing split view
   useEffect(() => {
     if (!isSplitViewOpen) {
@@ -372,7 +379,7 @@ export function ChatInterface({
 
   const chatContent = (
     <div
-      className={`relative flex flex-col h-full bg-background overflow-hidden transition-all duration-500 ease-in-out`}
+      className="relative flex flex-col h-full bg-background overflow-hidden"
     >
       <div className="relative flex items-center justify-end px-2">
         {(!isSplitViewOpen) ? (
@@ -395,7 +402,7 @@ export function ChatInterface({
         <div className="flex-shrink-0">
           <ComposerImageViewer
             composer={composer}
-            size="md"
+            size="sm"
             className="!scale-100"
           />
         </div>

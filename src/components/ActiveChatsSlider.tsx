@@ -20,14 +20,7 @@ export default function ActiveChatsSlider({
 }: ActiveChatsSliderProps) {
   return (
     <aside
-      className="fixed inset-y-0 right-0 z-50 bg-background backdrop-blur-sm border-l border-border shadow-lg transition-transform duration-500 ease-out flex flex-col"
-      style={{
-        width: '16rem',
-        top: '2.5rem',
-        height: 'calc(100vh - 2.5rem)',
-        transform: isOpen ? 'translateX(0)' : 'translateX(100%)',
-        transition: 'transform 500ms ease-out',
-      }}
+      className={`fixed top-10 bottom-0 right-0 w-64 z-50 bg-background border-l border-border shadow-lg transform transition-transform duration-200 ease-out flex flex-col ${isOpen ? 'translate-x-0 pointer-events-auto' : 'translate-x-full pointer-events-none'}`}
     >
       <div className="flex items-center justify-between p-4 border-b border-border">
         <h3 className="text-base font-semibold">Active Chats</h3>
