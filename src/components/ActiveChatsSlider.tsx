@@ -1,5 +1,5 @@
 import { Composer } from '@/data/composers';
-import { X } from 'lucide-react';
+import { X, Trash2 } from 'lucide-react';
 
 interface ActiveChatsSliderProps {
   isOpen: boolean;
@@ -8,6 +8,7 @@ interface ActiveChatsSliderProps {
   onSelectComposer: (composer: Composer) => void;
   onClearAll: () => void;
   onClose: () => void;
+  onRemoveChat: (composer: Composer) => void;
 }
 
 export default function ActiveChatsSlider({
@@ -17,6 +18,7 @@ export default function ActiveChatsSlider({
   onSelectComposer,
   onClearAll,
   onClose,
+  onRemoveChat,
 }: ActiveChatsSliderProps) {
   return (
     <aside
@@ -41,16 +43,24 @@ export default function ActiveChatsSlider({
             const composer = composers.find((c) => c.id === id);
             if (!composer) return null;
             return (
-              <button
-                key={id}
-                onClick={() => onSelectComposer(composer)}
-                className="w-full text-left p-2 rounded hover:bg-muted transition-colors"
-              >
-                <div className="text-sm font-medium">{composer.name}</div>
-                <div className="text-xs text-muted-foreground">
-                  {Array.isArray(composer.era) ? composer.era.join(', ') : composer.era}
-                </div>
-              </button>
+              <div key={id} className="flex items-center justify-between">
+                <button
+                  onClick={() => onSelectComposer(composer)}
+                  className="flex-1 text-left p-2 rounded hover:bg-muted transition-colors"
+                >
+                  <div className="text-sm font-medium">{composer.name}</div>
+                  <div className="text-xs text-muted-foreground">
+                    {Array.isArray(composer.era) ? composer.era.join(', ') : composer.era}
+                  </div>
+                </button>
+                <button
+                  onClick={() => onRemoveChat(composer)}
+                  className="p-2 text-red-600 rounded hover:bg-muted transition-colors"
+                  aria-label={`Remove chat with ${composer.name}`}
+                >
+                  <Trash2 className="w-4 h-4 text-destructive" />
+                </button>
+              </div>
             );
           })
         )}
@@ -59,7 +69,7 @@ export default function ActiveChatsSlider({
       <div className="p-4 border-t border-border">
         <button
           onClick={onClearAll}
-          className="w-full text-sm text-red-600 hover:underline transition-colors"
+          className="w-full text-sm text-destructive hover:underline transition-colors"
         >
           Clear All
         </button>

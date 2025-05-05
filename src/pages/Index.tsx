@@ -36,7 +36,7 @@ const Index = () => {
 
   const [shouldScrollToComposer, setShouldScrollToComposer] = useState(false);
 
-  const { startConversation, getConversationsForComposer, clearAllConversations } = useConversations();
+  const { startConversation, getConversationsForComposer, clearAllConversations, deleteConversation } = useConversations();
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   const isTouch = useIsTouch();
@@ -150,6 +150,19 @@ const Index = () => {
     setIsActiveChatsOpen(false);
     setChatClearTrigger(prev => prev + 1);
   }, [clearAllConversations, setActiveChatIds, setChatClearTrigger]);
+
+  // Remove individual active chat and clear its conversation
+  const handleRemoveActiveChat = useCallback((composer: Composer) => {
+    // Remove from active chats list
+    setActiveChatIds(prev => prev.filter(id => id !== composer.id));
+    // Delete all conversations for this composer
+    const composerConversations = getConversationsForComposer(composer.id);
+    composerConversations.forEach(conv => deleteConversation(conv.id));
+    // If this composer is currently open, reset chat interface
+    if (selectedComposer?.id === composer.id) {
+      setChatClearTrigger(prev => prev + 1);
+    }
+  }, [getConversationsForComposer, deleteConversation, setActiveChatIds, setChatClearTrigger, selectedComposer]);
 
   const toggleMenu = () => {
     // Toggle menu state
@@ -359,6 +372,7 @@ const Index = () => {
         onSelectComposer={handleActiveChatClick}
         onClearAll={handleClearActiveChats}
         onClose={() => setIsActiveChatsOpen(false)}
+        onRemoveChat={handleRemoveActiveChat}
       />
     </div>
   );
