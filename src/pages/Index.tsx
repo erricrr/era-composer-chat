@@ -41,6 +41,9 @@ const Index = () => {
 
   const isTouch = useIsTouch();
 
+  // State trigger to reset chat interface when clearing all active chats
+  const [chatClearTrigger, setChatClearTrigger] = useState(0);
+
   // Active chats (up to 5) persisted in localStorage
   const [activeChatIds, setActiveChatIds] = useLocalStorage<string[]>('activeChats', []);
   const [isActiveChatsOpen, setIsActiveChatsOpen] = useState(false);
@@ -145,7 +148,8 @@ const Index = () => {
     clearAllConversations();
     localStorage.removeItem('activeChats');
     setIsActiveChatsOpen(false);
-  }, [clearAllConversations, setActiveChatIds]);
+    setChatClearTrigger(prev => prev + 1);
+  }, [clearAllConversations, setActiveChatIds, setChatClearTrigger]);
 
   const toggleMenu = () => {
     // Toggle menu state
@@ -325,6 +329,7 @@ const Index = () => {
           {selectedComposer && isComposerInPublicDomain(selectedComposer) && (
             <div className="container mx-auto px-4 h-full">
               <ChatInterface
+                key={chatClearTrigger}
                 composer={selectedComposer}
                 onUserTyping={() => {}}
                 onUserSend={handleAddActiveChat}
