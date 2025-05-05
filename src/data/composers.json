@@ -255,6 +255,7 @@
     {
       "id": "bela-bartok",
       "name": "Béla Bartók",
+      "searchableName": "Bela Bartok",
       "era": ["20th-21st Century"],
       "birthYear": 1881,
       "deathYear": 1945,
