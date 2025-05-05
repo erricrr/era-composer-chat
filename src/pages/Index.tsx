@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { Composer, Era, isComposerInPublicDomain, composers as allComposersData, getComposersByEra } from '@/data/composers';
 import { ComposerMenu } from '@/components/ComposerMenu';
 import { ChatInterface } from '@/components/ChatInterface';
@@ -7,8 +7,6 @@ import { MusicNoteDecoration } from '@/components/MusicNoteDecoration';
 import { useConversations } from '@/hooks/useConversations';
 import FooterDrawer from '@/components/ui/footerDrawer';
 import { ComposerSearch } from '@/components/ComposerSearch';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { useIsTouch } from '@/hooks/useIsTouch';
 
 const Index = () => {
   const [selectedComposer, setSelectedComposer] = useState<Composer | null>(() => {
@@ -34,20 +32,6 @@ const Index = () => {
   const [shouldScrollToComposer, setShouldScrollToComposer] = useState(false);
 
   const { startConversation, getConversationsForComposer } = useConversations();
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
-  const isTouch = useIsTouch();
-
-  const handleThemeChange = (newMode: boolean) => {
-    setIsDarkMode(newMode);
-  };
-
-  // Add effect to clean up overflow style when component unmounts
-  useEffect(() => {
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, []);
 
   const handleSelectComposer = useCallback((composer: Composer, options?: { source?: string }) => {
     console.log(`[Index] handleSelectComposer called for ${composer.name} from ${options?.source}`);
@@ -107,24 +91,17 @@ const Index = () => {
   };
 
   const toggleMenu = () => {
-    // Toggle menu state
-    const newIsMenuOpen = !isMenuOpen;
-    setIsMenuOpen(newIsMenuOpen);
-
-    if (newIsMenuOpen) {
-      // If opening menu, stop chat
+    if (!isMenuOpen) {
       setIsChatting(false);
       localStorage.setItem('isChatting', 'false');
-
-      // Prevent body scrolling when menu is open
-      document.body.style.overflow = 'hidden';
+      setIsMenuOpen(true);
+      localStorage.setItem('isMenuOpen', 'true');
     } else {
-      // Restore body scrolling when menu is closed
-      document.body.style.overflow = '';
+      setIsChatting(false);
+      localStorage.setItem('isChatting', 'false');
+      setIsMenuOpen(false);
+      localStorage.setItem('isMenuOpen', 'false');
     }
-
-    // Update localStorage for menu state
-    localStorage.setItem('isMenuOpen', String(newIsMenuOpen));
   };
 
   return (
@@ -138,96 +115,58 @@ const Index = () => {
           {/* Left Side: Menu Toggle Area */}
           <div
             onClick={toggleMenu}
-            className="flex items-center cursor-pointer group"
+            className="flex items-center flex-1 cursor-pointer group"
           >
-            <div className="flex-shrink-0 p-2 rounded transition-colors duration-200 group-hover:bg-muted">
+            <div className="flex-shrink-0 p-1 rounded-full transition-colors duration-200 group-hover:bg-muted">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 transform transition-transform duration-500 ease-out"
-                style={{
-                  transform: isMenuOpen ? 'rotate(90deg)' : 'rotate(0deg)',
-                }}
+                className={`h-5 w-5 transition-all duration-500 ${isMenuOpen ? 'rotate-180' : 'rotate-0'} text-foreground group-hover:text-primary`}
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
+                style={{ width: '1.25rem', height: '1.25rem' }}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
-                />
+                {isMenuOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                )}
               </svg>
             </div>
           </div>
 
-         {/* Right Side: Search + Icons */}
-        <div className="flex items-center gap-2">
-          {/* Search Bar */}
-          <div className="max-w-xs">
-            <ComposerSearch
-              composers={allComposersData}
-              onSelectComposer={(composer) => handleSelectComposer(composer, { source: 'search' })}
-              selectedComposer={selectedComposer}
-            />
+          {/* Right Side: Search + Icons */}
+          <div className="flex items-center gap-2">
+             {/* Search Bar */}
+             <div className="max-w-xs">
+               <ComposerSearch
+                 composers={allComposersData}
+                 onSelectComposer={(composer) => handleSelectComposer(composer, { source: 'search' })}
+                 selectedComposer={selectedComposer}
+               />
+             </div>
+             {/* Icons */}
+            <FooterDrawer />
+            <ThemeToggle />
           </div>
-
-          {/* Icons */}
-          {!isTouch ? (
-            <Tooltip delayDuration={200}>
-              <TooltipTrigger asChild>
-                <div onClick={(e) => e.stopPropagation()}>
-                  <FooterDrawer />
-                </div>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" className="text-xs">
-                About
-              </TooltipContent>
-            </Tooltip>
-          ) : (
-            <div onClick={(e) => e.stopPropagation()}>
-              <FooterDrawer />
-            </div>
-          )}
-
-          {!isTouch ? (
-            <Tooltip delayDuration={200}>
-              <TooltipTrigger asChild>
-                <div onClick={(e) => e.stopPropagation()}>
-                  <ThemeToggle onThemeChange={handleThemeChange} />
-                </div>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" className="text-xs">
-                {isDarkMode ? 'Toggle light mode' : 'Toggle dark mode'}
-              </TooltipContent>
-            </Tooltip>
-          ) : (
-            <div onClick={(e) => e.stopPropagation()}>
-              <ThemeToggle onThemeChange={handleThemeChange} />
-            </div>
-          )}
-        </div>
         </div>
       </div>
 
       <main className="content-main h-full">
-        {/* Composer Selection Menu - Now slides from left and overlays chat, no fade, better overflow handling */}
-        <aside
+        {/* Composer Selection Menu */}
+        <div
           className={`
-            fixed inset-y-0 left-0 z-50
-            bg-background backdrop-blur-sm border-r border-border shadow-lg
-            transition-transform duration-500 ease-out will-change-transform
-            flex flex-col
+            fixed inset-x-0 z-40
+            bg-background backdrop-blur-sm border-b border-border shadow-lg
+            transition-transform duration-500 ease-out
+            ${isMenuOpen ? 'translate-y-0' : '-translate-y-full pointer-events-none'}
+            overflow-y-auto
           `}
           style={{
-            width: '100%', // Full width overlay
-            top: '2.5rem', // Adjust based on your header height
-            height: 'calc(100vh - 2.5rem)',
-            transform: isMenuOpen ? 'translateX(0)' : 'translateX(-100%)',
-            transition: 'transform 500ms ease-out'
+            maxHeight: `calc(100vh - 1.5rem)`
           }}
         >
-          <div className="flex-1 overflow-hidden">
+          <div className="pb-14">
             <ComposerMenu
               onSelectComposer={(composer) => handleSelectComposer(composer, { source: 'list' })}
               onStartChat={handleStartChat}
@@ -239,7 +178,7 @@ const Index = () => {
               onScrollComplete={handleScrollComplete}
             />
           </div>
-        </aside>
+        </div>
 
         {/* Chat Interface */}
         <div
@@ -250,7 +189,6 @@ const Index = () => {
             maxHeight: 'calc(95vh - 2.5rem)',
             backdropFilter: 'blur(8px)',
             boxShadow: '0 -10px 25px rgba(0,0,0,0.1)',
-            zIndex: 40
           }}
         >
           {selectedComposer && isComposerInPublicDomain(selectedComposer) && (

@@ -5,7 +5,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 
 interface ComposerImageViewerProps {
   composer: Composer;
-  size?: 'sm' | 'lg' | 'xl' | 'md';  // sm = 20x20 (chat), lg = 24x24 (list), xl = 32x32 (list), md = 14x14 (chaåt)
+  size?: 'sm' | 'lg' | 'xl';  // sm = 20x20 (chat), lg = 24x24 (list), xl = 32x32 (list)
   className?: string;
   onClick?: () => void;
   allowModalOnDesktop?: boolean; // New prop to control modal behavior on desktop
@@ -37,8 +37,7 @@ export function ComposerImageViewer({
   const sizeClasses = {
     sm: 'w-20 h-20',
     lg: 'w-24 h-24',
-    md: 'w-20 h-20 md:w-24 md:h-24',
-    xl: 'w-20 h-20 md:w-28 md:h-28 lg:w-32 lg:h-32'  // Progressive scaling
+    xl: 'w-24 h-24 md:w-28 md:h-28 lg:w-32 lg:h-32'  // Progressive scaling
   };
 
   const handleClick = () => {

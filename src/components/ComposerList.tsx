@@ -68,8 +68,8 @@ export function ComposerList({
   }, [selectedComposer, shouldScrollToComposer, onScrollComplete]);
 
   return (
-    <div className="w-full mt-3 relative" style={{ height: "65vh" }}>
-      <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] gap-1 md:gap-2 h-full">
+    <div className="w-full mt-5 relative" style={{ height: "65vh" }}>
+      <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] gap-4 md:gap-5 h-full">
         <div className="overflow-hidden h-full flex flex-col">
           <div className="md:hidden flex-shrink-0">
             <ScrollArea className="w-full h-full">
@@ -111,56 +111,46 @@ export function ComposerList({
         </div>
 
         {selectedComposer && (
-        <div className="flex flex-col h-full overflow-hidden">
-          <div className="relative flex-1 min-h-0 flex flex-col">
-            <div className="px-3 md:px-4 pt-1">
-              <div className="flex items-start md:items-center space-x-2 md:space-x-6 border-b pt-2 md:pt-0" style={{ paddingBottom: '16px' }}>
-                <ComposerImageViewer
-                  composer={selectedComposer}
-                  size="xl"
-                  allowModalOnDesktop={true}
-                />
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-xl md:text-2xl font-bold font-serif break-words">
-                    {selectedComposer.name}
-                  </h3>
-                  <div className="flex flex-col lg:flex-row lg:items-center gap-1 lg:gap-2 mt-1">
-                    <span className="text-xs md:text-sm text-muted-foreground">
-                      {selectedComposer.nationality}, {selectedComposer.birthYear}–{selectedComposer.deathYear || 'present'}
-                    </span>
-                    <div className="flex flex-wrap gap-1 lg:ml-2">
-                      {selectedComposer.era.map((era, idx) => (
-                        <Badge key={era + idx} variant="badge" className="text-xs">
-                          {era}
-                        </Badge>
-                      ))}
+          <div className="flex flex-col h-full overflow-hidden">
+            <div className="flex-1 min-h-0 flex flex-col border-b">
+              <ScrollArea className="flex-1 min-h-0">
+                <div className="px-3 md:px-4">
+                  <div className="flex items-start md:items-center space-x-3 md:space-x-6 mb-3 md:mb-4">
+                    <ComposerImageViewer
+                      composer={selectedComposer}
+                      allowModalOnDesktop={true}
+                      className="w-16 h-16 md:w-24 md:h-24 lg:w-28 lg:h-28 flex-shrink-0 cursor-pointer"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-xl md:text-2xl font-bold font-serif break-words">
+                        {selectedComposer.name}
+                      </h3>
+                      <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-2 mt-1">
+                        <span className="text-xs md:text-sm text-muted-foreground">
+                          {selectedComposer.nationality}, {selectedComposer.birthYear}-{selectedComposer.deathYear || 'present'}
+                        </span>
+                        <div className="flex flex-wrap gap-1 md:ml-2">
+                          {selectedComposer.era.map((era, idx) => (
+                            <Badge key={era + idx} variant="badge" className="text-xs">{era}</Badge>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="space-y-2 md:space-y-4">
+                    <p className="text-sm md:text-base text-foreground/90">{selectedComposer.shortBio}</p>
+                    <div>
+                      <h4 className="font-semibold mb-1 md:mb-2 text-base md:text-lg">Notable Works</h4>
+                      <ul className="list-disc pl-5 space-y-1">
+                        {selectedComposer.famousWorks.slice(0, 3).map((work, index) => (
+                          <li key={index} className="text-sm md:text-base text-foreground/80">{work}</li>
+                        ))}
+                      </ul>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-              {/* Scrollable content starts here */}
-              <ScrollArea className="flex-1 relative">
-                <div className="p-5 space-y-2 md:space-y-4">
-                  <p className="text-sm md:text-base text-foreground/90">
-                    {selectedComposer.shortBio}
-                  </p>
-                  <div>
-                    <h4 className="font-semibold mb-1 md:mb-2 text-base md:text-lg">Notable Works</h4>
-                    <ul className="list-disc pl-5 space-y-1">
-                      {selectedComposer.famousWorks.slice(0, 3).map((work, index) => (
-                        <li key={index} className="text-sm md:text-base text-foreground/80">{work}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-
-                {/* Scroll shadow for all screen sizes */}
-                <div className="pointer-events-none absolute bottom-0 left-0 w-full h-5 bg-gradient-to-t from-background to-transparent z-10" />
               </ScrollArea>
-
             </div>
-
             <div className="flex-shrink-0 h-14 md:h-16 px-3 md:px-4 py-2 bg-background">
               <Button
                 onClick={() => {
@@ -186,7 +176,6 @@ export function ComposerList({
             </div>
           </div>
         )}
-
         {!selectedComposer && (
           <div className="md:flex items-center justify-center h-full text-muted-foreground p-4 text-center">
             Select a composer from the list to see their details and chat availability.

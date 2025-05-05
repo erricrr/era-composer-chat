@@ -134,7 +134,7 @@
   }
 
   .fixed-header {
-    @apply fixed top-0 left-0 right-0 bg-background z-50 flex items-center;
+    @apply fixed top-0 left-0 right-0 bg-background backdrop-blur-md z-50 border-b border-border/40 shadow-sm flex items-center;
     height: 2.5rem;
     transform: translateY(-100%);
   }
