@@ -1,0 +1,76 @@
+import { Composer } from '@/data/composers';
+import { X } from 'lucide-react';
+
+interface ActiveChatsSliderProps {
+  isOpen: boolean;
+  activeChatIds: string[];
+  composers: Composer[];
+  onSelectComposer: (composer: Composer) => void;
+  onClearAll: () => void;
+  onClose: () => void;
+}
+
+export default function ActiveChatsSlider({
+  isOpen,
+  activeChatIds,
+  composers,
+  onSelectComposer,
+  onClearAll,
+  onClose,
+}: ActiveChatsSliderProps) {
+  return (
+    <aside
+      className="fixed inset-y-0 right-0 z-50 bg-background backdrop-blur-sm border-l border-border shadow-lg transition-transform duration-500 ease-out flex flex-col"
+      style={{
+        width: '16rem',
+        top: '2.5rem',
+        height: 'calc(100vh - 2.5rem)',
+        transform: isOpen ? 'translateX(0)' : 'translateX(100%)',
+        transition: 'transform 500ms ease-out',
+      }}
+    >
+      <div className="flex items-center justify-between p-4 border-b border-border">
+        <h3 className="text-base font-semibold">Active Chats</h3>
+        <button
+          onClick={onClose}
+          className="p-1 rounded hover:bg-muted transition-colors"
+          aria-label="Close active chats"
+        >
+          <X className="w-4 h-4" />
+        </button>
+      </div>
+
+      <div className="flex-1 overflow-auto p-4 space-y-3">
+        {activeChatIds.length === 0 ? (
+          <div className="text-sm text-muted-foreground">No active chats.</div>
+        ) : (
+          activeChatIds.map((id) => {
+            const composer = composers.find((c) => c.id === id);
+            if (!composer) return null;
+            return (
+              <button
+                key={id}
+                onClick={() => onSelectComposer(composer)}
+                className="w-full text-left p-2 rounded hover:bg-muted transition-colors"
+              >
+                <div className="text-sm font-medium">{composer.name}</div>
+                <div className="text-xs text-muted-foreground">
+                  {Array.isArray(composer.era) ? composer.era.join(', ') : composer.era}
+                </div>
+              </button>
+            );
+          })
+        )}
+      </div>
+
+      <div className="p-4 border-t border-border">
+        <button
+          onClick={onClearAll}
+          className="w-full text-sm text-red-600 hover:underline transition-colors"
+        >
+          Clear All
+        </button>
+      </div>
+    </aside>
+  );
+}

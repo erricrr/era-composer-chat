@@ -13,12 +13,14 @@ import { useIsTouch } from '@/hooks/useIsTouch';
 interface ChatInterfaceProps {
   composer: Composer;
   onUserTyping: (isTyping: boolean) => void;
+  onUserSend?: (composer: Composer) => void;
   isComposerListOpen?: boolean;
 }
 
 export function ChatInterface({
   composer,
   onUserTyping,
+  onUserSend,
   isComposerListOpen = false,
 }: ChatInterfaceProps) {
   const [inputMessage, setInputMessage] = useState('');
@@ -231,6 +233,8 @@ export function ChatInterface({
 
   const handleMessageSubmit = () => {
     if (!inputMessage.trim()) return;
+    // Notify parent that user sent a message (activate chat)
+    onUserSend?.(composer);
 
     // Create the user message
     const userMessage: Message = {

@@ -2,9 +2,12 @@ import { useState, useCallback, useEffect } from 'react';
 import { Composer, Era, isComposerInPublicDomain, composers as allComposersData, getComposersByEra } from '@/data/composers';
 import { ComposerMenu } from '@/components/ComposerMenu';
 import { ChatInterface } from '@/components/ChatInterface';
+import ActiveChatsSlider from '@/components/ActiveChatsSlider';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { MusicNoteDecoration } from '@/components/MusicNoteDecoration';
 import { useConversations } from '@/hooks/useConversations';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { MessageCircle } from 'lucide-react';
 import FooterDrawer from '@/components/ui/footerDrawer';
 import { ComposerSearch } from '@/components/ComposerSearch';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -33,10 +36,14 @@ const Index = () => {
 
   const [shouldScrollToComposer, setShouldScrollToComposer] = useState(false);
 
-  const { startConversation, getConversationsForComposer } = useConversations();
+  const { startConversation, getConversationsForComposer, clearAllConversations } = useConversations();
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   const isTouch = useIsTouch();
+
+  // Active chats (up to 5) persisted in localStorage
+  const [activeChatIds, setActiveChatIds] = useLocalStorage<string[]>('activeChats', []);
+  const [isActiveChatsOpen, setIsActiveChatsOpen] = useState(false);
 
   const handleThemeChange = (newMode: boolean) => {
     setIsDarkMode(newMode);
@@ -103,8 +110,40 @@ const Index = () => {
         setIsChatting(true);
         localStorage.setItem('isChatting', 'true');
       }, 500);
+
+      // Add to active chats, keep most recent at front, max 5
+      handleAddActiveChat(composer);
     }
   };
+
+  // Add or move a composer to front of active chats, limit to 5
+  const handleAddActiveChat = useCallback((composer: Composer) => {
+    setActiveChatIds(prev => {
+      const ids = prev.filter(id => id !== composer.id);
+      ids.unshift(composer.id);
+      if (ids.length > 5) ids.pop();
+      return ids;
+    });
+  }, [setActiveChatIds]);
+
+  // Handler for clicking an active chat entry
+  const handleActiveChatClick = useCallback((composer: Composer) => {
+    // Re-open chat on click keep list open
+    setSelectedComposer(composer);
+    localStorage.setItem('selectedComposer', JSON.stringify(composer));
+    // Ensure chat view is open
+    setIsChatting(true);
+    localStorage.setItem('isChatting', 'true');
+    setIsMenuOpen(false);
+  }, [setIsChatting, setIsMenuOpen]);
+
+  // Clear all active chats and reset conversations
+  const handleClearActiveChats = useCallback(() => {
+    setActiveChatIds([]);
+    clearAllConversations();
+    localStorage.removeItem('activeChats');
+    setIsActiveChatsOpen(false);
+  }, [clearAllConversations, setActiveChatIds]);
 
   const toggleMenu = () => {
     // Toggle menu state
@@ -206,6 +245,32 @@ const Index = () => {
               <ThemeToggle onThemeChange={handleThemeChange} />
             </div>
           )}
+
+          {/* Active Chats Tab Icon */}
+          {!isTouch ? (
+            <Tooltip delayDuration={200}>
+              <TooltipTrigger asChild>
+                <div
+                  onClick={(e) => { e.stopPropagation(); setIsActiveChatsOpen(prev => !prev); }}
+                  className="p-2 rounded hover:bg-muted cursor-pointer transition-colors"
+                >
+                  <MessageCircle
+                    className={`h-5 w-5 transform transition-transform ${isActiveChatsOpen ? 'rotate-180' : ''}`}
+                  />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="text-xs">
+                Active Chats
+              </TooltipContent>
+            </Tooltip>
+          ) : (
+            <div
+              onClick={(e) => { e.stopPropagation(); setIsActiveChatsOpen(prev => !prev); }}
+              className="p-2 rounded hover:bg-muted cursor-pointer transition-colors"
+            >
+              <MessageCircle className="h-5 w-5" />
+            </div>
+          )}
         </div>
         </div>
       </div>
@@ -258,6 +323,7 @@ const Index = () => {
               <ChatInterface
                 composer={selectedComposer}
                 onUserTyping={() => {}}
+                onUserSend={handleAddActiveChat}
                 isComposerListOpen={isMenuOpen}
               />
             </div>
@@ -274,6 +340,16 @@ const Index = () => {
           )}
         </div>
       </main>
+
+      {/* Active Chats Slider */}
+      <ActiveChatsSlider
+        isOpen={isActiveChatsOpen}
+        activeChatIds={activeChatIds}
+        composers={allComposersData}
+        onSelectComposer={handleActiveChatClick}
+        onClearAll={handleClearActiveChats}
+        onClose={() => setIsActiveChatsOpen(false)}
+      />
     </div>
   );
 }
