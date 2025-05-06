@@ -187,9 +187,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen overflow-hidden bg-background">
-      {/* Removed Background Decoration */}
-      {/* <MusicNoteDecoration /> */}
-
       {/* Fixed Header */}
       <div className="fixed-header">
         <div className="container mx-auto px-2 flex items-center justify-between h-full">
@@ -219,90 +216,88 @@ const Index = () => {
             </div>
           </div>
 
-         {/* Right Side: Search + Icons */}
-        <div className="flex items-center gap-2">
+          {/* Right Side: Search + Icons */}
+          <div className="flex items-center gap-2">
+            {/* Search Bar */}
+            <div className="max-w-xs">
+              <ComposerSearch
+                composers={allComposersData}
+                onSelectComposer={(composer) => handleSelectComposer(composer, { source: 'search' })}
+                selectedComposer={selectedComposer}
+              />
+            </div>
 
+            {/* Active Chats Tab Icon */}
+            {!isTouch ? (
+              <Tooltip delayDuration={200}>
+                <TooltipTrigger asChild>
+                  <div
+                    onClick={(e) => { e.stopPropagation(); setIsActiveChatsOpen(prev => !prev); }}
+                    className="p-2 rounded hover:bg-muted cursor-pointer transition-colors"
+                  >
+                    <MessageCircle
+                      className={`h-5 w-5 transform transition-transform ${isActiveChatsOpen ? 'rotate-180' : ''}`}
+                    />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="text-xs">
+                  Active Chats
+                </TooltipContent>
+              </Tooltip>
+            ) : (
+              <div
+                onClick={(e) => { e.stopPropagation(); setIsActiveChatsOpen(prev => !prev); }}
+                className="p-2 rounded hover:bg-muted cursor-pointer transition-colors"
+              >
+                <MessageCircle className="h-5 w-5" />
+              </div>
+            )}
 
-          {/* Search Bar */}
-          <div className="max-w-xs">
-            <ComposerSearch
-              composers={allComposersData}
-              onSelectComposer={(composer) => handleSelectComposer(composer, { source: 'search' })}
-              selectedComposer={selectedComposer}
-            />
+            {/* Icons */}
+            {!isTouch ? (
+              <Tooltip delayDuration={200}>
+                <TooltipTrigger asChild>
+                  <div onClick={(e) => e.stopPropagation()}>
+                    <FooterDrawer />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="text-xs">
+                  About
+                </TooltipContent>
+              </Tooltip>
+            ) : (
+              <div onClick={(e) => e.stopPropagation()}>
+                <FooterDrawer />
+              </div>
+            )}
+
+            {!isTouch ? (
+              <Tooltip delayDuration={200}>
+                <TooltipTrigger asChild>
+                  <div onClick={(e) => e.stopPropagation()}>
+                    <ThemeToggle onThemeChange={handleThemeChange} />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="text-xs">
+                  {isDarkMode ? 'Toggle light mode' : 'Toggle dark mode'}
+                </TooltipContent>
+              </Tooltip>
+            ) : (
+              <div onClick={(e) => e.stopPropagation()}>
+                <ThemeToggle onThemeChange={handleThemeChange} />
+              </div>
+            )}
           </div>
-           {/* Active Chats Tab Icon */}
-           {!isTouch ? (
-            <Tooltip delayDuration={200}>
-              <TooltipTrigger asChild>
-                <div
-                  onClick={(e) => { e.stopPropagation(); setIsActiveChatsOpen(prev => !prev); }}
-                  className="p-2 rounded hover:bg-muted cursor-pointer transition-colors"
-                >
-                  <MessageCircle
-                    className={`h-5 w-5 transform transition-transform ${isActiveChatsOpen ? 'rotate-180' : ''}`}
-                  />
-                </div>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" className="text-xs">
-                Active Chats
-              </TooltipContent>
-            </Tooltip>
-          ) : (
-            <div
-              onClick={(e) => { e.stopPropagation(); setIsActiveChatsOpen(prev => !prev); }}
-              className="p-2 rounded hover:bg-muted cursor-pointer transition-colors"
-            >
-              <MessageCircle className="h-5 w-5" />
-            </div>
-          )}
-
-          {/* Icons */}
-          {!isTouch ? (
-            <Tooltip delayDuration={200}>
-              <TooltipTrigger asChild>
-                <div onClick={(e) => e.stopPropagation()}>
-                  <FooterDrawer />
-                </div>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" className="text-xs">
-                About
-              </TooltipContent>
-            </Tooltip>
-          ) : (
-            <div onClick={(e) => e.stopPropagation()}>
-              <FooterDrawer />
-            </div>
-          )}
-
-          {!isTouch ? (
-            <Tooltip delayDuration={200}>
-              <TooltipTrigger asChild>
-                <div onClick={(e) => e.stopPropagation()}>
-                  <ThemeToggle onThemeChange={handleThemeChange} />
-                </div>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" className="text-xs">
-                {isDarkMode ? 'Toggle light mode' : 'Toggle dark mode'}
-              </TooltipContent>
-            </Tooltip>
-          ) : (
-            <div onClick={(e) => e.stopPropagation()}>
-              <ThemeToggle onThemeChange={handleThemeChange} />
-            </div>
-          )}
-        </div>
         </div>
       </div>
 
-      <main className="content-main h-full">
-        {/* Composer Selection Menu - Now slides from left and overlays chat, no fade, better overflow handling */}
+      <main className="pt-10">
+        {/* Composer Selection Menu - Fixes overflow issues */}
         <aside
           className={`
             fixed inset-y-0 left-0 z-50
             bg-background backdrop-blur-sm border-r border-border shadow-lg
             transition-transform duration-500 ease-out will-change-transform
-            flex flex-col
           `}
           style={{
             width: '100%', // Full width overlay
@@ -312,29 +307,27 @@ const Index = () => {
             transition: 'transform 500ms ease-out'
           }}
         >
-          <div className="flex-1 overflow-hidden">
-            <ComposerMenu
-              onSelectComposer={(composer) => handleSelectComposer(composer, { source: 'list' })}
-              onStartChat={handleStartChat}
-              selectedComposer={selectedComposer}
-              isOpen={isMenuOpen}
-              selectedEra={selectedEra}
-              onSelectEra={handleSelectEra}
-              shouldScrollToComposer={shouldScrollToComposer}
-              onScrollComplete={handleScrollComplete}
-            />
-          </div>
+          {/* Important: We don't add another scrollable container here */}
+          <ComposerMenu
+            onSelectComposer={(composer) => handleSelectComposer(composer, { source: 'list' })}
+            onStartChat={handleStartChat}
+            selectedComposer={selectedComposer}
+            isOpen={isMenuOpen}
+            selectedEra={selectedEra}
+            onSelectEra={handleSelectEra}
+            shouldScrollToComposer={shouldScrollToComposer}
+            onScrollComplete={handleScrollComplete}
+          />
         </aside>
 
-        {/* Chat Interface */}
+        {/* Chat Interface - Fixed positioning with proper overflow handling */}
         <div
-          className="fixed bottom-0 overflow-y-auto bg-background"
+          className="fixed bg-background"
           style={{
             left: 0,
             right: isSplitViewOpenFromChat ? '0' : isActiveChatsOpen ? '16rem' : '0',
             top: '2.5rem',
-            height: 'calc(95vh - 2.5rem)',
-            maxHeight: 'calc(95vh - 2.5rem)',
+            height: 'calc(100vh - 2.5rem)',
             backdropFilter: 'blur(8px)',
             boxShadow: '0 -10px 25px rgba(0,0,0,0.1)',
             zIndex: 40
