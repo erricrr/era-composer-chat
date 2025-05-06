@@ -4,7 +4,8 @@ import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ComposerImageViewer } from './ComposerImageViewer';
-import { useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
+import { ChevronLeft, ChevronRight, ChevronUp, ChevronDown } from 'lucide-react';
 
 interface ComposerListProps {
   era: Era;
@@ -28,15 +29,84 @@ export function ComposerList({
   console.log("[List] Rendering for era:", era, "Selected:", selectedComposer?.name, "ShouldScroll:", shouldScrollToComposer);
   const allComposers = getComposersByEra(era);
 
+  // State for scroll position indicators
+  const [horizontalScroll, setHorizontalScroll] = useState({
+    isAtStart: true,
+    isAtEnd: false
+  });
+  const [verticalScroll, setVerticalScroll] = useState({
+    isAtTop: true,
+    isAtBottom: false
+  });
+
   // Simple selection handler
   const handleComposerSelect = useCallback((composer: Composer) => {
     console.log("[List] handleComposerSelect called for:", composer.name);
+
+    // Call the selection handler first
     try {
       onSelectComposer(composer, { source: 'list' });
       console.log("[List] onSelectComposer called successfully");
     } catch (error) {
       console.error("[List] Error calling onSelectComposer:", error);
     }
+
+    // Smart scroll handling
+    setTimeout(() => {
+      // Handle mobile horizontal scroll
+      const mobileElement = document.getElementById(`mobile-composer-card-${composer.id}`);
+      const mobileViewport = document.querySelector('.md\\:hidden .scroll-area [data-radix-scroll-area-viewport]');
+
+      if (mobileElement && mobileViewport) {
+        const viewportRect = mobileViewport.getBoundingClientRect();
+        const cardRect = mobileElement.getBoundingClientRect();
+
+        // Calculate how much of the card is out of view
+        const leftOverflow = viewportRect.left - cardRect.left;
+        const rightOverflow = cardRect.right - viewportRect.right;
+
+        if (leftOverflow > 0) {
+          // Card is partially hidden on the left
+          mobileViewport.scrollBy({
+            left: -leftOverflow,
+            behavior: 'smooth'
+          });
+        } else if (rightOverflow > 0) {
+          // Card is partially hidden on the right
+          mobileViewport.scrollBy({
+            left: rightOverflow,
+            behavior: 'smooth'
+          });
+        }
+      }
+
+      // Handle desktop vertical scroll
+      const desktopElement = document.getElementById(`composer-card-${composer.id}`);
+      const desktopViewport = document.querySelector('.md\\:flex .scroll-area [data-radix-scroll-area-viewport]');
+
+      if (desktopElement && desktopViewport) {
+        const viewportRect = desktopViewport.getBoundingClientRect();
+        const cardRect = desktopElement.getBoundingClientRect();
+
+        // Calculate how much of the card is out of view
+        const topOverflow = viewportRect.top - cardRect.top;
+        const bottomOverflow = cardRect.bottom - viewportRect.bottom;
+
+        if (topOverflow > 0) {
+          // Card is partially hidden at the top
+          desktopViewport.scrollBy({
+            top: -topOverflow,
+            behavior: 'smooth'
+          });
+        } else if (bottomOverflow > 0) {
+          // Card is partially hidden at the bottom
+          desktopViewport.scrollBy({
+            top: bottomOverflow,
+            behavior: 'smooth'
+          });
+        }
+      }
+    }, 0);
   }, [onSelectComposer]);
 
   // Effect to scroll selected composer into view *if needed*
@@ -60,19 +130,124 @@ export function ComposerList({
         }
 
         if (scrolled) {
-            console.log("[List] Calling onScrollComplete");
-            onScrollComplete();
+          console.log("[List] Calling onScrollComplete");
+          onScrollComplete();
         }
       }, 0);
     }
   }, [selectedComposer, shouldScrollToComposer, onScrollComplete]);
 
+  // Check scroll position when content changes
+  useEffect(() => {
+    const checkHorizontalScroll = () => {
+      // Get mobile scrollable container from DOM
+      const horizontalScroller = document.querySelector('.md\\:hidden .scroll-area');
+      if (!horizontalScroller) return;
+
+      const scrollView = horizontalScroller.querySelector('[data-radix-scroll-area-viewport]');
+
+      if (scrollView) {
+        const scrollLeft = scrollView.scrollLeft;
+        const scrollWidth = scrollView.scrollWidth;
+        const clientWidth = scrollView.clientWidth;
+
+        // Add a small buffer for accurate detection
+        const buffer = 2;
+
+        console.log("[List] Horizontal scroll check:", {
+          scrollLeft,
+          scrollWidth,
+          clientWidth,
+          isAtStart: scrollLeft <= buffer,
+          isAtEnd: Math.abs((scrollLeft + clientWidth) - scrollWidth) <= buffer
+        });
+
+        setHorizontalScroll({
+          isAtStart: scrollLeft <= buffer,
+          isAtEnd: Math.abs((scrollLeft + clientWidth) - scrollWidth) <= buffer
+        });
+      }
+    };
+
+    const checkVerticalScroll = () => {
+      // Get desktop scrollable container from DOM
+      const verticalScroller = document.querySelector('.md\\:flex .scroll-area');
+      if (!verticalScroller) return;
+
+      const scrollView = verticalScroller.querySelector('[data-radix-scroll-area-viewport]');
+
+      if (scrollView) {
+        const scrollTop = scrollView.scrollTop;
+        const scrollHeight = scrollView.scrollHeight;
+        const clientHeight = scrollView.clientHeight;
+
+        // Add a small buffer for accurate detection
+        const buffer = 2;
+
+        console.log("[List] Vertical scroll check:", {
+          scrollTop,
+          scrollHeight,
+          clientHeight,
+          isAtTop: scrollTop <= buffer,
+          isAtBottom: Math.abs((scrollTop + clientHeight) - scrollHeight) <= buffer
+        });
+
+        setVerticalScroll({
+          isAtTop: scrollTop <= buffer,
+          isAtBottom: Math.abs((scrollTop + clientHeight) - scrollHeight) <= buffer
+        });
+      }
+    };
+
+    // Initial check
+    setTimeout(() => {
+      checkHorizontalScroll();
+      checkVerticalScroll();
+    }, 500);
+
+    // Add scroll event listeners to the actual scrollable elements
+    const addScrollListeners = () => {
+      const horizontalViewport = document.querySelector('.md\\:hidden .scroll-area [data-radix-scroll-area-viewport]');
+      const verticalViewport = document.querySelector('.md\\:flex .scroll-area [data-radix-scroll-area-viewport]');
+
+      if (horizontalViewport) {
+        console.log("[List] Adding horizontal scroll listener");
+        horizontalViewport.addEventListener('scroll', checkHorizontalScroll);
+      }
+
+      if (verticalViewport) {
+        console.log("[List] Adding vertical scroll listener");
+        verticalViewport.addEventListener('scroll', checkVerticalScroll);
+      }
+    };
+
+    // Delay to ensure DOM elements are available
+    const timer = setTimeout(addScrollListeners, 1000);
+
+    return () => {
+      clearTimeout(timer);
+
+      // Clean up event listeners
+      const horizontalViewport = document.querySelector('.md\\:hidden .scroll-area [data-radix-scroll-area-viewport]');
+      const verticalViewport = document.querySelector('.md\\:flex .scroll-area [data-radix-scroll-area-viewport]');
+
+      if (horizontalViewport) {
+        horizontalViewport.removeEventListener('scroll', checkHorizontalScroll);
+      }
+
+      if (verticalViewport) {
+        verticalViewport.removeEventListener('scroll', checkVerticalScroll);
+      }
+    };
+  }, [era]); // Re-run when era changes
+
   return (
     <div className="w-full mt-3 relative" style={{ height: "65vh" }}>
       <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] gap-1 md:gap-2 h-full">
         <div className="overflow-hidden h-full flex flex-col">
-          <div className="md:hidden flex-shrink-0">
-            <ScrollArea className="w-full h-full">
+          {/* Mobile horizontal scroll with indicators */}
+          <div className="md:hidden flex-shrink-0 relative h-full px-8">
+            <ScrollArea className="w-full h-full scroll-area">
               <div className="inline-flex h-full items-center">
                 {allComposers.map((composer) => (
                   <div
@@ -90,13 +265,57 @@ export function ComposerList({
               </div>
               <ScrollBar orientation="horizontal" />
             </ScrollArea>
+
+            {/* Horizontal scroll indicators */}
+            {!horizontalScroll.isAtStart && (
+              <div
+                className="absolute left-0 top-1/3 bottom-1/3 flex items-center z-20 cursor-pointer"
+                onClick={() => {
+                  const viewport = document.querySelector('.md\\:hidden .scroll-area [data-radix-scroll-area-viewport]');
+                  if (viewport) {
+                    const currentScroll = viewport.scrollLeft;
+                    viewport.scrollTo({
+                      left: currentScroll - 240,
+                      behavior: 'smooth'
+                    });
+                  }
+                }}
+              >
+                <div className="bg-primary/80 hover:bg-primary text-background p-2 rounded-full shadow-lg flex items-center">
+                  <ChevronLeft size={20} />
+                </div>
+              </div>
+            )}
+            {!horizontalScroll.isAtEnd && (
+              <div
+                className="absolute right-0 top-1/3 bottom-1/3 flex items-center z-20 cursor-pointer"
+                onClick={() => {
+                  const viewport = document.querySelector('.md\\:hidden .scroll-area [data-radix-scroll-area-viewport]');
+                  if (viewport) {
+                    const currentScroll = viewport.scrollLeft;
+                    viewport.scrollTo({
+                      left: currentScroll + 240,
+                      behavior: 'smooth'
+                    });
+                  }
+                }}
+              >
+                <div className="bg-primary/80 hover:bg-primary text-background p-2 rounded-full shadow-lg flex items-center">
+                  <ChevronRight size={20} />
+                </div>
+              </div>
+            )}
           </div>
 
-          <div className="hidden md:flex flex-col flex-1 overflow-hidden">
-            <ScrollArea className="h-full w-full">
+          {/* Desktop vertical scroll with indicators */}
+          <div className="hidden md:flex flex-col flex-1 overflow-hidden relative py-8"> {/* Added py-8 for chevron space */}
+            <ScrollArea className="h-full w-full scroll-area">
               <div className="flex flex-col">
                 {allComposers.map((composer) => (
-                  <div key={composer.id} id={`composer-card-${composer.id}`}>
+                  <div
+                    key={composer.id}
+                    id={`composer-card-${composer.id}`}
+                  >
                     <ComposerCard
                       composer={composer}
                       onClick={() => handleComposerSelect(composer)}
@@ -107,6 +326,46 @@ export function ComposerList({
               </div>
               <ScrollBar orientation="vertical" />
             </ScrollArea>
+
+            {/* Vertical scroll indicators */}
+            {!verticalScroll.isAtTop && (
+              <div
+                className="absolute top-0 left-0 right-0 flex justify-center z-20 cursor-pointer"
+                onClick={() => {
+                  const viewport = document.querySelector('.md\\:flex .scroll-area [data-radix-scroll-area-viewport]');
+                  if (viewport) {
+                    const currentScroll = viewport.scrollTop;
+                    viewport.scrollTo({
+                      top: currentScroll - 180,
+                      behavior: 'smooth'
+                    });
+                  }
+                }}
+              >
+                <div className="bg-primary/80 hover:bg-primary text-background p-2 rounded-full shadow-lg">
+                  <ChevronUp size={20} />
+                </div>
+              </div>
+            )}
+            {!verticalScroll.isAtBottom && (
+              <div
+                className="absolute bottom-0 left-0 right-0 flex justify-center z-20 cursor-pointer"
+                onClick={() => {
+                  const viewport = document.querySelector('.md\\:flex .scroll-area [data-radix-scroll-area-viewport]');
+                  if (viewport) {
+                    const currentScroll = viewport.scrollTop;
+                    viewport.scrollTo({
+                      top: currentScroll + 180,
+                      behavior: 'smooth'
+                    });
+                  }
+                }}
+              >
+                <div className="bg-primary/80 hover:bg-primary text-background p-2 rounded-full shadow-lg">
+                  <ChevronDown size={20} />
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
