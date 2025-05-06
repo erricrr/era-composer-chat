@@ -366,6 +366,27 @@ export function ComposerList({
     };
   }, [era]); // Re-run when era changes
 
+  // Maintain selected composer card in view when switching between mobile and desktop on resize
+  const scrollToSelectedComposer = useCallback(() => {
+    if (selectedComposer) {
+      // Desktop view
+      const desktopEl = document.getElementById(`composer-card-${selectedComposer.id}`);
+      if (desktopEl) {
+        desktopEl.scrollIntoView({ behavior: 'auto', block: 'nearest' });
+      }
+      // Mobile view
+      const mobileEl = document.getElementById(`mobile-composer-card-${selectedComposer.id}`);
+      if (mobileEl) {
+        mobileEl.scrollIntoView({ behavior: 'auto', inline: 'nearest' });
+      }
+    }
+  }, [selectedComposer]);
+
+  useEffect(() => {
+    window.addEventListener('resize', scrollToSelectedComposer);
+    return () => window.removeEventListener('resize', scrollToSelectedComposer);
+  }, [scrollToSelectedComposer]);
+
   return (
     <div className="w-full mt-3 relative" style={{ height: "65vh" }}>
       <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] gap-1 md:gap-2 h-full">
