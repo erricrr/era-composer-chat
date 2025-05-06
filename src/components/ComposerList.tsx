@@ -23,17 +23,58 @@ const ScrollChevron = ({ direction, onClick }: ScrollChevronProps) => {
   const Icon = ChevronIcon[direction];
 
   const roundedClasses: Record<typeof direction, string> = {
-    left: 'rounded-l-lg',
-    right: 'rounded-r-lg',
-    up: 'rounded-t-lg',
-    down: 'rounded-b-lg'
+    left: 'rounded-l-md',
+    right: 'rounded-r-md',
+    up: 'rounded-t-md',
+    down: 'rounded-b-md'
+  };
+
+  const containerClasses: Record<typeof direction, string> = {
+    left: 'w-2.5 h-10 mb-2',
+    right: 'w-2.5 h-10 mb-2',
+    up: 'w-10 h-2.5',
+    down: 'w-10 h-2.5'
   };
 
   return (
-    <div className={`bg-primary/20 hover:bg-primary/40 text-primary p-1.5 shadow-sm backdrop-blur-sm transition-colors select-none ${roundedClasses[direction]}`}
-         onClick={onClick}>
-      <Icon size={16} />
-    </div>
+    <>
+      {(direction === 'left' || direction === 'right') ? (
+        <div
+          className="absolute top-0 bottom-0 flex items-center cursor-pointer select-none z-20"
+          style={{ [direction]: 0 }}
+          onClick={onClick}
+        >
+          <div className={`
+            ${containerClasses[direction]}
+            bg-primary/35 hover:bg-primary/65
+            ${roundedClasses[direction]}
+            flex items-center justify-center
+            relative
+            transition-colors
+            duration-200
+          `}>
+            <Icon size={18} className="text-background absolute" />
+          </div>
+        </div>
+      ) : (
+        <div
+          className={`
+            bg-primary/35 hover:bg-primary/65
+            text-secondary
+            transition-colors
+            duration-200
+            select-none
+            flex items-center justify-center
+            cursor-pointer
+            ${containerClasses[direction]}
+            ${roundedClasses[direction]}
+          `}
+          onClick={onClick}
+        >
+          <Icon size={18} className="text-background" />
+        </div>
+      )}
+    </>
   );
 };
 
@@ -276,7 +317,7 @@ export function ComposerList({
       <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] gap-1 md:gap-2 h-full">
         <div className="overflow-hidden h-full flex flex-col">
           {/* Mobile horizontal scroll with indicators */}
-          <div className="md:hidden flex-shrink-0 relative h-full px-8">
+          <div className="md:hidden flex-shrink-0 relative h-full px-4">
             <ScrollArea className="w-full h-full scroll-area">
               <div className="inline-flex h-full items-center">
                 {allComposers.map((composer, idx) => (
@@ -321,43 +362,39 @@ export function ComposerList({
 
             {/* Horizontal scroll indicators */}
             {!horizontalScroll.isAtStart && (
-              <div className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center z-20 cursor-pointer">
-                <ScrollChevron
-                  direction="left"
-                  onClick={() => {
-                    const viewport = document.querySelector('.md\\:hidden .scroll-area [data-radix-scroll-area-viewport]');
-                    if (viewport) {
-                      const currentScroll = viewport.scrollLeft;
-                      viewport.scrollTo({
-                        left: currentScroll - 240,
-                        behavior: 'smooth'
-                      });
-                    }
-                  }}
-                />
-              </div>
+              <ScrollChevron
+                direction="left"
+                onClick={() => {
+                  const viewport = document.querySelector('.md\\:hidden .scroll-area [data-radix-scroll-area-viewport]');
+                  if (viewport) {
+                    const currentScroll = viewport.scrollLeft;
+                    viewport.scrollTo({
+                      left: Math.max(0, currentScroll - 240),
+                      behavior: 'smooth'
+                    });
+                  }
+                }}
+              />
             )}
             {!horizontalScroll.isAtEnd && (
-              <div className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center z-20 cursor-pointer">
-                <ScrollChevron
-                  direction="right"
-                  onClick={() => {
-                    const viewport = document.querySelector('.md\\:hidden .scroll-area [data-radix-scroll-area-viewport]');
-                    if (viewport) {
-                      const currentScroll = viewport.scrollLeft;
-                      viewport.scrollTo({
-                        left: currentScroll + 240,
-                        behavior: 'smooth'
-                      });
-                    }
-                  }}
-                />
-              </div>
+              <ScrollChevron
+                direction="right"
+                onClick={() => {
+                  const viewport = document.querySelector('.md\\:hidden .scroll-area [data-radix-scroll-area-viewport]');
+                  if (viewport) {
+                    const currentScroll = viewport.scrollLeft;
+                    viewport.scrollTo({
+                      left: currentScroll + 240,
+                      behavior: 'smooth'
+                    });
+                  }
+                }}
+              />
             )}
           </div>
 
           {/* Desktop vertical scroll with indicators */}
-          <div className="hidden md:flex flex-col flex-1 overflow-hidden relative py-8"> {/* Added py-8 for chevron space */}
+          <div className="hidden md:flex flex-col flex-1 overflow-hidden relative py-4">
             <ScrollArea className="h-full w-full scroll-area">
               <div className="flex flex-col">
                 {allComposers.map((composer, idx) => (
@@ -441,7 +478,7 @@ export function ComposerList({
         <div className="flex flex-col h-full overflow-hidden">
           <div className="relative flex-1 min-h-0 flex flex-col">
             <div className="px-3 md:px-4 pt-1">
-              <div className="flex items-start md:items-center space-x-2 md:space-x-6 border-b pt-2 md:pt-0" style={{ paddingBottom: '16px' }}>
+              <div className="flex items-start md:items-center space-x-2 md:space-x-6 border-b pt-2 md:pt-0" style={{ paddingBottom: '10px' }}>
                 <ComposerImageViewer
                   composer={selectedComposer}
                   size="xl"
@@ -468,7 +505,7 @@ export function ComposerList({
             </div>
               {/* Scrollable content starts here */}
               <ScrollArea className="flex-1 relative">
-                <div className="p-5 space-y-2 md:space-y-4">
+                <div className="p-3 space-y-2 md:space-y-4">
                   <p className="text-sm md:text-base text-foreground/90">
                     {selectedComposer.shortBio}
                   </p>
