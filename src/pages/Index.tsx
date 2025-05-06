@@ -221,6 +221,8 @@ const Index = () => {
 
          {/* Right Side: Search + Icons */}
         <div className="flex items-center gap-2">
+
+
           {/* Search Bar */}
           <div className="max-w-xs">
             <ComposerSearch
@@ -229,6 +231,31 @@ const Index = () => {
               selectedComposer={selectedComposer}
             />
           </div>
+           {/* Active Chats Tab Icon */}
+           {!isTouch ? (
+            <Tooltip delayDuration={200}>
+              <TooltipTrigger asChild>
+                <div
+                  onClick={(e) => { e.stopPropagation(); setIsActiveChatsOpen(prev => !prev); }}
+                  className="p-2 rounded hover:bg-muted cursor-pointer transition-colors"
+                >
+                  <MessageCircle
+                    className={`h-5 w-5 transform transition-transform ${isActiveChatsOpen ? 'rotate-180' : ''}`}
+                  />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="text-xs">
+                Active Chats
+              </TooltipContent>
+            </Tooltip>
+          ) : (
+            <div
+              onClick={(e) => { e.stopPropagation(); setIsActiveChatsOpen(prev => !prev); }}
+              className="p-2 rounded hover:bg-muted cursor-pointer transition-colors"
+            >
+              <MessageCircle className="h-5 w-5" />
+            </div>
+          )}
 
           {/* Icons */}
           {!isTouch ? (
@@ -262,32 +289,6 @@ const Index = () => {
           ) : (
             <div onClick={(e) => e.stopPropagation()}>
               <ThemeToggle onThemeChange={handleThemeChange} />
-            </div>
-          )}
-
-          {/* Active Chats Tab Icon */}
-          {!isTouch ? (
-            <Tooltip delayDuration={200}>
-              <TooltipTrigger asChild>
-                <div
-                  onClick={(e) => { e.stopPropagation(); setIsActiveChatsOpen(prev => !prev); }}
-                  className="p-2 rounded hover:bg-muted cursor-pointer transition-colors"
-                >
-                  <MessageCircle
-                    className={`h-5 w-5 transform transition-transform ${isActiveChatsOpen ? 'rotate-180' : ''}`}
-                  />
-                </div>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" className="text-xs">
-                Active Chats
-              </TooltipContent>
-            </Tooltip>
-          ) : (
-            <div
-              onClick={(e) => { e.stopPropagation(); setIsActiveChatsOpen(prev => !prev); }}
-              className="p-2 rounded hover:bg-muted cursor-pointer transition-colors"
-            >
-              <MessageCircle className="h-5 w-5" />
             </div>
           )}
         </div>
