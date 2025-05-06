@@ -23,14 +23,14 @@ const ScrollChevron = ({ direction, onClick }: ScrollChevronProps) => {
   const Icon = ChevronIcon[direction];
 
   const roundedClasses: Record<typeof direction, string> = {
-    left: 'rounded-r-lg rounded-tr-lg',
-    right: 'rounded-l-lg rounded-tl-lg',
-    up: 'rounded-b-lg',
-    down: 'rounded-t-lg'
+    left: 'rounded-l-lg',
+    right: 'rounded-r-lg',
+    up: 'rounded-t-lg',
+    down: 'rounded-b-lg'
   };
 
   return (
-    <div className={`bg-primary/20 hover:bg-primary/40 text-primary p-1.5 shadow-sm backdrop-blur-sm transition-colors ${roundedClasses[direction]}`}
+    <div className={`bg-primary/20 hover:bg-primary/40 text-primary p-1.5 shadow-sm backdrop-blur-sm transition-colors select-none ${roundedClasses[direction]}`}
          onClick={onClick}>
       <Icon size={16} />
     </div>
