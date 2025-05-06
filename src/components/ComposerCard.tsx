@@ -5,9 +5,13 @@ interface ComposerCardProps {
   onClick: (composer: Composer) => void;
   isSelected: boolean;
   compact?: boolean;
+  tabIndex?: number;
+  role?: string;
+  ariaLabel?: string;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void;
 }
 
-export function ComposerCard({ composer, onClick, isSelected, compact = false }: ComposerCardProps) {
+export function ComposerCard({ composer, onClick, isSelected, compact = false, tabIndex, role, ariaLabel, onKeyDown }: ComposerCardProps) {
   return (
     <div
       onClick={() => onClick(composer)}
@@ -18,7 +22,10 @@ export function ComposerCard({ composer, onClick, isSelected, compact = false }:
           : 'bg-secondary hover:bg-secondary/70'
         }
       `}
-
+      tabIndex={tabIndex}
+      role={role}
+      aria-label={ariaLabel}
+      onKeyDown={onKeyDown}
     >
       {/* Hover state bar */}
       <div

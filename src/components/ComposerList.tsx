@@ -249,7 +249,7 @@ export function ComposerList({
           <div className="md:hidden flex-shrink-0 relative h-full px-8">
             <ScrollArea className="w-full h-full scroll-area">
               <div className="inline-flex h-full items-center">
-                {allComposers.map((composer) => (
+                {allComposers.map((composer, idx) => (
                   <div
                     key={composer.id}
                     id={`mobile-composer-card-${composer.id}`}
@@ -259,6 +259,29 @@ export function ComposerList({
                       composer={composer}
                       onClick={() => handleComposerSelect(composer)}
                       isSelected={selectedComposer?.id === composer.id}
+                      tabIndex={0}
+                      role="button"
+                      ariaLabel={`Select composer ${composer.name}`}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          handleComposerSelect(composer);
+                        } else if (e.key === 'ArrowRight') {
+                          // Focus next card
+                          const next = document.getElementById(`mobile-composer-card-${allComposers[idx + 1]?.id}`);
+                          if (next) {
+                            const focusable = next.querySelector('[tabindex="0"]') as HTMLElement | null;
+                            if (focusable) focusable.focus();
+                          }
+                        } else if (e.key === 'ArrowLeft') {
+                          // Focus previous card
+                          const prev = document.getElementById(`mobile-composer-card-${allComposers[idx - 1]?.id}`);
+                          if (prev) {
+                            const focusable = prev.querySelector('[tabindex="0"]') as HTMLElement | null;
+                            if (focusable) focusable.focus();
+                          }
+                        }
+                      }}
                     />
                   </div>
                 ))}
@@ -311,7 +334,7 @@ export function ComposerList({
           <div className="hidden md:flex flex-col flex-1 overflow-hidden relative py-8"> {/* Added py-8 for chevron space */}
             <ScrollArea className="h-full w-full scroll-area">
               <div className="flex flex-col">
-                {allComposers.map((composer) => (
+                {allComposers.map((composer, idx) => (
                   <div
                     key={composer.id}
                     id={`composer-card-${composer.id}`}
@@ -320,6 +343,29 @@ export function ComposerList({
                       composer={composer}
                       onClick={() => handleComposerSelect(composer)}
                       isSelected={selectedComposer?.id === composer.id}
+                      tabIndex={0}
+                      role="button"
+                      ariaLabel={`Select composer ${composer.name}`}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          handleComposerSelect(composer);
+                        } else if (e.key === 'ArrowDown') {
+                          // Focus next card
+                          const next = document.getElementById(`composer-card-${allComposers[idx + 1]?.id}`);
+                          if (next) {
+                            const focusable = next.querySelector('[tabindex="0"]') as HTMLElement | null;
+                            if (focusable) focusable.focus();
+                          }
+                        } else if (e.key === 'ArrowUp') {
+                          // Focus previous card
+                          const prev = document.getElementById(`composer-card-${allComposers[idx - 1]?.id}`);
+                          if (prev) {
+                            const focusable = prev.querySelector('[tabindex="0"]') as HTMLElement | null;
+                            if (focusable) focusable.focus();
+                          }
+                        }
+                      }}
                     />
                   </div>
                 ))}
