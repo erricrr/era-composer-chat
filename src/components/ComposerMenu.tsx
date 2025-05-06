@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Timeline } from './Timeline';
 import { ComposerList } from './ComposerList';
 import { Composer, Era, getComposersByEra } from '@/data/composers';
@@ -26,6 +26,15 @@ export function ComposerMenu({
 }: ComposerMenuProps) {
   // State to remember the last selected composer for each era
   const [lastSelectedComposerPerEra, setLastSelectedComposerPerEra] = useState<Partial<Record<Era, Composer>>>({});
+
+  // --- SCROLL POSITION STATE ---
+  const mobileScrollPositions = useRef<{ [era: string]: number }>({});
+  const desktopScrollPositions = useRef<{ [era: string]: number }>({});
+
+  const getMobileScrollPosition = useCallback((era: Era) => mobileScrollPositions.current[era] ?? 0, []);
+  const setMobileScrollPosition = useCallback((era: Era, pos: number) => { mobileScrollPositions.current[era] = pos; }, []);
+  const getDesktopScrollPosition = useCallback((era: Era) => desktopScrollPositions.current[era] ?? 0, []);
+  const setDesktopScrollPosition = useCallback((era: Era, pos: number) => { desktopScrollPositions.current[era] = pos; }, []);
 
   // Update the last selected composer for the current era whenever selectedComposer changes
   useEffect(() => {
@@ -70,6 +79,10 @@ export function ComposerMenu({
           onStartChat={onStartChat}
           shouldScrollToComposer={shouldScrollToComposer}
           onScrollComplete={onScrollComplete}
+          getMobileScrollPosition={getMobileScrollPosition}
+          setMobileScrollPosition={setMobileScrollPosition}
+          getDesktopScrollPosition={getDesktopScrollPosition}
+          setDesktopScrollPosition={setDesktopScrollPosition}
         />
       </div>
     </div>

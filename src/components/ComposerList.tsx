@@ -86,6 +86,10 @@ interface ComposerListProps {
   isOpen?: boolean;
   shouldScrollToComposer: boolean;
   onScrollComplete: () => void;
+  getMobileScrollPosition: (era: Era) => number;
+  setMobileScrollPosition: (era: Era, pos: number) => void;
+  getDesktopScrollPosition: (era: Era) => number;
+  setDesktopScrollPosition: (era: Era, pos: number) => void;
 }
 
 export function ComposerList({
@@ -95,7 +99,11 @@ export function ComposerList({
   onStartChat,
   isOpen = false,
   shouldScrollToComposer,
-  onScrollComplete
+  onScrollComplete,
+  getMobileScrollPosition,
+  setMobileScrollPosition,
+  getDesktopScrollPosition,
+  setDesktopScrollPosition
 }: ComposerListProps) {
   console.log("[List] Rendering for era:", era, "Selected:", selectedComposer?.name, "ShouldScroll:", shouldScrollToComposer);
   const allComposers = getComposersByEra(era);
@@ -180,28 +188,74 @@ export function ComposerList({
     }, 0);
   }, [onSelectComposer]);
 
-  // Effect to scroll selected composer into view *if needed*
+  // Effect to restore scroll position on era change
+  useEffect(() => {
+    // Restore mobile scroll position
+    setTimeout(() => {
+      const mobileViewport = document.querySelector('.md\\:hidden .scroll-area [data-radix-scroll-area-viewport]') as HTMLElement | null;
+      if (mobileViewport) {
+        const pos = getMobileScrollPosition(era);
+        mobileViewport.scrollTo({ left: pos, behavior: 'auto' });
+      }
+    }, 0);
+    // Restore desktop scroll position
+    setTimeout(() => {
+      const desktopViewport = document.querySelector('.md\\:flex .scroll-area [data-radix-scroll-area-viewport]') as HTMLElement | null;
+      if (desktopViewport) {
+        const pos = getDesktopScrollPosition(era);
+        desktopViewport.scrollTo({ top: pos, behavior: 'auto' });
+      }
+    }, 0);
+  }, [era, getMobileScrollPosition, getDesktopScrollPosition]);
+
+  // Save scroll position on scroll for mobile and desktop
+  useEffect(() => {
+    const mobileViewport = document.querySelector('.md\\:hidden .scroll-area [data-radix-scroll-area-viewport]') as HTMLElement | null;
+    const desktopViewport = document.querySelector('.md\\:flex .scroll-area [data-radix-scroll-area-viewport]') as HTMLElement | null;
+
+    const handleMobileScroll = () => {
+      if (mobileViewport) {
+        setMobileScrollPosition(era, mobileViewport.scrollLeft);
+      }
+    };
+    const handleDesktopScroll = () => {
+      if (desktopViewport) {
+        setDesktopScrollPosition(era, desktopViewport.scrollTop);
+      }
+    };
+
+    if (mobileViewport) {
+      mobileViewport.addEventListener('scroll', handleMobileScroll);
+    }
+    if (desktopViewport) {
+      desktopViewport.addEventListener('scroll', handleDesktopScroll);
+    }
+    return () => {
+      if (mobileViewport) {
+        mobileViewport.removeEventListener('scroll', handleMobileScroll);
+      }
+      if (desktopViewport) {
+        desktopViewport.removeEventListener('scroll', handleDesktopScroll);
+      }
+    };
+  }, [era, setMobileScrollPosition, setDesktopScrollPosition]);
+
+  // Effect to scroll selected composer into view
   useEffect(() => {
     if (selectedComposer && shouldScrollToComposer) {
-      console.log(`[List] Scroll triggered for ${selectedComposer.name}`);
       let scrolled = false;
       setTimeout(() => {
         const desktopElement = document.getElementById(`composer-card-${selectedComposer.id}`);
         if (desktopElement) {
-          console.log(`[List] Scrolling desktop to ${selectedComposer.name}`);
           desktopElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
           scrolled = true;
         }
-
         const mobileElement = document.getElementById(`mobile-composer-card-${selectedComposer.id}`);
         if (mobileElement) {
-          console.log(`[List] Scrolling mobile to ${selectedComposer.name}`);
           mobileElement.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
           scrolled = true;
         }
-
         if (scrolled) {
-          console.log("[List] Calling onScrollComplete");
           onScrollComplete();
         }
       }, 0);
@@ -318,7 +372,7 @@ export function ComposerList({
         <div className="overflow-hidden h-full flex flex-col">
           {/* Mobile horizontal scroll with indicators */}
           <div className="md:hidden flex-shrink-0 relative h-full px-4">
-            <ScrollArea className="w-full h-full scroll-area">
+            <ScrollArea key={era} className="w-full h-full scroll-area">
               <div className="inline-flex h-full items-center">
                 {allComposers.map((composer, idx) => (
                   <div
@@ -395,7 +449,7 @@ export function ComposerList({
 
           {/* Desktop vertical scroll with indicators */}
           <div className="hidden md:flex flex-col flex-1 overflow-hidden relative py-4">
-            <ScrollArea className="h-full w-full scroll-area">
+            <ScrollArea key={era} className="h-full w-full scroll-area">
               <div className="flex flex-col">
                 {allComposers.map((composer, idx) => (
                   <div

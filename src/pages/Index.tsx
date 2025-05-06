@@ -35,6 +35,7 @@ const Index = () => {
   });
 
   const [shouldScrollToComposer, setShouldScrollToComposer] = useState(false);
+  const [pendingScrollComposerId, setPendingScrollComposerId] = useState<string | null>(null);
 
   const { startConversation, getConversationsForComposer, clearAllConversations, deleteConversation } = useConversations();
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -64,27 +65,35 @@ const Index = () => {
   const handleSelectComposer = useCallback((composer: Composer, options?: { source?: string }) => {
     console.log(`[Index] handleSelectComposer called for ${composer.name} from ${options?.source}`);
 
-    setSelectedComposer(composer);
-    localStorage.setItem('selectedComposer', JSON.stringify(composer));
-
     if (options?.source === 'search') {
-        const composerEra = Array.isArray(composer.era) ? composer.era[0] : composer.era;
-        if (composerEra && composerEra !== selectedEra) {
-          console.log(`[Index] Source is search, changing era to ${composerEra}`);
-          setSelectedEra(composerEra);
-          localStorage.setItem('selectedEra', composerEra);
-        }
-
-        // If already chatting, ensure we stay in chat mode
-        if (isChatting) {
-          setIsMenuOpen(false);
-          localStorage.setItem('isMenuOpen', 'false');
-        }
+      const composerEra = Array.isArray(composer.era) ? composer.era[0] : composer.era;
+      if (composerEra && composerEra !== selectedEra) {
+        console.log(`[Index] Source is search, changing era to ${composerEra}`);
+        setSelectedEra(composerEra);
+        // Set the composer after era change to ensure proper state updates
+        setTimeout(() => {
+          setSelectedComposer(composer);
+          setShouldScrollToComposer(true);
+        }, 0);
+      } else {
+        setSelectedComposer(composer);
+        setShouldScrollToComposer(true);
+      }
+    } else {
+      setSelectedComposer(composer);
     }
+  }, [selectedEra]);
 
-    setShouldScrollToComposer(options?.source === 'search');
-
-  }, [selectedEra, isChatting]);
+  // Effect: when selectedEra and selectedComposer match pending scroll, trigger scroll
+  useEffect(() => {
+    if (
+      pendingScrollComposerId &&
+      selectedComposer &&
+      selectedComposer.id === pendingScrollComposerId
+    ) {
+      setShouldScrollToComposer(true);
+    }
+  }, [pendingScrollComposerId, selectedComposer, selectedEra]);
 
   const handleSelectEra = useCallback((newEra: Era) => {
     if (newEra !== selectedEra) {
@@ -104,6 +113,7 @@ const Index = () => {
   const handleScrollComplete = useCallback(() => {
     console.log("[Index] handleScrollComplete called, resetting scroll flag.");
     setShouldScrollToComposer(false);
+    setPendingScrollComposerId(null);
   }, []);
 
   const handleStartChat = (composer: Composer) => {
