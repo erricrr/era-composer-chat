@@ -68,17 +68,23 @@ const Index = () => {
     localStorage.setItem('selectedComposer', JSON.stringify(composer));
 
     if (options?.source === 'search') {
-        const composerEra = composer.era[0];
+        const composerEra = Array.isArray(composer.era) ? composer.era[0] : composer.era;
         if (composerEra && composerEra !== selectedEra) {
           console.log(`[Index] Source is search, changing era to ${composerEra}`);
           setSelectedEra(composerEra);
           localStorage.setItem('selectedEra', composerEra);
         }
+
+        // If already chatting, ensure we stay in chat mode
+        if (isChatting) {
+          setIsMenuOpen(false);
+          localStorage.setItem('isMenuOpen', 'false');
+        }
     }
 
     setShouldScrollToComposer(options?.source === 'search');
 
-  }, [selectedEra]);
+  }, [selectedEra, isChatting]);
 
   const handleSelectEra = useCallback((newEra: Era) => {
     if (newEra !== selectedEra) {
@@ -188,7 +194,7 @@ const Index = () => {
   return (
     <div className="min-h-screen overflow-hidden bg-background">
       {/* Fixed Header */}
-      <div className="fixed-header">
+      <div className="fixed-header" style={{ position: 'relative', zIndex: 1000 }}>
         <div className="container mx-auto px-2 flex items-center justify-between h-full">
           {/* Left Side: Menu Toggle Area */}
           <div

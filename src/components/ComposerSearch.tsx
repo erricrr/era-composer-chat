@@ -35,9 +35,25 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
   const containerRef = useRef<HTMLDivElement>(null);
   const resultRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  // Filter logic
+  // Memoize text normalization function
+  const normalizeText = useMemo(() => {
+    return (text: string): string => {
+      return text
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim();
+    };
+  }, []);
 
+  // Memoize name parts extraction
+  const getSearchableNameParts = useMemo(() => {
+    return (composer: Composer): string[] => {
+      return composer.name.split(' ').map(part => normalizeText(part));
+    };
+  }, [normalizeText]);
 
+  // Filter logic with improved name matching
   const performFilter = useCallback((query: string) => {
     setIsLoading(true);
     console.log("[Search] Performing filter for:", query);
@@ -56,58 +72,55 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
     setHasSearched(true);
 
     try {
-      const normalizedQuery = trimmedQuery.toLowerCase();
+      const normalizedQuery = normalizeText(trimmedQuery);
+
       const filtered = composers
         .filter((composer) => {
-          // Use searchableName if available, otherwise fall back to name
-          const searchName = (composer.searchableName || composer.name || '').toLowerCase();
-          return searchName.includes(normalizedQuery);
+          const nameParts = getSearchableNameParts(composer);
+          const fullName = normalizeText(composer.name);
+
+          return nameParts.some(part => part.includes(normalizedQuery)) ||
+                 fullName.includes(normalizedQuery);
         })
         .sort((a, b) => {
-          // Use searchableName if available, otherwise fall back to name
-          const aName = (a.searchableName || a.name || '').toLowerCase();
-          const bName = (b.searchableName || b.name || '').toLowerCase();
+          const aName = normalizeText(a.name);
+          const bName = normalizeText(b.name);
 
-          // Exact match
+          // Exact match gets highest priority
           if (aName === normalizedQuery) return -1;
           if (bName === normalizedQuery) return 1;
 
-          // Starts with query
-          const aStartsWith = aName.startsWith(normalizedQuery);
-          const bStartsWith = bName.startsWith(normalizedQuery);
-          if (aStartsWith && !bStartsWith) return -1;
-          if (bStartsWith && !aStartsWith) return 1;
+          // Then check for matches at the start of any name part
+          const aNameParts = getSearchableNameParts(a);
+          const bNameParts = getSearchableNameParts(b);
 
-          // If both or neither start with query, sort by how early the match occurs
-          const aIndex = aName.indexOf(normalizedQuery);
-          const bIndex = bName.indexOf(normalizedQuery);
-          return aIndex - bIndex;
+          const aStartsWithQuery = aNameParts.some(part => part.startsWith(normalizedQuery));
+          const bStartsWithQuery = bNameParts.some(part => part.startsWith(normalizedQuery));
+
+          if (aStartsWithQuery && !bStartsWithQuery) return -1;
+          if (bStartsWithQuery && !aStartsWithQuery) return 1;
+
+          // Finally, sort by how early the match occurs in the full name
+          return aName.indexOf(normalizedQuery) - bName.indexOf(normalizedQuery);
         });
 
+      console.log("[Search] Found matches:", filtered.length);
       setFilteredComposers(filtered);
-      setIsOpen(true);
+      setIsOpen(filtered.length > 0);
     } catch (error) {
       console.error("[Search] Error during filtering:", error);
       setFilteredComposers([]);
     }
 
     setIsLoading(false);
-  }, [composers]);
+  }, [composers, normalizeText, getSearchableNameParts]);
 
-  // Debounced filter
-  const debouncedFilter = useCallback((query: string) => {
-    const handler = setTimeout(() => {
-      performFilter(query);
-    }, 200);
-
-    return () => clearTimeout(handler);
-  }, [performFilter]);
-
-  // Handle input changes
+  // Handle input changes with debounce
   const handleInputChange = useCallback((value: string) => {
+    console.log("[Search] Input changed:", value);
     setSearchQuery(value);
-    debouncedFilter(value);
-  }, [debouncedFilter]);
+    performFilter(value);
+  }, [performFilter]);
 
   // Handle clearing the search
   const handleClear = useCallback(() => {
@@ -134,6 +147,7 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
     setIsOpen(false);
     setHasSearched(false);
     setActiveResultIndex(-1);
+    setIsMobileSearchActive(false);
   }, [onSelectComposer]);
 
   // Activate mobile search
@@ -207,7 +221,7 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
   }, [isMobileSearchActive]);
 
   // Determine whether to show results
-  const shouldShowResults = isOpen && searchQuery.trim().length > 0;
+  const shouldShowResults = searchQuery.trim().length > 0;
 
   return (
     <div className="relative flex items-center md:w-[230px]" ref={containerRef}>
@@ -229,6 +243,7 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
           isMobileSearchActive ? "w-full" : "hidden",
           "md:block md:w-full"
         )}
+        style={{ position: 'relative', zIndex: 1000 }}
       >
         {/* Input with icons */}
         <div className="flex items-center px-3 rounded-full">
@@ -243,6 +258,7 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
             onKeyDown={handleKeyDown}
             onFocus={() => {
               if (searchQuery.trim().length > 0) {
+                performFilter(searchQuery);
                 setIsOpen(true);
               }
             }}
@@ -251,7 +267,7 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
           {(searchQuery || isMobileSearchActive) && (
             <button
               onClick={handleClear}
-              className="p-1 hover:bg-secondary/30 rounded-full text-muted-foreground/60 hover:text-muted-foreground md:hidden"
+              className="p-1 hover:bg-secondary/30 rounded-full text-muted-foreground/60 hover:text-muted-foreground"
               type="button"
               aria-label="Clear or close search"
             >
@@ -262,7 +278,10 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
 
         {/* Results dropdown */}
         {shouldShowResults && (
-          <div className="absolute top-[calc(100%+4px)] left-0 right-0 z-50 w-full">
+          <div
+            className="absolute top-[calc(100%+4px)] left-0 right-0 w-full"
+            style={{ zIndex: 1000 }}
+          >
             <div className="rounded-lg border border-border bg-card shadow-md">
               <div className="max-h-[200px] overflow-y-auto p-1">
                 {/* Loading indicator */}
@@ -281,7 +300,7 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
 
                 {/* Results list */}
                 {!isLoading && filteredComposers.length > 0 && (
-                  <div>
+                  <div className="relative">
                     {filteredComposers.map((composer, index) => (
                       <div
                         ref={(el) => resultRefs.current[index] = el}
