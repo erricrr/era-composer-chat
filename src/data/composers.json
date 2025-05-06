@@ -374,7 +374,7 @@
         "Violin Concertos",
         "L'Amant anonyme"
       ],
-      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/0/02/Mather_Brown_William_Ward_-_Monsieur_de_St_George_1788_NPG_D4132_London.png",
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/0/02/Mather_Brown%2C_William_Ward_-_Monsieur_de_St_George%2C_1788%2C_NPG_D4132%2C_London.png",
       "notableQuotes": [
         "Music is the language of the soul.",
         "The art of music is a divine gift, and those who possess it are blessed."
@@ -879,7 +879,7 @@
         "Come Ye Sons of Art",
         "Music for the Funeral of Queen Mary"
       ],
-      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/8/88/John_Closterman_%281660-1711%29_%28by_or_after%29_-_Henry_Purcell_-_NPG_D4132_London.png",
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/d/df/Henry_Purcell_Closterman.jpg",
       "notableQuotes": [
         "Music is the greatest good that mortals know and nothing but harmony from heaven above.",
         "The art of music is a divine gift, and those who possess it are blessed."
@@ -1076,6 +1076,7 @@
     },
     {
       "id": "frederic-chopin",
+      "name": "Frédéric Chopin",
       "searchableName": "Frederic Chopin",
       "era": ["Romantic"],
       "birthYear": 1810,
