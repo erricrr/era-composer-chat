@@ -49,17 +49,7 @@ export function ComposerMenu({
   // Handle era changes
   const handleEraChange = useCallback((newEra: Era) => {
     onSelectEra(newEra);
-
-    const rememberedComposer = lastSelectedComposerPerEra[newEra];
-    if (rememberedComposer) {
-      onSelectComposer(rememberedComposer, { source: 'timeline' });
-    } else {
-      const composersInEra = getComposersByEra(newEra);
-      if (composersInEra.length > 0) {
-        onSelectComposer(composersInEra[0], { source: 'timeline' });
-      }
-    }
-  }, [onSelectEra, lastSelectedComposerPerEra, onSelectComposer]);
+  }, [onSelectEra]);
 
   return (
     <div className="container mx-auto px-4 flex flex-col h-full overflow-y-auto">

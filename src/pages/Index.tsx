@@ -101,12 +101,10 @@ const Index = () => {
       setSelectedEra(newEra);
       localStorage.setItem('selectedEra', newEra);
 
-      const composersInNewEra = getComposersByEra(newEra);
-      if (composersInNewEra.length > 0) {
-         setSelectedComposer(composersInNewEra[0]);
-         localStorage.setItem('selectedComposer', JSON.stringify(composersInNewEra[0]));
-         setShouldScrollToComposer(false);
-      }
+      // Clear the selected composer when changing eras
+      setSelectedComposer(null);
+      localStorage.removeItem('selectedComposer');
+      setShouldScrollToComposer(false);
     }
   }, [selectedEra]);
 
