@@ -346,11 +346,23 @@ export function ComposerList({
       }
     };
 
+    // Add resize listener to recalculate scroll positions
+    const handleResize = () => {
+      console.log("[List] Window resized, rechecking scroll positions");
+      setTimeout(() => {
+        checkHorizontalScroll();
+        checkVerticalScroll();
+      }, 100); // Small delay to ensure DOM has updated
+    };
+
+    window.addEventListener('resize', handleResize);
+
     // Delay to ensure DOM elements are available
     const timer = setTimeout(addScrollListeners, 1000);
 
     return () => {
       clearTimeout(timer);
+      window.removeEventListener('resize', handleResize);
 
       // Clean up event listeners
       const horizontalViewport = document.querySelector('.md\\:hidden .scroll-area [data-radix-scroll-area-viewport]');
