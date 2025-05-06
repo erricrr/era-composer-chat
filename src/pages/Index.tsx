@@ -15,23 +15,49 @@ import { useIsTouch } from '@/hooks/useIsTouch';
 
 const Index = () => {
   const [selectedComposer, setSelectedComposer] = useState<Composer | null>(() => {
-    const saved = localStorage.getItem('selectedComposer');
-    return saved ? JSON.parse(saved) : null;
+    try {
+      const saved = localStorage.getItem('selectedComposer');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.id && parsed.name) {
+          return parsed;
+        }
+      }
+      return null;
+    } catch (e) {
+      console.error('Error parsing selectedComposer from localStorage:', e);
+      return null;
+    }
   });
 
   const [selectedEra, setSelectedEra] = useState<Era>(() => {
-    const saved = localStorage.getItem('selectedEra');
-    return saved ? (saved as Era) : Era.Baroque;
+    try {
+      const saved = localStorage.getItem('selectedEra');
+      return saved && Object.values(Era).includes(saved as Era) ? (saved as Era) : Era.Baroque;
+    } catch (e) {
+      console.error('Error parsing selectedEra from localStorage:', e);
+      return Era.Baroque;
+    }
   });
 
   const [isMenuOpen, setIsMenuOpen] = useState(() => {
-    const saved = localStorage.getItem('isMenuOpen');
-    return saved ? JSON.parse(saved) : true;
+    try {
+      const saved = localStorage.getItem('isMenuOpen');
+      return saved ? JSON.parse(saved) : true;
+    } catch (e) {
+      console.error('Error parsing isMenuOpen from localStorage:', e);
+      return true;
+    }
   });
 
   const [isChatting, setIsChatting] = useState(() => {
-    const saved = localStorage.getItem('isChatting');
-    return saved ? JSON.parse(saved) : false;
+    try {
+      const saved = localStorage.getItem('isChatting');
+      return saved ? JSON.parse(saved) : false;
+    } catch (e) {
+      console.error('Error parsing isChatting from localStorage:', e);
+      return false;
+    }
   });
 
   const [shouldScrollToComposer, setShouldScrollToComposer] = useState(false);
@@ -62,8 +88,14 @@ const Index = () => {
     };
   }, []);
 
-  const handleSelectComposer = useCallback((composer: Composer, options?: { source?: string }) => {
-    console.log(`[Index] handleSelectComposer called for ${composer.name} from ${options?.source}`);
+  const handleSelectComposer = useCallback((composer: Composer | null, options?: { source?: string }) => {
+    console.log(`[Index] handleSelectComposer called for ${composer?.name || 'null'} from ${options?.source}`);
+
+    if (!composer) {
+      setSelectedComposer(null);
+      localStorage.removeItem('selectedComposer');
+      return;
+    }
 
     if (options?.source === 'search') {
       const composerEra = Array.isArray(composer.era) ? composer.era[0] : composer.era;
@@ -79,9 +111,15 @@ const Index = () => {
         setSelectedComposer(composer);
         setShouldScrollToComposer(true);
       }
+    } else if (options?.source === 'restore') {
+      // When restoring from localStorage, just set the composer without side effects
+      setSelectedComposer(composer);
     } else {
       setSelectedComposer(composer);
     }
+
+    // Save to localStorage when selecting a non-null composer
+    localStorage.setItem('selectedComposer', JSON.stringify(composer));
   }, [selectedEra]);
 
   // Effect: when selectedEra and selectedComposer match pending scroll, trigger scroll
@@ -101,9 +139,7 @@ const Index = () => {
       setSelectedEra(newEra);
       localStorage.setItem('selectedEra', newEra);
 
-      // Clear the selected composer when changing eras
-      setSelectedComposer(null);
-      localStorage.removeItem('selectedComposer');
+      // Don't clear the selected composer here - let ComposerMenu handle it
       setShouldScrollToComposer(false);
     }
   }, [selectedEra]);
@@ -198,6 +234,50 @@ const Index = () => {
     // Update localStorage for menu state
     localStorage.setItem('isMenuOpen', String(newIsMenuOpen));
   };
+
+  // Effect to sync selectedComposer with localStorage
+  useEffect(() => {
+    if (selectedComposer) {
+      localStorage.setItem('selectedComposer', JSON.stringify(selectedComposer));
+    } else {
+      localStorage.removeItem('selectedComposer');
+    }
+  }, [selectedComposer]);
+
+  // Effect to sync selectedEra with localStorage
+  useEffect(() => {
+    localStorage.setItem('selectedEra', selectedEra);
+  }, [selectedEra]);
+
+  // Effect to sync isMenuOpen with localStorage
+  useEffect(() => {
+    localStorage.setItem('isMenuOpen', JSON.stringify(isMenuOpen));
+  }, [isMenuOpen]);
+
+  // Effect to sync isChatting with localStorage
+  useEffect(() => {
+    localStorage.setItem('isChatting', JSON.stringify(isChatting));
+  }, [isChatting]);
+
+  // Effect to restore chat state on page load if a composer is selected
+  useEffect(() => {
+    if (selectedComposer) {
+      // Ensure the selected composer belongs to the current era
+      const composerEras = Array.isArray(selectedComposer.era)
+        ? selectedComposer.era
+        : [selectedComposer.era];
+
+      if (composerEras.includes(selectedEra)) {
+        // If composer belongs to current era, ensure chat is open
+        if (!isChatting && !isMenuOpen) {
+          setIsChatting(true);
+        }
+      } else {
+        // If composer doesn't belong to current era, update era to match composer
+        setSelectedEra(composerEras[0]);
+      }
+    }
+  }, [selectedComposer, selectedEra, isChatting, isMenuOpen]);
 
   return (
     <div className="min-h-screen overflow-hidden bg-background">

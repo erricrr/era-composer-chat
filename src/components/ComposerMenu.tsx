@@ -25,7 +25,15 @@ export function ComposerMenu({
   onScrollComplete
 }: ComposerMenuProps) {
   // State to remember the last selected composer for each era
-  const [lastSelectedComposerPerEra, setLastSelectedComposerPerEra] = useState<Partial<Record<Era, Composer>>>({});
+  const [lastSelectedComposerPerEra, setLastSelectedComposerPerEra] = useState<Partial<Record<Era, Composer>>>(() => {
+    try {
+      const saved = localStorage.getItem('lastSelectedComposerPerEra');
+      return saved ? JSON.parse(saved) : {};
+    } catch (e) {
+      console.error('Error parsing lastSelectedComposerPerEra from localStorage:', e);
+      return {};
+    }
+  });
 
   // --- SCROLL POSITION STATE ---
   const mobileScrollPositions = useRef<{ [era: string]: number }>({});
@@ -36,32 +44,57 @@ export function ComposerMenu({
   const getDesktopScrollPosition = useCallback((era: Era) => desktopScrollPositions.current[era] ?? 0, []);
   const setDesktopScrollPosition = useCallback((era: Era, pos: number) => { desktopScrollPositions.current[era] = pos; }, []);
 
-  // Update the last selected composer for the current era whenever selectedComposer changes
-  useEffect(() => {
-    if (selectedComposer) {
-      setLastSelectedComposerPerEra(prevMap => ({
-        ...prevMap,
-        [selectedEra]: selectedComposer
-      }));
-    }
-  }, [selectedComposer, selectedEra]);
+  // Helper function to check if a composer belongs to an era
+  const composerBelongsToEra = (composer: Composer, era: Era): boolean => {
+    const composerEras = Array.isArray(composer.era) ? composer.era : [composer.era];
+    return composerEras.includes(era);
+  };
 
   // Handle era changes
   const handleEraChange = useCallback((newEra: Era) => {
+    console.log(`[ComposerMenu] Changing era to ${newEra}`);
     onSelectEra(newEra);
 
-    // Only select a composer if we have a remembered one for this era
+    // Try to restore the last selected composer for this era
     const rememberedComposer = lastSelectedComposerPerEra[newEra];
-    if (rememberedComposer) {
+    if (rememberedComposer && composerBelongsToEra(rememberedComposer, newEra)) {
+      console.log(`[ComposerMenu] Restoring composer ${rememberedComposer.name} for era ${newEra}`);
       onSelectComposer(rememberedComposer, { source: 'timeline' });
+    } else {
+      // If no valid remembered composer for this era, clear the selection
+      console.log(`[ComposerMenu] No valid composer to restore for era ${newEra}, clearing selection`);
+      onSelectComposer(null, { source: 'timeline' });
     }
   }, [onSelectEra, lastSelectedComposerPerEra, onSelectComposer]);
+
+  // Effect to restore the last selected composer on mount and era changes
+  useEffect(() => {
+    const rememberedComposer = lastSelectedComposerPerEra[selectedEra];
+    if (rememberedComposer && !selectedComposer && composerBelongsToEra(rememberedComposer, selectedEra)) {
+      console.log(`[ComposerMenu] Initial restore of composer ${rememberedComposer.name} for era ${selectedEra}`);
+      onSelectComposer(rememberedComposer, { source: 'restore' });
+    }
+  }, [selectedEra, selectedComposer, lastSelectedComposerPerEra, onSelectComposer]);
+
+  // Update the last selected composer for the current era whenever selectedComposer changes
+  useEffect(() => {
+    if (selectedComposer && composerBelongsToEra(selectedComposer, selectedEra)) {
+      setLastSelectedComposerPerEra(prevMap => {
+        const newMap = {
+          ...prevMap,
+          [selectedEra]: selectedComposer
+        };
+        localStorage.setItem('lastSelectedComposerPerEra', JSON.stringify(newMap));
+        return newMap;
+      });
+    }
+  }, [selectedComposer, selectedEra]);
 
   return (
     <div className="container mx-auto px-4 flex flex-col h-full overflow-y-auto">
       <div className="relative">
-      <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-3xl font-bold text-center font-serif mt-0 pb-4 mx-4 sm:mx-[30px]">
-      {selectedEra} Era Composers
+        <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-3xl font-bold text-center font-serif mt-0 pb-4 mx-4 sm:mx-[30px]">
+          {selectedEra} Era Composers
         </h1>
       </div>
 
