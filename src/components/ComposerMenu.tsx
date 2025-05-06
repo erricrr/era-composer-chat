@@ -49,7 +49,13 @@ export function ComposerMenu({
   // Handle era changes
   const handleEraChange = useCallback((newEra: Era) => {
     onSelectEra(newEra);
-  }, [onSelectEra]);
+
+    // Only select a composer if we have a remembered one for this era
+    const rememberedComposer = lastSelectedComposerPerEra[newEra];
+    if (rememberedComposer) {
+      onSelectComposer(rememberedComposer, { source: 'timeline' });
+    }
+  }, [onSelectEra, lastSelectedComposerPerEra, onSelectComposer]);
 
   return (
     <div className="container mx-auto px-4 flex flex-col h-full overflow-y-auto">
