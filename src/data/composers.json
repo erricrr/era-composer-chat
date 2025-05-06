@@ -675,6 +675,28 @@
       ]
     },
     {
+      "id": "gabriel-faure",
+      "searchableName": "Gabriel Faure",
+      "name": "Gabriel Fauré",
+      "era": ["Romantic"],
+      "birthYear": 1845,
+      "deathYear": 1924,
+      "shortBio": "Gabriel Fauré was a renowned French composer, organist, and teacher of the Romantic era. Known for his elegant and melodic compositions, his work spans chamber music, piano pieces, and art songs. Fauré's music is distinguished by its refinement and subtle harmonies. Born in Pamiers, France, he studied at the École Niedermeyer in Paris and later became a professor of composition at the Paris Conservatoire, where he influenced many French composers.",
+      "longBio": "Gabriel Fauré was a prominent French composer, organist, and teacher of the Romantic era. His compositions, which include chamber music, piano works, and art songs, are celebrated for their elegance, melodic beauty, and refined harmonies. Born in Pamiers, France, Fauré studied at the École Niedermeyer in Paris. He later became a professor of composition at the Paris Conservatoire, where he had a significant impact on a generation of French composers. Fauré was a close friend of Camille Saint-Saëns and was known for his gentle and modest demeanor. Among his most famous works are the Requiem, Op. 48, and the Pavane, Op. 50. His compositions continue to be admired for their delicate expressiveness and harmonic innovation.",
+      "nationality": "French",
+      "location": "Paris, France",
+      "famousWorks": [
+        "Requiem, Op. 48",
+        "Pavane, Op. 50",
+        "Dolly Suite, Op. 56"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Gabriel_Faur%C3%A9_par_Nadar_2.jpg/800px-Gabriel_Faur%C3%A9_par_Nadar_2.jpg",
+      "notableQuotes": [
+        "Music is the language of the soul.",
+        "The art of music is a divine gift, and those who possess it are blessed."
+      ]
+    },
+    {
       "id": "george-bridgetower",
       "name": "George Bridgetower",
       "era": ["Classical", "Romantic"],
