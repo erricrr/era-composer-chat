@@ -5,7 +5,37 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ComposerImageViewer } from './ComposerImageViewer';
 import React, { useState, useCallback, useEffect, useRef } from 'react';
-import { ChevronLeft, ChevronRight, ChevronUp, ChevronDown } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ChevronUp, ChevronDown, LucideIcon } from 'lucide-react';
+
+interface ScrollChevronProps {
+  direction: 'left' | 'right' | 'up' | 'down';
+  onClick: () => void;
+}
+
+const ScrollChevron = ({ direction, onClick }: ScrollChevronProps) => {
+  const ChevronIcon: Record<typeof direction, LucideIcon> = {
+    left: ChevronLeft,
+    right: ChevronRight,
+    up: ChevronUp,
+    down: ChevronDown
+  };
+
+  const Icon = ChevronIcon[direction];
+
+  const roundedClasses: Record<typeof direction, string> = {
+    left: 'rounded-r-lg rounded-tr-lg',
+    right: 'rounded-l-lg rounded-tl-lg',
+    up: 'rounded-b-lg',
+    down: 'rounded-t-lg'
+  };
+
+  return (
+    <div className={`bg-primary/20 hover:bg-primary/40 text-primary p-1.5 shadow-sm backdrop-blur-sm transition-colors ${roundedClasses[direction]}`}
+         onClick={onClick}>
+      <Icon size={16} />
+    </div>
+  );
+};
 
 interface ComposerListProps {
   era: Era;
@@ -291,41 +321,37 @@ export function ComposerList({
 
             {/* Horizontal scroll indicators */}
             {!horizontalScroll.isAtStart && (
-              <div
-                className="absolute left-0 top-1/3 bottom-1/3 flex items-center z-20 cursor-pointer"
-                onClick={() => {
-                  const viewport = document.querySelector('.md\\:hidden .scroll-area [data-radix-scroll-area-viewport]');
-                  if (viewport) {
-                    const currentScroll = viewport.scrollLeft;
-                    viewport.scrollTo({
-                      left: currentScroll - 240,
-                      behavior: 'smooth'
-                    });
-                  }
-                }}
-              >
-                <div className="bg-primary/80 hover:bg-primary text-background p-2 rounded-full shadow-lg flex items-center">
-                  <ChevronLeft size={20} />
-                </div>
+              <div className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center z-20 cursor-pointer">
+                <ScrollChevron
+                  direction="left"
+                  onClick={() => {
+                    const viewport = document.querySelector('.md\\:hidden .scroll-area [data-radix-scroll-area-viewport]');
+                    if (viewport) {
+                      const currentScroll = viewport.scrollLeft;
+                      viewport.scrollTo({
+                        left: currentScroll - 240,
+                        behavior: 'smooth'
+                      });
+                    }
+                  }}
+                />
               </div>
             )}
             {!horizontalScroll.isAtEnd && (
-              <div
-                className="absolute right-0 top-1/3 bottom-1/3 flex items-center z-20 cursor-pointer"
-                onClick={() => {
-                  const viewport = document.querySelector('.md\\:hidden .scroll-area [data-radix-scroll-area-viewport]');
-                  if (viewport) {
-                    const currentScroll = viewport.scrollLeft;
-                    viewport.scrollTo({
-                      left: currentScroll + 240,
-                      behavior: 'smooth'
-                    });
-                  }
-                }}
-              >
-                <div className="bg-primary/80 hover:bg-primary text-background p-2 rounded-full shadow-lg flex items-center">
-                  <ChevronRight size={20} />
-                </div>
+              <div className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center z-20 cursor-pointer">
+                <ScrollChevron
+                  direction="right"
+                  onClick={() => {
+                    const viewport = document.querySelector('.md\\:hidden .scroll-area [data-radix-scroll-area-viewport]');
+                    if (viewport) {
+                      const currentScroll = viewport.scrollLeft;
+                      viewport.scrollTo({
+                        left: currentScroll + 240,
+                        behavior: 'smooth'
+                      });
+                    }
+                  }}
+                />
               </div>
             )}
           </div>
@@ -375,41 +401,37 @@ export function ComposerList({
 
             {/* Vertical scroll indicators */}
             {!verticalScroll.isAtTop && (
-              <div
-                className="absolute top-0 left-0 right-0 flex justify-center z-20 cursor-pointer"
-                onClick={() => {
-                  const viewport = document.querySelector('.md\\:flex .scroll-area [data-radix-scroll-area-viewport]');
-                  if (viewport) {
-                    const currentScroll = viewport.scrollTop;
-                    viewport.scrollTo({
-                      top: currentScroll - 180,
-                      behavior: 'smooth'
-                    });
-                  }
-                }}
-              >
-                <div className="bg-primary/80 hover:bg-primary text-background p-2 rounded-full shadow-lg">
-                  <ChevronUp size={20} />
-                </div>
+              <div className="absolute top-0 left-0 right-0 flex justify-center z-20 cursor-pointer">
+                <ScrollChevron
+                  direction="up"
+                  onClick={() => {
+                    const viewport = document.querySelector('.md\\:flex .scroll-area [data-radix-scroll-area-viewport]');
+                    if (viewport) {
+                      const currentScroll = viewport.scrollTop;
+                      viewport.scrollTo({
+                        top: currentScroll - 180,
+                        behavior: 'smooth'
+                      });
+                    }
+                  }}
+                />
               </div>
             )}
             {!verticalScroll.isAtBottom && (
-              <div
-                className="absolute bottom-0 left-0 right-0 flex justify-center z-20 cursor-pointer"
-                onClick={() => {
-                  const viewport = document.querySelector('.md\\:flex .scroll-area [data-radix-scroll-area-viewport]');
-                  if (viewport) {
-                    const currentScroll = viewport.scrollTop;
-                    viewport.scrollTo({
-                      top: currentScroll + 180,
-                      behavior: 'smooth'
-                    });
-                  }
-                }}
-              >
-                <div className="bg-primary/80 hover:bg-primary text-background p-2 rounded-full shadow-lg">
-                  <ChevronDown size={20} />
-                </div>
+              <div className="absolute bottom-0 left-0 right-0 flex justify-center z-20 cursor-pointer">
+                <ScrollChevron
+                  direction="down"
+                  onClick={() => {
+                    const viewport = document.querySelector('.md\\:flex .scroll-area [data-radix-scroll-area-viewport]');
+                    if (viewport) {
+                      const currentScroll = viewport.scrollTop;
+                      viewport.scrollTo({
+                        top: currentScroll + 180,
+                        behavior: 'smooth'
+                      });
+                    }
+                  }}
+                />
               </div>
             )}
           </div>
