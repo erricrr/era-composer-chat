@@ -371,8 +371,8 @@ export function ComposerList({
       <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] gap-1 md:gap-2 h-full">
         <div className="overflow-hidden h-full flex flex-col">
           {/* Mobile horizontal scroll with indicators */}
-          <div className="md:hidden flex-shrink-0 relative h-full px-4">
-            <ScrollArea key={era} className="w-full h-full scroll-area">
+          <div className="md:hidden flex-shrink-0 relative px-4">
+            <ScrollArea key={era} className="w-full h-auto md:h-full scroll-area">
               <div className="inline-flex h-full items-center">
                 {allComposers.map((composer, idx) => (
                   <div
@@ -449,7 +449,7 @@ export function ComposerList({
 
           {/* Desktop vertical scroll with indicators */}
           <div className="hidden md:flex flex-col flex-1 overflow-hidden relative py-4">
-            <ScrollArea key={era} className="h-full w-full scroll-area">
+            <ScrollArea key={era} className="w-full h-auto md:h-full scroll-area">
               <div className="flex flex-col">
                 {allComposers.map((composer, idx) => (
                   <div
