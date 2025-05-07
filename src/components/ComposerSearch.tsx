@@ -220,6 +220,28 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
     }
   }, [isMobileSearchActive]);
 
+  // Add media query listener to reset mobile search on screen resize
+  useEffect(() => {
+    // Media query for md breakpoint (typically 768px)
+    const mediaQuery = window.matchMedia('(min-width: 768px)');
+
+    // Handler to reset mobile search if screen becomes larger than md breakpoint
+    const handleScreenChange = (e: MediaQueryListEvent) => {
+      if (e.matches && isMobileSearchActive) {
+        // If screen size changes to desktop (md+), reset mobile search active state
+        setIsMobileSearchActive(false);
+      }
+    };
+
+    // Modern browsers
+    mediaQuery.addEventListener('change', handleScreenChange);
+
+    // Clean up
+    return () => {
+      mediaQuery.removeEventListener('change', handleScreenChange);
+    };
+  }, [isMobileSearchActive]);
+
   // Determine whether to show results
   const shouldShowResults = searchQuery.trim().length > 0;
 
