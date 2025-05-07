@@ -525,7 +525,7 @@ export function ChatInterface({
     </div>
   </div>
   <p className="text-xs text-muted-foreground text-center mx-11 pb-2 pt-2">
-    AI-generated conversation from verified sources. Does not reflect {getLastName(composer.name)}&apos;s personal views.
+  AI-generated chat. Not {getLastName(composer.name)}&apos;s own words.
   </p>
 </form>
 
