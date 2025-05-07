@@ -10,7 +10,7 @@ import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { MessageCircle } from 'lucide-react';
 import FooterDrawer from '@/components/ui/footerDrawer';
 import { ComposerSearch } from '@/components/ComposerSearch';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
 import { useIsTouch } from '@/hooks/useIsTouch';
 
 const Index = () => {
@@ -280,189 +280,191 @@ const Index = () => {
   }, [selectedComposer, selectedEra, isChatting, isMenuOpen]);
 
   return (
-    <div className="min-h-screen overflow-hidden bg-background">
-      {/* Fixed Header */}
-      <div className="fixed-header" style={{ position: 'relative', zIndex: 1000 }}>
-        <div className="container mx-auto px-2 flex items-center justify-between h-full">
-          {/* Left Side: Menu Toggle Area */}
-          <div
-            onClick={toggleMenu}
-            className="flex items-center cursor-pointer group"
-          >
-            <div className="flex-shrink-0 p-2 rounded transition-colors duration-200 group-hover:bg-muted">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 transform transition-transform duration-500 ease-out"
-                style={{
-                  transform: isMenuOpen ? 'rotate(90deg)' : 'rotate(0deg)',
-                }}
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
+    <TooltipProvider>
+      <div className="min-h-screen overflow-hidden bg-background">
+        {/* Fixed Header */}
+        <div className="fixed-header" style={{ position: 'relative', zIndex: 1000 }}>
+          <div className="container mx-auto px-2 flex items-center justify-between h-full">
+            {/* Left Side: Menu Toggle Area */}
+            <div
+              onClick={toggleMenu}
+              className="flex items-center cursor-pointer group"
+            >
+              <div className="flex-shrink-0 p-2 rounded transition-colors duration-200 group-hover:bg-muted">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 transform transition-transform duration-500 ease-out"
+                  style={{
+                    transform: isMenuOpen ? 'rotate(90deg)' : 'rotate(0deg)',
+                  }}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
+                  />
+                </svg>
+              </div>
+            </div>
+
+            {/* Right Side: Search + Icons */}
+            <div className="flex items-center gap-2">
+              {/* Search Bar */}
+              <div className="max-w-xs">
+                <ComposerSearch
+                  composers={allComposersData}
+                  onSelectComposer={(composer) => handleSelectComposer(composer, { source: 'search' })}
+                  selectedComposer={selectedComposer}
                 />
-              </svg>
+              </div>
+
+              {/* Active Chats Tab Icon */}
+              {!isTouch ? (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div
+                      onClick={(e) => { e.stopPropagation(); setIsActiveChatsOpen(prev => !prev); }}
+                      className="p-2 rounded hover:bg-muted cursor-pointer transition-colors"
+                    >
+                      <MessageCircle
+                        className={`h-5 w-5 transform transition-transform ${isActiveChatsOpen ? 'rotate-180' : ''}`}
+                      />
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom" className="text-xs">
+                    Active Chats
+                  </TooltipContent>
+                </Tooltip>
+              ) : (
+                <div
+                  onClick={(e) => { e.stopPropagation(); setIsActiveChatsOpen(prev => !prev); }}
+                  className="p-2 rounded hover:bg-muted cursor-pointer transition-colors"
+                >
+                  <MessageCircle className="h-5 w-5" />
+                </div>
+              )}
+
+              {/* Icons */}
+              {!isTouch ? (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div onClick={(e) => e.stopPropagation()}>
+                      <FooterDrawer />
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom" className="text-xs">
+                    About
+                  </TooltipContent>
+                </Tooltip>
+              ) : (
+                <div onClick={(e) => e.stopPropagation()}>
+                  <FooterDrawer />
+                </div>
+              )}
+
+              {!isTouch ? (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div onClick={(e) => e.stopPropagation()}>
+                      <ThemeToggle onThemeChange={handleThemeChange} />
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom" className="text-xs">
+                    {isDarkMode ? 'Toggle light mode' : 'Toggle dark mode'}
+                  </TooltipContent>
+                </Tooltip>
+              ) : (
+                <div onClick={(e) => e.stopPropagation()}>
+                  <ThemeToggle onThemeChange={handleThemeChange} />
+                </div>
+              )}
             </div>
-          </div>
-
-          {/* Right Side: Search + Icons */}
-          <div className="flex items-center gap-2">
-            {/* Search Bar */}
-            <div className="max-w-xs">
-              <ComposerSearch
-                composers={allComposersData}
-                onSelectComposer={(composer) => handleSelectComposer(composer, { source: 'search' })}
-                selectedComposer={selectedComposer}
-              />
-            </div>
-
-            {/* Active Chats Tab Icon */}
-            {!isTouch ? (
-              <Tooltip delayDuration={200}>
-                <TooltipTrigger asChild>
-                  <div
-                    onClick={(e) => { e.stopPropagation(); setIsActiveChatsOpen(prev => !prev); }}
-                    className="p-2 rounded hover:bg-muted cursor-pointer transition-colors"
-                  >
-                    <MessageCircle
-                      className={`h-5 w-5 transform transition-transform ${isActiveChatsOpen ? 'rotate-180' : ''}`}
-                    />
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent side="bottom" className="text-xs">
-                  Active Chats
-                </TooltipContent>
-              </Tooltip>
-            ) : (
-              <div
-                onClick={(e) => { e.stopPropagation(); setIsActiveChatsOpen(prev => !prev); }}
-                className="p-2 rounded hover:bg-muted cursor-pointer transition-colors"
-              >
-                <MessageCircle className="h-5 w-5" />
-              </div>
-            )}
-
-            {/* Icons */}
-            {!isTouch ? (
-              <Tooltip delayDuration={200}>
-                <TooltipTrigger asChild>
-                  <div onClick={(e) => e.stopPropagation()}>
-                    <FooterDrawer />
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent side="bottom" className="text-xs">
-                  About
-                </TooltipContent>
-              </Tooltip>
-            ) : (
-              <div onClick={(e) => e.stopPropagation()}>
-                <FooterDrawer />
-              </div>
-            )}
-
-            {!isTouch ? (
-              <Tooltip delayDuration={200}>
-                <TooltipTrigger asChild>
-                  <div onClick={(e) => e.stopPropagation()}>
-                    <ThemeToggle onThemeChange={handleThemeChange} />
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent side="bottom" className="text-xs">
-                  {isDarkMode ? 'Toggle light mode' : 'Toggle dark mode'}
-                </TooltipContent>
-              </Tooltip>
-            ) : (
-              <div onClick={(e) => e.stopPropagation()}>
-                <ThemeToggle onThemeChange={handleThemeChange} />
-              </div>
-            )}
           </div>
         </div>
+
+        <main className="pt-10">
+          {/* Composer Selection Menu - Fixes overflow issues */}
+          <aside
+            className={`
+              fixed inset-y-0 left-0 z-50
+              bg-background backdrop-blur-sm border-r border-border shadow-lg
+              transition-transform duration-500 ease-out will-change-transform
+            `}
+            style={{
+              width: '100%', // Full width overlay
+              top: '2.5rem', // Adjust based on your header height
+              height: 'calc(100vh - 2.5rem)',
+              transform: isMenuOpen ? 'translateX(0)' : 'translateX(-100%)',
+              transition: 'transform 500ms ease-out'
+            }}
+          >
+            {/* Important: We don't add another scrollable container here */}
+            <ComposerMenu
+              onSelectComposer={(composer) => handleSelectComposer(composer, { source: 'list' })}
+              onStartChat={handleStartChat}
+              selectedComposer={selectedComposer}
+              isOpen={isMenuOpen}
+              selectedEra={selectedEra}
+              onSelectEra={handleSelectEra}
+              shouldScrollToComposer={shouldScrollToComposer}
+              onScrollComplete={handleScrollComplete}
+            />
+          </aside>
+
+          {/* Chat Interface - Fixed positioning with proper overflow handling */}
+          <div
+            className="fixed bg-background"
+            style={{
+              left: 0,
+              right: isSplitViewOpenFromChat ? '0' : isActiveChatsOpen ? '16rem' : '0',
+              top: '2.5rem',
+              height: 'calc(100vh - 2.5rem)',
+              backdropFilter: 'blur(8px)',
+              boxShadow: '0 -10px 25px rgba(0,0,0,0.1)',
+              zIndex: 40
+            }}
+          >
+            {selectedComposer && isComposerInPublicDomain(selectedComposer) && (
+              <div className="container mx-auto px-4 h-full">
+                <ChatInterface
+                  key={chatClearTrigger}
+                  composer={selectedComposer}
+                  onUserTyping={() => {}}
+                  onUserSend={handleAddActiveChat}
+                  onSplitViewToggle={setIsSplitViewOpenFromChat}
+                  isComposerListOpen={isMenuOpen}
+                />
+              </div>
+            )}
+            {selectedComposer && !isComposerInPublicDomain(selectedComposer) && (
+              <div className="container mx-auto px-4 h-full flex items-center justify-center">
+                <div className="text-center p-6 bg-muted/50 rounded-lg shadow">
+                  <h2 className="text-xl font-semibold mb-2">Chat Unavailable</h2>
+                  <p className="text-muted-foreground">
+                    Chatting with {selectedComposer.name} is unavailable due to copyright restrictions.
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+        </main>
+
+        {/* Active Chats Slider */}
+        <ActiveChatsSlider
+          isOpen={isActiveChatsOpen}
+          activeChatIds={activeChatIds}
+          composers={allComposersData}
+          onSelectComposer={handleActiveChatClick}
+          onClearAll={handleClearActiveChats}
+          onClose={() => setIsActiveChatsOpen(false)}
+          onRemoveChat={handleRemoveActiveChat}
+        />
       </div>
-
-      <main className="pt-10">
-        {/* Composer Selection Menu - Fixes overflow issues */}
-        <aside
-          className={`
-            fixed inset-y-0 left-0 z-50
-            bg-background backdrop-blur-sm border-r border-border shadow-lg
-            transition-transform duration-500 ease-out will-change-transform
-          `}
-          style={{
-            width: '100%', // Full width overlay
-            top: '2.5rem', // Adjust based on your header height
-            height: 'calc(100vh - 2.5rem)',
-            transform: isMenuOpen ? 'translateX(0)' : 'translateX(-100%)',
-            transition: 'transform 500ms ease-out'
-          }}
-        >
-          {/* Important: We don't add another scrollable container here */}
-          <ComposerMenu
-            onSelectComposer={(composer) => handleSelectComposer(composer, { source: 'list' })}
-            onStartChat={handleStartChat}
-            selectedComposer={selectedComposer}
-            isOpen={isMenuOpen}
-            selectedEra={selectedEra}
-            onSelectEra={handleSelectEra}
-            shouldScrollToComposer={shouldScrollToComposer}
-            onScrollComplete={handleScrollComplete}
-          />
-        </aside>
-
-        {/* Chat Interface - Fixed positioning with proper overflow handling */}
-        <div
-          className="fixed bg-background"
-          style={{
-            left: 0,
-            right: isSplitViewOpenFromChat ? '0' : isActiveChatsOpen ? '16rem' : '0',
-            top: '2.5rem',
-            height: 'calc(100vh - 2.5rem)',
-            backdropFilter: 'blur(8px)',
-            boxShadow: '0 -10px 25px rgba(0,0,0,0.1)',
-            zIndex: 40
-          }}
-        >
-          {selectedComposer && isComposerInPublicDomain(selectedComposer) && (
-            <div className="container mx-auto px-4 h-full">
-              <ChatInterface
-                key={chatClearTrigger}
-                composer={selectedComposer}
-                onUserTyping={() => {}}
-                onUserSend={handleAddActiveChat}
-                onSplitViewToggle={setIsSplitViewOpenFromChat}
-                isComposerListOpen={isMenuOpen}
-              />
-            </div>
-          )}
-          {selectedComposer && !isComposerInPublicDomain(selectedComposer) && (
-            <div className="container mx-auto px-4 h-full flex items-center justify-center">
-              <div className="text-center p-6 bg-muted/50 rounded-lg shadow">
-                <h2 className="text-xl font-semibold mb-2">Chat Unavailable</h2>
-                <p className="text-muted-foreground">
-                  Chatting with {selectedComposer.name} is unavailable due to copyright restrictions.
-                </p>
-              </div>
-            </div>
-          )}
-        </div>
-      </main>
-
-      {/* Active Chats Slider */}
-      <ActiveChatsSlider
-        isOpen={isActiveChatsOpen}
-        activeChatIds={activeChatIds}
-        composers={allComposersData}
-        onSelectComposer={handleActiveChatClick}
-        onClearAll={handleClearActiveChats}
-        onClose={() => setIsActiveChatsOpen(false)}
-        onRemoveChat={handleRemoveActiveChat}
-      />
-    </div>
+    </TooltipProvider>
   );
 }
 

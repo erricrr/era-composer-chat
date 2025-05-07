@@ -384,56 +384,49 @@ export function ChatInterface({
       <div className="relative flex items-center justify-end px-2">
         {(!isSplitViewOpen) ? (
           <div className="flex items-center justify-between px-2 py-3 md:px-5 md:py-4 -mt-1 w-full bg-secondary border-b shadow-md z-10">
-            <div
-              onClick={() => setIsSplitViewOpen(true)}
-              className="flex items-center space-x-3 sm:space-x-6 cursor-pointer group hover:opacity-90 transition-all duration-300"
-            >
-
-<Tooltip delayDuration={200}>
-  <TooltipTrigger asChild>
-    <div
-      className="flex items-center space-x-6 cursor-pointer group hover:opacity-90 transition-all duration-300"
-      onClick={(e) => {
-        e.stopPropagation();
-        setIsSplitViewOpen(true);
-      }}
-    >
-      <div className="flex items-center gap-4 group">
-        <div className="flex-shrink-0">
-          <ComposerImageViewer
-            composer={composer}
-            size="sm"
-            className="!scale-100"
-          />
-        </div>
-        <div className="flex flex-col justify-center">
-          <h2 className="font-serif font-bold text-base md:text-lg text-left group-hover:text-primary transition-colors">{composer.name}</h2>
-          <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-1">
-            <span className="text-xs md:text-base text-muted-foreground group-hover:text-primary transition-colors">
-              {composer.nationality}, {composer.birthYear}-{composer.deathYear || 'present'}
-            </span>
-            <div className="flex flex-wrap gap-1 truncate">
-              {Array.isArray(composer.era)
-                ? composer.era.map((era, idx) => (
-                    <Badge key={era + idx} variant="badge">{era}</Badge>
-                  ))
-                : <Badge variant="badge">{composer.era}</Badge>}
-            </div>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div
+                  className="flex items-center space-x-6 cursor-pointer hover:opacity-90 transition-all duration-300"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsSplitViewOpen(true);
+                  }}
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="flex-shrink-0">
+                      <ComposerImageViewer
+                        composer={composer}
+                        size="sm"
+                        className="!scale-100"
+                      />
+                    </div>
+                    <div className="flex flex-col justify-center">
+                      <h2 className="font-serif font-bold text-base md:text-lg text-left hover:text-primary transition-colors">{composer.name}</h2>
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-1">
+                        <span className="text-xs md:text-base text-muted-foreground hover:text-primary transition-colors">
+                          {composer.nationality}, {composer.birthYear}-{composer.deathYear || 'present'}
+                        </span>
+                        <div className="flex flex-wrap gap-1 truncate">
+                          {Array.isArray(composer.era)
+                            ? composer.era.map((era, idx) => (
+                                <Badge key={era + idx} variant="badge">{era}</Badge>
+                              ))
+                            : <Badge variant="badge">{composer.era}</Badge>}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" align="start" alignOffset={-50} className="text-xs">
+                More about {getLastName(composer.name)}
+              </TooltipContent>
+            </Tooltip>
           </div>
-        </div>
+        ) : null}
       </div>
-    </div>
-  </TooltipTrigger>
-  <TooltipContent side="bottom" align="start" alignOffset={-50} className="text-xs">
-    More about {getLastName(composer.name)}
-</TooltipContent>
-</Tooltip>
-</div>
 
-</div>
-) : null}
-
-      </div>
       {/* Assign ref to chat container */}
       <div className="flex-1 overflow-y-auto p-4 relative" ref={chatContainerRef}>
         <div className="flex flex-col min-h-[calc(100%-2rem)]">
@@ -501,7 +494,7 @@ export function ChatInterface({
 
         {/* Reset Button */}
         {!isTouch ? (
-          <Tooltip delayDuration={200}>
+          <Tooltip>
             <TooltipTrigger asChild>
               <button
                 type="button"
