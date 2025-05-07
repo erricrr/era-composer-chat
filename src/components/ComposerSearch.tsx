@@ -24,6 +24,14 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
   const [filteredComposers, setFilteredComposers] = useState<Composer[]>([]);
   const [isMobileSearchActive, setIsMobileSearchActive] = useState(false);
 
+  // Initialize isMobileView with the current screen size
+  const [isMobileView, setIsMobileView] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth < 768;
+    }
+    return false; // Default to desktop for SSR
+  });
+
   // UI states
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -132,23 +140,36 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
       setHasSearched(false);
       // Focus input after clearing
       setTimeout(() => inputRef.current?.focus(), 0);
-    } else {
+    } else if (isMobileView) {
       console.log("[Search] Closing mobile search");
       setIsMobileSearchActive(false);
     }
-  }, [searchQuery]);
+    // On desktop with no query, do nothing when X is clicked
+  }, [searchQuery, isMobileView]);
 
   // Handle selecting a composer
   const handleSelect = useCallback((composer: Composer) => {
     console.log("[Search] Selected composer:", composer.name);
+    console.log("[Search] Current view is mobile:", isMobileView);
+
     onSelectComposer(composer);
+
+    // Clear the search query and results
     setSearchQuery('');
     setFilteredComposers([]);
     setIsOpen(false);
     setHasSearched(false);
     setActiveResultIndex(-1);
-    setIsMobileSearchActive(false);
-  }, [onSelectComposer]);
+
+    // Keep the search bar open on mobile devices
+    // Only close it if we're on desktop
+    if (!isMobileView) {
+      console.log("[Search] On desktop, closing search bar");
+      setIsMobileSearchActive(false);
+    } else {
+      console.log("[Search] On mobile, keeping search bar open");
+    }
+  }, [onSelectComposer, isMobileView]);
 
   // Activate mobile search
   const activateMobileSearch = useCallback(() => {
@@ -220,17 +241,54 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
     }
   }, [isMobileSearchActive]);
 
+  // Effect to track screen size
+  useEffect(() => {
+    if (typeof window === 'undefined') return; // Skip for SSR
+
+    // Media query for md breakpoint
+    const mediaQuery = window.matchMedia('(min-width: 768px)');
+
+    // Set initial state
+    setIsMobileView(!mediaQuery.matches);
+
+    // Handler for screen size changes
+    const handleScreenChange = (e: MediaQueryListEvent) => {
+      setIsMobileView(!e.matches);
+    };
+
+    // Also handle window resize directly for redundancy
+    const handleResize = () => {
+      setIsMobileView(window.innerWidth < 768);
+    };
+
+    // Listen for changes
+    mediaQuery.addEventListener('change', handleScreenChange);
+    window.addEventListener('resize', handleResize);
+
+    // Clean up
+    return () => {
+      mediaQuery.removeEventListener('change', handleScreenChange);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   // Add media query listener to reset mobile search on screen resize
   useEffect(() => {
     // Media query for md breakpoint (typically 768px)
     const mediaQuery = window.matchMedia('(min-width: 768px)');
 
+    // Initial check to see if we're on desktop
+    const isInitiallyDesktop = mediaQuery.matches;
+
     // Handler to reset mobile search if screen becomes larger than md breakpoint
     const handleScreenChange = (e: MediaQueryListEvent) => {
+      // ONLY reset mobile search active state when transitioning FROM mobile TO desktop
       if (e.matches && isMobileSearchActive) {
         // If screen size changes to desktop (md+), reset mobile search active state
         setIsMobileSearchActive(false);
       }
+      // Do NOT set isMobileSearchActive when going from desktop to mobile
+      // This ensures the search bar stays closed on mobile until user explicitly opens it
     };
 
     // Modern browsers
@@ -286,12 +344,16 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
             }}
             aria-label="Search composers"
           />
-          {(searchQuery || isMobileSearchActive) && (
+          {/* Show X button in these cases:
+              1. On ANY screen size when there's a search query
+              2. OR on mobile only when the mobile search is active (to close/hide the search) */}
+          {(searchQuery || (isMobileSearchActive && isMobileView)) && (
             <button
               onClick={handleClear}
-              className="p-1 hover:bg-secondary/30 rounded-full text-muted-foreground/60 hover:text-muted-foreground"
+              className="p-1 hover:bg-secondary/30 rounded-full text-muted-foreground/60 hover:text-muted-foreground flex items-center gap-1"
               type="button"
-              aria-label="Clear or close search"
+              aria-label={searchQuery ? "Clear search" : "Close search"}
+              data-testid="search-clear-button"
             >
               <X className="h-3.5 w-3.5 shrink-0" />
             </button>
