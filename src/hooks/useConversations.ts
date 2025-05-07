@@ -140,8 +140,46 @@ export function useConversations() {
 
   // Get conversations for a specific composer
   const getConversationsForComposer = useCallback((composerId: string): Conversation[] => {
-    return conversations.filter(conv => conv.composerId === composerId)
-      .sort((a, b) => b.lastUpdated - a.lastUpdated); // Sort by most recent first
+    if (!composerId) {
+      console.error('[useConversations] Cannot get conversations: No composer ID provided');
+      return [];
+    }
+
+    console.log(`[useConversations] Getting conversations for composer: ${composerId}`);
+
+    try {
+      // First try to read directly from localStorage to ensure latest data
+      try {
+        const storedData = localStorage.getItem('composer-conversations');
+        if (storedData) {
+          const storedConversations = JSON.parse(storedData);
+          const composerConversations = storedConversations.filter(
+            (c: Conversation) => c.composerId === composerId
+          );
+
+          console.log(`[useConversations] Found ${composerConversations.length} conversations for composer ${composerId} in localStorage`);
+          return composerConversations.sort((a: Conversation, b: Conversation) => b.lastUpdated - a.lastUpdated);
+        }
+      } catch (e) {
+        console.error('[useConversations] Error reading from localStorage:', e);
+        // Fall through to using the in-memory state
+      }
+
+      // If localStorage read fails, use the in-memory state
+      const filteredConversations = conversations.filter(conv => {
+        const match = conv.composerId === composerId;
+        if (match) {
+          console.log(`[useConversations] Found conversation ${conv.id} for composer ${composerId}`);
+        }
+        return match;
+      });
+
+      console.log(`[useConversations] Total conversations for composer ${composerId}: ${filteredConversations.length}`);
+      return filteredConversations.sort((a, b) => b.lastUpdated - a.lastUpdated); // Sort by most recent first
+    } catch (error) {
+      console.error(`[useConversations] Error in getConversationsForComposer:`, error);
+      return [];
+    }
   }, [conversations]);
 
   // Clear all conversations
@@ -152,12 +190,58 @@ export function useConversations() {
 
   // Delete a specific conversation
   const deleteConversation = useCallback((conversationId: string): void => {
-    setConversations(prev => prev.filter(conv => conv.id !== conversationId));
-
-    if (activeConversationId === conversationId) {
-      setActiveConversationId(null);
+    if (!conversationId) {
+      console.error('[useConversations] Cannot delete conversation: No conversation ID provided');
+      return;
     }
-  }, [activeConversationId, setConversations]);
+
+    try {
+      console.log(`[useConversations] Deleting conversation: ${conversationId}`);
+
+      // First try to directly update localStorage
+      try {
+        const storedData = localStorage.getItem('composer-conversations');
+        if (storedData) {
+          const storedConversations = JSON.parse(storedData);
+          const filteredConversations = storedConversations.filter(
+            (c: Conversation) => c.id !== conversationId
+          );
+
+          // Only update if something was actually removed
+          if (filteredConversations.length !== storedConversations.length) {
+            localStorage.setItem('composer-conversations', JSON.stringify(filteredConversations));
+            setConversations(filteredConversations);
+            console.log(`[useConversations] Successfully deleted conversation ${conversationId} directly from localStorage`);
+
+            // Update activeConversationId if needed
+            if (activeConversationId === conversationId) {
+              setActiveConversationId(null);
+              console.log(`[useConversations] Reset active conversation ID to null`);
+            }
+
+            return;
+          }
+        }
+      } catch (e) {
+        console.error('[useConversations] Error updating localStorage directly:', e);
+        // Fall through to using the React state update as fallback
+      }
+
+      // If direct localStorage update fails, use the React state update mechanism
+      setConversations(prev => {
+        const filtered = prev.filter(conv => conv.id !== conversationId);
+        console.log(`[useConversations] Filtered conversations from ${prev.length} to ${filtered.length}`);
+        return filtered;
+      });
+
+      if (activeConversationId === conversationId) {
+        setActiveConversationId(null);
+        console.log(`[useConversations] Reset active conversation ID to null`);
+      }
+    } catch (error) {
+      console.error(`[useConversations] Error in deleteConversation:`, error);
+    }
+  }, [activeConversationId, setConversations, setActiveConversationId]);
 
   return {
     conversations,

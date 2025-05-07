@@ -203,14 +203,48 @@ const Index = () => {
 
   // Remove individual active chat and clear its conversation
   const handleRemoveActiveChat = useCallback((composer: Composer) => {
-    // Remove from active chats list
-    setActiveChatIds(prev => prev.filter(id => id !== composer.id));
-    // Delete all conversations for this composer
-    const composerConversations = getConversationsForComposer(composer.id);
-    composerConversations.forEach(conv => deleteConversation(conv.id));
-    // If this composer is currently open, reset chat interface
-    if (selectedComposer?.id === composer.id) {
-      setChatClearTrigger(prev => prev + 1);
+    try {
+      console.log(`[Index] Removing chat for composer: ${composer.name} (${composer.id})`);
+
+      // First, remove from active chats list
+      setActiveChatIds(prev => {
+        console.log(`[Index] Removing composer ID ${composer.id} from active chats`);
+        return prev.filter(id => id !== composer.id);
+      });
+
+      // Next, safely delete only conversations for THIS composer
+      try {
+        const composerConversations = getConversationsForComposer(composer.id);
+        console.log(`[Index] Found ${composerConversations.length} conversations to delete for composer ${composer.id}`);
+
+        // Make sure we're only deleting conversations for this specific composer
+        if (composerConversations.length > 0) {
+          // Delete each conversation one by one
+          for (const conv of composerConversations) {
+            // Double check this conversation belongs to this composer before deleting
+            if (conv.composerId === composer.id) {
+              console.log(`[Index] Deleting conversation: ${conv.id} for composer ${composer.id}`);
+              deleteConversation(conv.id);
+            } else {
+              console.warn(`[Index] Skipping conversation ${conv.id} as it doesn't belong to composer ${composer.id}`);
+            }
+          }
+        } else {
+          console.log(`[Index] No conversations found for composer ${composer.id}`);
+        }
+      } catch (e) {
+        console.error(`[Index] Error deleting conversations for composer ${composer.id}:`, e);
+      }
+
+      // If this composer is currently open, reset chat interface
+      if (selectedComposer?.id === composer.id) {
+        console.log(`[Index] Resetting chat interface for currently open composer: ${composer.id}`);
+        setChatClearTrigger(prev => prev + 1);
+      }
+
+      console.log(`[Index] Successfully removed chat for composer: ${composer.name}`);
+    } catch (error) {
+      console.error(`[Index] Error in handleRemoveActiveChat:`, error);
     }
   }, [getConversationsForComposer, deleteConversation, setActiveChatIds, setChatClearTrigger, selectedComposer]);
 

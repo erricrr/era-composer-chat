@@ -20,6 +20,16 @@ export default function ActiveChatsSlider({
   onClose,
   onRemoveChat,
 }: ActiveChatsSliderProps) {
+  // Handle removing a single chat
+  const handleRemoveChat = (composer: Composer, e: React.MouseEvent<HTMLButtonElement>) => {
+    // Prevent the event from propagating to parent elements
+    e.stopPropagation();
+    e.preventDefault();
+
+    // Call the onRemoveChat handler
+    onRemoveChat(composer);
+  };
+
   return (
     <aside
       className={`fixed top-10 bottom-0 right-0 w-64 z-50 bg-background border-l border-border shadow-lg transform transition-transform duration-200 ease-out flex flex-col ${isOpen ? 'translate-x-0 pointer-events-auto' : 'translate-x-full pointer-events-none'}`}
@@ -54,9 +64,11 @@ export default function ActiveChatsSlider({
                   </div>
                 </button>
                 <button
-                  onClick={() => onRemoveChat(composer)}
+                  type="button"
+                  onClick={(e) => handleRemoveChat(composer, e)}
                   className="p-2 text-red-600 rounded hover:bg-muted transition-colors"
                   aria-label={`Remove chat with ${composer.name}`}
+                  title="Remove this chat and clear its conversation"
                 >
                   <Trash2 className="w-4 h-4 text-destructive" />
                 </button>
