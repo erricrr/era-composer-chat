@@ -192,7 +192,7 @@ const Index = () => {
         toast.warning(
           `Active Chat Limit Reached: ${MAX_ACTIVE_CHATS}`,
           {
-            description: `You've reached the maximum of ${MAX_ACTIVE_CHATS} active chats. Adding more will remove the oldest conversations.`,
+            description: `You've reached the maximum of ${MAX_ACTIVE_CHATS} active chats. Adding more will start to remove conversations at the bottom of the list.`,
             duration: 5000,
             icon: <AlertTriangle className="h-5 w-5 dark:text-amber-500 text-amber-600" />,
             closeButton: true
