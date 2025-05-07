@@ -323,7 +323,7 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
           isMobileSearchActive ? "w-full" : "hidden",
           "md:block md:w-full"
         )}
-        style={{ position: 'relative', zIndex: 1000 }}
+        style={{ position: 'relative', zIndex: 65 }}
       >
         {/* Input with icons */}
         <div className="flex items-center px-3 rounded-full">
@@ -364,7 +364,7 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
         {shouldShowResults && (
           <div
             className="absolute top-[calc(100%+4px)] left-0 right-0 w-full"
-            style={{ zIndex: 1000 }}
+            style={{ zIndex: 65 }}
           >
             <div className="rounded-lg border border-border bg-card shadow-md">
               <div className="max-h-[200px] overflow-y-auto p-1">

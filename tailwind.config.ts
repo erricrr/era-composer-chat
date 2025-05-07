@@ -18,6 +18,15 @@ export default {
 			}
 		},
 		extend: {
+			zIndex: {
+				'40': '40',
+				'50': '50',
+				'60': '60',
+				'70': '70',
+				'80': '80',
+				'90': '90',
+				'100': '100',
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',

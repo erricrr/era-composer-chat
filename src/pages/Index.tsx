@@ -379,7 +379,7 @@ const Index = () => {
     <TooltipProvider>
       <div className="min-h-screen overflow-hidden bg-background">
         {/* Fixed Header */}
-        <div className="fixed-header" style={{ position: 'relative', zIndex: 1000 }}>
+        <div className="fixed-header" style={{ position: 'relative', zIndex: 70 }}>
           <div className="container mx-auto px-2 flex items-center justify-between h-full">
             {/* Left Side: Menu Toggle Area */}
             <div
