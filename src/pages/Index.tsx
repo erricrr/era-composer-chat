@@ -7,7 +7,7 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 import { MusicNoteDecoration } from '@/components/MusicNoteDecoration';
 import { useConversations } from '@/hooks/useConversations';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
-import { MessageCircle, AlertTriangle, MessageSquareOff, X } from 'lucide-react';
+import { MessageSquare, AlertTriangle, MessageSquareOff, X } from 'lucide-react';
 import FooterDrawer from '@/components/ui/footerDrawer';
 import { ComposerSearch } from '@/components/ComposerSearch';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
@@ -430,7 +430,7 @@ const Index = () => {
                         onClick={(e) => { e.stopPropagation(); setIsActiveChatsOpen(prev => !prev); }}
                         className="p-2 rounded-md hover:bg-muted cursor-pointer transition-colors duration-200 relative z-[60]"
                       >
-                        <MessageCircle
+                        <MessageSquare
                           className={`h-5 w-5 transform transition-transform ${isActiveChatsOpen ? 'rotate-180' : ''}`}
                         />
                       </div>
@@ -445,7 +445,7 @@ const Index = () => {
                   onClick={(e) => { e.stopPropagation(); setIsActiveChatsOpen(prev => !prev); }}
                   className="p-2 rounded-md hover:bg-muted cursor-pointer transition-colors duration-200"
                 >
-                  <MessageCircle className="h-5 w-5" />
+                  <MessageSquare className="h-5 w-5" />
                 </div>
               )}
 
