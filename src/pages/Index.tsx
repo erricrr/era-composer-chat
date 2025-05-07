@@ -178,14 +178,17 @@ const Index = () => {
   // Add or move a composer to front of active chats, limit to 5
   const handleAddActiveChat = useCallback((composer: Composer) => {
     setActiveChatIds(prev => {
+      // Check if the composer is already in the active chats
+      const isAlreadyActive = prev.includes(composer.id);
+
       // Remove if already in the list
       const ids = prev.filter(id => id !== composer.id);
 
       // Add to the front of the list
       ids.unshift(composer.id);
 
-      // Show warning when we reach the maximum chat limit
-      if (ids.length === MAX_ACTIVE_CHATS) {
+      // Only show warning when we reach the maximum chat limit with a new composer
+      if (ids.length === MAX_ACTIVE_CHATS && !isAlreadyActive) {
         toast.warning(
           `Active Chat Limit Reached: ${MAX_ACTIVE_CHATS}`,
           {
