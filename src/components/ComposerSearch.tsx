@@ -297,7 +297,7 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
   const shouldShowResults = searchQuery.trim().length > 0;
 
   return (
-    <div className="relative flex items-center md:w-[230px]" ref={containerRef}>
+    <div className="relative flex items-center md:w-[200px]" ref={containerRef}>
       {/* Mobile-Only Search Icon Button */}
       <Tooltip>
         <TooltipTrigger asChild>
