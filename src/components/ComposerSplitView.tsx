@@ -166,11 +166,25 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
       {/* Scrollable Content Area */}
       <div className="flex-1 overflow-hidden">
   <ScrollArea className="h-full">
-    <div className="p-4 md:p-6 space-y-4 md:space-y-6">
-      <div className="flex flex-col items-center text-center space-y-3">
+    <div className={`space-y-4 md:space-y-6 ${
+      isMobile
+        ? 'p-3' // Compact padding for mobile
+        : isActiveChatsOpen
+          ? 'p-3 md:p-4'
+          : 'p-4 md:p-6'
+    }`}>
+      <div className={`flex flex-col items-center text-center ${isMobile ? 'space-y-2' : 'space-y-3'}`}>
         <div
           onClick={() => setImageModalOpen(true)}
-          className="cursor-pointer w-40 h-40 md:w-56 md:h-56 lg:w-64 lg:h-64 xl:w-72 xl:h-72 rounded-full overflow-hidden border-2 border-primary flex-shrink-0 transition-transform duration-300 ease-in-out hover:scale-[1.03]"
+          className={`cursor-pointer transition-all duration-300 rounded-full overflow-hidden border-2 border-primary flex-shrink-0 hover:scale-[1.03] ${
+            isMobile
+              ? isActiveChatsOpen
+                ? 'w-40 h-40' // Larger size for mobile when active chats is open
+                : 'w-56 h-56' // Larger size for mobile when active chats is closed
+              : isActiveChatsOpen
+                ? 'w-28 h-28 md:w-40 md:h-40 lg:w-48 lg:h-48 xl:w-56 xl:h-56'
+                : 'w-40 h-40 md:w-56 md:h-56 lg:w-64 lg:h-64 xl:w-72 xl:h-72'
+          }`}
         >
           <img
             src={composer.imageUrl}
@@ -181,31 +195,81 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
 
         {/* Composer info (nationality, years, era badges) */}
         <div className="flex flex-col md:flex-col items-center gap-2 mt-2 text-center">
-          <span className="text-sm md:text-base text-muted-foreground">
+          <span className={`text-muted-foreground ${
+            isMobile
+              ? 'text-sm'
+              : isActiveChatsOpen
+                ? 'text-xs'
+                : 'text-sm md:text-base'
+          }`}>
             {composer.nationality}, {composer.birthYear}-{composer.deathYear || 'present'}
           </span>
           <div className="flex flex-wrap justify-center gap-1">
             {Array.isArray(composer.era)
               ? composer.era.map((era, idx) => (
-                  <Badge key={era + idx} variant="badge">
+                  <Badge
+                    key={era + idx}
+                    variant="badge"
+                    className={
+                      isMobile
+                        ? 'text-xs px-2 py-0.5'
+                        : isActiveChatsOpen ? 'text-[10px] px-1.5 py-0.5' : ''
+                    }
+                  >
                     {era}
                   </Badge>
                 ))
-              : <Badge variant="badge">{composer.era}</Badge>}
+              : <Badge
+                  variant="badge"
+                  className={
+                    isMobile
+                      ? 'text-xs px-2 py-0.5'
+                      : isActiveChatsOpen ? 'text-[10px] px-1.5 py-0.5' : ''
+                  }
+                >
+                  {composer.era}
+                </Badge>}
           </div>
         </div>
       </div>
 
             <div className="space-y-4 md:space-y-6 max-w-prose mx-auto">
               <div>
-                <p className="text-sm md:text-base text-foreground/90">{composer.longBio}</p>
+                <p className={`text-foreground/90 ${
+                  isMobile
+                    ? 'text-sm'
+                    : isActiveChatsOpen
+                      ? 'text-xs md:text-sm'
+                      : 'text-sm md:text-base'
+                }`}>
+                  {composer.longBio}
+                </p>
               </div>
 
               <div>
-                <h3 className="font-semibold mb-2 text-base md:text-lg">Notable Works</h3>
+                <h3 className={`font-semibold mb-2 ${
+                  isMobile
+                    ? 'text-base'
+                    : isActiveChatsOpen
+                      ? 'text-sm md:text-base'
+                      : 'text-base md:text-lg'
+                }`}>
+                  Notable Works
+                </h3>
                 <ul className="list-disc pl-5 space-y-1">
                   {composer.famousWorks.map((work, index) => (
-                    <li key={index} className="text-sm md:text-base text-foreground/80">{work}</li>
+                    <li
+                      key={index}
+                      className={`text-foreground/80 ${
+                        isMobile
+                          ? 'text-sm'
+                          : isActiveChatsOpen
+                            ? 'text-xs md:text-sm'
+                            : 'text-sm md:text-base'
+                      }`}
+                    >
+                      {work}
+                    </li>
                   ))}
                 </ul>
               </div>
