@@ -316,6 +316,17 @@ export function ChatInterface({
     };
   }, []);
 
+  // Effect to handle edge cases with input clearing
+  useEffect(() => {
+    // If the input should be empty but contains only dictation markers, clear it
+    if (inputMessage === '[listening]' || inputMessage.trim() === '') {
+      if (textareaRef.current) {
+        textareaRef.current.value = '';
+        textareaRef.current.style.height = '48px';
+      }
+    }
+  }, [inputMessage]);
+
   // Show loading state
   if (!activeConversationId && currentMessages.length === 0) {
     return <div className="flex items-center justify-center h-full">Loading conversation...</div>;
@@ -331,13 +342,16 @@ export function ChatInterface({
       recognitionRef.current = null;
     }
 
+    // Clean up any [listening] markers from message text
+    const cleanMessage = inputMessage.trim().replace(/\s*\[listening\]\s*$/g, '');
+
     // Notify parent that user sent a message (activate chat)
     onUserSend?.(composer);
 
     // Create the user message
     const userMessage: Message = {
       id: uuidv4(),
-      text: inputMessage.trim().replace(/\[listening\]/g, ''), // Remove any [listening] markers
+      text: cleanMessage,
       sender: 'user',
       timestamp: Date.now()
     };
@@ -402,12 +416,14 @@ export function ChatInterface({
       }, 1000);
     }
 
-    // Clear the input and reset textarea height (like chat-panel.tsx)
+    // IMPORTANT: Clear the input immediately to ensure it's reset
     setInputMessage('');
+
+    // Clear any lingering input and reset textarea height
     setTimeout(() => {
       if (textareaRef.current) {
-        // Clear inline height to use CSS min-height
-        textareaRef.current.style.height = '';
+        textareaRef.current.value = ''; // Force clear the DOM element
+        textareaRef.current.style.height = '48px'; // Reset to default height
       }
     }, 0);
   };
@@ -502,6 +518,11 @@ export function ChatInterface({
 
     recognition.onstart = () => {
       setIsDictating(true);
+
+      // Focus the textarea when dictation starts to show the focus ring
+      if (textareaRef.current) {
+        textareaRef.current.focus();
+      }
     };
 
     recognition.onresult = (event) => {
@@ -541,8 +562,11 @@ export function ChatInterface({
         );
       }
 
-      // Resize the textarea after adding text
+      // Ensure textarea stays focused while dictating
       if (textareaRef.current) {
+        textareaRef.current.focus();
+
+        // Resize the textarea after adding text
         textareaRef.current.style.height = '48px';
         textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 300)}px`;
       }
@@ -571,6 +595,15 @@ export function ChatInterface({
       // Default handling if we're stopping
       setIsDictating(false);
       recognitionRef.current = null;
+
+      // If the input is now empty (like after sending), make sure it stays empty
+      if (!inputMessage.trim() || inputMessage.trim() === '[listening]') {
+        setInputMessage('');
+        if (textareaRef.current) {
+          textareaRef.current.value = '';
+          textareaRef.current.style.height = '48px';
+        }
+      }
     };
 
     recognition.onerror = (event) => {
@@ -711,7 +744,10 @@ export function ChatInterface({
                 }}
                 onKeyDown={handleKeyPress}
                 placeholder={`Ask ${getLastName(composer.name)} a question...`}
-                className="w-full bg-background pl-5 pr-32 py-3 border border-input text-xs md:text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary min-h-[48px] max-h-[300px] overflow-y-auto resize-none"
+                className={`w-full bg-background pl-5 pr-32 py-3 border border-input text-xs md:text-sm text-foreground
+                  focus:outline-none focus:ring-1 focus:ring-primary
+                  ${isDictating ? 'ring-1 ring-primary' : ''}
+                  min-h-[48px] max-h-[300px] overflow-y-auto resize-none`}
                 rows={1}
                 disabled={isComposerListOpen || isComposerMenuOpen}
               />
