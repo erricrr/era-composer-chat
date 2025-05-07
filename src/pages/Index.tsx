@@ -7,7 +7,7 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 import { MusicNoteDecoration } from '@/components/MusicNoteDecoration';
 import { useConversations } from '@/hooks/useConversations';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
-import { MessageCircle, AlertTriangle, MessageSquareOff } from 'lucide-react';
+import { MessageCircle, AlertTriangle, MessageSquareOff, X } from 'lucide-react';
 import FooterDrawer from '@/components/ui/footerDrawer';
 import { ComposerSearch } from '@/components/ComposerSearch';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
@@ -191,7 +191,8 @@ const Index = () => {
           {
             description: `You've reached the maximum of ${MAX_ACTIVE_CHATS} active chats. Adding more will remove the oldest conversations.`,
             duration: 5000,
-            icon: <AlertTriangle className="h-5 w-5  dark:text-amber-500 text-amber-600" />
+            icon: <AlertTriangle className="h-5 w-5 dark:text-amber-500 text-amber-600" />,
+            closeButton: true
           }
         );
       }
@@ -227,7 +228,8 @@ const Index = () => {
                 {
                   description: "This conversation has been cleared as it exceeded the 5 chat limit.",
                   duration: 4000,
-                  icon: <MessageSquareOff className="text-destructive h-5 w-5" />
+                  icon: <MessageSquareOff className="text-destructive h-5 w-5" />,
+                  closeButton: true
                 }
               );
             }
