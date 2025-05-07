@@ -7,7 +7,7 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 import { MusicNoteDecoration } from '@/components/MusicNoteDecoration';
 import { useConversations } from '@/hooks/useConversations';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
-import { MessageCircle, AlertTriangle } from 'lucide-react';
+import { MessageCircle, AlertTriangle, MessageSquareOff } from 'lucide-react';
 import FooterDrawer from '@/components/ui/footerDrawer';
 import { ComposerSearch } from '@/components/ComposerSearch';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
@@ -222,11 +222,12 @@ const Index = () => {
               }
 
               // Show a notification that the composer was removed
-              toast.info(
+              toast(
                 `Removed from Active Chats: ${removedComposer.name}`,
                 {
                   description: "This conversation has been cleared as it exceeded the 5 chat limit.",
-                  duration: 4000
+                  duration: 4000,
+                  icon: <MessageSquareOff className="text-destructive h-5 w-5" />
                 }
               );
             }
