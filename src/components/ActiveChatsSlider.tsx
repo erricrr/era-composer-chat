@@ -1,5 +1,5 @@
 import { Composer } from '@/data/composers';
-import { X, Trash2, AlertTriangle } from 'lucide-react';
+import { X, MessageSquareOff, AlertTriangle } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface ActiveChatsSliderProps {
@@ -83,10 +83,10 @@ export default function ActiveChatsSlider({
                     <button
                       type="button"
                       onClick={(e) => handleRemoveChat(composer, e)}
-                      className="p-2 text-red-600 rounded hover:bg-muted transition-colors"
+                      className="p-2 rounded hover:bg-muted transition-colors"
                       aria-label={`Remove chat with ${composer.name}`}
                     >
-                      <Trash2 className="w-4 h-4 text-destructive" />
+                      <MessageSquareOff className="w-4 h-4 text-destructive" />
                     </button>
                   </TooltipTrigger>
                   <TooltipContent side="bottom" className="text-xs">
