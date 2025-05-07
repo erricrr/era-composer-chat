@@ -743,8 +743,8 @@ export function ChatInterface({
                   e.target.style.height = `${Math.min(e.target.scrollHeight, 300)}px`;
                 }}
                 onKeyDown={handleKeyPress}
-                placeholder={`Ask ${getLastName(composer.name)} a question...`}
-                className={`w-full bg-background pl-5 pr-32 py-3 border border-input text-xs md:text-sm text-foreground
+                placeholder={`Ask a question...`}
+                className={`w-full bg-background pl-5 pr-32 py-3 border border-input text-sm text-foreground
                   focus:outline-none focus:ring-1 focus:ring-primary
                   ${isDictating ? 'ring-1 ring-primary' : ''}
                   min-h-[48px] max-h-[300px] overflow-y-auto resize-none`}
