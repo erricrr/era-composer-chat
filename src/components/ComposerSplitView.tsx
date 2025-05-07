@@ -108,9 +108,10 @@ interface ComposerSplitViewProps {
   isOpen: boolean;
   onClose: () => void;
   children: ReactNode;
+  isActiveChatsOpen?: boolean;
 }
 
-export function ComposerSplitView({ composer, isOpen, onClose, children }: ComposerSplitViewProps) {
+export function ComposerSplitView({ composer, isOpen, onClose, children, isActiveChatsOpen = false }: ComposerSplitViewProps) {
   const isMobile = useIsMobile();
 
   // SIMPLIFIED: Don't use localStorage at all, just a simple state
@@ -230,7 +231,13 @@ export function ComposerSplitView({ composer, isOpen, onClose, children }: Compo
 
   if (isMobile) {
     return (
-      <div className="fixed inset-0 z-40">
+      <div
+        className="fixed inset-0 z-40"
+        style={{
+          right: isActiveChatsOpen ? '16rem' : 0,
+          transition: 'right 200ms ease-out'
+        }}
+      >
         <ResizablePanelGroup
           direction="vertical"
           className="h-full transition-opacity duration-300 ease-in-out"
@@ -279,7 +286,13 @@ export function ComposerSplitView({ composer, isOpen, onClose, children }: Compo
 
 
   return (
-    <div className="fixed inset-0 z-40 w-screen">
+    <div
+      className="fixed inset-0 z-40"
+      style={{
+        right: isActiveChatsOpen ? '16rem' : 0,
+        transition: 'right 200ms ease-out'
+      }}
+    >
       <div
         className={`absolute inset-0 bg-background/80 backdrop-blur-sm transition-all duration-300 ease-out ${
           isOpen ? 'opacity-100' : 'opacity-0'
@@ -287,7 +300,7 @@ export function ComposerSplitView({ composer, isOpen, onClose, children }: Compo
       />
       <ResizablePanelGroup
         direction={isMobile ? "vertical" : "horizontal"}
-        className={`h-full w-screen transition-all duration-300 ease-out ${
+        className={`h-full w-full transition-all duration-300 ease-out ${
           isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2'
         }`}
       >

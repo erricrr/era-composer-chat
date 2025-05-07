@@ -530,6 +530,7 @@ const Index = () => {
                   onUserSend={handleAddActiveChat}
                   onSplitViewToggle={setIsSplitViewOpenFromChat}
                   isComposerListOpen={isMenuOpen}
+                  isActiveChatsOpen={isActiveChatsOpen}
                 />
               </div>
             )}

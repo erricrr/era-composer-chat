@@ -16,6 +16,7 @@ interface ChatInterfaceProps {
   onUserSend?: (composer: Composer) => void;
   onSplitViewToggle?: (isOpen: boolean) => void;
   isComposerListOpen?: boolean;
+  isActiveChatsOpen?: boolean;
 }
 
 export function ChatInterface({
@@ -24,6 +25,7 @@ export function ChatInterface({
   onUserSend,
   onSplitViewToggle,
   isComposerListOpen = false,
+  isActiveChatsOpen = false,
 }: ChatInterfaceProps) {
   const [inputMessage, setInputMessage] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -558,6 +560,7 @@ export function ChatInterface({
             composer={composer}
             isOpen={isSplitViewOpen}
             onClose={() => setIsSplitViewOpen(false)}
+            isActiveChatsOpen={isActiveChatsOpen}
           >
             <div className="h-full">{chatContent}</div>
           </ComposerSplitView>
