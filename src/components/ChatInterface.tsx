@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, KeyboardEvent, useCallback } from 'react';
 import { Composer, Message, Era, Conversation, getLastName } from '@/data/composers';
 import { useConversations } from '@/hooks/useConversations';
-import { RefreshCcw, ArrowUp, Music } from 'lucide-react';
+import { RefreshCcw, ArrowUp, Music, Mic } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Badge } from "@/components/ui/badge";
 import { v4 as uuidv4 } from 'uuid';
@@ -9,6 +9,56 @@ import { ComposerImageViewer } from './ComposerImageViewer';
 import { ComposerSplitView } from './ComposerSplitView';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useIsTouch } from '@/hooks/useIsTouch';
+
+// Add type definitions for Web Speech API
+interface SpeechRecognitionEvent extends Event {
+  results: SpeechRecognitionResultList;
+  resultIndex: number;
+  error: any;
+}
+
+interface SpeechRecognitionResultList {
+  length: number;
+  item(index: number): SpeechRecognitionResult;
+  [index: number]: SpeechRecognitionResult;
+}
+
+interface SpeechRecognitionResult {
+  isFinal: boolean;
+  length: number;
+  item(index: number): SpeechRecognitionAlternative;
+  [index: number]: SpeechRecognitionAlternative;
+}
+
+interface SpeechRecognitionAlternative {
+  transcript: string;
+  confidence: number;
+}
+
+interface SpeechRecognition extends EventTarget {
+  lang: string;
+  continuous: boolean;
+  interimResults: boolean;
+  maxAlternatives: number;
+  start(): void;
+  stop(): void;
+  abort(): void;
+  onresult: (event: SpeechRecognitionEvent) => void;
+  onerror: (event: SpeechRecognitionEvent) => void;
+  onstart: (event: Event) => void;
+  onend: (event: Event) => void;
+}
+
+interface SpeechRecognitionConstructor {
+  new (): SpeechRecognition;
+}
+
+declare global {
+  interface Window {
+    SpeechRecognition: SpeechRecognitionConstructor;
+    webkitSpeechRecognition: SpeechRecognitionConstructor;
+  }
+}
 
 interface ChatInterfaceProps {
   composer: Composer;
@@ -39,6 +89,7 @@ export function ChatInterface({
     const saved = localStorage.getItem('splitViewOpen');
     return saved ? JSON.parse(saved) : false;
   });
+  const [isDictating, setIsDictating] = useState(false);
 
   // Display state controlled entirely by this component
   const [currentMessages, setCurrentMessages] = useState<Message[]>([]);
@@ -48,6 +99,9 @@ export function ChatInterface({
 
   // State to track if the composer menu is open
   const [isComposerMenuOpen, setIsComposerMenuOpen] = useState(false);
+
+  // Reference for speech recognition
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
 
   const {
     activeConversation,
@@ -235,6 +289,33 @@ export function ChatInterface({
     }
   }, [isSplitViewOpen]);
 
+  // Add global CSS for mic pulse animation
+  useEffect(() => {
+    // Add global CSS for mic pulse animation
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes micPulse {
+        0% {
+          box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+        }
+        70% {
+          box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+        }
+      }
+      .mic-pulse-animation {
+        animation: micPulse 1.5s infinite;
+      }
+    `;
+    document.head.appendChild(style);
+
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
+
   // Show loading state
   if (!activeConversationId && currentMessages.length === 0) {
     return <div className="flex items-center justify-center h-full">Loading conversation...</div>;
@@ -242,13 +323,21 @@ export function ChatInterface({
 
   const handleMessageSubmit = () => {
     if (!inputMessage.trim()) return;
+
+    // Stop dictation if it's active when sending a message
+    if (isDictating && recognitionRef.current) {
+      recognitionRef.current.stop();
+      setIsDictating(false);
+      recognitionRef.current = null;
+    }
+
     // Notify parent that user sent a message (activate chat)
     onUserSend?.(composer);
 
     // Create the user message
     const userMessage: Message = {
       id: uuidv4(),
-      text: inputMessage.trim(),
+      text: inputMessage.trim().replace(/\[listening\]/g, ''), // Remove any [listening] markers
       sender: 'user',
       timestamp: Date.now()
     };
@@ -379,6 +468,147 @@ export function ChatInterface({
     return `Thank you for your interest in my work. I was a composer from the ${composer.era} era, known for ${composer.famousWorks[0]}. ${composer.shortBio}`;
   };
 
+  // Function to handle dictation
+  const handleDictation = () => {
+    // If already dictating, stop it
+    if (isDictating && recognitionRef.current) {
+      recognitionRef.current.stop();
+      setIsDictating(false);
+      recognitionRef.current = null;
+      return;
+    }
+
+    if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
+      // Show error if browser doesn't support Speech Recognition
+      alert("Your browser doesn't support speech recognition. Please try using Chrome or Edge.");
+      return;
+    }
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+
+    // Store reference to recognition object
+    recognitionRef.current = recognition;
+
+    // Track the base input before dictation started - will be empty after sending a message
+    const baseInput = inputMessage;
+    // Store the last transcript to avoid duplications
+    let lastTranscript = '';
+
+    recognition.lang = 'en-US';
+    recognition.continuous = true; // Keep listening until explicitly stopped
+    recognition.interimResults = true; // Show interim results
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = () => {
+      setIsDictating(true);
+    };
+
+    recognition.onresult = (event) => {
+      // Build the complete transcript from current recognition session
+      let finalTranscript = '';
+      let interimTranscript = '';
+
+      // Process all results from this session
+      for (let i = 0; i < event.results.length; i++) {
+        const result = event.results[i];
+        if (result.isFinal) {
+          finalTranscript += result[0].transcript;
+        } else {
+          interimTranscript += result[0].transcript;
+        }
+      }
+
+      // Combine with the base input
+      const combinedTranscript = finalTranscript;
+
+      // Only update if we have new content
+      if (combinedTranscript !== lastTranscript) {
+        lastTranscript = combinedTranscript;
+
+        // Set the input with appropriate formatting
+        setInputMessage(
+          baseInput
+            ? `${baseInput} ${combinedTranscript}${interimTranscript ? ' ' + interimTranscript + ' [listening]' : ''}`
+            : `${combinedTranscript}${interimTranscript ? ' ' + interimTranscript + ' [listening]' : ''}`
+        );
+      } else if (interimTranscript) {
+        // Only update interim results if they've changed
+        setInputMessage(
+          baseInput
+            ? `${baseInput} ${finalTranscript} ${interimTranscript} [listening]`
+            : `${finalTranscript} ${interimTranscript} [listening]`
+        );
+      }
+
+      // Resize the textarea after adding text
+      if (textareaRef.current) {
+        textareaRef.current.style.height = '48px';
+        textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 300)}px`;
+      }
+    };
+
+    recognition.onend = () => {
+      // Remove any [listening] markers
+      setInputMessage(prevInput => {
+        if (prevInput && prevInput.includes('[listening]')) {
+          return prevInput.split('[listening]')[0].trim();
+        }
+        return prevInput;
+      });
+
+      // If dictation should continue but ended automatically, restart it
+      if (isDictating && recognitionRef.current) {
+        try {
+          recognition.start();
+          return; // Don't reset state if continuing
+        } catch (e) {
+          console.error('Failed to restart recognition', e);
+          // Fall through to reset state
+        }
+      }
+
+      // Default handling if we're stopping
+      setIsDictating(false);
+      recognitionRef.current = null;
+    };
+
+    recognition.onerror = (event) => {
+      console.error('Speech recognition error', event.error);
+
+      // Clean up any [listening] markers
+      setInputMessage(prevInput => {
+        if (prevInput && prevInput.includes('[listening]')) {
+          return prevInput.split('[listening]')[0].trim();
+        }
+        return prevInput;
+      });
+
+      // Only stop if it's a fatal error
+      if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+        setIsDictating(false);
+        recognitionRef.current = null;
+      } else if (isDictating && recognitionRef.current) {
+        // For other errors, try to restart if still active
+        try {
+          setTimeout(() => {
+            recognition.start();
+          }, 1000);
+          return; // Keep state as dictating
+        } catch (e) {
+          console.error('Failed to restart after error', e);
+          // Fall through to reset state
+        }
+      }
+
+      // Default error handling
+      setIsDictating(false);
+      recognitionRef.current = null;
+    };
+
+    recognition.start();
+  };
+
   const chatContent = (
     <div
       className="relative flex flex-col h-full bg-background overflow-hidden"
@@ -465,71 +695,102 @@ export function ChatInterface({
       </div>
 
       <form onSubmit={handleSendMessage} className="sticky bottom-0 border-t bg-background/80 backdrop-blur-sm">
-  <div className="pt-4 relative mx-5">
-    <div className="relative flex gap-2">
-      <div key={`input-${isSplitViewOpen}`} className="flex-1 relative">
-        <textarea
-          key={`textarea-${isSplitViewOpen}`}
-          ref={textareaRef}
-          value={inputMessage}
-          onChange={(e) => {
-            setInputMessage(e.target.value);
-            onUserTyping(true);
-            // Reset then resize
-            e.target.style.height = '48px';
-            e.target.style.height = `${Math.min(e.target.scrollHeight, 300)}px`;
-          }}
-          onKeyDown={handleKeyPress}
-          placeholder={`Ask ${getLastName(composer.name)} a question...`}
-          className="w-full bg-background pl-5 pr-20 py-3 border border-input text-xs md:text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary min-h-[48px] max-h-[300px] overflow-y-auto resize-none"
-          rows={1}
-          disabled={isComposerListOpen || isComposerMenuOpen}
-        />
-        {/* Send Button */}
-        <button
-          type="submit"
-          disabled={!inputMessage.trim() || isComposerListOpen || isComposerMenuOpen}
-          className="absolute bottom-3.5 right-10 h-8 w-8 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-105 active:scale-95 shadow-sm"
-        >
-          <ArrowUp className="w-5 h-5" strokeWidth={3} />
-        </button>
-
-        {/* Reset Button */}
-        {!isTouch ? (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button
-                type="button"
+        <div className="pt-4 relative mx-5 z-10">
+          <div className="relative flex gap-2">
+            <div key={`input-${isSplitViewOpen}`} className="flex-1 relative">
+              <textarea
+                key={`textarea-${isSplitViewOpen}`}
+                ref={textareaRef}
+                value={inputMessage}
+                onChange={(e) => {
+                  setInputMessage(e.target.value);
+                  onUserTyping(true);
+                  // Reset then resize
+                  e.target.style.height = '48px';
+                  e.target.style.height = `${Math.min(e.target.scrollHeight, 300)}px`;
+                }}
+                onKeyDown={handleKeyPress}
+                placeholder={`Ask ${getLastName(composer.name)} a question...`}
+                className="w-full bg-background pl-5 pr-32 py-3 border border-input text-xs md:text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary min-h-[48px] max-h-[300px] overflow-y-auto resize-none"
+                rows={1}
                 disabled={isComposerListOpen || isComposerMenuOpen}
-                onClick={handleResetChat}
-                className="absolute bottom-3.5 right-1 h-8 w-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-primary transition-colors duration-200 hover:scale-105 active:scale-95 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                aria-label="Reset chat"
+              />
+
+              {/* Dictation Button - Wrap in a positioned div for tooltip context */}
+              <div className="absolute bottom-3.5 right-20 z-10">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      type="button"
+                      disabled={isComposerListOpen || isComposerMenuOpen}
+                      onClick={handleDictation}
+                      className={`h-8 w-8 rounded-full flex items-center justify-center
+                        ${isComposerListOpen || isComposerMenuOpen ? 'opacity-50 cursor-not-allowed' : ''}
+                        ${isDictating
+                          ? 'bg-destructive text-background mic-pulse-animation'
+                          : 'text-muted-foreground hover:text-primary'
+                        } transition-colors duration-200 hover:scale-105 active:scale-95 shadow-sm`}
+                      aria-label={isDictating ? "Stop dictating" : "Dictate"}
+                    >
+                      <Mic className="w-5 h-5" strokeWidth={2} />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent
+                    side="top"
+                    align="center"
+                    className="text-xs z-50"
+                    sideOffset={5}
+                  >
+                    {isDictating ? 'Stop dictating' : 'Dictate'}
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+
+              {/* Send Button */}
+              <button
+                type="submit"
+                disabled={!inputMessage.trim() || isComposerListOpen || isComposerMenuOpen}
+                className="absolute bottom-3.5 right-10 h-8 w-8 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-105 active:scale-95 shadow-sm"
               >
-                <RefreshCcw className="w-5 h-5" strokeWidth={2} />
+                <ArrowUp className="w-5 h-5" strokeWidth={3} />
               </button>
-            </TooltipTrigger>
-            <TooltipContent side="bottom" align="center" className="text-xs">
-              Reset chat
-            </TooltipContent>
-          </Tooltip>
-        ) : (
-          <button
-            type="button"
-            disabled={isComposerListOpen || isComposerMenuOpen}
-            onClick={handleResetChat}
-            className="absolute bottom-3.5 right-1 h-8 w-8 rounded-full flex items-center justify-center text-muted-foreground transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
-            aria-label="Reset chat"
-          >
-            <RefreshCcw className="w-5 h-5" strokeWidth={2} />
-          </button>
-        )}
-      </div>
-    </div>
-  </div>
-  <p className="text-xs text-muted-foreground text-center mx-11 pb-2 pt-2">
-  AI-generated chat. Not {getLastName(composer.name)}&apos;s own words.
-  </p>
-</form>
+
+              {/* Reset Button */}
+              {!isTouch ? (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      type="button"
+                      disabled={isComposerListOpen || isComposerMenuOpen}
+                      onClick={handleResetChat}
+                      className="absolute bottom-3.5 right-1 h-8 w-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-primary transition-colors duration-200 hover:scale-105 active:scale-95 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                      aria-label="Reset chat"
+                    >
+                      <RefreshCcw className="w-5 h-5" strokeWidth={2} />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top" align="center" className="text-xs">
+                    Reset chat
+                  </TooltipContent>
+                </Tooltip>
+              ) : (
+                <button
+                  type="button"
+                  disabled={isComposerListOpen || isComposerMenuOpen}
+                  onClick={handleResetChat}
+                  className="absolute bottom-3.5 right-1 h-8 w-8 rounded-full flex items-center justify-center text-muted-foreground transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                  aria-label="Reset chat"
+                >
+                  <RefreshCcw className="w-5 h-5" strokeWidth={2} />
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+        <p className="text-xs text-muted-foreground text-center mx-11 pb-2 pt-2">
+        AI-generated chat. Not {getLastName(composer.name)}&apos;s own words.
+        </p>
+      </form>
 
     </div>
   );
