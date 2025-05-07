@@ -481,7 +481,7 @@ export function ChatInterface({
           }}
           onKeyDown={handleKeyPress}
           placeholder={`Ask ${getLastName(composer.name)} a question...`}
-          className="w-full bg-background pl-5 pr-20 py-3 border border-input text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary min-h-[48px] max-h-[300px] overflow-y-auto resize-none"
+          className="w-full bg-background pl-5 pr-20 py-3 border border-input text-xs md:text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary min-h-[48px] max-h-[300px] overflow-y-auto resize-none"
           rows={1}
           disabled={isComposerListOpen || isComposerMenuOpen}
         />
