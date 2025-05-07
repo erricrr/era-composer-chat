@@ -1,5 +1,5 @@
 import { Composer } from '@/data/composers';
-import { X, Trash2 } from 'lucide-react';
+import { X, Trash2, AlertTriangle } from 'lucide-react';
 
 interface ActiveChatsSliderProps {
   isOpen: boolean;
@@ -10,6 +10,9 @@ interface ActiveChatsSliderProps {
   onClose: () => void;
   onRemoveChat: (composer: Composer) => void;
 }
+
+// Maximum number of active chats allowed
+const MAX_ACTIVE_CHATS = 5;
 
 export default function ActiveChatsSlider({
   isOpen,
@@ -43,6 +46,17 @@ export default function ActiveChatsSlider({
         >
           <X className="w-4 h-4" />
         </button>
+      </div>
+
+      {/* Chat limit indicator */}
+      <div className="px-4 py-2 bg-muted/50 text-xs border-b border-border flex items-center justify-between">
+        <div className="flex items-center gap-1">
+          <AlertTriangle className="h-3 w-3 text-amber-500" />
+          <span className="text-muted-foreground">Limit: {activeChatIds.length}/{MAX_ACTIVE_CHATS} chats</span>
+        </div>
+        <span className="text-muted-foreground/70 text-[10px]">
+          {MAX_ACTIVE_CHATS - activeChatIds.length} remaining
+        </span>
       </div>
 
       <div className="flex-1 overflow-auto p-4 space-y-3">

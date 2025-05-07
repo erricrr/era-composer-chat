@@ -7,11 +7,12 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 import { MusicNoteDecoration } from '@/components/MusicNoteDecoration';
 import { useConversations } from '@/hooks/useConversations';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
-import { MessageCircle } from 'lucide-react';
+import { MessageCircle, AlertTriangle } from 'lucide-react';
 import FooterDrawer from '@/components/ui/footerDrawer';
 import { ComposerSearch } from '@/components/ComposerSearch';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
 import { useIsTouch } from '@/hooks/useIsTouch';
+import { toast } from "sonner";
 
 const Index = () => {
   const [selectedComposer, setSelectedComposer] = useState<Composer | null>(() => {
@@ -76,6 +77,9 @@ const Index = () => {
   const [isActiveChatsOpen, setIsActiveChatsOpen] = useState(false);
   // Track split view open state to adjust layout
   const [isSplitViewOpenFromChat, setIsSplitViewOpenFromChat] = useState(false);
+
+  // Maximum number of active chats allowed
+  const MAX_ACTIVE_CHATS = 5;
 
   const handleThemeChange = (newMode: boolean) => {
     setIsDarkMode(newMode);
@@ -174,12 +178,67 @@ const Index = () => {
   // Add or move a composer to front of active chats, limit to 5
   const handleAddActiveChat = useCallback((composer: Composer) => {
     setActiveChatIds(prev => {
+      // Remove if already in the list
       const ids = prev.filter(id => id !== composer.id);
+
+      // Add to the front of the list
       ids.unshift(composer.id);
-      if (ids.length > 5) ids.pop();
+
+      // Show warning when we reach the maximum chat limit
+      if (ids.length === MAX_ACTIVE_CHATS) {
+        toast.warning(
+          `Active Chat Limit Reached: ${MAX_ACTIVE_CHATS}`,
+          {
+            description: `You've reached the maximum of ${MAX_ACTIVE_CHATS} active chats. Adding more will remove the oldest conversations.`,
+            duration: 5000,
+            icon: <AlertTriangle className="h-5 w-5 text-amber-500" />
+          }
+        );
+      }
+
+      // If we're exceeding the limit, get the composer ID that's being removed
+      let removedComposerId: string | null = null;
+      if (ids.length > MAX_ACTIVE_CHATS) {
+        removedComposerId = ids[MAX_ACTIVE_CHATS]; // Get the ID that will be removed
+        ids.length = MAX_ACTIVE_CHATS; // Limit the array to MAX_ACTIVE_CHATS
+      }
+
+      // If a composer was removed from the active list, clear its conversations
+      if (removedComposerId) {
+        try {
+          // Find the composer that was removed
+          const removedComposer = allComposersData.find(c => c.id === removedComposerId);
+          if (removedComposer) {
+            console.log(`[Index] Clearing conversations for kicked composer: ${removedComposer.name}`);
+
+            // Get all conversations for the removed composer
+            const removedComposerConversations = getConversationsForComposer(removedComposerId);
+
+            // Delete each conversation
+            if (removedComposerConversations.length > 0) {
+              for (const conv of removedComposerConversations) {
+                console.log(`[Index] Deleting conversation: ${conv.id} for kicked composer ${removedComposerId}`);
+                deleteConversation(conv.id);
+              }
+
+              // Show a notification that the composer was removed
+              toast.info(
+                `Removed from Active Chats: ${removedComposer.name}`,
+                {
+                  description: "This conversation has been cleared as it exceeded the 5 chat limit.",
+                  duration: 4000
+                }
+              );
+            }
+          }
+        } catch (error) {
+          console.error(`[Index] Error clearing conversations for kicked composer:`, error);
+        }
+      }
+
       return ids;
     });
-  }, [setActiveChatIds]);
+  }, [setActiveChatIds, getConversationsForComposer, deleteConversation, allComposersData]);
 
   // Handler for clicking an active chat entry
   const handleActiveChatClick = useCallback((composer: Composer) => {
