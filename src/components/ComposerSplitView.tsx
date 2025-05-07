@@ -138,28 +138,28 @@ export function ComposerSplitView({ composer, isOpen, onClose, children }: Compo
         <MusicNoteDecoration />
       </div>
 
-      {/* Fixed Header - Now outside ScrollArea */}
-      <div
-        onClick={onClose}
-        className="relative flex items-center justify-center border-b py-7 bg-secondary backdrop-blur-sm shadow-md z-10 flex-shrink-0 cursor-pointer group hover:bg-secondary/80 transition-colors"
-      >
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <h2 className="font-bold font-serif text-lg md:text-xl pointer-events-none">
-            {composer.name}
-          </h2>
-        </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={(e) => {
-            e.stopPropagation();
-            onClose();
-          }}
-          className="absolute right-4 rounded-full hover:bg-primary/20 transition-all duration-200 group-hover:bg-primary/20 w-8 h-8 text-foreground/70 hover:text-foreground/90"
-        >
-          <X className="h-4 w-4" />
-        </Button>
-      </div>
+{/* Fixed Header - Now outside ScrollArea */}
+<div
+  onClick={onClose}
+  className="relative flex items-center justify-center border-b py-7 bg-secondary backdrop-blur-sm shadow-md z-10 flex-shrink-0 cursor-pointer group hover:bg-secondary/80 transition-colors"
+>
+  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+    <h2 className="font-bold font-serif text-lg md:text-xl pointer-events-none truncate max-w-[calc(100%-5rem)] px-4">
+      {composer.name}
+    </h2>
+  </div>
+  <Button
+    variant="ghost"
+    size="icon"
+    onClick={(e) => {
+      e.stopPropagation();
+      onClose();
+    }}
+    className="absolute right-4 rounded-full hover:bg-primary/20 transition-all duration-200 group-hover:bg-primary/20 w-8 h-8 text-foreground/70 hover:text-foreground/90"
+  >
+    <X className="h-4 w-4" />
+  </Button>
+</div>
 
 
       {/* Scrollable Content Area */}
