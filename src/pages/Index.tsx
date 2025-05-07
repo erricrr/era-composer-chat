@@ -385,30 +385,37 @@ const Index = () => {
         <div className="fixed-header" style={{ position: 'relative', zIndex: 70 }}>
           <div className="container mx-auto px-2 flex items-center justify-between h-full">
             {/* Left Side: Menu Toggle Area */}
-            <div
-              onClick={toggleMenu}
-              className="flex items-center cursor-pointer group"
-            >
-              <div className="flex-shrink-0 p-2 rounded-md transition-colors duration-200 group-hover:bg-muted">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 transform transition-transform duration-500 ease-out"
-                  style={{
-                    transform: isMenuOpen ? 'rotate(90deg)' : 'rotate(0deg)',
-                  }}
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div
+                  onClick={toggleMenu}
+                  className="flex items-center cursor-pointer group"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
-                  />
-                </svg>
-              </div>
-            </div>
+                  <div className="flex-shrink-0 p-2 rounded-md transition-colors duration-200 group-hover:bg-muted">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5 transform transition-transform duration-500 ease-out"
+                      style={{
+                        transform: isMenuOpen ? 'rotate(90deg)' : 'rotate(0deg)',
+                      }}
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="text-xs">
+                {isMenuOpen ? 'Close menu' : 'Open menu'}
+              </TooltipContent>
+            </Tooltip>
 
             {/* Right Side: Search + Icons */}
             <div className="flex items-center gap-2">

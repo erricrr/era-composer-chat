@@ -3,6 +3,7 @@ import { Composer } from '@/data/composers';
 import { X, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface ComposerSearchProps {
   composers: Composer[];
@@ -298,15 +299,22 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
   return (
     <div className="relative flex items-center md:w-[230px]" ref={containerRef}>
       {/* Mobile-Only Search Icon Button */}
-      <Button
-        variant="ghost"
-        size="icon"
-        className={`w-8 h-8 flex-shrink-0 md:hidden ${isMobileSearchActive ? 'hidden' : 'flex'} rounded-md hover:bg-muted transition-colors duration-200`}
-        onClick={activateMobileSearch}
-        aria-label="Open search bar"
-      >
-        <Search className="h-5 w-5 text-muted-foreground" />
-      </Button>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            className={`w-8 h-8 flex-shrink-0 md:hidden ${isMobileSearchActive ? 'hidden' : 'flex'} rounded-md hover:bg-muted transition-colors duration-200`}
+            onClick={activateMobileSearch}
+            aria-label="Open search bar"
+          >
+            <Search className="h-5 w-5 text-muted-foreground" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent side="bottom" className="text-xs">
+          Search composers
+        </TooltipContent>
+      </Tooltip>
 
       {/* Search Input Container */}
       <div
