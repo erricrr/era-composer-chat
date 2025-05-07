@@ -191,7 +191,7 @@ const Index = () => {
           {
             description: `You've reached the maximum of ${MAX_ACTIVE_CHATS} active chats. Adding more will remove the oldest conversations.`,
             duration: 5000,
-            icon: <AlertTriangle className="h-5 w-5 text-amber-500" />
+            icon: <AlertTriangle className="h-5 w-5  dark:text-amber-500 text-amber-600" />
           }
         );
       }

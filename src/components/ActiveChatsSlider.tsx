@@ -52,7 +52,7 @@ export default function ActiveChatsSlider({
       {/* Chat limit indicator */}
       <div className="px-4 py-2 bg-muted/50 text-xs border-b border-border flex items-center justify-between">
         <div className="flex items-center gap-1">
-          <AlertTriangle className="h-3 w-3 text-amber-500" />
+          <AlertTriangle className="h-3 w-3 dark:text-amber-500 text-amber-700" />
           <span className="text-muted-foreground">Limit: {activeChatIds.length}/{MAX_ACTIVE_CHATS} chats</span>
         </div>
         <span className="text-muted-foreground/70 text-[10px]">
