@@ -36,7 +36,7 @@ export function ThemeToggle({ onThemeChange }: { onThemeChange?: (isDark: boolea
   return (
     <button
       onClick={toggleTheme}
-      className="p-1 rounded-full hover:bg-muted transition-colors duration-200"
+      className="p-2 rounded-md hover:bg-muted transition-colors duration-200"
       aria-label="Toggle theme"
       data-theme={isDarkMode ? 'dark' : 'light'}
     >

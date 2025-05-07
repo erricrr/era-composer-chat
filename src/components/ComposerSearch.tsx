@@ -1,13 +1,5 @@
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { Composer } from '@/data/composers';
-import {
-  Command,
-  CommandInput,
-  CommandEmpty,
-  CommandGroup,
-  CommandItem,
-  CommandList,
-} from '@/components/ui/command';
 import { X, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -309,7 +301,7 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
       <Button
         variant="ghost"
         size="icon"
-        className={`w-7 h-7 flex-shrink-0 md:hidden ${isMobileSearchActive ? 'hidden' : 'flex'} rounded-full hover:bg-muted`}
+        className={`w-8 h-8 flex-shrink-0 md:hidden ${isMobileSearchActive ? 'hidden' : 'flex'} rounded-md hover:bg-muted transition-colors duration-200`}
         onClick={activateMobileSearch}
         aria-label="Open search bar"
       >

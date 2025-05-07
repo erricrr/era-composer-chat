@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Drawer,
   DrawerTrigger,
@@ -8,24 +8,35 @@ import {
   DrawerTitle,
   DrawerDescription,
   DrawerClose,
+  DrawerOverlay
 } from "./drawer";
 import { Button } from "@/components/ui/button";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 
 const FooterDrawer = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Handle opening and closing the drawer manually
+  const handleTriggerClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setIsOpen(true);
+  };
+
   return (
-    <Drawer>
+    <Drawer open={isOpen} onOpenChange={setIsOpen}>
       <DrawerTrigger asChild>
         <Button
           variant="ghost"
           size="sm"
-          className="flex items-center gap-1 text-muted-foreground hover:bg-transparent hover:text-primary p-1"
+          className="p-2 rounded-md hover:bg-muted transition-colors duration-200 text-muted-foreground hover:text-muted-foreground"
+          onClick={handleTriggerClick}
         >
-          <FontAwesomeIcon icon={faInfoCircle} className="h-3.5 w-3.5" />
+          <FontAwesomeIcon icon={faInfoCircle} className="h-5 w-5" />
         </Button>
       </DrawerTrigger>
-      <DrawerContent>
+      <DrawerContent className="z-[150]">
         <div className="flex flex-col max-h-[85vh]">
           <DrawerHeader className="pb-2">
             <DrawerTitle className="text-center text-lg font-semibold text-primary">
@@ -83,7 +94,12 @@ const FooterDrawer = () => {
               © {new Date().getFullYear()} AI Composer Chat - An educational tool for exploring classical music
             </p>
             <DrawerClose asChild>
-              <Button variant="outline" size="sm" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground">
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground"
+                onClick={() => setIsOpen(false)}
+              >
                 Close
               </Button>
             </DrawerClose>
