@@ -42,7 +42,7 @@ export default function ActiveChatsSlider({
         <h3 className="text-base font-semibold">Active Chats</h3>
         <button
           onClick={onClose}
-          className="p-1 rounded hover:bg-muted transition-colors"
+          className="p-1 rounded-full hover:bg-muted transition-colors"
           aria-label="Close active chats"
         >
           <X className="w-4 h-4" />
