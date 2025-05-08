@@ -648,7 +648,7 @@ export function ChatInterface({
     >
       <div className="relative flex items-center justify-end px-2">
         {(!isSplitViewOpen) ? (
-          <div className="flex items-center justify-between px-2 py-3 md:px-5 md:py-4 -mt-1 w-full bg-secondary border-b shadow-md z-10">
+          <div className="flex items-center justify-between px-5 py-4 pb-3 -mt-1 w-full bg-secondary border-b shadow-md z-10">
             <Tooltip>
               <TooltipTrigger asChild>
                 <div
