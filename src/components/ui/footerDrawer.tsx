@@ -46,7 +46,7 @@ const FooterDrawer: React.FC = () => {
           <div className="flex flex-col max-h-[85vh]">
             <DrawerHeader className="pb-2">
               <DrawerTitle className="text-center text-lg font-semibold text-primary">
-                AI Composer Chat
+                Composer AI Chat
               </DrawerTitle>
               <DrawerDescription className="text-center text-muted-foreground">
                 An educational tool for exploring classical music through interactive conversations
