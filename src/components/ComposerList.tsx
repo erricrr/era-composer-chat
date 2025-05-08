@@ -140,22 +140,13 @@ export function ComposerList({
         const viewportRect = mobileViewport.getBoundingClientRect();
         const cardRect = mobileElement.getBoundingClientRect();
 
-        // Calculate how much of the card is out of view
         const leftOverflow = viewportRect.left - cardRect.left;
         const rightOverflow = cardRect.right - viewportRect.right;
 
         if (leftOverflow > 0) {
-          // Card is partially hidden on the left
-          mobileViewport.scrollBy({
-            left: -leftOverflow,
-            behavior: 'smooth'
-          });
+          mobileViewport.scrollBy({ left: -leftOverflow, behavior: 'smooth' });
         } else if (rightOverflow > 0) {
-          // Card is partially hidden on the right
-          mobileViewport.scrollBy({
-            left: rightOverflow,
-            behavior: 'smooth'
-          });
+          mobileViewport.scrollBy({ left: rightOverflow, behavior: 'smooth' });
         }
       }
 
@@ -167,22 +158,13 @@ export function ComposerList({
         const viewportRect = desktopViewport.getBoundingClientRect();
         const cardRect = desktopElement.getBoundingClientRect();
 
-        // Calculate how much of the card is out of view
         const topOverflow = viewportRect.top - cardRect.top;
         const bottomOverflow = cardRect.bottom - viewportRect.bottom;
 
         if (topOverflow > 0) {
-          // Card is partially hidden at the top
-          desktopViewport.scrollBy({
-            top: -topOverflow,
-            behavior: 'smooth'
-          });
+          desktopViewport.scrollBy({ top: -topOverflow, behavior: 'smooth' });
         } else if (bottomOverflow > 0) {
-          // Card is partially hidden at the bottom
-          desktopViewport.scrollBy({
-            top: bottomOverflow,
-            behavior: 'smooth'
-          });
+          desktopViewport.scrollBy({ top: bottomOverflow, behavior: 'smooth' });
         }
       }
     }, 0);
@@ -571,7 +553,12 @@ export function ComposerList({
                   size="xxl"
                   allowModalOnDesktop={true}
                 />
-                <div className="flex-1 min-w-0">
+                <div
+                  tabIndex={0}
+                  role="region"
+                  aria-label={`Composer details: ${selectedComposer.name}, ${selectedComposer.nationality}, ${selectedComposer.birthYear}-${selectedComposer.deathYear || 'present'}`}
+                  className="focus:outline-none focus-visible:ring-2 focus-visible:ring-primary flex-1 min-w-0"
+                >
                   <h3 className="text-xl md:text-2xl font-bold font-serif break-words">
                     {selectedComposer.name}
                   </h3>
@@ -592,7 +579,13 @@ export function ComposerList({
             </div>
               {/* Scrollable content starts here */}
               <ScrollArea className="flex-1 relative">
-                <div className="p-3 space-y-2 md:space-y-4">
+                <div
+                  tabIndex={0}
+                  onFocus={(e) => e.currentTarget.scrollIntoView({ behavior: 'smooth', block: 'nearest' })}
+                  role="region"
+                  aria-label={`About ${selectedComposer.name}: biography and notable works`}
+                  className="focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary p-3 space-y-2 md:space-y-4"
+                >
                   <p className="text-sm md:text-base text-foreground/90">
                     {selectedComposer.shortBio}
                   </p>

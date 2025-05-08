@@ -52,18 +52,27 @@ export function ComposerImageViewer({
 
   return (
     <>
-      <div
-        className={`${sizeClasses[size]} rounded-full overflow-hidden border-2 border-primary flex-shrink-0 cursor-pointer transition-transform duration-300 ease-in-out ${
+      <button
+        type="button"
+        role="button"
+        aria-label={`View image of ${composer.name}`}
+        className={`${sizeClasses[size]} appearance-none border-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-full overflow-hidden flex-shrink-0 cursor-pointer transition-transform duration-300 ease-in-out ${
           size !== 'sm' ? 'hover:scale-105' : ''
         } ${className}`}
         onClick={handleClick}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleClick();
+          }
+        }}
       >
         <img
           src={composer.imageUrl}
           alt={composer.name}
           className="w-full h-full object-cover"
         />
-      </div>
+      </button>
 
       {(isMobile || allowModalOnDesktop) && (
         <ImageModal
