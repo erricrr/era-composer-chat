@@ -275,6 +275,27 @@
       ]
     },
     {
+      "id": "benjamin-britten",
+      "name": "Benjamin Britten",
+      "era": ["20th-21st Century"],
+      "birthYear": 1913,
+      "deathYear": 1976,
+      "shortBio": "Benjamin Britten was an English composer, conductor, and pianist of the 20th century. He is renowned for his operas, vocal works, and orchestral compositions. Britten's music is celebrated for its emotional depth and technical brilliance. He was born in Lowestoft, England, and studied at the Royal College of Music in London. Britten co-founded the Aldeburgh Festival, which remains a significant event in the classical music calendar.",
+      "longBio": "Benjamin Britten was a leading English composer of the 20th century. Born in Lowestoft, he showed prodigious musical talent from a young age. Britten studied at the Royal College of Music and gained recognition with works such as 'Peter Grimes' and 'The Young Person's Guide to the Orchestra.' He co-founded the Aldeburgh Festival, which became a prominent platform for new music. Britten's compositions include operas, choral works, and orchestral pieces, often characterized by their expressive power and innovative use of harmony. He collaborated with prominent artists and writers, including W.H. Auden and Peter Pears. Britten's legacy endures as one of the most influential figures in British classical music. His works continue to be performed and admired worldwide.",
+      "nationality": "English",
+      "location": "Aldeburgh, England",
+      "famousWorks": [
+        "Peter Grimes",
+        "The Young Person's Guide to the Orchestra",
+        "War Requiem"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/2/23/Benjamin_Britten%2C_London_Records_1968_publicity_photo_for_Wikipedia_%28restored%29.jpg",
+      "notableQuotes": [
+        "The only thing that matters is the music.",
+        "I believe that music can change the world."
+      ]
+    },
+    {
       "id": "camille-saint-saens",
       "name": "Camille Saint-Saëns",
       "searchableName": "Camille Saint-Saens",
