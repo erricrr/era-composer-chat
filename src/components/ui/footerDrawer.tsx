@@ -31,6 +31,7 @@ const FooterDrawer: React.FC = () => {
             size="sm"
             className="p-2 rounded-md hover:bg-muted transition-colors duration-200 text-muted-foreground hover:text-muted-foreground"
             onClick={toggleDrawer}
+            aria-label="About"
           >
             <FontAwesomeIcon icon={faInfoCircle} className="h-5 w-5" />
           </Button>

@@ -384,7 +384,13 @@ const Index = () => {
           <div className="container mx-auto px-2 flex items-center justify-between h-full">
             {/* Left Side: Menu Toggle Area */}
             <HeaderIcon tooltip={isMenuOpen ? 'Close menu' : 'Open menu'}>
-              <div onClick={toggleMenu} className="flex items-center cursor-pointer group">
+              <button
+                type="button"
+                onClick={toggleMenu}
+                aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+                aria-expanded={isMenuOpen}
+                className="flex items-center group"
+              >
                 <div className="flex-shrink-0 p-2 rounded-md transition-colors duration-200 group-hover:bg-muted">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -397,7 +403,7 @@ const Index = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
                   </svg>
                 </div>
-              </div>
+              </button>
             </HeaderIcon>
 
             {/* Right Side: Search + Icons */}
@@ -413,12 +419,15 @@ const Index = () => {
 
               {/* Active Chats Tab Icon */}
               <HeaderIcon tooltip="Active Chats">
-                <div
+                <button
+                  type="button"
                   onClick={(e) => { e.stopPropagation(); setIsActiveChatsOpen(prev => !prev); }}
-                  className="p-2 rounded-md hover:bg-muted cursor-pointer transition-colors duration-200 relative z-[60]"
+                  aria-label="Active Chats"
+                  aria-expanded={isActiveChatsOpen}
+                  className="p-2 rounded-md hover:bg-muted transition-colors duration-200 relative z-[60]"
                 >
                   <MessageSquare className={`h-5 w-5 transform transition-transform ${isActiveChatsOpen ? 'rotate-180' : ''}`} />
-                </div>
+                </button>
               </HeaderIcon>
 
               {/* About Icon & Drawer */}
