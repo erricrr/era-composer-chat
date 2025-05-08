@@ -224,7 +224,10 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
               </button>
 
               {/* Composer info (nationality, years, era badges) */}
-              <div className="flex flex-col md:flex-col items-center gap-2 mt-2 text-center">
+              <div
+                tabIndex={0}
+                className="focus:outline-none focus-visible:ring-1 focus-visible:ring-primary flex flex-col md:flex-col items-center gap-2 mt-2 text-center"
+              >
                 <span className={`text-muted-foreground ${
                   isMobile
                     ? 'text-sm'
@@ -235,30 +238,36 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
                   {composer.nationality}, {composer.birthYear}-{composer.deathYear || 'present'}
                 </span>
                 <div className="flex flex-wrap justify-center gap-1">
-                  {Array.isArray(composer.era)
-                    ? composer.era.map((era, idx) => (
-                        <Badge
-                          key={era + idx}
-                          variant="badge"
-                          className={
-                            isMobile
-                              ? 'text-xs px-2 py-0.5'
-                              : isActiveChatsOpen ? 'text-[10px] px-1.5 py-0.5' : ''
-                          }
-                        >
-                          {era}
-                        </Badge>
-                      ))
-                    : <Badge
+                  {Array.isArray(composer.era) ? (
+                    composer.era.map((era, idx) => (
+                      <Badge
+                        key={era + idx}
                         variant="badge"
                         className={
                           isMobile
                             ? 'text-xs px-2 py-0.5'
-                            : isActiveChatsOpen ? 'text-[10px] px-1.5 py-0.5' : ''
+                            : isActiveChatsOpen
+                              ? 'text-[10px] px-1.5 py-0.5'
+                              : ''
                         }
                       >
-                        {composer.era}
-                      </Badge>}
+                        {era}
+                      </Badge>
+                    ))
+                  ) : (
+                    <Badge
+                      variant="badge"
+                      className={
+                        isMobile
+                          ? 'text-xs px-2 py-0.5'
+                          : isActiveChatsOpen
+                            ? 'text-[10px] px-1.5 py-0.5'
+                            : ''
+                      }
+                    >
+                      {composer.era}
+                    </Badge>
+                  )}
                 </div>
               </div>
             </div>
@@ -299,8 +308,7 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
                           : isActiveChatsOpen
                             ? 'text-xs md:text-sm'
                             : 'text-sm md:text-base'
-                      }`}
-                    >
+                      }`}>
                       {work}
                     </li>
                   ))}
@@ -381,7 +389,6 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
     );
   }
 
-
   return (
     <div
       className="fixed inset-0 z-40"
@@ -394,7 +401,8 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
         className={`absolute inset-0 bg-background/80 backdrop-blur-sm transition-all duration-300 ease-out ${
           isOpen ? 'opacity-100' : 'opacity-0'
         }`}
-      />
+      >
+      </div>
       <ResizablePanelGroup
         direction={isMobile ? "vertical" : "horizontal"}
         className={`h-full w-full transition-all duration-300 ease-out ${
