@@ -302,20 +302,17 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
       {!isMobileSearchActive && (
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="flex-shrink-0 md:hidden flex rounded-md hover:bg-muted transition-colors duration-200"
+            <button
+              type="button"
+              className="p-2 rounded-md md:hidden hover:bg-muted transition-colors duration-200 flex-shrink-0 flex"
               onClick={(e) => {
-                // Prevent any tooltip events from firing
                 e.stopPropagation();
-                // Use setTimeout to ensure tooltip is fully dismissed before search activation
                 setTimeout(activateMobileSearch, 10);
               }}
               aria-label="Open search bar"
             >
-              <Search className="text-muted-foreground" />
-            </Button>
+              <Search className="h-5 w-5 text-muted-foreground" />
+            </button>
           </TooltipTrigger>
           <TooltipContent side="bottom" sideOffset={5} className="text-xs">
             Search composers
