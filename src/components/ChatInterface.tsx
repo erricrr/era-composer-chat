@@ -651,8 +651,11 @@ export function ChatInterface({
           <div className="flex items-center justify-between px-5 py-4 pb-3 -mt-1 w-full bg-secondary border-b shadow-md z-10">
             <Tooltip>
               <TooltipTrigger asChild>
-                <div
-                  className="flex items-center space-x-6 cursor-pointer hover:opacity-90 transition-all duration-300"
+                <button
+                  type="button"
+                  aria-label={`Open split view for ${composer.name}`}
+                  aria-expanded={isSplitViewOpen}
+                  className="flex items-center space-x-6 cursor-pointer hover:opacity-90 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary"
                   onClick={(e) => {
                     e.stopPropagation();
                     setIsSplitViewOpen(true);
@@ -666,8 +669,8 @@ export function ChatInterface({
                         className="!scale-100"
                       />
                     </div>
-                    <div className="flex flex-col justify-center">
-                      <h2 className="font-serif font-bold text-base md:text-lg text-left hover:text-primary transition-colors">{composer.name}</h2>
+                    <div className="flex flex-col justify-center text-left">
+                      <h2 className="font-serif font-bold text-base md:text-lg hover:text-primary transition-colors">{composer.name}</h2>
                       <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-1">
                         <span className="text-xs md:text-base text-muted-foreground hover:text-primary transition-colors">
                           {composer.nationality}, {composer.birthYear}-{composer.deathYear || 'present'}
@@ -682,7 +685,7 @@ export function ChatInterface({
                       </div>
                     </div>
                   </div>
-                </div>
+                </button>
               </TooltipTrigger>
               <TooltipContent side="bottom" align="start" alignOffset={-50} className="text-xs">
                 More about {getLastName(composer.name)}

@@ -124,6 +124,21 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
     }
   }, [isOpen]);
 
+  // Add keyboard listener for Escape to close split view
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    if (isOpen) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, onClose]);
+
   // Clean early return - don't render anything when closed
   if (!isOpen) return null;
 
@@ -141,6 +156,15 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
 
 {/* Fixed Header - Now outside ScrollArea */}
 <div
+  role="button"
+  tabIndex={0}
+  aria-label={`Close split view for ${composer.name}`}
+  onKeyDown={(e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onClose();
+    }
+  }}
   onClick={onClose}
   className="relative flex items-center justify-center border-b py-7 bg-secondary backdrop-blur-sm shadow-md z-10 flex-shrink-0 cursor-pointer group hover:bg-secondary/80 transition-colors"
 >
@@ -152,6 +176,7 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
   <Button
     variant="ghost"
     size="icon"
+    aria-label="Close split view"
     onClick={(e) => {
       e.stopPropagation();
       onClose();
