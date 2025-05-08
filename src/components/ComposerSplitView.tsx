@@ -202,24 +202,26 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
                 : 'p-4 md:p-6'
           }`}>
             <div className={`flex flex-col items-center text-center ${isMobile ? 'space-y-2' : 'space-y-3'}`}>
-              <div
+              <button
+                type="button"
                 onClick={() => setImageModalOpen(true)}
-                className={`cursor-pointer transition-all duration-300 rounded-full overflow-hidden border-2 border-primary flex-shrink-0 hover:scale-[1.03] ${
+                className={`appearance-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer transition-all duration-300 rounded-full overflow-hidden border-2 border-primary flex-shrink-0 hover:scale-[1.03] ${
                   isMobile
                     ? isActiveChatsOpen
-                      ? 'w-32 h-32' // Reduced from w-36 h-36
-                      : 'w-48 h-48' // Reduced from w-52 h-52
+                      ? 'w-32 h-32'
+                      : 'w-48 h-48'
                     : isActiveChatsOpen
-                      ? 'w-20 h-20 md:w-32 md:h-32 lg:w-40 lg:h-40 xl:w-48 xl:h-48' // Reduced each by 4
-                      : 'w-32 h-32 md:w-48 md:h-48 lg:w-56 lg:h-56 xl:w-64 xl:h-64' // Reduced each by 4
+                      ? 'w-20 h-20 md:w-32 md:h-32 lg:w-40 lg:h-40 xl:w-48 xl:h-48'
+                      : 'w-32 h-32 md:w-48 md:h-48 lg:w-56 lg:h-56 xl:w-64 xl:h-64'
                 }`}
+                aria-label={`View full image of ${composer.name}`}
               >
                 <img
                   src={composer.imageUrl}
                   alt={composer.name}
                   className="w-full h-full object-cover"
                 />
-              </div>
+              </button>
 
               {/* Composer info (nationality, years, era badges) */}
               <div className="flex flex-col md:flex-col items-center gap-2 mt-2 text-center">
@@ -261,7 +263,10 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
               </div>
             </div>
 
-            <div className="space-y-4 md:space-y-6 max-w-prose mx-auto">
+            <div
+              tabIndex={0}
+              className="focus:outline-none focus-visible:ring-1 focus-visible:ring-primary space-y-4 md:space-y-6 max-w-prose mx-auto"
+            >
               <div>
                 <p className={`text-foreground/90 ${
                   isMobile
