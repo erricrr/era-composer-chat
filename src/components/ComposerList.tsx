@@ -568,7 +568,7 @@ export function ComposerList({
               <div className="flex items-start md:items-center space-x-2 md:space-x-6 border-b pt-2 md:pt-0" style={{ paddingBottom: '10px' }}>
                 <ComposerImageViewer
                   composer={selectedComposer}
-                  size="xl"
+                  size="xxl"
                   allowModalOnDesktop={true}
                 />
                 <div className="flex-1 min-w-0">

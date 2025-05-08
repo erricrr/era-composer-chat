@@ -178,12 +178,13 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
           onClick={() => setImageModalOpen(true)}
           className={`cursor-pointer transition-all duration-300 rounded-full overflow-hidden border-2 border-primary flex-shrink-0 hover:scale-[1.03] ${
             isMobile
-              ? isActiveChatsOpen
-                ? 'w-40 h-40' // Larger size for mobile when active chats is open
-                : 'w-56 h-56' // Larger size for mobile when active chats is closed
-              : isActiveChatsOpen
-                ? 'w-28 h-28 md:w-40 md:h-40 lg:w-48 lg:h-48 xl:w-56 xl:h-56'
-                : 'w-40 h-40 md:w-56 md:h-56 lg:w-64 lg:h-64 xl:w-72 xl:h-72'
+            ? isActiveChatsOpen
+              ? 'w-36 h-36'
+              : 'w-52 h-52'
+            : isActiveChatsOpen
+              ? 'w-24 h-24 md:w-36 md:h-36 lg:w-44 lg:h-44 xl:w-52 xl:h-52'
+              : 'w-36 h-36 md:w-52 md:h-52 lg:w-60 lg:h-60 xl:w-68 xl:h-68'
+
           }`}
         >
           <img
