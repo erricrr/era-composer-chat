@@ -298,23 +298,30 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
 
   return (
     <div className="relative flex items-center md:w-[200px]" ref={containerRef}>
-      {/* Mobile-Only Search Icon Button */}
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            className={`w-8 h-8 flex-shrink-0 md:hidden ${isMobileSearchActive ? 'hidden' : 'flex'} rounded-md hover:bg-muted transition-colors duration-200`}
-            onClick={activateMobileSearch}
-            aria-label="Open search bar"
-          >
-            <Search className="h-5 w-5 text-muted-foreground" />
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent side="bottom" className="text-xs">
-          Search composers
-        </TooltipContent>
-      </Tooltip>
+      {/* Mobile-Only Search Icon Button with conditional tooltip */}
+      {!isMobileSearchActive && (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="w-8 h-8 flex-shrink-0 md:hidden flex rounded-md hover:bg-muted transition-colors duration-200"
+              onClick={(e) => {
+                // Prevent any tooltip events from firing
+                e.stopPropagation();
+                // Use setTimeout to ensure tooltip is fully dismissed before search activation
+                setTimeout(activateMobileSearch, 10);
+              }}
+              aria-label="Open search bar"
+            >
+              <Search className="h-5 w-5 text-muted-foreground" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="bottom" sideOffset={5} className="text-xs">
+            Search composers
+          </TooltipContent>
+        </Tooltip>
+      )}
 
       {/* Search Input Container */}
       <div
