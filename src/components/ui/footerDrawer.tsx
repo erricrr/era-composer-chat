@@ -16,9 +16,10 @@ import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip
 const FooterDrawer: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const openDrawer = (e: React.MouseEvent) => {
+  // Toggle drawer open/close on info-icon click
+  const toggleDrawer = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setIsOpen(true);
+    setIsOpen(prev => !prev);
   };
 
   return (
@@ -29,7 +30,7 @@ const FooterDrawer: React.FC = () => {
             variant="ghost"
             size="sm"
             className="p-2 rounded-md hover:bg-muted transition-colors duration-200 text-muted-foreground hover:text-muted-foreground"
-            onClick={openDrawer}
+            onClick={toggleDrawer}
           >
             <FontAwesomeIcon icon={faInfoCircle} className="h-5 w-5" />
           </Button>
@@ -40,7 +41,8 @@ const FooterDrawer: React.FC = () => {
       </Tooltip>
 
       <Drawer open={isOpen} onOpenChange={setIsOpen}>
-        <DrawerContent className="z-[150]">
+        {/* close drawer when transparent background is touched */}
+        <DrawerContent className="z-[150]" onOverlayClick={() => setIsOpen(false)}>
           <div className="flex flex-col max-h-[85vh]">
             <DrawerHeader className="pb-2">
               <DrawerTitle className="text-center text-lg font-semibold text-primary">

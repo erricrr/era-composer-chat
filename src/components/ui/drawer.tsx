@@ -3,6 +3,11 @@ import { Drawer as DrawerPrimitive } from "vaul"
 
 import { cn } from "@/lib/utils"
 
+// Add an optional prop for overlay click handling
+interface DrawerContentProps extends React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> {
+  onOverlayClick?: React.MouseEventHandler<HTMLDivElement>
+}
+
 const Drawer = ({
   shouldScaleBackground = true,
   ...props
@@ -32,12 +37,14 @@ const DrawerOverlay = React.forwardRef<
 ))
 DrawerOverlay.displayName = DrawerPrimitive.Overlay.displayName
 
+// Modify DrawerContent to accept onOverlayClick
 const DrawerContent = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content>
->(({ className, children, ...props }, ref) => (
+  DrawerContentProps
+>(({ className, children, onOverlayClick, ...props }, ref) => (
   <DrawerPortal>
-    <DrawerOverlay />
+    {/* call onOverlayClick when background is touched */}
+    <DrawerOverlay onClick={onOverlayClick} />
     <DrawerPrimitive.Content
       ref={ref}
       className={cn(
