@@ -9,9 +9,9 @@ import { useConversations } from '@/hooks/useConversations';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { MessageSquare, AlertTriangle, MessageSquareOff, X } from 'lucide-react';
 import FooterDrawer from '@/components/ui/footerDrawer';
+import HeaderIcon from '@/components/ui/HeaderIcon';
 import { ComposerSearch } from '@/components/ComposerSearch';
-import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
-import { useIsTouch } from '@/hooks/useIsTouch';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import { toast } from "sonner";
 
 const Index = () => {
@@ -66,8 +66,6 @@ const Index = () => {
 
   const { startConversation, getConversationsForComposer, clearAllConversations, deleteConversation } = useConversations();
   const [isDarkMode, setIsDarkMode] = useState(false);
-
-  const isTouch = useIsTouch();
 
   // State trigger to reset chat interface when clearing all active chats
   const [chatClearTrigger, setChatClearTrigger] = useState(0);
@@ -385,37 +383,22 @@ const Index = () => {
         <div className="fixed-header" style={{ position: 'relative', zIndex: 70 }}>
           <div className="container mx-auto px-2 flex items-center justify-between h-full">
             {/* Left Side: Menu Toggle Area */}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div
-                  onClick={toggleMenu}
-                  className="flex items-center cursor-pointer group"
-                >
-                  <div className="flex-shrink-0 p-2 rounded-md transition-colors duration-200 group-hover:bg-muted">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5 transform transition-transform duration-500 ease-out"
-                      style={{
-                        transform: isMenuOpen ? 'rotate(90deg)' : 'rotate(0deg)',
-                      }}
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
-                      />
-                    </svg>
-                  </div>
+            <HeaderIcon tooltip={isMenuOpen ? 'Close menu' : 'Open menu'}>
+              <div onClick={toggleMenu} className="flex items-center cursor-pointer group">
+                <div className="flex-shrink-0 p-2 rounded-md transition-colors duration-200 group-hover:bg-muted">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5 transform transition-transform duration-500 ease-out"
+                    style={{ transform: isMenuOpen ? 'rotate(90deg)' : 'rotate(0deg)' }}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
+                  </svg>
                 </div>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" className="text-xs">
-                {isMenuOpen ? 'Close menu' : 'Open menu'}
-              </TooltipContent>
-            </Tooltip>
+              </div>
+            </HeaderIcon>
 
             {/* Right Side: Search + Icons */}
             <div className="flex items-center gap-2">
@@ -429,77 +412,28 @@ const Index = () => {
               </div>
 
               {/* Active Chats Tab Icon */}
-              {!isTouch ? (
-                <div className="relative group">
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div
-                        onClick={(e) => { e.stopPropagation(); setIsActiveChatsOpen(prev => !prev); }}
-                        className="p-2 rounded-md hover:bg-muted cursor-pointer transition-colors duration-200 relative z-[60]"
-                      >
-                        <MessageSquare
-                          className={`h-5 w-5 transform transition-transform ${isActiveChatsOpen ? 'rotate-180' : ''}`}
-                        />
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent side="bottom" className="text-xs">
-                      Active Chats
-                    </TooltipContent>
-                  </Tooltip>
-                </div>
-              ) : (
+              <HeaderIcon tooltip="Active Chats">
                 <div
                   onClick={(e) => { e.stopPropagation(); setIsActiveChatsOpen(prev => !prev); }}
-                  className="p-2 rounded-md hover:bg-muted cursor-pointer transition-colors duration-200"
+                  className="p-2 rounded-md hover:bg-muted cursor-pointer transition-colors duration-200 relative z-[60]"
                 >
-                  <MessageSquare className="h-5 w-5" />
+                  <MessageSquare className={`h-5 w-5 transform transition-transform ${isActiveChatsOpen ? 'rotate-180' : ''}`} />
                 </div>
-              )}
+              </HeaderIcon>
 
-              {/* Icons */}
-              {!isTouch ? (
-                <div className="relative group">
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div
-                        onClick={(e) => e.stopPropagation()}
-                        className="relative z-[60]"
-                      >
-                        <FooterDrawer />
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent side="bottom" className="text-xs">
-                      About
-                    </TooltipContent>
-                  </Tooltip>
-                </div>
-              ) : (
-                <div onClick={(e) => e.stopPropagation()}>
+              {/* About Icon & Drawer */}
+              <div className="relative group">
+                <div onClick={(e) => e.stopPropagation()} className="relative z-[60]">
                   <FooterDrawer />
                 </div>
-              )}
+              </div>
 
-              {!isTouch ? (
-                <div className="relative group">
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div
-                        onClick={(e) => e.stopPropagation()}
-                        className="relative z-[60]"
-                      >
-                        <ThemeToggle onThemeChange={handleThemeChange} />
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent side="bottom" className="text-xs">
-                      {isDarkMode ? 'Light mode' : 'Dark mode'}
-                    </TooltipContent>
-                  </Tooltip>
-                </div>
-              ) : (
-                <div onClick={(e) => e.stopPropagation()}>
+              {/* Theme Toggle Icon */}
+              <HeaderIcon tooltip={isDarkMode ? 'Light mode' : 'Dark mode'}>
+                <div onClick={(e) => e.stopPropagation()} className="relative z-[60]">
                   <ThemeToggle onThemeChange={handleThemeChange} />
                 </div>
-              )}
+              </HeaderIcon>
             </div>
           </div>
         </div>
