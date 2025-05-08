@@ -448,33 +448,29 @@ const Index = () => {
         </div>
 
         <main className="pt-10">
-          {/* Composer Selection Menu - Fixes overflow issues */}
-          <aside
-            className={`
-              fixed inset-y-0 left-0 z-50
-              bg-background backdrop-blur-sm border-r border-border shadow-lg
-              transition-transform duration-500 ease-out will-change-transform
-            `}
-            style={{
-              width: '100%', // Full width overlay
-              top: '2.5rem', // Adjust based on your header height
-              height: 'calc(100vh - 2.5rem)',
-              transform: isMenuOpen ? 'translateX(0)' : 'translateX(-100%)',
-              transition: 'transform 500ms ease-out'
-            }}
-          >
-            {/* Important: We don't add another scrollable container here */}
-            <ComposerMenu
-              onSelectComposer={(composer) => handleSelectComposer(composer, { source: 'list' })}
-              onStartChat={handleStartChat}
-              selectedComposer={selectedComposer}
-              isOpen={isMenuOpen}
-              selectedEra={selectedEra}
-              onSelectEra={handleSelectEra}
-              shouldScrollToComposer={shouldScrollToComposer}
-              onScrollComplete={handleScrollComplete}
-            />
-          </aside>
+          {/* Composer Selection Menu - Only render when open to remove from tab order when closed */}
+          {isMenuOpen && (
+            <aside
+              className="fixed inset-y-0 left-0 z-50 bg-background backdrop-blur-sm border-r border-border shadow-lg"
+              style={{
+                width: '100%',
+                top: '2.5rem',
+                height: 'calc(100vh - 2.5rem)'
+              }}
+            >
+              {/* Composer list rendered only when open */}
+              <ComposerMenu
+                onSelectComposer={(composer) => handleSelectComposer(composer, { source: 'list' })}
+                onStartChat={handleStartChat}
+                selectedComposer={selectedComposer}
+                isOpen={isMenuOpen}
+                selectedEra={selectedEra}
+                onSelectEra={handleSelectEra}
+                shouldScrollToComposer={shouldScrollToComposer}
+                onScrollComplete={handleScrollComplete}
+              />
+            </aside>
+          )}
 
           {/* Chat Interface - Fixed positioning with proper overflow handling */}
           <div

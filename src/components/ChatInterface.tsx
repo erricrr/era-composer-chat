@@ -327,6 +327,13 @@ export function ChatInterface({
     }
   }, [inputMessage]);
 
+  // Auto-focus textarea when composer changes or split view toggles
+  useEffect(() => {
+    if (!isSplitViewOpen && textareaRef.current) {
+      textareaRef.current.focus();
+    }
+  }, [composer.id, isSplitViewOpen]);
+
   // Show loading state
   if (!activeConversationId && currentMessages.length === 0) {
     return <div className="flex items-center justify-center h-full">Loading conversation...</div>;
@@ -655,10 +662,17 @@ export function ChatInterface({
                   type="button"
                   aria-label={`Open split view for ${composer.name}`}
                   aria-expanded={isSplitViewOpen}
-                  className="flex items-center space-x-6 cursor-pointer hover:opacity-90 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary"
+                  className="flex items-center space-x-6 cursor-pointer hover:opacity-90 transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                   onClick={(e) => {
                     e.stopPropagation();
                     setIsSplitViewOpen(true);
+                  }}
+                  onKeyDown={(e) => {
+                    e.stopPropagation();
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      setIsSplitViewOpen(true);
+                    }
                   }}
                 >
                   <div className="flex items-center gap-4">
@@ -687,7 +701,7 @@ export function ChatInterface({
                   </div>
                 </button>
               </TooltipTrigger>
-              <TooltipContent side="bottom" align="start" alignOffset={-50} className="text-xs">
+              <TooltipContent side="bottom" align="start" alignOffset={-20} className="text-xs">
                 More about {getLastName(composer.name)}
               </TooltipContent>
             </Tooltip>
@@ -748,7 +762,7 @@ export function ChatInterface({
                 onKeyDown={handleKeyPress}
                 placeholder={`Ask a question...`}
                 className={`w-full bg-background pl-5 pr-32 py-3 border border-input text-sm text-foreground
-                  focus:outline-none focus:ring-1 focus:ring-primary
+                  focus:outline-none focus-visible:ring-1 focus-visible:ring-primary
                   ${isDictating ? 'ring-1 ring-primary' : ''}
                   min-h-[48px] max-h-[300px] overflow-y-auto resize-none`}
                 rows={1}

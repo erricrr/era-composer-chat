@@ -154,110 +154,112 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
         <MusicNoteDecoration />
       </div>
 
-{/* Fixed Header - Now outside ScrollArea */}
-<div
-  role="button"
-  tabIndex={0}
-  aria-label={`Close split view for ${composer.name}`}
-  onKeyDown={(e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      onClose();
-    }
-  }}
-  onClick={onClose}
-  className="relative flex items-center justify-center border-b py-7 bg-secondary backdrop-blur-sm shadow-md z-10 flex-shrink-0 cursor-pointer group hover:bg-secondary/80 transition-colors"
->
-  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-    <h2 className="font-bold font-serif text-lg md:text-xl pointer-events-none truncate max-w-[calc(100%-5rem)] px-4">
-      {composer.name}
-    </h2>
-  </div>
-  <Button
-    variant="ghost"
-    size="icon"
-    aria-label="Close split view"
-    onClick={(e) => {
-      e.stopPropagation();
-      onClose();
-    }}
-    className="absolute right-4 rounded-full hover:bg-primary/20 transition-all duration-200 group-hover:bg-primary/20 w-8 h-8 text-foreground/70 hover:text-foreground/90"
-  >
-    <X className="h-4 w-4" />
-  </Button>
-</div>
-
+      {/* Fixed Header - Now outside ScrollArea */}
+      <div
+        role="button"
+        tabIndex={0}
+        aria-label={`Close split view for ${composer.name}`}
+        onKeyDown={(e) => {
+          e.stopPropagation();
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onClose();
+          }
+        }}
+        onClick={(e) => {
+          e.stopPropagation();
+          onClose();
+        }}
+        className="relative flex items-center justify-center border-b py-7 bg-secondary backdrop-blur-sm shadow-md z-10 flex-shrink-0 cursor-pointer group hover:bg-secondary/80 transition-colors"
+      >
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <h2 className="font-bold font-serif text-lg md:text-xl pointer-events-none truncate max-w-[calc(100%-5rem)] px-4">
+            {composer.name}
+          </h2>
+        </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          aria-label="Close split view"
+          onClick={(e) => {
+            e.stopPropagation();
+            onClose();
+          }}
+          className="absolute right-4 rounded-full hover:bg-primary/20 transition-all duration-200 group-hover:bg-primary/20 w-8 h-8 text-foreground/70 hover:text-foreground/90"
+        >
+          <X className="h-4 w-4" />
+        </Button>
+      </div>
 
       {/* Scrollable Content Area */}
       <div className="flex-1 overflow-hidden">
-  <ScrollArea className="h-full">
-    <div className={`space-y-4 md:space-y-6 ${
-      isMobile
-        ? 'p-3' // Compact padding for mobile
-        : isActiveChatsOpen
-          ? 'p-3 md:p-4'
-          : 'p-4 md:p-6'
-    }`}>
-      <div className={`flex flex-col items-center text-center ${isMobile ? 'space-y-2' : 'space-y-3'}`}>
-        <div
-          onClick={() => setImageModalOpen(true)}
-          className={`cursor-pointer transition-all duration-300 rounded-full overflow-hidden border-2 border-primary flex-shrink-0 hover:scale-[1.03] ${
+        <ScrollArea className="h-full">
+          <div className={`space-y-4 md:space-y-6 ${
             isMobile
-            ? isActiveChatsOpen
-              ? 'w-36 h-36'
-              : 'w-52 h-52'
-            : isActiveChatsOpen
-              ? 'w-24 h-24 md:w-36 md:h-36 lg:w-44 lg:h-44 xl:w-52 xl:h-52'
-              : 'w-36 h-36 md:w-52 md:h-52 lg:w-60 lg:h-60 xl:w-68 xl:h-68'
-
-          }`}
-        >
-          <img
-            src={composer.imageUrl}
-            alt={composer.name}
-            className="w-full h-full object-cover"
-          />
-        </div>
-
-        {/* Composer info (nationality, years, era badges) */}
-        <div className="flex flex-col md:flex-col items-center gap-2 mt-2 text-center">
-          <span className={`text-muted-foreground ${
-            isMobile
-              ? 'text-sm'
+              ? 'p-3' // Compact padding for mobile
               : isActiveChatsOpen
-                ? 'text-xs'
-                : 'text-sm md:text-base'
+                ? 'p-3 md:p-4'
+                : 'p-4 md:p-6'
           }`}>
-            {composer.nationality}, {composer.birthYear}-{composer.deathYear || 'present'}
-          </span>
-          <div className="flex flex-wrap justify-center gap-1">
-            {Array.isArray(composer.era)
-              ? composer.era.map((era, idx) => (
-                  <Badge
-                    key={era + idx}
-                    variant="badge"
-                    className={
-                      isMobile
-                        ? 'text-xs px-2 py-0.5'
-                        : isActiveChatsOpen ? 'text-[10px] px-1.5 py-0.5' : ''
-                    }
-                  >
-                    {era}
-                  </Badge>
-                ))
-              : <Badge
-                  variant="badge"
-                  className={
-                    isMobile
-                      ? 'text-xs px-2 py-0.5'
-                      : isActiveChatsOpen ? 'text-[10px] px-1.5 py-0.5' : ''
-                  }
-                >
-                  {composer.era}
-                </Badge>}
-          </div>
-        </div>
-      </div>
+            <div className={`flex flex-col items-center text-center ${isMobile ? 'space-y-2' : 'space-y-3'}`}>
+              <div
+                onClick={() => setImageModalOpen(true)}
+                className={`cursor-pointer transition-all duration-300 rounded-full overflow-hidden border-2 border-primary flex-shrink-0 hover:scale-[1.03] ${
+                  isMobile
+                    ? isActiveChatsOpen
+                      ? 'w-32 h-32' // Reduced from w-36 h-36
+                      : 'w-48 h-48' // Reduced from w-52 h-52
+                    : isActiveChatsOpen
+                      ? 'w-20 h-20 md:w-32 md:h-32 lg:w-40 lg:h-40 xl:w-48 xl:h-48' // Reduced each by 4
+                      : 'w-32 h-32 md:w-48 md:h-48 lg:w-56 lg:h-56 xl:w-64 xl:h-64' // Reduced each by 4
+                }`}
+              >
+                <img
+                  src={composer.imageUrl}
+                  alt={composer.name}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+
+              {/* Composer info (nationality, years, era badges) */}
+              <div className="flex flex-col md:flex-col items-center gap-2 mt-2 text-center">
+                <span className={`text-muted-foreground ${
+                  isMobile
+                    ? 'text-sm'
+                    : isActiveChatsOpen
+                      ? 'text-xs'
+                      : 'text-sm md:text-base'
+                }`}>
+                  {composer.nationality}, {composer.birthYear}-{composer.deathYear || 'present'}
+                </span>
+                <div className="flex flex-wrap justify-center gap-1">
+                  {Array.isArray(composer.era)
+                    ? composer.era.map((era, idx) => (
+                        <Badge
+                          key={era + idx}
+                          variant="badge"
+                          className={
+                            isMobile
+                              ? 'text-xs px-2 py-0.5'
+                              : isActiveChatsOpen ? 'text-[10px] px-1.5 py-0.5' : ''
+                          }
+                        >
+                          {era}
+                        </Badge>
+                      ))
+                    : <Badge
+                        variant="badge"
+                        className={
+                          isMobile
+                            ? 'text-xs px-2 py-0.5'
+                            : isActiveChatsOpen ? 'text-[10px] px-1.5 py-0.5' : ''
+                        }
+                      >
+                        {composer.era}
+                      </Badge>}
+                </div>
+              </div>
+            </div>
 
             <div className="space-y-4 md:space-y-6 max-w-prose mx-auto">
               <div>
@@ -301,8 +303,8 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
               </div>
             </div>
           </div>
-           {/* Scroll shadow for all screen sizes */}
-           <div className="pointer-events-none absolute bottom-0 left-0 w-full h-6 bg-gradient-to-t from-background to-transparent z-10" />
+          {/* Scroll shadow for all screen sizes */}
+          <div className="pointer-events-none absolute bottom-0 left-0 w-full h-6 bg-gradient-to-t from-background to-transparent z-10" />
         </ScrollArea>
       </div>
 
