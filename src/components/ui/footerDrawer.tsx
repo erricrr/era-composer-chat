@@ -28,11 +28,11 @@ const FooterDrawer: React.FC = () => {
         <TooltipTrigger asChild>
           <button
             type="button"
-            className="p-2 rounded-md hover:bg-muted transition-colors duration-200 text-muted-foreground hover:text-muted-foreground"
+            className="py-1.5 px-2.5 rounded-md hover:bg-muted transition-colors duration-200 text-muted-foreground hover:text-muted-foreground"
             onClick={toggleDrawer}
             aria-label="About"
           >
-            <FontAwesomeIcon icon={faInfoCircle} className="h-5 w-5" />
+            <FontAwesomeIcon icon={faInfoCircle} className="h-4 w-4" />
           </button>
         </TooltipTrigger>
         <TooltipContent side="bottom" className="text-xs">
