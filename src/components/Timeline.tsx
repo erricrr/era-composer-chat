@@ -1,8 +1,9 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Era, eras } from '@/data/composers';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { cn } from '@/lib/utils';
 import { useIsTouch } from '@/hooks/useIsTouch';
 
 interface TimelineProps {
@@ -13,6 +14,22 @@ interface TimelineProps {
 export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
   const localStorageKey = 'timelineOpenPopoverId';
   const isTouch = useIsTouch();
+  // Add refs for label buttons and keyboard navigation handler
+  const eraLabelRefs = useRef<Array<HTMLButtonElement | null>>([]);
+  const handleLabelKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>, index: number, eraName: Era) => {
+    if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      const nextIndex = (index + 1) % eras.length;
+      eraLabelRefs.current[nextIndex]?.focus();
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      const prevIndex = (index - 1 + eras.length) % eras.length;
+      eraLabelRefs.current[prevIndex]?.focus();
+    } else if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onSelectEra(eraName);
+    }
+  };
 
   const [openPopoverId, setOpenPopoverId] = useState<string | null>(() => {
     // Only run in client-side
@@ -39,21 +56,59 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
     '20th-21st Century': '20th-21st Century'
   };
 
+  // helper to render the era icon trigger + tooltip in one place
+  const renderIcon = (era: typeof eras[number]) => {
+    const isSelectedIcon = selectedEra === era.name;
+    const baseButtonClasses = 'w-6 h-6 rounded-full flex items-center justify-center transition-all duration-300 ease-out relative before:absolute before:w-8 before:h-8 before:bg-background before:-z-10 before:rounded-full';
+    const iconClass = cn(
+      baseButtonClasses,
+      isSelectedIcon
+        ? 'bg-primary text-background shadow-md shadow-primary/30'
+        : 'bg-background border border-primary/60 text-primary/70 hover:border-primary hover:text-primary hover:bg-primary/10'
+    );
+    const button = (
+      <button
+        onClick={e => { e.stopPropagation(); handleIconClick(era.id); }}
+        className={iconClass}
+        aria-label={`More info about ${era.name}`}
+      >
+        <span className="text-xs font-medium">?</span>
+      </button>
+    );
+    const trigger = <PopoverTrigger asChild>{button}</PopoverTrigger>;
+    if (isTouch) {
+      return trigger;
+    }
+    return (
+      <Tooltip>
+        <TooltipTrigger asChild>{trigger}</TooltipTrigger>
+        <TooltipContent side="top" className="text-xs">
+          {isSelectedIcon ? 'Active Era' : 'Era Details'}
+        </TooltipContent>
+      </Tooltip>
+    );
+  };
+
   return (
     <TooltipProvider>
       <div className="w-full max-w-4xl mx-auto my-4 md:my-6">
         {/* Era Timeline */}
         <div className="relative flex flex-col">
           {/* Era labels */}
-          <div className="flex justify-between mb-2">
-            {eras.map(era => {
+          <div className="flex justify-between mb-2" role="tablist">
+            {eras.map((era, index) => {
               const displayLabel = displayLabels[era.name] || era.name;
 
               return (
-                <div
+                <button
                   key={era.id}
-                  className="flex flex-col items-center w-1/4 group cursor-pointer"
+                  ref={el => eraLabelRefs.current[index] = el}
+                  type="button"
+                  role="tab"
+                  aria-selected={selectedEra === era.name}
                   onClick={() => onSelectEra(era.name)}
+                  onKeyDown={e => handleLabelKeyDown(e, index, era.name)}
+                  className="flex flex-col items-center w-1/4 group p-0 m-0 bg-transparent border-none appearance-none"
                 >
                   <div className="relative flex flex-col items-center">
                     {/* Era name */}
@@ -94,7 +149,7 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
                       ${selectedEra === era.name ? 'scale-x-100' : 'scale-x-0'}
                     `} />
                   </div>
-                </div>
+                </button>
               );
             })}
           </div>
@@ -114,57 +169,7 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
                   className="flex flex-col items-center w-1/4 relative z-10"
                 >
                   <Popover open={openPopoverId === era.id} onOpenChange={(open) => setOpenPopoverId(open ? era.id : null)}>
-                    {!isTouch ? (
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <PopoverTrigger asChild>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleIconClick(era.id);
-                              }}
-                              className={`
-                                w-6 h-6 rounded-full flex items-center justify-center
-                                transition-all duration-300 ease-out relative
-                                ${selectedEra === era.name
-                                  ? 'bg-primary text-background shadow-md shadow-primary/30'
-                                  : 'bg-background border border-primary/60 text-primary/70 hover:border-primary hover:text-primary hover:bg-primary/10'
-                                }
-                                before:absolute before:w-8 before:h-8 before:bg-background before:-z-10 before:rounded-full
-                              `}
-                              aria-label={`More info about ${era.name}`}
-                            >
-                              <span className="text-xs font-medium">?</span>
-                            </button>
-                          </PopoverTrigger>
-                        </TooltipTrigger>
-                        <TooltipContent side="top" className="text-xs">
-                          {selectedEra === era.name ? 'Active Era' : 'Era Details'}
-                        </TooltipContent>
-                      </Tooltip>
-                    ) : (
-                      <PopoverTrigger asChild>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleIconClick(era.id);
-                          }}
-                          className={`
-                            w-6 h-6 rounded-full flex items-center justify-center
-                            transition-all duration-300 ease-out relative
-                            ${selectedEra === era.name
-                              ? 'bg-primary text-background shadow-md shadow-primary/30'
-                              : 'bg-background border border-primary/60 text-primary/70 hover:border-primary hover:text-primary hover:bg-primary/10'
-                            }
-                            before:absolute before:w-8 before:h-8 before:bg-background before:-z-10 before:rounded-full
-                          `}
-                          aria-label={`More info about ${era.name}`}
-                        >
-                          <span className="text-xs font-medium">?</span>
-                        </button>
-                      </PopoverTrigger>
-                    )}
-
+                    {renderIcon(era)}
                     <PopoverContent className="relative max-w-sm p-2 shadow-xl overflow-hidden">
                       <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-primary rounded-l-md animate-[expandVertical_0.3s_ease-in-out] origin-top" />
                       <div className="p-3">
