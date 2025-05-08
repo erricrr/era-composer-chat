@@ -662,7 +662,7 @@ export function ChatInterface({
                   type="button"
                   aria-label={`Open split view for ${composer.name}`}
                   aria-expanded={isSplitViewOpen}
-                  className="flex items-center space-x-6 cursor-pointer hover:opacity-90 transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  className="chat-split-btn appearance-none border-none ring-0 focus:ring-0 focus:outline-none active:outline-none focus-visible:ring-2 focus-visible:ring-primary active:ring-0 flex items-center space-x-6 cursor-pointer hover:opacity-90 transition-all duration-300"
                   onClick={(e) => {
                     e.stopPropagation();
                     setIsSplitViewOpen(true);
