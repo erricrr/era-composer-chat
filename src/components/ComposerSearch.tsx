@@ -305,7 +305,7 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
             <Button
               variant="ghost"
               size="icon"
-              className="w-8 h-8 flex-shrink-0 md:hidden flex rounded-md hover:bg-muted transition-colors duration-200"
+              className="flex-shrink-0 md:hidden flex rounded-md hover:bg-muted transition-colors duration-200"
               onClick={(e) => {
                 // Prevent any tooltip events from firing
                 e.stopPropagation();
@@ -314,7 +314,7 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
               }}
               aria-label="Open search bar"
             >
-              <Search className="h-5 w-5 text-muted-foreground" />
+              <Search className="text-muted-foreground" />
             </Button>
           </TooltipTrigger>
           <TooltipContent side="bottom" sideOffset={5} className="text-xs">
