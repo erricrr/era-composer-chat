@@ -552,6 +552,7 @@ export function ComposerList({
                   composer={selectedComposer}
                   size="xxl"
                   allowModalOnDesktop={true}
+                  className="focus-visible:z-10 relative"
                 />
                 <div
                   tabIndex={0}

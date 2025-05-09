@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { Composer, Era, isComposerInPublicDomain, composers as allComposersData, getComposersByEra } from '@/data/composers';
 import { ComposerMenu } from '@/components/ComposerMenu';
 import { ChatInterface } from '@/components/ChatInterface';
@@ -78,6 +78,9 @@ const Index = () => {
 
   // Maximum number of active chats allowed
   const MAX_ACTIVE_CHATS = 5;
+
+  // Ref for the active chats button - for focus management
+  const activeChatsButtonRef = useRef<HTMLButtonElement>(null);
 
   const handleThemeChange = (newMode: boolean) => {
     setIsDarkMode(newMode);
@@ -420,11 +423,12 @@ const Index = () => {
               {/* Active Chats Tab Icon */}
               <HeaderIcon tooltip="Active Chats">
                 <button
+                  ref={activeChatsButtonRef}
                   type="button"
                   onClick={(e) => { e.stopPropagation(); setIsActiveChatsOpen(prev => !prev); }}
                   aria-label="Active Chats"
                   aria-expanded={isActiveChatsOpen}
-                  className="p-2 rounded-md hover:bg-muted transition-colors duration-200 relative z-[60]"
+                  className="p-2 rounded-md hover:bg-muted transition-colors duration-200 relative z-[60] focus-ring-inset"
                 >
                   <MessageSquare className={`h-5 w-5 transform transition-transform ${isActiveChatsOpen ? 'rotate-180' : ''}`} />
                 </button>
@@ -520,6 +524,7 @@ const Index = () => {
           onClearAll={handleClearActiveChats}
           onClose={() => setIsActiveChatsOpen(false)}
           onRemoveChat={handleRemoveActiveChat}
+          returnFocusRef={activeChatsButtonRef}
         />
       </div>
     </TooltipProvider>

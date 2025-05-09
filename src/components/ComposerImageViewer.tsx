@@ -1,6 +1,6 @@
 import { Composer } from '@/data/composers';
 import { ImageModal } from './ImageModal';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 interface ComposerImageViewerProps {
@@ -21,17 +21,50 @@ export function ComposerImageViewer({
   // Construct a unique key for localStorage based on the composer's ID
   const localStorageKey = `imageModalOpen_${composer.id}`;
 
+  // Check if modal was open before a refresh/navigation and should be reopened
+  const wasModalOpenBefore = useRef<boolean>(false);
+
   // Initialize state from localStorage or default to false
   const [imageModalOpen, setImageModalOpen] = useState(() => {
     const storedValue = localStorage.getItem(localStorageKey);
+    const sessionFlag = sessionStorage.getItem(`modal_${composer.id}`);
+
+    // If the modal was open in session storage, mark it for reopening
+    if (sessionFlag === 'open') {
+      wasModalOpenBefore.current = true;
+    }
+
     return storedValue ? JSON.parse(storedValue) : false;
   });
 
   const isMobile = useIsMobile();
 
+  // Add ref for focus management
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  // Keep track of whether we've just closed the modal
+  const justClosedRef = useRef(false);
+
   // Effect to update localStorage when state changes
   useEffect(() => {
     localStorage.setItem(localStorageKey, JSON.stringify(imageModalOpen));
+
+    // If modal was previously open and now we've mounted, reopen it
+    if (wasModalOpenBefore.current && !imageModalOpen) {
+      setTimeout(() => {
+        setImageModalOpen(true);
+        wasModalOpenBefore.current = false; // Reset the flag
+      }, 100);
+    }
+
+    // Handle focus after modal close
+    if (!imageModalOpen && justClosedRef.current) {
+      // Ensure button gets focus when modal closes
+      setTimeout(() => {
+        buttonRef.current?.focus();
+        justClosedRef.current = false; // Reset flag
+      }, 50);
+    }
   }, [imageModalOpen, localStorageKey]);
 
   const sizeClasses = {
@@ -50,13 +83,19 @@ export function ComposerImageViewer({
     }
   };
 
+  const handleCloseModal = () => {
+    setImageModalOpen(false);
+    justClosedRef.current = true;
+  };
+
   return (
     <>
       <button
+        ref={buttonRef}
         type="button"
         role="button"
         aria-label={`View image of ${composer.name}`}
-        className={`${sizeClasses[size]} rounded-full overflow-hidden border-2 border-primary flex-shrink-0 cursor-pointer transition-transform duration-300 ease-in-out appearance-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
+        className={`${sizeClasses[size]} rounded-full overflow-hidden border-2 border-primary flex-shrink-0 cursor-pointer transition-transform duration-300 ease-in-out appearance-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:z-10 relative ${
           size !== 'sm' ? 'hover:scale-105' : ''
         } ${className}`}
         onClick={handleClick}
@@ -77,13 +116,14 @@ export function ComposerImageViewer({
       {(isMobile || allowModalOnDesktop) && (
         <ImageModal
           isOpen={imageModalOpen}
-          onClose={() => setImageModalOpen(false)}
+          onClose={handleCloseModal}
           imageSrc={composer.imageUrl}
           composerName={composer.name}
           composerId={composer.id}
           nationality={composer.nationality}
           birthYear={composer.birthYear}
           deathYear={composer.deathYear}
+          returnFocusRef={buttonRef}
         />
       )}
     </>

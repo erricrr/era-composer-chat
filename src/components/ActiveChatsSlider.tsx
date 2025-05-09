@@ -1,3 +1,4 @@
+import React, { useEffect, useRef } from 'react';
 import { Composer } from '@/data/composers';
 import { X, MessageSquareOff, AlertTriangle } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -10,6 +11,7 @@ interface ActiveChatsSliderProps {
   onClearAll: () => void;
   onClose: () => void;
   onRemoveChat: (composer: Composer) => void;
+  returnFocusRef?: React.RefObject<HTMLButtonElement>;
 }
 
 // Maximum number of active chats allowed
@@ -23,7 +25,65 @@ export default function ActiveChatsSlider({
   onClearAll,
   onClose,
   onRemoveChat,
+  returnFocusRef
 }: ActiveChatsSliderProps) {
+  // Refs for focus management
+  const sliderRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const clearAllButtonRef = useRef<HTMLButtonElement>(null);
+
+  // Handle focus management when slider opens/closes
+  useEffect(() => {
+    if (isOpen) {
+      // Focus the close button when the slider opens
+      setTimeout(() => {
+        closeButtonRef.current?.focus();
+      }, 100);
+    } else if (returnFocusRef?.current) {
+      // Return focus to the trigger button when closed
+      returnFocusRef.current.focus();
+    }
+  }, [isOpen, returnFocusRef]);
+
+  // Handle keyboard navigation and focus trapping
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Close on escape
+      if (e.key === 'Escape') {
+        onClose();
+        return;
+      }
+
+      // Trap focus within the slider
+      if (e.key === 'Tab' && sliderRef.current) {
+        const focusableElements = sliderRef.current.querySelectorAll(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+
+        // Convert NodeList to Array and filter out hidden elements
+        const focusable = Array.from(focusableElements).filter(
+          el => window.getComputedStyle(el as HTMLElement).display !== 'none'
+        ) as HTMLElement[];
+
+        if (focusable.length === 0) return;
+
+        // Handle tab navigation
+        if (e.shiftKey && document.activeElement === focusable[0]) {
+          e.preventDefault();
+          focusable[focusable.length - 1].focus();
+        } else if (!e.shiftKey && document.activeElement === focusable[focusable.length - 1]) {
+          e.preventDefault();
+          focusable[0].focus();
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   // Handle removing a single chat
   const handleRemoveChat = (composer: Composer, e: React.MouseEvent<HTMLButtonElement>) => {
     // Prevent the event from propagating to parent elements
@@ -36,13 +96,18 @@ export default function ActiveChatsSlider({
 
   return (
     <aside
+      ref={sliderRef}
       className={`fixed top-10 bottom-0 right-0 w-64 z-60 bg-popover border-l border-t border-border shadow-lg transform transition-transform duration-200 ease-out flex flex-col ${isOpen ? 'translate-x-0 pointer-events-auto' : 'translate-x-full pointer-events-none'}`}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Active Chats"
     >
       <div className="flex items-center justify-between p-4 border-b border-border">
-        <h3 className="text-base font-semibold">Active Chats</h3>
+        <h3 tabIndex={0} className="text-base font-semibold focus-ring-inset">Active Chats</h3>
         <button
+          ref={closeButtonRef}
           onClick={onClose}
-          className="p-1 rounded-full hover:bg-muted transition-colors"
+          className="p-1 rounded-full hover:bg-muted transition-colors focus-ring-inset"
           aria-label="Close active chats"
         >
           <X className="w-4 h-4" />
@@ -71,7 +136,8 @@ export default function ActiveChatsSlider({
               <div key={id} className="flex items-center justify-between">
                 <button
                   onClick={() => onSelectComposer(composer)}
-                  className="flex-1 text-left p-2 rounded hover:bg-muted transition-colors"
+                  className="flex-1 text-left p-2 rounded hover:bg-muted transition-colors focus-ring-inset"
+                  aria-label={`Open chat with ${composer.name}`}
                 >
                   <div className="text-sm font-medium">{composer.name}</div>
                   <div className="text-xs text-muted-foreground">
@@ -83,7 +149,7 @@ export default function ActiveChatsSlider({
                     <button
                       type="button"
                       onClick={(e) => handleRemoveChat(composer, e)}
-                      className="p-2 rounded hover:bg-muted transition-colors"
+                      className="p-2 rounded hover:bg-muted transition-colors focus-ring-inset"
                       aria-label={`Remove chat with ${composer.name}`}
                     >
                       <MessageSquareOff className="w-4 h-4 text-destructive" />
@@ -101,8 +167,10 @@ export default function ActiveChatsSlider({
 
       <div className="p-4 border-t border-border">
         <button
+          ref={clearAllButtonRef}
           onClick={onClearAll}
-          className="w-full text-sm text-destructive hover:underline transition-colors"
+          className="w-full text-sm text-destructive hover:underline transition-colors focus-ring-inset"
+          aria-label="Clear all active chats"
         >
           Clear All
         </button>

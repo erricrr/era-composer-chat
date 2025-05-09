@@ -15,26 +15,96 @@ function ContainedImageModal({
   onClose,
   imageSrc,
   composerName,
-  composerId
+  composerId,
+  returnFocusRef
 }: {
   isOpen: boolean;
   onClose: () => void;
   imageSrc: string;
   composerName: string;
   composerId: string;
+  returnFocusRef: React.RefObject<HTMLButtonElement>;
 }) {
   const [isAnimating, setIsAnimating] = useState(false);
+  const modalRef = React.useRef<HTMLDivElement>(null);
+  const closeButtonRef = React.useRef<HTMLButtonElement>(null);
+  const firstLinkRef = React.useRef<HTMLAnchorElement>(null);
+  const secondLinkRef = React.useRef<HTMLAnchorElement>(null);
+  const imageRef = React.useRef<HTMLImageElement>(null);
 
+  // Focus management
   React.useEffect(() => {
     if (isOpen) {
       setIsAnimating(true);
+      // Focus the close button when the modal opens
+      setTimeout(() => {
+        closeButtonRef.current?.focus();
+      }, 50);
     } else {
       const timer = setTimeout(() => {
         setIsAnimating(false);
       }, 150);
+
+      // Return focus to the originating button when modal closes
+      if (returnFocusRef.current) {
+        setTimeout(() => {
+          returnFocusRef.current?.focus();
+        }, 50);
+      }
+
       return () => clearTimeout(timer);
     }
-  }, [isOpen]);
+  }, [isOpen, returnFocusRef]);
+
+  // Handle keyboard navigation
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!isOpen) return;
+
+      // Close modal on escape
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onClose();
+        return;
+      }
+
+      // Trap focus inside modal
+      if (e.key === 'Tab') {
+        // Get all focusable elements in modal
+        const focusableElements = modalRef.current?.querySelectorAll(
+          'button, [href], input, select, textarea, img[tabindex="0"], [tabindex]:not([tabindex="-1"])'
+        ) || [];
+
+        // Convert NodeList to Array and filter out elements with display:none
+        const focusable = Array.from(focusableElements).filter(
+          el => window.getComputedStyle(el as HTMLElement).display !== 'none'
+        ) as HTMLElement[];
+
+        // Add the image to the tab order if it's not already included
+        if (imageRef.current && !Array.from(focusable).includes(imageRef.current)) {
+          // If image isn't in the tab sequence, make it so
+          imageRef.current.tabIndex = 0;
+        }
+
+        // If no focusable elements, do nothing
+        if (focusable.length === 0) return;
+
+        // If shift+tab on first element, move to last element
+        if (e.shiftKey && document.activeElement === focusable[0]) {
+          e.preventDefault();
+          focusable[focusable.length - 1].focus();
+        }
+        // If tab on last element, move to first element
+        else if (!e.shiftKey && document.activeElement === focusable[focusable.length - 1]) {
+          e.preventDefault();
+          focusable[0].focus();
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   // Get copyright details
   const copyrightDetails = getCopyrightAttribution(composerId);
@@ -51,9 +121,13 @@ function ContainedImageModal({
         opacity: isOpen ? 1 : 0,
         transition: 'opacity 150ms ease-in-out',
       }}
+      role="dialog"
+      aria-label={`Image of ${composerName}`}
+      aria-modal="true"
     >
       {/* Content container with proper spacing */}
       <div
+        ref={modalRef}
         className="relative bg-background rounded-lg shadow-xl z-10 overflow-hidden mt-5 max-w-[90%]"
         onClick={e => e.stopPropagation()} // Prevent click from closing modal
         style={{
@@ -61,22 +135,27 @@ function ContainedImageModal({
           transition: 'transform 150ms ease-in-out',
         }}
       >
-        {/* Close button - only visible on hover */}
+        {/* Close button - improved for keyboard access */}
         <Button
+          ref={closeButtonRef}
           variant="ghost"
           size="icon"
           onClick={onClose}
-          className="absolute right-2 top-2 z-20 h-8 w-8"
+          className="absolute right-2 top-2 z-20 h-8 w-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+          aria-label="Close image view"
         >
           <X className="h-4 w-4" />
         </Button>
 
         <div className="flex flex-col">
-          <div className="flex justify-center items-center">
+          <div className="flex justify-center items-center p-2">
             <img
+              ref={imageRef}
               src={imageSrc}
               alt={composerName}
-              className="w-auto max-w-full max-h-[calc(100vh-220px)] object-contain"
+              className="w-auto max-w-full max-h-[calc(100vh-220px)] object-contain focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 z-10"
+              tabIndex={0}
+              aria-label={`Full-size image of ${composerName}`}
             />
           </div>
 
@@ -86,11 +165,23 @@ function ContainedImageModal({
               {copyrightDetails ? (
                 <>
                   Image by {copyrightDetails.author} via{' '}
-                  <a href={copyrightDetails.sourceUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">
+                  <a
+                    ref={firstLinkRef}
+                    href={copyrightDetails.sourceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                  >
                     {copyrightDetails.source}
                   </a>
                   , licensed under{' '}
-                  <a href={copyrightDetails.licenseUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">
+                  <a
+                    ref={secondLinkRef}
+                    href={copyrightDetails.licenseUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                  >
                     {copyrightDetails.license}
                   </a>
                 </>
@@ -116,6 +207,8 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
 
   // SIMPLIFIED: Don't use localStorage at all, just a simple state
   const [imageModalOpen, setImageModalOpen] = useState(false);
+  // Add ref to image button for focus management
+  const imageButtonRef = React.useRef<HTMLButtonElement>(null);
 
   // IMPORTANT: This effect ensures the image modal is ALWAYS closed when the split view closes
   useEffect(() => {
@@ -144,6 +237,14 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
 
   const handleCloseImageModal = () => {
     setImageModalOpen(false);
+    // Ensure focus returns to the image button
+    setTimeout(() => {
+      imageButtonRef.current?.focus();
+    }, 50);
+  };
+
+  const handleOpenImageModal = () => {
+    setImageModalOpen(true);
   };
 
   const composerContent = (
@@ -170,13 +271,14 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
           e.stopPropagation();
           onClose();
         }}
-        className="relative flex items-center justify-center border-b py-7 bg-secondary backdrop-blur-sm shadow-md z-10 flex-shrink-0 cursor-pointer group hover:bg-secondary/80 transition-colors focus-ring-inset"
+        className="relative flex items-center justify-center border-b py-7 bg-secondary backdrop-blur-sm shadow-md z-10 flex-shrink-0 cursor-pointer group hover:bg-secondary/80 transition-colors w-full focus-ring-inset"
       >
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <h2 className="font-bold font-serif text-lg md:text-xl pointer-events-none truncate max-w-[calc(100%-5rem)] px-4">
             {composer.name}
           </h2>
         </div>
+
         <Button
           variant="ghost"
           size="icon"
@@ -185,7 +287,7 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
             e.stopPropagation();
             onClose();
           }}
-          className="absolute right-4 rounded-full hover:bg-primary/20 transition-all duration-200 group-hover:bg-primary/20 w-8 h-8 text-foreground/70 hover:text-foreground/90"
+          className="absolute right-4 rounded-full hover:bg-primary/20 transition-all duration-200 group-hover:bg-primary/20 w-8 h-8 text-foreground/70 hover:text-foreground/90 focus-ring-inset z-10"
         >
           <X className="h-4 w-4" />
         </Button>
@@ -203,9 +305,10 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
           }`}>
             <div className={`flex flex-col items-center text-center ${isMobile ? 'space-y-2' : 'space-y-3'}`}>
               <button
+                ref={imageButtonRef}
                 type="button"
-                onClick={() => setImageModalOpen(true)}
-                className={`appearance-none focus-ring-inset cursor-pointer transition-all duration-300 rounded-full overflow-hidden border-2 border-primary flex-shrink-0 hover:scale-[1.03] ${
+                onClick={handleOpenImageModal}
+                className={`appearance-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:z-10 relative cursor-pointer rounded-full overflow-hidden border-2 border-primary flex-shrink-0 hover:opacity-95 hover:border-opacity-80 ${
                   isMobile
                     ? isActiveChatsOpen
                       ? 'w-32 h-32'
@@ -329,6 +432,7 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
           imageSrc={composer.imageUrl}
           composerName={composer.name}
           composerId={composer.id}
+          returnFocusRef={imageButtonRef}
         />
       )}
     </div>
