@@ -51,6 +51,11 @@ const Index = () => {
     }
   });
 
+  // Track whether the menu is mounted for enter/exit transitions
+  const [isMenuMounted, setIsMenuMounted] = useState(isMenuOpen);
+  // Control enter (true) / exit (false) animation state
+  const [isMenuAnimating, setIsMenuAnimating] = useState(false);
+
   const [isChatting, setIsChatting] = useState(() => {
     try {
       const saved = localStorage.getItem('isChatting');
@@ -376,6 +381,21 @@ const Index = () => {
     localStorage.setItem('isChatting', JSON.stringify(isChatting));
   }, [isChatting]);
 
+  // Effect to manage mounting/unmounting with slide animations
+  useEffect(() => {
+    if (isMenuOpen) {
+      // Mount the menu, then trigger enter animation
+      setIsMenuMounted(true);
+      const openTimer = setTimeout(() => setIsMenuAnimating(true), 10);
+      return () => clearTimeout(openTimer);
+    } else {
+      // Trigger exit animation, then unmount
+      setIsMenuAnimating(false);
+      const closeTimer = setTimeout(() => setIsMenuMounted(false), 300);
+      return () => clearTimeout(closeTimer);
+    }
+  }, [isMenuOpen]);
+
   // Effect to restore chat state on page load if a composer is selected
   useEffect(() => {
     if (selectedComposer) {
@@ -501,9 +521,11 @@ const Index = () => {
 
         <main className="pt-10">
           {/* Composer Selection Menu - Only render when open to remove from tab order when closed */}
-          {isMenuOpen && (
+          {isMenuMounted && (
             <aside
-              className="fixed inset-y-0 left-0 z-50 bg-background backdrop-blur-sm border-r border-border shadow-lg"
+              className={`fixed inset-y-0 left-0 z-50 bg-background backdrop-blur-sm border-r border-border shadow-lg transform transition-transform duration-300 ease-out ${
+                isMenuAnimating ? 'translate-x-0' : '-translate-x-full'
+              }`}
               style={{
                 width: '100%',
                 top: '2.5rem',

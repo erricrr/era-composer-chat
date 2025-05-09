@@ -191,7 +191,7 @@
 
   /* Focus ring variations */
   .focus-ring-inset {
-    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset focus-visible:ring-offset-0 focus:ring-0 focus-visible:rounded-md;
+    @apply outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset focus-visible:ring-offset-0 focus-visible:rounded-md;
   }
 
   /* Ensure better visibility for focus rings on images */

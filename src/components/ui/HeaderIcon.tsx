@@ -17,7 +17,7 @@ const HeaderIcon: React.FC<HeaderIconProps> = ({ tooltip, children, tooltipOpen,
     return <>{children}</>
   }
   return (
-    <div className="relative group">
+    <div className="relative group outline-none">
       <Tooltip open={tooltipOpen} onOpenChange={onTooltipOpenChange}>
         <TooltipTrigger asChild>
           {children}
