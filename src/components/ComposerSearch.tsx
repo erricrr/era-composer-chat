@@ -346,6 +346,12 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
                 setIsOpen(true);
               }
             }}
+            onMouseDown={(e) => {
+              e.currentTarget.style.boxShadow = 'none';
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.removeProperty('box-shadow');
+            }}
             aria-label="Search composers"
           />
           {/* Show X button in these cases:
