@@ -124,6 +124,73 @@ export function ComposerList({
     onSelectComposer(composer, { source: 'list' });
   }, [onSelectComposer]);
 
+  // Handle partial visibility scrolling
+  const handlePartialVisibility = useCallback((element: HTMLElement, container: HTMLElement, isVertical: boolean) => {
+    const elementRect = element.getBoundingClientRect();
+    const containerRect = container.getBoundingClientRect();
+
+    if (isVertical) {
+      const isPartiallyVisible =
+        elementRect.top < containerRect.top ||
+        elementRect.bottom > containerRect.bottom;
+
+      if (isPartiallyVisible) {
+        const scrollOffset = elementRect.top - containerRect.top - (containerRect.height - elementRect.height) / 2;
+        container.scrollBy({
+          top: scrollOffset,
+          behavior: 'smooth'
+        });
+        return true;
+      }
+    } else {
+      const isPartiallyVisible =
+        elementRect.left < containerRect.left ||
+        elementRect.right > containerRect.right;
+
+      if (isPartiallyVisible) {
+        const scrollOffset = elementRect.left - containerRect.left - (containerRect.width - elementRect.width) / 2;
+        container.scrollBy({
+          left: scrollOffset,
+          behavior: 'smooth'
+        });
+        return true;
+      }
+    }
+    return false;
+  }, []);
+
+  // Enhanced composer card click handler
+  const handleComposerCardClick = useCallback((composer: Composer, element: HTMLElement | null) => {
+    if (!element) {
+      handleComposerSelect(composer);
+      return;
+    }
+
+    let scrolled = false;
+
+    // Check desktop view
+    const desktopContainer = document.querySelector('.md\\:flex .scroll-area [data-radix-scroll-area-viewport]') as HTMLElement;
+    if (desktopContainer?.offsetParent !== null && element.closest('.md\\:flex')) {
+      scrolled = handlePartialVisibility(element, desktopContainer, true);
+    }
+
+    // Check mobile view
+    const mobileContainer = document.querySelector('.md\\:hidden .scroll-area [data-radix-scroll-area-viewport]') as HTMLElement;
+    if (mobileContainer?.offsetParent !== null && element.closest('.md\\:hidden')) {
+      scrolled = handlePartialVisibility(element, mobileContainer, false);
+    }
+
+    // Call the selection handler
+    handleComposerSelect(composer);
+
+    // If we scrolled, wait for animation to complete before any other operations
+    if (scrolled) {
+      setTimeout(() => {
+        onScrollComplete();
+      }, 300);
+    }
+  }, [handleComposerSelect, handlePartialVisibility, onScrollComplete]);
+
   // Enhanced effect to scroll selected composer into view
   useEffect(() => {
     if (!selectedComposer || !shouldScrollToComposer) return;
@@ -409,7 +476,10 @@ export function ComposerList({
                   >
                     <ComposerCard
                       composer={composer}
-                      onClick={() => handleComposerSelect(composer)}
+                      onClick={(e: React.MouseEvent<HTMLElement>) => {
+                        const card = (e.currentTarget as HTMLElement).closest('[id^="mobile-composer-card-"]');
+                        handleComposerCardClick(composer, card as HTMLElement);
+                      }}
                       isSelected={selectedComposer?.id === composer.id}
                       tabIndex={0}
                       role="button"
@@ -417,7 +487,8 @@ export function ComposerList({
                       onKeyDown={(e) => {
                         if (e.key === 'Enter' || e.key === ' ') {
                           e.preventDefault();
-                          handleComposerSelect(composer);
+                          const card = (e.currentTarget as HTMLElement).closest('[id^="mobile-composer-card-"]');
+                          handleComposerCardClick(composer, card as HTMLElement);
                         } else if (e.key === 'ArrowRight') {
                           const next = document.getElementById(`mobile-composer-card-${allComposers[idx + 1]?.id}`);
                           if (next) {
@@ -482,7 +553,10 @@ export function ComposerList({
                   >
                     <ComposerCard
                       composer={composer}
-                      onClick={() => handleComposerSelect(composer)}
+                      onClick={(e: React.MouseEvent<HTMLElement>) => {
+                        const card = (e.currentTarget as HTMLElement).closest('[id^="composer-card-"]');
+                        handleComposerCardClick(composer, card as HTMLElement);
+                      }}
                       isSelected={selectedComposer?.id === composer.id}
                       tabIndex={0}
                       role="button"
@@ -490,7 +564,8 @@ export function ComposerList({
                       onKeyDown={(e) => {
                         if (e.key === 'Enter' || e.key === ' ') {
                           e.preventDefault();
-                          handleComposerSelect(composer);
+                          const card = (e.currentTarget as HTMLElement).closest('[id^="composer-card-"]');
+                          handleComposerCardClick(composer, card as HTMLElement);
                         } else if (e.key === 'ArrowDown') {
                           const next = document.getElementById(`composer-card-${allComposers[idx + 1]?.id}`);
                           if (next) {

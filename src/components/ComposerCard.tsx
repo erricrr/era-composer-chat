@@ -2,19 +2,19 @@ import { Composer } from '@/data/composers';
 
 interface ComposerCardProps {
   composer: Composer;
-  onClick: (composer: Composer) => void;
+  onClick: (e: React.MouseEvent<HTMLElement>) => void;
   isSelected: boolean;
   compact?: boolean;
   tabIndex?: number;
   role?: string;
   ariaLabel?: string;
-  onKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLElement>) => void;
 }
 
 export function ComposerCard({ composer, onClick, isSelected, compact = false, tabIndex, role, ariaLabel, onKeyDown }: ComposerCardProps) {
   return (
     <div
-      onClick={() => onClick(composer)}
+      onClick={onClick}
       tabIndex={tabIndex}
       role={role}
       aria-label={ariaLabel}
