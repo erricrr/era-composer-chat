@@ -15,17 +15,18 @@ export function ComposerCard({ composer, onClick, isSelected, compact = false, t
   return (
     <div
       onClick={() => onClick(composer)}
+      tabIndex={tabIndex}
+      role={role}
+      aria-label={ariaLabel}
+      onKeyDown={onKeyDown}
       className={`
         p-4 cursor-pointer select-none transition-transform duration-500 ease-in-out relative group
+        focus:outline-none focus-visible:ring-inset focus-visible:ring-2 focus-visible:ring-primary
         ${isSelected
           ? 'bg-background'
           : 'bg-secondary hover:bg-secondary/70'
         }
       `}
-      tabIndex={tabIndex}
-      role={role}
-      aria-label={ariaLabel}
-      onKeyDown={onKeyDown}
     >
       {/* Hover state bar */}
       <div

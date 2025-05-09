@@ -104,6 +104,20 @@
     outline: none !important;
     box-shadow: none !important;
   }
+
+  /* DRY: unify focus rings across all elements */
+  *:focus-visible {
+    @apply ring-2 ring-primary ring-offset-2 ring-offset-background outline-none;
+  }
+
+  /* Allow focus rings inside scroll areas to be visible */
+  .scroll-area:focus-within {
+    overflow: visible !important;
+  }
+
+  .scroll-area:focus-within [data-radix-scroll-area-viewport] {
+    overflow: visible !important;
+  }
 }
 
 @layer components {
@@ -173,6 +187,11 @@
 
   .content-below-header {
     @apply mt-8 md:mt-10;
+  }
+
+  /* Focus ring variations */
+  .focus-ring-inset {
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset focus-visible:ring-offset-0;
   }
 }
 

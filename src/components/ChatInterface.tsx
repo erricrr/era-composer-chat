@@ -662,7 +662,7 @@ export function ChatInterface({
                   type="button"
                   aria-label={`Open split view for ${composer.name}`}
                   aria-expanded={isSplitViewOpen}
-                  className="chat-split-btn appearance-none border-none ring-0 focus:ring-0 focus:outline-none active:outline-none focus-visible:ring-2 focus-visible:ring-primary active:ring-0 flex items-center space-x-6 cursor-pointer hover:opacity-90 transition-all duration-300"
+                  className="chat-split-btn appearance-none border-none ring-0 focus-ring-inset active:ring-0 flex items-center space-x-6 cursor-pointer hover:opacity-90 transition-all duration-300"
                   onClick={(e) => {
                     e.stopPropagation();
                     setIsSplitViewOpen(true);
@@ -762,7 +762,7 @@ export function ChatInterface({
                 onKeyDown={handleKeyPress}
                 placeholder={`Ask a question...`}
                 className={`w-full bg-background pl-5 pr-32 py-3 border border-input text-sm text-foreground
-                  focus:outline-none focus-visible:ring-1 focus-visible:ring-primary
+                  focus-ring-inset
                   ${isDictating ? 'ring-1 ring-primary' : ''}
                   min-h-[48px] max-h-[300px] overflow-y-auto resize-none`}
                 rows={1}
