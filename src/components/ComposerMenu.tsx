@@ -100,7 +100,7 @@ export function ComposerMenu({
 
       <Timeline selectedEra={selectedEra} onSelectEra={handleEraChange} />
 
-      <div className="px-2 md:px-6 pb-0 flex-grow overflow-y-auto">
+      <div className="px-2 md:px-6 pb-0 flex-grow overflow-visible">
         <ComposerList
           era={selectedEra}
           onSelectComposer={onSelectComposer}
