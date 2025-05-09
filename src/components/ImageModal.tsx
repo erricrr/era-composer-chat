@@ -304,15 +304,6 @@ export function ImageModal({
   }, [isOpen, onClose]);
 
   useEffect(() => {
-    // Check if modal was open before refresh
-    const wasModalOpen = sessionStorage.getItem('modalOpen');
-    if (wasModalOpen === 'true') {
-      // Clear the storage and call onClose to ensure modal starts closed
-      sessionStorage.removeItem('modalOpen');
-      onClose();
-      return;
-    }
-
     let timeoutId: ReturnType<typeof setTimeout>;
     if (isOpen) {
       setIsMounted(true);

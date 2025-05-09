@@ -130,23 +130,29 @@ export function ComposerList({
       console.error("[List] Error calling onSelectComposer:", error);
     }
 
-    // Smart scroll handling
+    // Smart scroll handling with improved partial visibility detection
     setTimeout(() => {
       // Handle mobile horizontal scroll
       const mobileElement = document.getElementById(`mobile-composer-card-${composer.id}`);
       const mobileViewport = document.querySelector('.md\\:hidden .scroll-area [data-radix-scroll-area-viewport]');
 
-      if (mobileElement && mobileViewport) {
+      if (mobileElement && mobileViewport && (mobileViewport as HTMLElement).offsetParent !== null) {
         const viewportRect = mobileViewport.getBoundingClientRect();
         const cardRect = mobileElement.getBoundingClientRect();
 
-        const leftOverflow = viewportRect.left - cardRect.left;
-        const rightOverflow = cardRect.right - viewportRect.right;
+        // Check if the card is partially visible or fully outside
+        const isPartiallyVisible =
+          (cardRect.left < viewportRect.left && cardRect.right > viewportRect.left) ||
+          (cardRect.left < viewportRect.right && cardRect.right > viewportRect.right);
+        const isFullyOutside = cardRect.right < viewportRect.left || cardRect.left > viewportRect.right;
 
-        if (leftOverflow > 0) {
-          mobileViewport.scrollBy({ left: -leftOverflow, behavior: 'smooth' });
-        } else if (rightOverflow > 0) {
-          mobileViewport.scrollBy({ left: rightOverflow, behavior: 'smooth' });
+        if (isPartiallyVisible || isFullyOutside) {
+          // Scroll manually to bring card fully into view
+          const vp = mobileViewport as HTMLElement;
+          const offsetLeft = cardRect.left < viewportRect.left
+            ? cardRect.left - viewportRect.left
+            : cardRect.right - viewportRect.right;
+          vp.scrollBy({ left: offsetLeft, behavior: 'smooth' });
         }
       }
 
@@ -154,17 +160,23 @@ export function ComposerList({
       const desktopElement = document.getElementById(`composer-card-${composer.id}`);
       const desktopViewport = document.querySelector('.md\\:flex .scroll-area [data-radix-scroll-area-viewport]');
 
-      if (desktopElement && desktopViewport) {
+      if (desktopElement && desktopViewport && (desktopViewport as HTMLElement).offsetParent !== null) {
         const viewportRect = desktopViewport.getBoundingClientRect();
         const cardRect = desktopElement.getBoundingClientRect();
 
-        const topOverflow = viewportRect.top - cardRect.top;
-        const bottomOverflow = cardRect.bottom - viewportRect.bottom;
+        // Check if the card is partially visible or fully outside
+        const isPartiallyVisible =
+          (cardRect.top < viewportRect.top && cardRect.bottom > viewportRect.top) ||
+          (cardRect.top < viewportRect.bottom && cardRect.bottom > viewportRect.bottom);
+        const isFullyOutside = cardRect.bottom < viewportRect.top || cardRect.top > viewportRect.bottom;
 
-        if (topOverflow > 0) {
-          desktopViewport.scrollBy({ top: -topOverflow, behavior: 'smooth' });
-        } else if (bottomOverflow > 0) {
-          desktopViewport.scrollBy({ top: bottomOverflow, behavior: 'smooth' });
+        if (isPartiallyVisible || isFullyOutside) {
+          // Scroll manually to bring card fully into view
+          const vp = desktopViewport as HTMLElement;
+          const offsetTop = cardRect.top < viewportRect.top
+            ? cardRect.top - viewportRect.top
+            : cardRect.bottom - viewportRect.bottom;
+          vp.scrollBy({ top: offsetTop, behavior: 'smooth' });
         }
       }
     }, 0);
@@ -222,25 +234,63 @@ export function ComposerList({
     };
   }, [era, setMobileScrollPosition, setDesktopScrollPosition]);
 
-  // Effect to scroll selected composer into view
+  // Enhanced effect to scroll selected composer into view
   useEffect(() => {
     if (selectedComposer && shouldScrollToComposer) {
       let scrolled = false;
       setTimeout(() => {
+        // Desktop scroll logic
         const desktopElement = document.getElementById(`composer-card-${selectedComposer.id}`);
-        if (desktopElement) {
-          desktopElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-          scrolled = true;
+        const desktopViewport = document.querySelector('.md\\:flex .scroll-area [data-radix-scroll-area-viewport]');
+
+        if (desktopElement && desktopViewport && (desktopViewport as HTMLElement).offsetParent !== null) {
+          const viewportRect = desktopViewport.getBoundingClientRect();
+          const cardRect = desktopElement.getBoundingClientRect();
+
+          // Check if the card is fully visible
+          const isFullyVisible =
+            cardRect.top >= viewportRect.top &&
+            cardRect.bottom <= viewportRect.bottom;
+
+          if (!isFullyVisible) {
+            // Scroll manually to bring card fully into view
+            const vp = desktopViewport as HTMLElement;
+            const offsetTop = cardRect.top < viewportRect.top
+              ? cardRect.top - viewportRect.top
+              : cardRect.bottom - viewportRect.bottom;
+            vp.scrollBy({ top: offsetTop, behavior: 'smooth' });
+            scrolled = true;
+          }
         }
+
+        // Mobile scroll logic
         const mobileElement = document.getElementById(`mobile-composer-card-${selectedComposer.id}`);
-        if (mobileElement) {
-          mobileElement.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
-          scrolled = true;
+        const mobileViewport = document.querySelector('.md\\:hidden .scroll-area [data-radix-scroll-area-viewport]');
+
+        if (mobileElement && mobileViewport && (mobileViewport as HTMLElement).offsetParent !== null) {
+          const viewportRect = mobileViewport.getBoundingClientRect();
+          const cardRect = mobileElement.getBoundingClientRect();
+
+          // Check if the card is fully visible
+          const isFullyVisible =
+            cardRect.left >= viewportRect.left &&
+            cardRect.right <= viewportRect.right;
+
+          if (!isFullyVisible) {
+            // Scroll manually to bring card fully into view
+            const vp = mobileViewport as HTMLElement;
+            const offsetLeft = cardRect.left < viewportRect.left
+              ? cardRect.left - viewportRect.left
+              : cardRect.right - viewportRect.right;
+            vp.scrollBy({ left: offsetLeft, behavior: 'smooth' });
+            scrolled = true;
+          }
         }
+
         if (scrolled) {
           onScrollComplete();
         }
-      }, 0);
+      }, 100); // Slightly increased timeout to ensure all elements are rendered
     }
   }, [selectedComposer, shouldScrollToComposer, onScrollComplete]);
 
@@ -259,15 +309,7 @@ export function ComposerList({
         const clientWidth = scrollView.clientWidth;
 
         // Add a small buffer for accurate detection
-        const buffer = 2;
-
-        console.log("[List] Horizontal scroll check:", {
-          scrollLeft,
-          scrollWidth,
-          clientWidth,
-          isAtStart: scrollLeft <= buffer,
-          isAtEnd: Math.abs((scrollLeft + clientWidth) - scrollWidth) <= buffer
-        });
+        const buffer = 5;
 
         setHorizontalScroll({
           isAtStart: scrollLeft <= buffer,
@@ -289,15 +331,7 @@ export function ComposerList({
         const clientHeight = scrollView.clientHeight;
 
         // Add a small buffer for accurate detection
-        const buffer = 2;
-
-        console.log("[List] Vertical scroll check:", {
-          scrollTop,
-          scrollHeight,
-          clientHeight,
-          isAtTop: scrollTop <= buffer,
-          isAtBottom: Math.abs((scrollTop + clientHeight) - scrollHeight) <= buffer
-        });
+        const buffer = 5;
 
         setVerticalScroll({
           isAtTop: scrollTop <= buffer,
@@ -306,11 +340,27 @@ export function ComposerList({
       }
     };
 
-    // Initial check
-    setTimeout(() => {
+    // Initial check with a delay to ensure DOM elements are loaded
+    const initialCheckTimer = setTimeout(() => {
       checkHorizontalScroll();
       checkVerticalScroll();
     }, 500);
+
+    // Add mutation observer to detect when composers are added/removed
+    const observer = new MutationObserver(() => {
+      checkHorizontalScroll();
+      checkVerticalScroll();
+    });
+
+    const horizontalContainer = document.querySelector('.md\\:hidden .scroll-area');
+    const verticalContainer = document.querySelector('.md\\:flex .scroll-area');
+
+    if (horizontalContainer) {
+      observer.observe(horizontalContainer, { childList: true, subtree: true });
+    }
+    if (verticalContainer) {
+      observer.observe(verticalContainer, { childList: true, subtree: true });
+    }
 
     // Add scroll event listeners to the actual scrollable elements
     const addScrollListeners = () => {
@@ -318,33 +368,28 @@ export function ComposerList({
       const verticalViewport = document.querySelector('.md\\:flex .scroll-area [data-radix-scroll-area-viewport]');
 
       if (horizontalViewport) {
-        console.log("[List] Adding horizontal scroll listener");
         horizontalViewport.addEventListener('scroll', checkHorizontalScroll);
       }
 
       if (verticalViewport) {
-        console.log("[List] Adding vertical scroll listener");
         verticalViewport.addEventListener('scroll', checkVerticalScroll);
       }
     };
 
     // Add resize listener to recalculate scroll positions
     const handleResize = () => {
-      console.log("[List] Window resized, rechecking scroll positions");
-      setTimeout(() => {
-        checkHorizontalScroll();
-        checkVerticalScroll();
-      }, 100); // Small delay to ensure DOM has updated
+      checkHorizontalScroll();
+      checkVerticalScroll();
     };
 
     window.addEventListener('resize', handleResize);
-
-    // Delay to ensure DOM elements are available
-    const timer = setTimeout(addScrollListeners, 1000);
+    const listenerTimer = setTimeout(addScrollListeners, 800);
 
     return () => {
-      clearTimeout(timer);
+      clearTimeout(initialCheckTimer);
+      clearTimeout(listenerTimer);
       window.removeEventListener('resize', handleResize);
+      observer.disconnect();
 
       // Clean up event listeners
       const horizontalViewport = document.querySelector('.md\\:hidden .scroll-area [data-radix-scroll-area-viewport]');
@@ -360,19 +405,44 @@ export function ComposerList({
     };
   }, [era]); // Re-run when era changes
 
-  // Maintain selected composer card in view when switching between mobile and desktop on resize
+  // Enhanced handling for maintaining selected composer in view during window resize
   const scrollToSelectedComposer = useCallback(() => {
     if (selectedComposer) {
-      // Desktop view
-      const desktopEl = document.getElementById(`composer-card-${selectedComposer.id}`);
-      if (desktopEl) {
-        desktopEl.scrollIntoView({ behavior: 'auto', block: 'nearest' });
-      }
-      // Mobile view
-      const mobileEl = document.getElementById(`mobile-composer-card-${selectedComposer.id}`);
-      if (mobileEl) {
-        mobileEl.scrollIntoView({ behavior: 'auto', inline: 'nearest' });
-      }
+      setTimeout(() => {
+        // Desktop view
+        const desktopEl = document.getElementById(`composer-card-${selectedComposer.id}`);
+        const desktopViewport = document.querySelector('.md\\:flex .scroll-area [data-radix-scroll-area-viewport]');
+
+        if (desktopEl && desktopViewport) {
+          const viewportRect = desktopViewport.getBoundingClientRect();
+          const cardRect = desktopEl.getBoundingClientRect();
+
+          const isFullyVisible =
+            cardRect.top >= viewportRect.top &&
+            cardRect.bottom <= viewportRect.bottom;
+
+          if (!isFullyVisible) {
+            desktopEl.scrollIntoView({ behavior: 'auto', block: 'center' });
+          }
+        }
+
+        // Mobile view
+        const mobileEl = document.getElementById(`mobile-composer-card-${selectedComposer.id}`);
+        const mobileViewport = document.querySelector('.md\\:hidden .scroll-area [data-radix-scroll-area-viewport]');
+
+        if (mobileEl && mobileViewport) {
+          const viewportRect = mobileViewport.getBoundingClientRect();
+          const cardRect = mobileEl.getBoundingClientRect();
+
+          const isFullyVisible =
+            cardRect.left >= viewportRect.left &&
+            cardRect.right <= viewportRect.right;
+
+          if (!isFullyVisible) {
+            mobileEl.scrollIntoView({ behavior: 'auto', inline: 'center' });
+          }
+        }
+      }, 150); // Give time for layout adjustments
     }
   }, [selectedComposer]);
 
