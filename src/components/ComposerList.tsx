@@ -579,30 +579,31 @@ export function ComposerList({
               </div>
             </div>
               {/* Scrollable content starts here */}
-              <ScrollArea className="flex-1 relative">
-                <div
-                  tabIndex={0}
-                  onFocus={(e) => e.currentTarget.scrollIntoView({ behavior: 'smooth', block: 'nearest' })}
-                  role="region"
-                  aria-label={`About ${selectedComposer.name}: biography and notable works`}
-                  className="focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary p-3 space-y-2 md:space-y-4"
-                >
-                  <p className="text-sm md:text-base text-foreground/90">
-                    {selectedComposer.shortBio}
-                  </p>
-                  <div>
-                    <h4 className="font-semibold mb-1 md:mb-2 text-base md:text-lg">Notable Works</h4>
-                    <ul className="list-disc pl-5 space-y-1">
-                      {selectedComposer.famousWorks.slice(0, 3).map((work, index) => (
-                        <li key={index} className="text-sm md:text-base text-foreground/80">{work}</li>
-                      ))}
-                    </ul>
+              <div className="relative flex-1 min-h-0">
+                <ScrollArea className="h-full">
+                  <div
+                    tabIndex={0}
+                    onFocus={(e) => e.currentTarget.scrollIntoView({ behavior: 'smooth', block: 'nearest' })}
+                    role="region"
+                    aria-label={`About ${selectedComposer.name}: biography and notable works`}
+                    className="focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary p-3 space-y-2 md:space-y-4"
+                  >
+                    <p className="text-sm md:text-base text-foreground/90">
+                      {selectedComposer.shortBio}
+                    </p>
+                    <div>
+                      <h4 className="font-semibold mb-1 md:mb-2 text-base md:text-lg">Notable Works</h4>
+                      <ul className="list-disc pl-5 space-y-1">
+                        {selectedComposer.famousWorks.slice(0, 3).map((work, index) => (
+                          <li key={index} className="text-sm md:text-base text-foreground/80">{work}</li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
-                </div>
-
+                </ScrollArea>
                 {/* Scroll shadow for all screen sizes */}
                 <div className="pointer-events-none absolute bottom-0 left-0 w-full h-5 bg-gradient-to-t from-background to-transparent z-10" />
-              </ScrollArea>
+              </div>
 
             </div>
 
