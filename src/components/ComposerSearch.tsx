@@ -36,6 +36,9 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
   const containerRef = useRef<HTMLDivElement>(null);
   const resultRefs = useRef<(HTMLDivElement | null)[]>([]);
 
+  // Track pointer vs keyboard interaction to suppress focus ring on click
+  const [pointerPressed, setPointerPressed] = useState(false);
+
   // Memoize text normalization function
   const normalizeText = useMemo(() => {
     return (text: string): string => {
@@ -293,6 +296,22 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
     };
   }, [isMobileSearchActive]);
 
+  // Track pointer vs keyboard interaction to suppress focus ring on click
+  useEffect(() => {
+    const handlePointerDown = () => setPointerPressed(true);
+    const handleKeyDownGlobal = (e: KeyboardEvent) => {
+      if (e.key === 'Tab') setPointerPressed(false);
+    };
+    document.addEventListener('mousedown', handlePointerDown);
+    document.addEventListener('touchstart', handlePointerDown);
+    document.addEventListener('keydown', handleKeyDownGlobal);
+    return () => {
+      document.removeEventListener('mousedown', handlePointerDown);
+      document.removeEventListener('touchstart', handlePointerDown);
+      document.removeEventListener('keydown', handleKeyDownGlobal);
+    };
+  }, []);
+
   // Determine whether to show results
   const shouldShowResults = searchQuery.trim().length > 0;
 
@@ -336,20 +355,23 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
             ref={inputRef}
             type="text"
             placeholder="Search all composers..."
-            className="flex-1 py-2 outline-none bg-transparent text-xs"
+            className="flex-1 py-2 bg-transparent text-xs outline-none"
             value={searchQuery}
             onChange={(e) => handleInputChange(e.target.value)}
             onKeyDown={handleKeyDown}
-            onFocus={() => {
+            onFocus={(e) => {
+              // Suppress ring on pointer focus
+              if (pointerPressed) {
+                e.currentTarget.style.boxShadow = 'none';
+              }
+              // Handle opening results
               if (searchQuery.trim().length > 0) {
                 performFilter(searchQuery);
                 setIsOpen(true);
               }
             }}
-            onMouseDown={(e) => {
-              e.currentTarget.style.boxShadow = 'none';
-            }}
             onBlur={(e) => {
+              // Restore default CSS behavior
               e.currentTarget.style.removeProperty('box-shadow');
             }}
             aria-label="Search composers"
