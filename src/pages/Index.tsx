@@ -392,7 +392,7 @@ const Index = () => {
                 onClick={toggleMenu}
                 aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
                 aria-expanded={isMenuOpen}
-                className="flex items-center group"
+                className="flex items-center group focus-ring-inset"
               >
                 <div className="flex-shrink-0 p-2 rounded-md transition-colors duration-200 group-hover:bg-muted">
                   <svg
@@ -436,14 +436,16 @@ const Index = () => {
 
               {/* About Icon & Drawer */}
               <div className="relative group">
-                <div onClick={(e) => e.stopPropagation()} className="relative z-[60]">
+                <div onClick={(e) => e.stopPropagation()} className="relative z-[60] focus-ring-inset">
                   <FooterDrawer />
                 </div>
               </div>
 
               {/* Theme Toggle Icon */}
               <HeaderIcon tooltip={isDarkMode ? 'Light mode' : 'Dark mode'}>
-                <div onClick={(e) => e.stopPropagation()} className="relative z-[60]">
+                <div onClick={(e) => e.stopPropagation()}
+                className="relative z-[60]"
+                >
                   <ThemeToggle onThemeChange={handleThemeChange} />
                 </div>
               </HeaderIcon>

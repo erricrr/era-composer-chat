@@ -304,7 +304,7 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
           <TooltipTrigger asChild>
             <button
               type="button"
-              className="p-2 rounded-md md:hidden hover:bg-muted transition-colors duration-200 flex-shrink-0 flex"
+              className="p-2 rounded-md md:hidden hover:bg-muted transition-colors duration-200 flex-shrink-0 flex focus-ring-inset"
               onClick={(e) => {
                 e.stopPropagation();
                 setTimeout(activateMobileSearch, 10);

@@ -271,7 +271,7 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
           e.stopPropagation();
           onClose();
         }}
-        className="relative flex items-center justify-center border-b py-7 bg-secondary backdrop-blur-sm shadow-md z-10 flex-shrink-0 cursor-pointer group hover:bg-secondary/80 transition-colors w-full focus-ring-inset"
+        className="relative flex items-center justify-center border-b py-7 bg-secondary backdrop-blur-sm shadow-md z-10 flex-shrink-0 cursor-pointer group hover:bg-secondary/80 transition-colors w-full focus-ring-inset focus:rounded-none"
       >
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <h2 className="font-bold font-serif text-lg md:text-xl pointer-events-none truncate max-w-[calc(100%-5rem)] px-4">
@@ -287,7 +287,7 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
             e.stopPropagation();
             onClose();
           }}
-          className="absolute right-4 rounded-full hover:bg-primary/20 transition-all duration-200 group-hover:bg-primary/20 w-8 h-8 text-foreground/70 hover:text-foreground/90 focus-ring-inset z-10"
+          className="absolute right-4 rounded-full hover:bg-primary/20 transition-all duration-200 group-hover:bg-primary/20 w-8 h-8 text-foreground/70 hover:text-foreground/90 z-10"
         >
           <X className="h-4 w-4" />
         </Button>
@@ -329,7 +329,7 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
               {/* Composer info (nationality, years, era badges) */}
               <div
                 tabIndex={0}
-                className="focus-ring-inset flex flex-col md:flex-col items-center gap-2 mt-2 text-center"
+                className="focus-ring-inset focus:rounded-none flex flex-col md:flex-col items-center gap-2 mt-2 text-center"
               >
                 <span className={`text-muted-foreground ${
                   isMobile
@@ -377,7 +377,7 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
 
             <div
               tabIndex={0}
-              className="focus-ring-inset space-y-4 md:space-y-6 max-w-prose mx-auto"
+              className="focus-ring-inset focus:rounded-none space-y-4 md:space-y-6 max-w-prose mx-auto"
             >
               <div>
                 <p className={`text-foreground/90 ${
