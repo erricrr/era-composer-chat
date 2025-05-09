@@ -82,6 +82,18 @@ const Index = () => {
   // Ref for the active chats button - for focus management
   const activeChatsButtonRef = useRef<HTMLButtonElement>(null);
 
+  // Effect to blur the active chats button if it's focused on initial page load
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      const button = activeChatsButtonRef.current;
+      if (button && document.activeElement === button) {
+        button.blur();
+      }
+    }, 0); // setTimeout with 0 delay defers execution until after the current call stack clears
+
+    return () => clearTimeout(timerId); // Cleanup the timeout if the component unmounts
+  }, []); // Empty dependency array ensures this runs only once on mount
+
   const handleThemeChange = (newMode: boolean) => {
     setIsDarkMode(newMode);
   };
