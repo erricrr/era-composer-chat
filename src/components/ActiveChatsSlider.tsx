@@ -31,6 +31,7 @@ export default function ActiveChatsSlider({
   const sliderRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const clearAllButtonRef = useRef<HTMLButtonElement>(null);
+  const skipReturnFocusRef = useRef<boolean>(false);
 
   // Handle focus management when slider opens/closes
   useEffect(() => {
@@ -39,9 +40,13 @@ export default function ActiveChatsSlider({
       setTimeout(() => {
         closeButtonRef.current?.focus();
       }, 100);
-    } else if (returnFocusRef?.current) {
-      // Return focus to the trigger button when closed
-      returnFocusRef.current.focus();
+    } else {
+      // Return focus unless skipped (e.g., closed via click)
+      if (!skipReturnFocusRef.current && returnFocusRef?.current) {
+        returnFocusRef.current.focus();
+      }
+      // Reset skip flag after handling
+      skipReturnFocusRef.current = false;
     }
   }, [isOpen, returnFocusRef]);
 
@@ -94,6 +99,12 @@ export default function ActiveChatsSlider({
     onRemoveChat(composer);
   };
 
+  // Handle close click separately to skip returning focus (prevents tooltip)
+  const handleCloseClick = () => {
+    skipReturnFocusRef.current = true;
+    onClose();
+  };
+
   return (
     <aside
       ref={sliderRef}
@@ -102,14 +113,15 @@ export default function ActiveChatsSlider({
       aria-modal="true"
       aria-label="Active Chats"
     >
-      <div className="flex items-center justify-between p-4 border-b border-border">
-        <h3 tabIndex={0} className="text-base font-semibold focus-ring-inset focus:rounded-none">Active Chats</h3>
+      <div className="border-b border-border">
         <button
           ref={closeButtonRef}
-          onClick={onClose}
-          className="p-1 rounded-full hover:bg-muted transition-colors focus-ring-inset"
+          type="button"
+          onClick={handleCloseClick}
+          className="flex items-center justify-between w-full p-4 text-base font-semibold rounded hover:bg-muted transition-colors focus-ring-inset"
           aria-label="Close active chats"
         >
+          <span>Active Chats</span>
           <X className="w-4 h-4" />
         </button>
       </div>
