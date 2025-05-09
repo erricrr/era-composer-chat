@@ -103,7 +103,7 @@ export default function ActiveChatsSlider({
       aria-label="Active Chats"
     >
       <div className="flex items-center justify-between p-4 border-b border-border">
-        <h3 tabIndex={0} className="text-base font-semibold focus-ring-inset">Active Chats</h3>
+        <h3 tabIndex={0} className="text-base font-semibold focus-ring-inset focus:rounded-none">Active Chats</h3>
         <button
           ref={closeButtonRef}
           onClick={onClose}
