@@ -76,6 +76,11 @@ const Index = () => {
   // Track split view open state to adjust layout
   const [isSplitViewOpenFromChat, setIsSplitViewOpenFromChat] = useState(false);
 
+  // State for controlling the About icon's tooltip
+  const [aboutTooltipOpen, setAboutTooltipOpen] = useState(false);
+  // State to track if the FooterDrawer is actually visible
+  const [footerDrawerVisible, setFooterDrawerVisible] = useState(false);
+
   // Maximum number of active chats allowed
   const MAX_ACTIVE_CHATS = 5;
 
@@ -447,11 +452,40 @@ const Index = () => {
               </HeaderIcon>
 
               {/* About Icon & Drawer */}
-              <div className="relative group">
-                <div onClick={(e) => e.stopPropagation()} className="relative z-[60] focus-ring-inset">
-                  <FooterDrawer />
+              <HeaderIcon
+                tooltip="About"
+                tooltipOpen={aboutTooltipOpen}
+                onTooltipOpenChange={(radixWantsToOpen) => {
+                  if (radixWantsToOpen) {
+                    // Tooltip trigger is hovered/focused, Radix wants to open it.
+                    // Only allow it to open if the footer drawer is NOT visible.
+                    if (!footerDrawerVisible) {
+                      setAboutTooltipOpen(true);
+                    } else {
+                      // Drawer is visible, so tooltip must stay closed.
+                      setAboutTooltipOpen(false);
+                    }
+                  } else {
+                    // Radix wants to close the tooltip (e.g. blur, pointer leave).
+                    setAboutTooltipOpen(false);
+                  }
+                }}
+              >
+                <div
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
+                  className="relative z-[60] focus-ring-inset"
+                  onPointerLeave={() => { // Explicitly close on pointer leave if drawer isn't open
+                    if (!footerDrawerVisible) setAboutTooltipOpen(false);
+                  }}
+                >
+                  <FooterDrawer
+                    onTrigger={() => setAboutTooltipOpen(false)}
+                    onVisibilityChange={setFooterDrawerVisible}
+                  />
                 </div>
-              </div>
+              </HeaderIcon>
 
               {/* Theme Toggle Icon */}
               <HeaderIcon tooltip={isDarkMode ? 'Light mode' : 'Dark mode'}>

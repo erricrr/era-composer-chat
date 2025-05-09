@@ -11,34 +11,75 @@ import {
 import { Button } from "@/components/ui/button";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
-import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
-const FooterDrawer: React.FC = () => {
+interface FooterDrawerProps {
+  onTrigger?: () => void;
+  onVisibilityChange?: (isVisible: boolean) => void;
+}
+
+const FooterDrawer: React.FC<FooterDrawerProps> = ({ onTrigger, onVisibilityChange }) => {
   const [isOpen, setIsOpen] = useState(false);
   const infoButtonRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const drawerContentRef = useRef<HTMLDivElement>(null);
 
+  // Refs to track previous state for focus management
+  const initialMount = useRef(true);
+  const prevIsOpen = useRef(isOpen);
+
   // Toggle drawer open/close on info-icon click
   const toggleDrawer = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setIsOpen(prev => !prev);
+    const newIsOpen = !isOpen;
+    setIsOpen(newIsOpen);
+    if (newIsOpen && onTrigger) {
+      onTrigger();
+    }
   };
+
+  // Effect to report visibility changes
+  useEffect(() => {
+    if (onVisibilityChange) {
+      onVisibilityChange(isOpen);
+    }
+  }, [isOpen, onVisibilityChange]);
 
   // Focus management when drawer opens/closes
   useEffect(() => {
-    if (isOpen) {
-      // Focus the close button when the drawer opens
-      setTimeout(() => {
-        closeButtonRef.current?.focus();
-      }, 100);
+    if (initialMount.current) {
+      initialMount.current = false;
+      // On initial mount, if isOpen is false, do nothing here regarding infoButtonRef focus.
+      // The blur effect (further down) will handle if it somehow gets focused.
+      if (isOpen) { // If somehow initial state is open, focus close button
+        setTimeout(() => closeButtonRef.current?.focus(), 100);
+      }
     } else {
-      // Return focus to the info button when the drawer closes
-      if (infoButtonRef.current) {
-        infoButtonRef.current.focus();
+      if (isOpen) {
+        // Focus the close button when the drawer opens
+        setTimeout(() => {
+          closeButtonRef.current?.focus();
+        }, 100);
+      } else if (prevIsOpen.current && !isOpen) {
+        // Only return focus if drawer was previously open and is now closing
+        if (infoButtonRef.current) {
+          infoButtonRef.current.focus();
+        }
       }
     }
+    prevIsOpen.current = isOpen; // Update previous state for next render
   }, [isOpen]);
+
+  // Effect to blur the info button if it's focused on initial page load
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      const button = infoButtonRef.current;
+      if (button && document.activeElement === button) {
+        button.blur();
+      }
+    }, 0); // setTimeout with 0 delay defers execution until after the current call stack clears
+
+    return () => clearTimeout(timerId); // Cleanup the timeout if the component unmounts
+  }, []); // Empty dependency array ensures this runs only once on mount
 
   // Handle keyboard navigation and focus trapping
   useEffect(() => {
@@ -80,23 +121,16 @@ const FooterDrawer: React.FC = () => {
 
   return (
     <>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <button
-            ref={infoButtonRef}
-            type="button"
-            className="py-1.5 px-2.5 rounded-md hover:bg-muted transition-colors duration-200 text-muted-foreground hover:text-muted-foreground focus-ring-inset"
-            onClick={toggleDrawer}
-            aria-label="About"
-            aria-expanded={isOpen}
-          >
-            <FontAwesomeIcon icon={faInfoCircle} className="h-4 w-4" />
-          </button>
-        </TooltipTrigger>
-        <TooltipContent side="bottom" className="text-xs">
-          About
-        </TooltipContent>
-      </Tooltip>
+      <button
+        ref={infoButtonRef}
+        type="button"
+        className="py-1.5 px-2.5 rounded-md hover:bg-muted transition-colors duration-200 text-muted-foreground hover:text-muted-foreground focus-ring-inset"
+        onClick={toggleDrawer}
+        aria-label="About"
+        aria-expanded={isOpen}
+      >
+        <FontAwesomeIcon icon={faInfoCircle} className="h-4 w-4" />
+      </button>
 
       <Drawer open={isOpen} onOpenChange={setIsOpen}>
         {/* close drawer when transparent background is touched */}
