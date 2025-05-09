@@ -109,15 +109,6 @@
   *:focus-visible {
     @apply ring-2 ring-primary ring-offset-2 ring-offset-background outline-none;
   }
-
-  /* Allow focus rings inside scroll areas to be visible */
-  .scroll-area:focus-within {
-    overflow: visible !important;
-  }
-
-  .scroll-area:focus-within [data-radix-scroll-area-viewport] {
-    overflow: visible !important;
-  }
 }
 
 @layer components {
