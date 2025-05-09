@@ -616,7 +616,7 @@ export function ComposerList({
         {selectedComposer && (
         <div className="flex flex-col h-full overflow-hidden">
           <div className="relative flex-1 min-h-0 flex flex-col">
-            <div className="px-3 md:px-4 pt-1">
+            <div className="px-3 md:px-4 pt-1 flex-shrink-0 relative z-20">
               <div className="flex items-start md:items-center space-x-2 md:space-x-6 border-b pt-2 md:pt-0" style={{ paddingBottom: '10px' }}>
                 <ComposerImageViewer
                   composer={selectedComposer}
@@ -677,7 +677,7 @@ export function ComposerList({
 
             </div>
 
-            <div className="flex-shrink-0 h-14 md:h-16 px-3 md:px-4 py-2 bg-background">
+            <div className="flex-shrink-0 h-14 md:h-16 px-3 md:px-4 py-2 bg-background relative z-20">
               <Button
                 onClick={() => {
                   if (selectedComposer && isComposerInPublicDomain(selectedComposer)) {
