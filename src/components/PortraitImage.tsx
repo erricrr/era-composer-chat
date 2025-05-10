@@ -8,7 +8,7 @@ interface PortraitImageProps {
 }
 
 const defaultPosition = 'object-[50%_10%]';
-const highPosition = 'object-[50%_25%]';
+const highPosition = 'object-[50%_15%]';
 const repositionOverrides = {
   'dieterich-buxtehude': highPosition,
   'johann-strauss-ii': 'object-[50%_25%]',
