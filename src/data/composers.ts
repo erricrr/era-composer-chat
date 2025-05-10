@@ -108,34 +108,14 @@ export interface CopyrightDetails {
   licenseUrl: string;
 }
 
-const copyrightInfo: { [key: string]: CopyrightDetails } = {
-  'saariaho': {
-    author: "Ministère de l'Europe et des Affaires étrangères",
-    source: "Wikimedia Commons",
-    sourceUrl: "https://commons.wikimedia.org/wiki/File:Kaija_Saariaho_in_2022.png",
-    license: "CC BY 3.0",
-    licenseUrl: "https://creativecommons.org/licenses/by/3.0/",
-  },
-  'iannis-xenakis': {
-    author: "Les Amis de Xenakis",
-    source: "Wikimedia Commons",
-    sourceUrl: "https://commons.wikimedia.org/wiki/File:XenakisMDaniel_crop.jpg",
-    license: "CC BY 2.5",
-    licenseUrl: "https://creativecommons.org/licenses/by/2.5/",
-  },
-  'arnold-schoenberg': {
-    author: "Man Ray",
-    source: "Wikimedia Commons",
-    sourceUrl: "https://commons.wikimedia.org/wiki/File:Arnold_sch%C3%B6nberg_man_ray.jpg",
-    license: "CC BY-SA 2.0",
-    licenseUrl: "https://creativecommons.org/licenses/by-sa/2.0/",
-  },
-};
+// Import the image attributions from JSON
+import imageAttributionsData from './imageAttributions.json';
 
 // Return CopyrightDetails object or null
 export const getCopyrightAttribution = (composerId: string): CopyrightDetails | null => {
-  return copyrightInfo[composerId] || null;
+  return (imageAttributionsData as { [key: string]: CopyrightDetails })[composerId] || null;
 };
+
 // --- End Copyright Info ---
 
 // Message interface for chat
