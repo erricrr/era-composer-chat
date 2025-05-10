@@ -9,16 +9,20 @@ import { ChevronLeft, ChevronRight, ChevronUp, ChevronDown, LucideIcon } from 'l
 
 interface ScrollChevronProps {
   direction: 'left' | 'right' | 'up' | 'down';
-  onClick: () => void;
+  onClick?: () => void;
+  disabled?: boolean;
 }
 
-const ScrollChevron = ({ direction, onClick }: ScrollChevronProps) => {
+const ScrollChevron = ({ direction, onClick = () => {}, disabled = false }: ScrollChevronProps) => {
   const ChevronIconMap = {
     left: ChevronLeft,
     right: ChevronRight,
     up: ChevronUp,
     down: ChevronDown,
   };
+
+  const disabledClasses = disabled ? 'pointer-events-none cursor-default' : '';
+  const innerBgClass = disabled ? 'bg-background' : 'bg-primary/35 hover:bg-primary/65';
 
   const Icon = ChevronIconMap[direction];
   const isHorizontal = direction === 'left' || direction === 'right';
@@ -30,7 +34,7 @@ const ScrollChevron = ({ direction, onClick }: ScrollChevronProps) => {
   const dimensionAndMarginClass = isHorizontal ? 'w-2.5 h-10 mb-2' : 'w-10 h-2.5';
 
   const commonInnerDivClasses = `
-    bg-primary/35 hover:bg-primary/65
+    ${innerBgClass}
     ${roundedClass}
     flex items-center justify-center
     relative
@@ -44,7 +48,7 @@ const ScrollChevron = ({ direction, onClick }: ScrollChevronProps) => {
   if (isHorizontal) {
     return (
       <div
-        className="absolute top-0 bottom-0 flex items-center select-none z-20"
+        className={`absolute top-0 bottom-0 flex items-center select-none z-20 ${disabledClasses}`}
         style={{ [direction]: 0 }}
         onClick={onClick}
       >
@@ -59,6 +63,7 @@ const ScrollChevron = ({ direction, onClick }: ScrollChevronProps) => {
         className={`
           ${commonInnerDivClasses}
           text-secondary
+          ${disabledClasses}
         `}
         onClick={onClick}
       >
@@ -534,24 +539,22 @@ export function ComposerList({
               <ScrollBar orientation="horizontal" />
             </ScrollArea>
 
-            {!horizontalScroll.isAtStart && (
-              <ScrollChevron
-                direction="left"
-                onClick={() => {
-                  const viewport = viewportRefs.current.mobile;
-                  if (viewport) viewport.scrollTo({ left: Math.max(0, viewport.scrollLeft - 240), behavior: 'smooth' });
-                }}
-              />
-            )}
-            {!horizontalScroll.isAtEnd && (
-              <ScrollChevron
-                direction="right"
-                onClick={() => {
-                  const viewport = viewportRefs.current.mobile;
-                  if (viewport) viewport.scrollTo({ left: viewport.scrollLeft + 240, behavior: 'smooth' });
-                }}
-              />
-            )}
+            <ScrollChevron
+              direction="left"
+              onClick={() => {
+                const viewport = viewportRefs.current.mobile;
+                if (viewport) viewport.scrollTo({ left: Math.max(0, viewport.scrollLeft - 240), behavior: 'smooth' });
+              }}
+              disabled={horizontalScroll.isAtStart}
+            />
+            <ScrollChevron
+              direction="right"
+              onClick={() => {
+                const viewport = viewportRefs.current.mobile;
+                if (viewport) viewport.scrollTo({ left: viewport.scrollLeft + 240, behavior: 'smooth' });
+              }}
+              disabled={horizontalScroll.isAtEnd}
+            />
           </div>
 
           {/* Desktop vertical scroll */}
@@ -594,28 +597,26 @@ export function ComposerList({
               <ScrollBar orientation="vertical" className="select-none" />
             </ScrollArea>
 
-            {!verticalScroll.isAtTop && (
-              <div className="absolute top-0 left-0 right-0 flex justify-center z-20 cursor-pointer">
-                <ScrollChevron
-                  direction="up"
-                  onClick={() => {
-                    const viewport = viewportRefs.current.desktop;
-                    if (viewport) viewport.scrollTo({ top: Math.max(0, viewport.scrollTop - 180), behavior: 'smooth' });
-                  }}
-                />
-              </div>
-            )}
-            {!verticalScroll.isAtBottom && (
-              <div className="absolute bottom-0 left-0 right-0 flex justify-center z-20 cursor-pointer">
-                <ScrollChevron
-                  direction="down"
-                  onClick={() => {
-                    const viewport = viewportRefs.current.desktop;
-                    if (viewport) viewport.scrollTo({ top: viewport.scrollTop + 180, behavior: 'smooth' });
-                  }}
-                />
-              </div>
-            )}
+            <div className="absolute top-0 left-0 right-0 flex justify-center z-20">
+              <ScrollChevron
+                direction="up"
+                onClick={() => {
+                  const viewport = viewportRefs.current.desktop;
+                  if (viewport) viewport.scrollTo({ top: Math.max(0, viewport.scrollTop - 180), behavior: 'smooth' });
+                }}
+                disabled={verticalScroll.isAtTop}
+              />
+            </div>
+            <div className="absolute bottom-0 left-0 right-0 flex justify-center z-20">
+              <ScrollChevron
+                direction="down"
+                onClick={() => {
+                  const viewport = viewportRefs.current.desktop;
+                  if (viewport) viewport.scrollTo({ top: viewport.scrollTop + 180, behavior: 'smooth' });
+                }}
+                disabled={verticalScroll.isAtBottom}
+              />
+            </div>
           </div>
         </div>
 
