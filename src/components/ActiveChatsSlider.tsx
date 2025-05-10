@@ -124,11 +124,13 @@ export default function ActiveChatsSlider({
           ref={closeButtonRef}
           type="button"
           onClick={handleCloseClick}
-          className="flex items-center justify-between w-full p-4 text-base font-semibold rounded hover:bg-muted transition-colors focus-ring-inset"
+          className="group flex items-center justify-between w-full p-4 text-base font-semibold rounded transition-colors focus-ring-inset"
           aria-label="Close active chats"
         >
           <span>Active Chats</span>
-          <X className="w-4 h-4" />
+          <span className="p-1 rounded-full transition-colors duration-200 hover:bg-muted group-hover:bg-muted">
+            <X className="w-4 h-4" />
+          </span>
         </button>
       </div>
 
