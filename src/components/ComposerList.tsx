@@ -135,7 +135,17 @@ export function ComposerList({
         elementRect.bottom > containerRect.bottom;
 
       if (isPartiallyVisible) {
-        const scrollOffset = elementRect.top - containerRect.top - (containerRect.height - elementRect.height) / 2;
+        let scrollOffset = 0;
+
+        // If element is partially above viewport, scroll up just enough to show it
+        if (elementRect.top < containerRect.top) {
+          scrollOffset = elementRect.top - containerRect.top;
+        }
+        // If element is partially below viewport, scroll down just enough to show it
+        else if (elementRect.bottom > containerRect.bottom) {
+          scrollOffset = elementRect.bottom - containerRect.bottom;
+        }
+
         container.scrollBy({
           top: scrollOffset,
           behavior: 'smooth'
@@ -148,7 +158,17 @@ export function ComposerList({
         elementRect.right > containerRect.right;
 
       if (isPartiallyVisible) {
-        const scrollOffset = elementRect.left - containerRect.left - (containerRect.width - elementRect.width) / 2;
+        let scrollOffset = 0;
+
+        // If element is partially to the left, scroll left just enough to show it
+        if (elementRect.left < containerRect.left) {
+          scrollOffset = elementRect.left - containerRect.left;
+        }
+        // If element is partially to the right, scroll right just enough to show it
+        else if (elementRect.right > containerRect.right) {
+          scrollOffset = elementRect.right - containerRect.right;
+        }
+
         container.scrollBy({
           left: scrollOffset,
           behavior: 'smooth'
