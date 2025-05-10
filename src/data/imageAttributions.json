@@ -1,6 +1,6 @@
 {
   "adolphe-adam": {
-    "author": "Maurin",
+    "author": "Nicolas Eustache Maurin",
     "source": "Wikimedia Commons",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Adolphe_Adam_by_Maurin.jpg",
     "license": "Public Domain",
@@ -35,42 +35,42 @@
     "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
   },
   "carl-nielsen": {
-    "author": "Unknown",
+    "author": "Georg Lindstrøm",
     "source": "Wikimedia Commons",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Carl_Nielsen_c._1908_-_Restoration.jpg",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Carl_Nielsen_c._1908.jpg",
     "license": "Public Domain",
     "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
   },
   "dieterich-buxtehude": {
-    "author": "Unknown",
+    "author": "Johannes Voorhout",
     "source": "Wikimedia Commons",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Imagebuxtehude.jpg",
     "license": "Public Domain",
     "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
   },
   "gabriel-faure": {
-    "author": "Pierre Petit",
+    "author": "Eugène Pirou",
     "source": "Wikimedia Commons",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:FauréPirou1905.jpg",
     "license": "Public Domain",
     "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
   },
   "georg-philipp-telemann": {
-    "author": "Georg Lichtensteger",
+    "author": "Valentin Daniel Preisler",
     "source": "Wikimedia Commons",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Telemann.jpg",
     "license": "Public Domain",
     "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
   },
   "hector-berlioz": {
-    "author": "Pierre Petit",
+    "author": "August Prinzhofer",
     "source": "Wikimedia Commons",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hector-Berlioz-1845.png",
     "license": "Public Domain",
     "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
   },
   "hugo-wolf": {
-    "author": "Unknown",
+    "author": "Dr. Meierhofer",
     "source": "Wikimedia Commons",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hugo_Wolf.jpg",
     "license": "Public Domain",
@@ -114,7 +114,7 @@
   "reinhold-gliere": {
     "author": "Unknown",
     "source": "Wikimedia Commons",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Reinhold_Glière.jpg",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Reinhold_Glier.jpg",
     "license": "Public Domain",
     "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
   },
@@ -147,9 +147,373 @@
     "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
   },
   "sergei-prokofiev": {
-    "author": "Bain News Service",
+    "author": "Bain News Service, publisher",
     "source": "Wikimedia Commons",
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Sergei_Prokofiev_circa_1918_over_Chair_Bain.jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "aaron-copland": {
+    "author": "CBS Television",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Aaron_Copland_in_1962.jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "alexander-glazunov": {
+    "author": "Ilya Repin",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Glazunov_by_Repin.jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "amy-beach": {
+    "author": "Photographer uncredited",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Amy_Beach.jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "antonio-salieri": {
+    "author": "Joseph Willibrord Mähler",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Antonio_Salieri_painted_by_Joseph_Willibrord_Mähler.jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "antonio-vivaldi": {
+    "author": "Unknown",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Vivaldi.jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "antonin-dvorak": {
+    "author": "Anoniem",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Dvorak_1868.jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "aram-khachaturian": {
+    "author": "Harry Pot / Anefo",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Aankomst_Russische_dirigent_Khatsjatoerian_op_Schiphol%2C_Khatsjatorian%2C_Bestanddeelnr_916-6862.jpg",
+    "license": "CC0 1.0",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/deed.en"
+  },
+  "arcangelo-corelli": {
+    "author": "Hugh Howard",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Arcangelo_Corelli,_portrait_by_Hugh_Howard_(1697).jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "bela-bartok": {
+    "author": "Unknown",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Bartók_Béla_1927_(cropped).jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "benjamin-britten": {
+    "author": "Unknown",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Benjamin_Britten_(1).jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "cecile-chaminade": {
+    "author": "Unknown",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Cecile_chaminade.jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "chevalier-de-saint-georges": {
+    "author": "Mather Brown, William Ward",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Mather_Brown,_William_Ward_-_Monsieur_de_St_George,_1788,_NPG_D4132,_London.png",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "christoph-willibald-gluck": {
+    "author": "Joseph Siffred Duplessis",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Joseph_Siffred_Duplessis_-_Christoph_Willibald_Gluck_-_Google_Art_Project.jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "clara-schumann": {
+    "author": "Franz Hanfstaengl",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Franz_Hanfstaengl_-_Clara_Schumann_(1857).jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "claude-debussy": {
+    "author": "Félix Nadar",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Claude_Debussy_ca_1908,_foto_av_Félix_Nadar.jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "claudio-monteverdi": {
+    "author": "Bernardo Strozzi",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Bernardo_Strozzi_-_Claudio_Monteverdi_(c.1630).jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "dmitri-shostakovich": {
+    "author": "Holger Eklund",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Dmitri-Shostakovich-1958.jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "domenico-scarlatti": {
+    "author": "Domingo Antonio Velasco",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Retrato_de_Domenico_Scarlatti.jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "elisabeth-jacquet-de-la-guerre": {
+    "author": "François de Troy",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Elisabeth_Jacquet_de_La_Guerre.jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "erik-satie": {
+    "author": "Henri Manuel",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ericsatie.jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "fanny-mendelssohn": {
+    "author": "Moritz Daniel Oppenheim",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Fanny_Hensel_1842.jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "felix-mendelssohn": {
+    "author": "Eduard Magnus",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Felix_Mendelssohn_Bartholdy.jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "francis-johnson": {
+    "author": "Unknown",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Frank_Johnson.jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "franz-liszt": {
+    "author": "Unknown",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Franz_Liszt_in_1880s.png",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "franz-schubert": {
+    "author": "Wilhelm August Rieder",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Franz_Schubert_by_Wilhelm_August_Rieder_1875.jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "george-bridgetower": {
+    "author": "Unknown",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Bridgetower2.jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "george-frideric-handel": {
+    "author": "Balthasar Denner",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:George_Frideric_Handel_by_Balthasar_Denner.jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "gershwin": {
+    "author": "Mishkin",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:George_Gershwin-signed.jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "giacomo-puccini": {
+    "author": "Unknown",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:GiacomoPuccini.jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "giuseppe-verdi": {
+    "author": "Giovanni Boldini",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Primo_ritratto_boldiniano_di_Verdi.jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "gustav-mahler": {
+    "author": "Moritz Nähr",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Photo_of_Gustav_Mahler_by_Moritz_N%C3%A4hr_01.jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "henry-purcell": {
+    "author": "John Closterman",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Henry_Purcell_Closterman.jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "ignatius-sancho": {
+    "author": "Thomas Gainsborough",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ignatius_Sancho,_1768.jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "igor-stravinsky": {
+    "author": "Unknown",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Photo_Portrait_of_the_musician_Igor_Stravinsky_in_Venice,_In_the_background,_the_bell_tower_of_St,_Mark%27s_1956_-_Touring_Club_Italiano_11_5548.jpg",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/deed.en"
+  },
+  "jean-philippe-rameau": {
+    "author": "Joseph Aved",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Attribu%C3%A9_%C3%A0_Joseph_Aved,_Portrait_de_Jean-Philippe_Rameau_(vers_1728)_-_001.jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "cage": {
+    "author": "Bogaerts, Rob / Anefo",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Opdracht_GPD_componist_John_Cage_,_kop,_Bestanddeelnr_934-2727.jpg",
+    "license": "CC0 1.0",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/deed.en"
+  },
+  "johann-strauss-ii": {
+    "author": "Fritz Luckhardt",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Johann_Strauss_II_by_Fritz_Luckhardt.jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "joseph-haydn": {
+    "author": "Thomas Hardy",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Joseph_Haydn.jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "leonard-bernstein": {
+    "author": "Jack Mitchell",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Leonard_Bernstein_by_Jack_Mitchell.jpg",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/"
+  },
+  "leo-delibes": {
+    "author": "Unknown",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:L%C3%A9o_Delibes_01.jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "luigi-boccherini": {
+    "author": "Étienne Mazas",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Luigi_Boccherini.jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "manuel-de-falla": {
+    "author": "Unknown",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:ManuelDeFalla.JPG",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "marianna-martines": {
+    "author": "Anton von Maron",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Marianna_Martines,_Pupil_of_P._Metastasio;_born_in_Vienna,_4th_day_of_May_1744,_Member_Academia_Filarmonica.jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "maurice-ravel": {
+    "author": "Unknown",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Maurice_Ravel_1925.jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "muzio-clementi": {
+    "author": "Thomas Hardy",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Muzio_Clementi.jpeg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "pyotr-ilyich-tchaikovsky": {
+    "author": "Nikolai Dmitriyevich Kuznetsov",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Portr%C3%A4t_des_Komponisten_Pjotr_I._Tschaikowski_(1840-1893).jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "johannes-brahms": {
+    "author": "C. Brasch",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:JohannesBrahms.jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "alessandro-scarlatti": {
+    "author": "Unknown",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Alessandro_Scarlatti.jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "wolfgang-amadeus-mozart": {
+    "author": "Barbara Krafft",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Wolfgang-amadeus-mozart_1.jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "samuel-coleridge-taylor": {
+    "author": "Unknown",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Samuel_Coleridge-Taylor.jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "sergei-rachmaninoff": {
+    "author": "Bain News Service, publisher",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Rach%27off_(i.e._Rachmaninoff)_LCCN2014711910.jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "ruth-crawford-seeger": {
+    "author": "Unknown",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ruth_Crawford_Seeger_early_1920s.jpg",
     "license": "Public Domain",
     "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
   }
