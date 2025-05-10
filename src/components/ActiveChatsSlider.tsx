@@ -29,6 +29,7 @@ export default function ActiveChatsSlider({
 }: ActiveChatsSliderProps) {
   // Refs for focus management
   const sliderRef = useRef<HTMLDivElement>(null);
+  const headerButtonRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const clearAllButtonRef = useRef<HTMLButtonElement>(null);
   const skipReturnFocusRef = useRef<boolean>(false);
@@ -38,7 +39,7 @@ export default function ActiveChatsSlider({
     if (isOpen) {
       // Focus the close button when the slider opens
       setTimeout(() => {
-        closeButtonRef.current?.focus();
+        headerButtonRef.current?.focus();
       }, 100);
     } else {
       // Return focus unless skipped (e.g., closed via click)
@@ -99,9 +100,10 @@ export default function ActiveChatsSlider({
     onRemoveChat(composer);
   };
 
-  // Handle close click separately to skip returning focus (prevents tooltip)
-  const handleCloseClick = () => {
-    skipReturnFocusRef.current = true;
+  // Handle close click: skip focus return for pointer clicks, but restore focus for keyboard activation
+  const handleCloseClick = (e: React.MouseEvent<HTMLElement>) => {
+    // event.detail > 0 indicates a pointer click; keyboard activations have detail 0
+    skipReturnFocusRef.current = e.detail > 0;
     onClose();
   };
 
@@ -120,22 +122,32 @@ export default function ActiveChatsSlider({
       aria-label="Active Chats"
     >
       <div className="border-b border-border">
-        <button
-          ref={closeButtonRef}
-          type="button"
-          onClick={handleCloseClick}
-          className="group flex items-center justify-between w-full p-4 text-base font-semibold rounded transition-colors focus-ring-inset"
-          aria-label="Close active chats"
-        >
-          <span>Active Chats</span>
-          <span className="p-1 rounded-full transition-colors duration-200 hover:bg-muted group-hover:bg-muted">
+        <div className="group flex items-center justify-between w-full p-4">
+          <div
+            ref={headerButtonRef}
+            tabIndex={0}
+            onClick={handleCloseClick}
+            className="cursor-pointer text-base font-semibold transition-colors focus-ring-inset focus:rounded-none"
+          >
+            Active Chats
+          </div>
+          <button
+            ref={closeButtonRef}
+            type="button"
+            onClick={handleCloseClick}
+            className="p-1 rounded-full transition-colors duration-200 hover:bg-muted group-hover:bg-muted focus-ring-inset"
+            aria-label="Close active chats"
+          >
             <X className="w-4 h-4" />
-          </span>
-        </button>
+          </button>
+        </div>
       </div>
 
       {/* Chat limit indicator */}
-      <div className="px-4 py-2 bg-muted/50 text-xs border-b border-border flex items-center justify-between">
+      <div
+        tabIndex={0}
+        className="px-4 py-2 bg-muted/50 text-xs border-b border-border flex items-center justify-between focus-ring-inset"
+      >
         <div className="flex items-center gap-1">
           <AlertTriangle className="h-3 w-3 dark:text-amber-500 text-amber-700" />
           <span className="text-muted-foreground">Limit: {activeChatIds.length}/{MAX_ACTIVE_CHATS} chats</span>
