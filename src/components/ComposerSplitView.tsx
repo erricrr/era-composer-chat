@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { MusicNoteDecoration } from '@/components/MusicNoteDecoration';
 import { ComposerImageViewer } from '@/components/ComposerImageViewer';
 import { CopyrightAttribution } from './CopyrightAttribution';
+import { PortraitImage } from './PortraitImage';
 
 // ContainedImageModal component
 function ContainedImageModal({
@@ -162,7 +163,10 @@ function ContainedImageModal({
 
           {/* Footer */}
           <div className="py-1 px-2 text-left bg-background dark:bg-secondary">
-            <div className="text-xs text-muted-foreground">
+            <div
+              className="text-xs text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+              tabIndex={0}
+            >
               {copyrightDetails ? (
                 <CopyrightAttribution
                   copyrightDetails={copyrightDetails}
@@ -303,10 +307,10 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
                 }`}
                 aria-label={`View full image of ${composer.name}`}
               >
-                <img
+                <PortraitImage
+                  composerId={composer.id}
                   src={composer.imageUrl}
                   alt={composer.name}
-                  className="w-full h-full object-cover"
                 />
               </button>
 

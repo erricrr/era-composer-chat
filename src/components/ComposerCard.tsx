@@ -1,4 +1,5 @@
 import { Composer } from '@/data/composers';
+import { PortraitImage } from './PortraitImage';
 
 interface ComposerCardProps {
   composer: Composer;
@@ -58,14 +59,11 @@ export function ComposerCard({ composer, onClick, isSelected, compact = false, t
     }`}
   >
     {composer.imageUrl && (
-      <img
+      <PortraitImage
+        composerId={composer.id}
         src={composer.imageUrl}
         alt={composer.name}
-        className={`
-          w-full h-full object-cover
-          transition-transform duration-200
-          ${isSelected ? 'scale-105' : 'group-hover:scale-105'}
-        `}
+        className={`transition-transform duration-200 ${isSelected ? 'scale-105' : 'group-hover:scale-105'}`}
       />
     )}
   </div>

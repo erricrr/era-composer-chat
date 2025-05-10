@@ -1,7 +1,8 @@
+import React, { useState, useEffect, useRef } from 'react';
 import { Composer } from '@/data/composers';
 import { ImageModal } from './ImageModal';
-import { useState, useEffect, useRef } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { PortraitImage } from './PortraitImage';
 
 interface ComposerImageViewerProps {
   composer: Composer;
@@ -106,10 +107,10 @@ export function ComposerImageViewer({
           }
         }}
       >
-        <img
+        <PortraitImage
+          composerId={composer.id}
           src={composer.imageUrl}
           alt={composer.name}
-          className="w-full h-full object-cover"
         />
       </button>
 
