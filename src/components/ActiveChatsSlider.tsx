@@ -105,6 +105,12 @@ export default function ActiveChatsSlider({
     onClose();
   };
 
+  // Handle clear all click separately to skip returning focus (prevents tooltip)
+  const handleClearAllClick = () => {
+    skipReturnFocusRef.current = true;
+    onClearAll();
+  };
+
   return (
     <aside
       ref={sliderRef}
@@ -180,7 +186,7 @@ export default function ActiveChatsSlider({
       <div className="p-4 border-t border-border">
         <button
           ref={clearAllButtonRef}
-          onClick={onClearAll}
+          onClick={handleClearAllClick}
           className="w-full text-sm text-destructive hover:underline transition-colors focus-ring-inset"
           aria-label="Clear all active chats"
         >
