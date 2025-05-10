@@ -42,21 +42,10 @@ export const CopyrightAttribution: React.FC<CopyrightAttributionProps> = ({
 }) => {
   if (!copyrightDetails) return null;
 
+  const isPublicDomain = copyrightDetails.license === "Public Domain";
+
   return (
     <>
-      {copyrightDetails.author},{' '}
-      <a
-        ref={secondLinkRef}
-        href={copyrightDetails.licenseUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="underline hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 inline-flex items-center"
-      >
-        {copyrightDetails.license}
-        <ExternalLinkIcon />
-        <span className="sr-only">(opens in new window)</span>
-      </a>
-      , via{' '}
       <a
         ref={firstLinkRef}
         href={copyrightDetails.sourceUrl}
@@ -64,10 +53,27 @@ export const CopyrightAttribution: React.FC<CopyrightAttributionProps> = ({
         rel="noopener noreferrer"
         className="underline hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 inline-flex items-center"
       >
-        {copyrightDetails.source}
+        {copyrightDetails.author}
         <ExternalLinkIcon />
         <span className="sr-only">(opens in new window)</span>
       </a>
+      ,{' '}
+      {isPublicDomain ? (
+        copyrightDetails.license
+      ) : (
+        <a
+          ref={secondLinkRef}
+          href={copyrightDetails.licenseUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 inline-flex items-center"
+        >
+          {copyrightDetails.license}
+          <ExternalLinkIcon />
+          <span className="sr-only">(opens in new window)</span>
+        </a>
+      )}
+      , via {copyrightDetails.source}
     </>
   );
 };
