@@ -114,19 +114,18 @@ export function ComposerImageViewer({
         />
       </button>
 
-      {(isMobile || allowModalOnDesktop) && (
-        <ImageModal
-          isOpen={imageModalOpen}
-          onClose={handleCloseModal}
-          imageSrc={composer.imageUrl}
-          composerName={composer.name}
-          composerId={composer.id}
-          nationality={composer.nationality}
-          birthYear={composer.birthYear}
-          deathYear={composer.deathYear}
-          returnFocusRef={buttonRef}
-        />
-      )}
+      {/* Always render the modal; its visibility is controlled by isOpen */}
+      <ImageModal
+        isOpen={imageModalOpen}
+        onClose={handleCloseModal}
+        imageSrc={composer.imageUrl}
+        composerName={composer.name}
+        composerId={composer.id}
+        nationality={composer.nationality}
+        birthYear={composer.birthYear}
+        deathYear={composer.deathYear}
+        returnFocusRef={buttonRef}
+      />
     </>
   );
 }
