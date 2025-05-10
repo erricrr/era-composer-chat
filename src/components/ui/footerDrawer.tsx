@@ -140,12 +140,12 @@ const FooterDrawer: React.FC<FooterDrawerProps> = ({ onTrigger, onVisibilityChan
           onOverlayClick={() => setIsOpen(false)}
           role="dialog"
           aria-modal="true"
-          aria-label="About Composer AI Chat"
+          aria-label="About Era Composer Chat"
         >
           <div className="flex flex-col max-h-[85vh]">
             <DrawerHeader className="pb-2">
               <DrawerTitle className="text-center text-lg font-semibold text-primary" tabIndex={0}>
-                Composer AI Chat
+                Era Composer Chat
               </DrawerTitle>
               <DrawerDescription className="text-center text-muted-foreground" tabIndex={0}>
                 An educational tool for exploring classical music through interactive conversations
