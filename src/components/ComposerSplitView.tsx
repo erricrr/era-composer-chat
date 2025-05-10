@@ -8,6 +8,7 @@ import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { MusicNoteDecoration } from '@/components/MusicNoteDecoration';
 import { ComposerImageViewer } from '@/components/ComposerImageViewer';
+import { CopyrightAttribution } from './CopyrightAttribution';
 
 // ContainedImageModal component
 function ContainedImageModal({
@@ -163,28 +164,11 @@ function ContainedImageModal({
           <div className="py-1 px-2 text-left bg-background dark:bg-secondary">
             <div className="text-xs text-muted-foreground">
               {copyrightDetails ? (
-                <>
-                  Image by {copyrightDetails.author} via{' '}
-                  <a
-                    ref={firstLinkRef}
-                    href={copyrightDetails.sourceUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="underline hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-                  >
-                    {copyrightDetails.source}
-                  </a>
-                  , licensed under{' '}
-                  <a
-                    ref={secondLinkRef}
-                    href={copyrightDetails.licenseUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="underline hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-                  >
-                    {copyrightDetails.license}
-                  </a>
-                </>
+                <CopyrightAttribution
+                  copyrightDetails={copyrightDetails}
+                  firstLinkRef={firstLinkRef}
+                  secondLinkRef={secondLinkRef}
+                />
               ) : null}
             </div>
           </div>

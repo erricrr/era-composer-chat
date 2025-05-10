@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { getCopyrightAttribution, CopyrightDetails } from '@/data/composers'; // Assuming this path is correct
+import { CopyrightAttribution } from './CopyrightAttribution';
 
 // --- Constants ---
 const ANIMATION_DURATION_MS = 150;
@@ -157,30 +158,10 @@ const ModalFooter: React.FC<ModalFooterProps> = ({
         tabIndex={0}
       >
         {copyrightDetails ? (
-          <>
-            Image by {copyrightDetails.author} via{' '}
-            <a
-              href={copyrightDetails.sourceUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-            >
-              {copyrightDetails.source}
-            </a>
-            , licensed under{' '}
-            <a
-              href={copyrightDetails.licenseUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-            >
-              {copyrightDetails.license}
-            </a>
-          </>
-        ) : (
-            // Provide a fallback or render nothing if copyright is missing
-             null
-        )}
+          <CopyrightAttribution
+            copyrightDetails={copyrightDetails}
+          />
+        ) : null}
       </span>
       {sourceUrl && (
         <a
