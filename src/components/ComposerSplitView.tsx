@@ -197,6 +197,8 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
   const [imageModalOpen, setImageModalOpen] = useState(false);
   // Add ref to image button for focus management
   const imageButtonRef = React.useRef<HTMLButtonElement>(null);
+  // Ref for header composer name focus management
+  const nameButtonRef = React.useRef<HTMLDivElement>(null);
 
   // IMPORTANT: This effect ensures the image modal is ALWAYS closed when the split view closes
   useEffect(() => {
@@ -244,29 +246,20 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
       </div>
 
       {/* Fixed Header - Now outside ScrollArea */}
-      <div
-        role="button"
-        tabIndex={0}
-        aria-label={`Close split view for ${composer.name}`}
-        onKeyDown={(e) => {
-          e.stopPropagation();
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            onClose();
-          }
-        }}
-        onClick={(e) => {
-          e.stopPropagation();
-          onClose();
-        }}
-        className="relative flex items-center justify-center border-b py-7 bg-secondary backdrop-blur-sm shadow-md z-10 flex-shrink-0 cursor-pointer group hover:bg-secondary/80 transition-colors w-full focus-ring-inset focus:rounded-none"
-      >
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <h2 className="font-bold font-serif text-lg md:text-xl pointer-events-none truncate max-w-[calc(100%-5rem)] px-4">
+      <div className="relative flex items-center justify-center border-b py-7 bg-secondary backdrop-blur-sm shadow-md z-10 flex-shrink-0 group hover:bg-secondary/80 transition-colors w-full">
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div
+            ref={nameButtonRef}
+            tabIndex={0}
+            onClick={(e) => {
+              e.stopPropagation();
+              onClose();
+            }}
+            className="cursor-pointer font-bold font-serif text-lg md:text-xl truncate max-w-[calc(100%-5rem)] px-4 transition-colors focus-ring-inset focus:rounded-none"
+          >
             {composer.name}
-          </h2>
+          </div>
         </div>
-
         <Button
           variant="ghost"
           size="icon"
