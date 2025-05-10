@@ -655,7 +655,7 @@ export function ComposerList({
                 </div>
               </div>
               <div className="relative flex-1 min-h-0">
-                <ScrollArea className="h-full">
+                <ScrollArea key={selectedComposer.id} className="h-full">
                   <div
                     tabIndex={0}
                     onFocus={(e) => e.currentTarget.scrollIntoView({ behavior: 'smooth', block: 'nearest' })}
