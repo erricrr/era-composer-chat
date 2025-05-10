@@ -53,7 +53,7 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
     'Baroque': 'Baroque',
     'Classical': 'Classical',
     'Romantic': 'Romantic',
-    '20th-21st Century': '20th-21st Century'
+    '20th Century': '20th Century'
   };
 
   // helper to render the era icon trigger + tooltip in one place

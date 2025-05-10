@@ -3,7 +3,7 @@
     {
       "id": "aaron-copland",
       "name": "Aaron Copland",
-      "era": ["20th-21st Century"],
+      "era": ["20th Century"],
       "birthYear": 1900,
       "deathYear": 1990,
       "shortBio": "Aaron Copland was an American composer, teacher, and conductor. He is known for creating a distinctly American style of classical music. His works often incorporate folk themes and open, spacious harmonies. Copland's ballet scores, such as 'Appalachian Spring,' 'Billy the Kid,' and 'Rodeo,' are celebrated for their evocation of American landscapes and experiences. He also composed significant works for film, including 'Of Mice and Men' and 'The Heiress,' for which he won an Academy Award.",
@@ -44,7 +44,7 @@
     {
       "id": "alexander-glazunov",
       "name": "Alexander Glazunov",
-      "era": ["Romantic", "20th-21st Century"],
+      "era": ["Romantic", "20th Century"],
       "birthYear": 1865,
       "deathYear": 1936,
       "shortBio": "Alexander Glazunov was a Russian composer, conductor, and music teacher. He bridged the late Russian Romantic period and early 20th-century music. Glazunov was director of the Saint Petersburg Conservatory for over two decades. His compositions include symphonies, ballets, and concertos. Glazunov's music blends Russian nationalism with Western influences.",
@@ -65,7 +65,7 @@
     {
       "id": "alma-mahler",
       "name": "Alma Mahler",
-      "era": ["Romantic", "20th-21st Century"],
+      "era": ["Romantic", "20th Century"],
       "birthYear": 1879,
       "deathYear": 1964,
       "shortBio": "Alma Mahler was an Austrian composer, author, and socialite. She was known for her relationships with prominent artists and her own musical talent. Alma composed songs and was a central figure in Viennese cultural life. Her compositions include nearly fifty songs, showcasing her musical prowess. Mahler's life and relationships have been the subject of much literary and artistic interest.",
@@ -192,7 +192,7 @@
     {
       "id": "aram-khachaturian",
       "name": "Aram Khachaturian",
-      "era": ["20th-21st Century"],
+      "era": ["20th Century"],
       "birthYear": 1903,
       "deathYear": 1978,
       "shortBio": "Aram Khachaturian was a Soviet Armenian composer and conductor. He is renowned for his vibrant orchestral works and ballets, notably 'Spartacus' and 'Gayane.' Khachaturian's 'Sabre Dance' is one of the most recognizable pieces of 20th-century classical music. His music is known for its rhythmic vitality, colorful orchestration, and incorporation of Armenian folk themes. Khachaturian was an influential teacher and cultural figure in the Soviet Union.",
@@ -234,7 +234,7 @@
     {
       "id": "arnold-schoenberg",
       "name": "Arnold Schoenberg",
-      "era": ["20th-21st Century"],
+      "era": ["20th Century"],
       "birthYear": 1874,
       "deathYear": 1951,
       "shortBio": "Arnold Schoenberg was an Austrian composer, music theorist, and painter. He is best known for developing the twelve-tone technique and atonal music. Schoenberg's innovations had a profound impact on 20th-century music. He was also a painter and associated with the Expressionist movement. Schoenberg's theoretical writings and teaching reshaped modern music.",
@@ -256,7 +256,7 @@
       "id": "bela-bartok",
       "name": "Béla Bartók",
       "searchableName": "Bela Bartok",
-      "era": ["20th-21st Century"],
+      "era": ["20th Century"],
       "birthYear": 1881,
       "deathYear": 1945,
       "shortBio": "Béla Bartók was a Hungarian composer, pianist, and ethnomusicologist. He is recognized for integrating folk music into classical compositions. Bartók is considered one of the most important composers of the 20th century. He composed six string quartets, the Concerto for Orchestra, and 'Music for Strings, Percussion and Celesta.' Bartók emigrated to the United States in 1940 due to World War II.",
@@ -277,7 +277,7 @@
     {
       "id": "benjamin-britten",
       "name": "Benjamin Britten",
-      "era": ["20th-21st Century"],
+      "era": ["20th Century"],
       "birthYear": 1913,
       "deathYear": 1976,
       "shortBio": "Benjamin Britten was an English composer, conductor, and pianist of the 20th century. He is renowned for his operas, vocal works, and orchestral compositions. Britten's music is celebrated for its emotional depth and technical brilliance. He was born in Lowestoft, England, and studied at the Royal College of Music in London. Britten co-founded the Aldeburgh Festival, which remains a significant event in the classical music calendar.",
@@ -341,7 +341,7 @@
     {
       "id": "carl-nielsen",
       "name": "Carl Nielsen",
-      "era": ["Romantic", "20th-21st Century"],
+      "era": ["Romantic", "20th Century"],
       "birthYear": 1865,
       "deathYear": 1931,
       "shortBio": "Carl Nielsen was a Danish composer, conductor, and violinist. He is regarded as Denmark’s most prominent composer. Nielsen is best known for his six symphonies and his innovative approach to musical form. He was born on the island of Funen, Denmark, to a musical but poor family. Nielsen began his career playing in a military band and later studied at the Royal Danish Academy of Music.",
@@ -446,7 +446,7 @@
     {
       "id": "claude-debussy",
       "name": "Claude Debussy",
-      "era": ["20th-21st Century"],
+      "era": ["20th Century"],
       "birthYear": 1862,
       "deathYear": 1918,
       "shortBio": "Claude Debussy was a French composer associated with Impressionist music. He is known for his innovative harmonies and evocative, atmospheric works. Debussy’s music marked a turning point in the transition from Romanticism to modernism. He was born in Saint-Germain-en-Laye, France, and studied at the Paris Conservatoire. Debussy’s works, such as ‘Clair de Lune,’ ‘La Mer,’ and ‘Prélude à l’après-midi d’un faune,’ are celebrated for their impressionistic qualities and subtle orchestration.",
@@ -509,7 +509,7 @@
     {
       "id": "dmitri-shostakovich",
       "name": "Dmitri Shostakovich",
-      "era": ["20th-21st Century"],
+      "era": ["20th Century"],
       "birthYear": 1906,
       "deathYear": 1975,
       "shortBio": "Dmitri Shostakovich was a Russian composer and pianist of the Soviet era. He is known for his symphonies, string quartets, and dramatic works. Shostakovich’s music reflects the turbulence and repression of 20th-century Russia. He was born in Saint Petersburg, Russia, and studied at the Petrograd Conservatory. Shostakovich gained early fame with his First Symphony, composed at age 19.",
@@ -572,7 +572,7 @@
     {
       "id": "erik-satie",
       "name": "Erik Satie",
-      "era": ["20th-21st Century"],
+      "era": ["20th Century"],
       "birthYear": 1866,
       "deathYear": 1925,
       "shortBio": "Erik Satie was a French composer who created influential minimalist works like 'Gymnopédies.' Despite little recognition during his lifetime, his innovative approach pioneered ambient music and influenced generations of composers. Satie lived from 1866 to 1925, embracing surrealism and leaving behind a legacy that grew significantly after his death. He was born in Honfleur, France, and studied at the Paris Conservatoire.",
@@ -783,7 +783,7 @@
     {
       "id": "gershwin",
       "name": "George Gershwin",
-      "era": ["20th-21st Century"],
+      "era": ["20th Century"],
       "birthYear": 1898,
       "deathYear": 1937,
       "shortBio": "George Gershwin was an American composer and pianist whose compositions spanned both popular and classical genres. Among his best-known works are the orchestral compositions 'Rhapsody in Blue' (1924) and 'An American in Paris' (1928), the songs 'Swanee' (1919) and 'Fascinating Rhythm' (1924), the jazz standards 'I Got Rhythm' (1930) and 'Embraceable You' (1930), and the opera 'Porgy and Bess' (1935), which gave birth to the hit 'Summertime.' Gershwin studied piano under Charles Hambitzer and composition with Rubin Goldmark, Henry Cowell, and Joseph Brody.",
@@ -846,7 +846,7 @@
     {
       "id": "gustav-mahler",
       "name": "Gustav Mahler",
-      "era": ["Romantic", "20th-21st Century"],
+      "era": ["Romantic", "20th Century"],
       "birthYear": 1860,
       "deathYear": 1911,
       "shortBio": "Gustav Mahler was an Austrian composer and conductor of the late Romantic and early modern eras. He is known for his expansive symphonies and deeply expressive song cycles. Mahler’s music bridges the 19th and 20th centuries with innovation and emotional depth. He was born in Bohemia, then part of the Austrian Empire. Mahler studied at the Vienna Conservatory and became one of the leading conductors of his time.",
@@ -930,7 +930,7 @@
     {
       "id": "iannis-xenakis",
       "name": "Iannis Xenakis",
-      "era": ["20th-21st Century"],
+      "era": ["20th Century"],
       "birthYear": 1922,
       "deathYear": 2001,
       "shortBio": "Iannis Xenakis was a Greek-French composer, architect, and music theorist. He pioneered the use of mathematics and architecture in musical composition. Xenakis's innovative works have had a lasting impact on contemporary music. He was born in Braila, Romania, and studied in Athens and Paris. Xenakis fought in the Greek Resistance during World War II before moving to France. He integrated mathematical concepts, such as stochastic processes, into his music.",
@@ -972,7 +972,7 @@
     {
       "id": "igor-stravinsky",
       "name": "Igor Stravinsky",
-      "era": ["20th-21st Century"],
+      "era": ["20th Century"],
       "birthYear": 1882,
       "deathYear": 1971,
       "shortBio": "Igor Stravinsky was a Russian-born composer, pianist, and conductor. He is renowned for his revolutionary ballets and innovative musical styles. Stravinsky's work transformed 20th-century music and continues to influence composers today. He was born in Russia and later became a French and then American citizen. Stravinsky gained international fame with ballets like 'The Firebird,' 'Petrushka,' and 'The Rite of Spring.' The premiere of 'The Rite of Spring' in 1913 caused a sensation with its bold rhythms and harmonies.",
@@ -1035,7 +1035,7 @@
     {
       "id": "cage",
       "name": "John Cage",
-      "era": ["20th-21st Century"],
+      "era": ["20th Century"],
       "birthYear": 1912,
       "deathYear": 1992,
       "shortBio": "John Cage was an American composer and pioneer of experimental music. He is known for his innovative use of chance and non-traditional instruments. Cage's ideas challenged the boundaries of what music could be. He was born in Los Angeles, California, and studied music with Arnold Schoenberg. Cage pioneered indeterminacy in music, using chance operations in composition and performance. His best-known work, '4′33″,' consists of performers not playing their instruments, highlighting ambient sound.",
@@ -1160,30 +1160,9 @@
       ]
     },
     {
-      "id": "saariaho",
-      "name": "Kaija Saariaho",
-      "era": ["20th-21st Century"],
-      "birthYear": 1952,
-      "deathYear": 2023,
-      "shortBio": "Kaija Saariaho was a Finnish composer renowned for her innovative blend of acoustic and electronic music. Her works are celebrated for their rich textures and spectral soundscapes. Saariaho was a leading figure in contemporary classical music. She was born in Helsinki, Finland, and studied in Helsinki, Freiburg, and Paris, where she became associated with the spectralist movement. Saariaho was acclaimed for her unique timbral explorations and use of technology in composition.",
-      "longBio": "Kaija Saariaho was a pioneering Finnish composer whose music bridges the worlds of acoustic and electronic sound. She studied in Helsinki, Freiburg, and Paris, where she became associated with the spectralist movement. Saariaho was acclaimed for her unique timbral explorations and use of technology in composition. Her major works include the operas 'L’Amour de loin,' 'Adriana Mater,' and 'Only the Sound Remains.' She also composed orchestral, chamber, and vocal music, often collaborating with leading performers and ensembles. Saariaho received numerous awards, including the Grawemeyer Award and the Polar Music Prize. Her legacy endures as one of the most influential voices in 21st-century music.",
-      "nationality": "Finnish",
-      "location": "Paris, France",
-      "famousWorks": [
-        "L’Amour de loin",
-        "Graal théâtre",
-        "D'Om le Vrai Sens"
-      ],
-      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/2/2b/Kaija_Saariaho_in_2022.png",
-      "notableQuotes": [
-        "Music is the art of thinking with sounds.",
-        "The role of the composer is to make the complex simple and the simple complex."
-      ]
-    },
-    {
       "id": "leonard-bernstein",
       "name": "Leonard Bernstein",
-      "era": ["20th-21st Century"],
+      "era": ["20th Century"],
       "birthYear": 1918,
       "deathYear": 1990,
       "shortBio": "Leonard Bernstein was an American composer, conductor, pianist, and educator. He bridged classical and popular music with works like 'West Side Story.' Bernstein was a charismatic figure in 20th-century music. He was born in Lawrence, Massachusetts, and studied at Harvard University and the Curtis Institute of Music. Bernstein served as music director of the New York Philharmonic and conducted major orchestras worldwide. He composed symphonies, musicals, ballets, and film scores, including 'West Side Story' and 'Candide.'",
@@ -1268,7 +1247,7 @@
     {
       "id": "manuel-de-falla",
       "name": "Manuel de Falla",
-      "era": ["20th-21st Century"],
+      "era": ["20th Century"],
       "birthYear": 1876,
       "deathYear": 1946,
       "shortBio": "Manuel de Falla was a Spanish composer and one of the most important musicians of early 20th-century Spain. He blended Spanish folk traditions, especially Andalusian flamenco, with classical forms. Falla's works are celebrated for their vibrant rhythms and evocative melodies. He was born in Cádiz, Spain, and studied in Madrid and Paris, where he met Debussy and Ravel. Falla's major works include 'The Three-Cornered Hat,' 'Nights in the Gardens of Spain,' and 'El Amor Brujo.'",
@@ -1310,7 +1289,7 @@
     {
       "id": "maurice-ravel",
       "name": "Maurice Ravel",
-      "era": ["20th-21st Century"],
+      "era": ["20th Century"],
       "birthYear": 1875,
       "deathYear": 1937,
       "shortBio": "Maurice Ravel was a French composer, pianist, and conductor known for his impressionistic style. He is celebrated for his innovative harmonies and masterful orchestration. Ravel's most famous work is the orchestral piece 'Boléro.' He was born in Ciboure, France, and studied at the Paris Conservatoire. Ravel's works include orchestral pieces, piano music, chamber music, and operas. 'Boléro,' premiered in 1928, is his most popular composition.",
@@ -1374,7 +1353,7 @@
       "id": "reinhold-gliere",
       "name": "Reinhold Gliere",
       "searchableName": "Reinhold Gliere",
-      "era": ["20th-21st Century"],
+      "era": ["20th Century"],
       "birthYear": 1875,
       "deathYear": 1956,
       "shortBio": "Reinhold Gliere was a Soviet composer of German-Polish descent. He is known for his symphonies, ballets, and incorporation of folk elements. Gliere taught many notable Russian composers. He was born in Kiev, Ukraine, and studied at the Moscow Conservatory. Gliere's music blends Romantic style with Russian and Ukrainian folk influences. His major works include the ballet 'The Red Poppy' and Symphony No. 3 'Ilya Muromets.'",
@@ -1416,7 +1395,7 @@
     {
       "id": "richard-strauss",
       "name": "Richard Strauss",
-      "era": ["Romantic", "20th-21st Century"],
+      "era": ["Romantic", "20th Century"],
       "birthYear": 1864,
       "deathYear": 1949,
       "shortBio": "Richard Strauss was a German composer and conductor active during the late Romantic and early modern eras. He is renowned for his tone poems and operas. Strauss's music is known for its rich orchestration and expressive power. He was born in Munich, Germany, and composed innovative tone poems such as 'Also sprach Zarathustra' and 'Don Juan.' Strauss's operas, including 'Salome' and 'Der Rosenkavalier,' expanded the expressive range of the genre.",
@@ -1479,7 +1458,7 @@
     {
       "id": "ruth-crawford-seeger",
       "name": "Ruth Crawford Seeger",
-      "era": ["20th-21st Century"],
+      "era": ["20th Century"],
       "birthYear": 1901,
       "deathYear": 1953,
       "shortBio": "Ruth Crawford Seeger was an American modernist composer and folk music specialist. She was the first woman to receive a Guggenheim Fellowship in composition. Crawford Seeger made significant contributions to American music scholarship. She was born in East Liverpool, Ohio, and was associated with the 'ultramodernist' movement in early 20th-century American music. Crawford Seeger composed innovative works for piano, chamber ensembles, and voice.",
@@ -1521,7 +1500,7 @@
     {
       "id": "sergei-prokofiev",
       "name": "Sergei Prokofiev",
-      "era": ["20th-21st Century"],
+      "era": ["20th Century"],
       "birthYear": 1891,
       "deathYear": 1953,
       "shortBio": "Sergei Prokofiev was a Russian composer, pianist, and conductor of the 20th century. He is celebrated for his innovative melodies, harmonies, and orchestration. Prokofiev's works include ballets, symphonies, and the beloved 'Peter and the Wolf.' He was born in Sontsovka, Ukraine, and studied at the St. Petersburg Conservatory. Prokofiev composed across many genres, including symphonies, concertos, ballets, and operas. His best-known works include 'Romeo and Juliet,' 'Peter and the Wolf,' and the 'Classical Symphony.'",
@@ -1542,7 +1521,7 @@
     {
       "id": "sergei-rachmaninoff",
       "name": "Sergei Rachmaninoff",
-      "era": ["Romantic", "20th-21st Century"],
+      "era": ["Romantic", "20th Century"],
       "birthYear": 1873,
       "deathYear": 1943,
       "shortBio": "Sergei Rachmaninoff was a Russian composer, virtuoso pianist, and conductor of the late Romantic era. He is renowned for his sweeping melodies and expressive piano works. Rachmaninoff's music bridges Russian Romanticism and early 20th-century styles. He was born in Semyonovo, Russia, and studied at the Moscow Conservatory. Rachmaninoff achieved early success with his piano and orchestral works. He emigrated to the United States, where he continued composing and performing.",

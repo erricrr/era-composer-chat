@@ -19,7 +19,7 @@ export enum Era {
   Baroque = "Baroque",
   Classical = "Classical",
   Romantic = "Romantic",
-  Modern = "20th-21st Century"
+  Modern = "20th Century"
 }
 
 export const eras = [
@@ -44,8 +44,8 @@ export const eras = [
   {
     id: "modern",
     name: Era.Modern,
-    period: "1900-Present",
-    description: "From Impressionism and Neoclassicism to Serialism, Minimalism, and beyond, this era embraces innovation and diversity. Composers challenge traditional tonality and form, explore new textures, and expand sonic palettes with electronics, chance operations, and global influences."
+    period: "1900-2000",
+    description: "Beginning with Impressionism's dreamy soundscapes, the century saw composers break traditional rules, experiment with unusual sounds, and draw inspiration globally. New technologies transformed how music was created and heard, producing everything from atmospheric pieces to bold experimental works unprecedented in earlier periods."
   }
 ];
 
