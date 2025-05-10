@@ -97,7 +97,7 @@ const ModalHeader: React.FC<ModalHeaderProps> = ({
           e.stopPropagation(); // Prevent header click from triggering onClose twice
           onClose();
         }}
-        className="p-1 rounded-full transition-opacity duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+        className="p-1 rounded-full transition-colors duration-200 hover:bg-muted group-hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
         aria-label="Close modal"
       >
         {/* Close Icon SVG */}
