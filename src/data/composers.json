@@ -593,7 +593,7 @@
     {
       "id": "fanny-mendelssohn",
       "name": "Fanny Mendelssohn",
-      "era": ["Romantic"],
+      "era": ["Classical", "Romantic"],
       "birthYear": 1805,
       "deathYear": 1847,
       "shortBio": "Fanny Mendelssohn was a German composer and pianist of the Romantic era. She was the sister of Felix Mendelssohn and composed over 460 pieces, including songs, piano works, and chamber music. Despite societal constraints, she became a significant musical figure in her own right. She was born in Hamburg, Germany, and was a child prodigy on the piano.",
