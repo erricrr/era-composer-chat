@@ -154,7 +154,7 @@ export default function ActiveChatsSlider({
       {/* Chat limit indicator */}
       <div
         tabIndex={0}
-        className="px-4 py-2 bg-muted/50 text-xs border-b border-border flex items-center justify-between focus-ring-inset"
+        className="px-4 py-2 bg-muted/50 text-xs border-b border-border flex items-center justify-between focus-ring-inset focus:rounded-none"
       >
         <div className="flex items-center gap-1">
           <AlertTriangle className="h-3 w-3 dark:text-amber-500 text-amber-700" />
@@ -209,7 +209,7 @@ export default function ActiveChatsSlider({
         <button
           ref={clearAllButtonRef}
           onClick={handleClearAllClick}
-          className="w-full text-sm text-destructive hover:underline transition-colors focus-ring-inset"
+          className="w-full text-sm text-destructive hover:underline transition-colors focus-ring-inset focus:rounded-none"
           aria-label="Clear all active chats"
         >
           Clear All
