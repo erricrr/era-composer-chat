@@ -160,6 +160,13 @@ const Index = () => {
     }
   }, [pendingScrollComposerId, selectedComposer, selectedEra]);
 
+  // On initial mount, if we've restored a composer from localStorage, scroll it into view
+  useEffect(() => {
+    if (selectedComposer) {
+      setShouldScrollToComposer(true);
+    }
+  }, []);
+
   const handleSelectEra = useCallback((newEra: Era) => {
     if (newEra !== selectedEra) {
       console.log(`[Index] handleSelectEra called for ${newEra}`);
