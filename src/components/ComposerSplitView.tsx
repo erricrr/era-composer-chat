@@ -143,7 +143,7 @@ function ContainedImageModal({
           variant="ghost"
           size="icon"
           onClick={onClose}
-          className="absolute right-2 top-2 z-20 h-8 w-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+          className="absolute right-2 top-2 z-20 h-11 w-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
           aria-label="Close image view"
         >
           <X className="h-4 w-4" />
@@ -247,7 +247,7 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
 
       {/* Fixed Header - Now outside ScrollArea */}
       <div
-        className="relative flex items-center justify-center border-b py-7 bg-secondary backdrop-blur-sm shadow-md z-10 flex-shrink-0 group hover:bg-secondary/80 transition-colors w-full cursor-pointer focus-ring-inset focus:rounded-none"
+        className="relative flex items-center justify-center border-b py-7 bg-secondary backdrop-blur-sm shadow-md z-10 mt-1 flex-shrink-0 group hover:bg-secondary/80 transition-colors w-full cursor-pointer focus-ring-inset focus:rounded-none"
         tabIndex={0}
         role="button"
         aria-label="Close split view"
@@ -282,7 +282,7 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
             e.stopPropagation();
             onClose();
           }}
-          className="absolute right-4 rounded-full hover:bg-primary/20 transition-all duration-200 group-hover:bg-primary/20 w-8 h-8 text-foreground/70 hover:text-foreground/90 z-10"
+          className="absolute right-4 rounded-full hover:bg-primary/20 transition-all duration-200 group-hover:bg-primary/20 w-11 h-11 flex items-center justify-center text-foreground/70 hover:text-foreground/90 z-10"
         >
           <X className="h-4 w-4" />
         </Button>

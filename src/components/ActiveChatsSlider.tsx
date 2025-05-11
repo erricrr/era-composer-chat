@@ -39,7 +39,7 @@ export default function ActiveChatsSlider({
     if (isOpen) {
       // Focus the close button when the slider opens
       setTimeout(() => {
-        headerButtonRef.current?.focus();
+        closeButtonRef.current?.focus();
       }, 100);
     } else {
       // Return focus unless skipped (e.g., closed via click)
@@ -117,37 +117,25 @@ export default function ActiveChatsSlider({
     <aside
       ref={sliderRef}
       className={`fixed top-10 bottom-0 right-0 w-64 z-60 bg-popover border-l border-t border-border shadow-lg transform transition-transform duration-200 ease-out flex flex-col ${isOpen ? 'translate-x-0 pointer-events-auto' : 'translate-x-full pointer-events-none'}`}
-      role="dialog"
-      aria-modal="true"
       aria-label="Active Chats"
     >
       <div className="border-b border-border">
-        <div
-          ref={headerButtonRef}
-          tabIndex={0}
-          role="button"
-          aria-label="Close active chats"
-          onClick={handleCloseClick}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              onClose();
-            }
-          }}
-          className="group flex items-center justify-between w-full p-4 cursor-pointer focus-ring-inset focus:rounded-none"
-        >
-          <div className="text-base font-semibold transition-colors">
-            Active Chats
-          </div>
+        <div className="group flex items-center justify-between w-full p-4">
           <button
             ref={closeButtonRef}
             type="button"
             onClick={handleCloseClick}
-            className="p-1 rounded-full transition-colors duration-200 hover:bg-muted-foreground/25 group-hover:bg-muted-foreground/25"
+            className="order-1 w-11 h-11 flex items-center justify-center rounded-full transition-colors duration-200 hover:bg-muted-foreground/25 focus-ring-inset"
             aria-label="Close active chats"
           >
             <X className="w-4 h-4" />
           </button>
+          <div
+            tabIndex={0}
+            className="order-0 text-base font-semibold transition-colors focus-ring-inset focus:rounded-none"
+          >
+            Active Chats
+          </div>
         </div>
       </div>
 
@@ -189,7 +177,7 @@ export default function ActiveChatsSlider({
                     <button
                       type="button"
                       onClick={(e) => handleRemoveChat(composer, e)}
-                      className="p-2 rounded hover:bg-muted transition-colors focus-ring-inset"
+                      className="w-11 h-11 flex items-center justify-center rounded-full hover:bg-muted transition-colors focus-ring-inset"
                       aria-label={`Remove chat with ${composer.name}`}
                     >
                       <MessageSquareOff className="w-4 h-4 text-destructive" />

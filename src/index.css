@@ -146,7 +146,7 @@
 
   .fixed-header {
     @apply fixed top-0 left-0 right-0 bg-background z-70 flex items-center;
-    height: 2.5rem;
+    height: 2.75rem;
     transform: translateY(-100%);
   }
 

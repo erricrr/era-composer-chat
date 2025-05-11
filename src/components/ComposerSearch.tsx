@@ -317,13 +317,22 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
 
   return (
     <div className="relative flex items-center md:w-[200px]" ref={containerRef}>
+      {/* Live region to announce result counts */}
+      <div aria-live="polite" aria-atomic="true" className="sr-only">
+        {hasSearched && (
+          filteredComposers.length > 0
+            ? `${filteredComposers.length} composer${filteredComposers.length > 1 ? 's' : ''} found.`
+            : 'No composers found.'
+        )}
+      </div>
+
       {/* Mobile-Only Search Icon Button with conditional tooltip */}
       {!isMobileSearchActive && (
         <Tooltip>
           <TooltipTrigger asChild>
             <button
               type="button"
-              className="p-2 rounded-md md:hidden hover:bg-muted transition-colors duration-200 flex-shrink-0 flex focus-ring-inset"
+              className="w-11 h-11 flex items-center justify-center rounded-md md:hidden hover:bg-muted transition-colors duration-200 focus-ring-inset"
               onClick={(e) => {
                 e.stopPropagation();
                 setTimeout(activateMobileSearch, 10);
@@ -382,7 +391,7 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
           {(searchQuery || (isMobileSearchActive && isMobileView)) && (
             <button
               onClick={handleClear}
-              className="p-1 hover:bg-secondary/30 rounded-full text-muted-foreground/60 hover:text-muted-foreground flex items-center gap-1"
+              className="w-11 h-11 flex items-center justify-center rounded-full hover:bg-secondary/30 text-muted-foreground/60 hover:text-muted-foreground focus-ring-inset"
               type="button"
               aria-label={searchQuery ? "Clear search" : "Close search"}
               data-testid="search-clear-button"

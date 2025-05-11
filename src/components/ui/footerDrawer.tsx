@@ -124,7 +124,7 @@ const FooterDrawer: React.FC<FooterDrawerProps> = ({ onTrigger, onVisibilityChan
       <button
         ref={infoButtonRef}
         type="button"
-        className="py-1.5 px-2.5 rounded-md hover:bg-muted transition-colors duration-200 text-muted-foreground hover:text-muted-foreground focus-ring-inset"
+        className="w-11 h-11 flex items-center justify-center rounded-md hover:bg-muted transition-colors duration-200 text-muted-foreground hover:text-muted-foreground focus-ring-inset"
         onClick={toggleDrawer}
         aria-label="About"
         aria-expanded={isOpen}

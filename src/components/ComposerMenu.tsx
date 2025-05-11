@@ -104,6 +104,8 @@ export function ComposerMenu({
         <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-3xl font-bold text-center font-serif mt-0 pb-4 mx-4 sm:mx-[30px]">
           {selectedEra} Era Composers
         </h1>
+        {/* Hidden h2 for accessibility to maintain sequential heading order */}
+        <h2 className="sr-only">Composer selection menu</h2>
       </div>
 
       <Timeline selectedEra={selectedEra} onSelectEra={handleEraChange} />

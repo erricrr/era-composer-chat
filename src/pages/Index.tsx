@@ -420,7 +420,7 @@ const Index = () => {
     <TooltipProvider>
       <div className="min-h-screen overflow-hidden bg-background">
         {/* Fixed Header */}
-        <div className="fixed-header" style={{ position: 'relative', zIndex: 70 }}>
+        <header className="fixed-header" style={{ position: 'relative', zIndex: 70 }}>
           <div className="container mx-auto px-2 flex items-center justify-between h-full">
             {/* Left Side: Menu Toggle Area */}
             <HeaderIcon tooltip={isMenuOpen ? 'Close menu' : 'Open menu'}>
@@ -429,20 +429,18 @@ const Index = () => {
                 onClick={toggleMenu}
                 aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
                 aria-expanded={isMenuOpen}
-                className="flex items-center group focus-ring-inset"
+                className="w-11 h-11 flex items-center justify-center rounded-md hover:bg-muted transition-colors duration-200 focus-ring-inset"
               >
-                <div className="flex-shrink-0 p-2 rounded-md transition-colors duration-200 group-hover:bg-muted">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5 transform transition-transform duration-500 ease-out"
-                    style={{ transform: isMenuOpen ? 'rotate(90deg)' : 'rotate(0deg)' }}
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
-                  </svg>
-                </div>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 transform transition-transform duration-500 ease-out"
+                  style={{ transform: isMenuOpen ? 'rotate(90deg)' : 'rotate(0deg)' }}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
+                </svg>
               </button>
             </HeaderIcon>
 
@@ -465,7 +463,7 @@ const Index = () => {
                   onClick={(e) => { e.stopPropagation(); setIsActiveChatsOpen(prev => !prev); }}
                   aria-label="Active Chats"
                   aria-expanded={isActiveChatsOpen}
-                  className="p-2 rounded-md hover:bg-muted transition-colors duration-200 relative z-[60] focus-ring-inset"
+                  className="w-11 h-11 flex items-center justify-center rounded-md hover:bg-muted transition-colors duration-200 relative z-[60] focus-ring-inset"
                 >
                   <MessageSquare className={`h-5 w-5 transform transition-transform ${isActiveChatsOpen ? 'rotate-180' : ''}`} />
                 </button>
@@ -517,9 +515,9 @@ const Index = () => {
               </HeaderIcon>
             </div>
           </div>
-        </div>
+        </header>
 
-        <main className="pt-10">
+        <main className="pt-11">
           {/* Composer Selection Menu - Only render when open to remove from tab order when closed */}
           {isMenuMounted && (
             <aside
