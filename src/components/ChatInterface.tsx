@@ -717,7 +717,7 @@ export function ChatInterface({
               <p>Start a conversation with {getLastName(composer.name)}. Ask them about their music.</p>
             </div>
           ) : (
-            <div className="space-y-4 w-full pr-7">
+            <div className="space-y-4 w-full pr-7" aria-live="polite" aria-relevant="additions">
               {currentMessages.map((message: Message) => (
                 <div
                   key={message.id}
@@ -749,6 +749,8 @@ export function ChatInterface({
           <div className="relative flex gap-2">
             <div key={`input-${isSplitViewOpen}`} className="flex-1 relative">
               <textarea
+                id="chat-input"
+                aria-label="Type your message"
                 key={`textarea-${isSplitViewOpen}`}
                 ref={textareaRef}
                 value={inputMessage}

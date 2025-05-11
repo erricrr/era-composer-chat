@@ -96,9 +96,7 @@ export function ComposerImageViewer({
         type="button"
         role="button"
         aria-label={`View image of ${composer.name}`}
-        className={`${sizeClasses[size]} rounded-full overflow-hidden border-2 border-primary flex-shrink-0 cursor-pointer transition-transform duration-300 ease-in-out appearance-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:z-10 relative ${
-          size !== 'sm' ? 'hover:scale-105' : ''
-        } ${className}`}
+        className={`${sizeClasses[size]} rounded-full overflow-hidden border-2 border-primary flex-shrink-0 cursor-pointer transition-transform duration-300 ease-in-out appearance-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:z-10 hover:scale-105 ${className}`}
         onClick={handleClick}
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
@@ -110,7 +108,7 @@ export function ComposerImageViewer({
         <PortraitImage
           composerId={composer.id}
           src={composer.imageUrl}
-          alt={composer.name}
+          alt={`Portrait of ${composer.name}`}
         />
       </button>
 

@@ -303,7 +303,7 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
                 ref={imageButtonRef}
                 type="button"
                 onClick={handleOpenImageModal}
-                className={`appearance-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:z-10 relative cursor-pointer rounded-full overflow-hidden border-2 border-primary flex-shrink-0 hover:opacity-95 hover:border-opacity-80 ${
+                className={`transform transition-transform duration-200 hover:scale-105 appearance-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:z-10 relative cursor-pointer rounded-full overflow-hidden border-2 border-primary flex-shrink-0 ${
                   isMobile
                     ? isActiveChatsOpen
                       ? 'w-32 h-32'

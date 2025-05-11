@@ -371,7 +371,7 @@ export function ImageModal({
                 onClose={onClose}
             />
             <div className="flex-grow overflow-auto">
-                <ModalImageWithRef imageSrc={imageSrc} altText={composerName} />
+                <ModalImageWithRef imageSrc={imageSrc} altText={`Portrait of ${composerName}`} />
             </div>
             <ModalFooter
                 caption={caption}
