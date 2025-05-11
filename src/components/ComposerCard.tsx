@@ -23,7 +23,7 @@ export function ComposerCard({ composer, onClick, isSelected, compact = false, t
         focus:outline-none focus-visible:ring-inset focus-visible:ring-2 focus-visible:ring-primary
         ${isSelected
           ? 'bg-background'
-          : 'bg-secondary hover:bg-secondary/70'
+          : 'bg-primary-foreground hover:bg-primary-foreground/70'
         }
       `}
     >
