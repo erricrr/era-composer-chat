@@ -637,6 +637,7 @@ export function ComposerList({
                     aria-label={`Composer details: ${selectedComposer.name}, ${selectedComposer.nationality}, ${selectedComposer.birthYear}-${selectedComposer.deathYear || 'present'}`}
                     className="focus:outline-none focus-visible:ring-2 focus-visible:ring-primary flex-1 min-w-0"
                   >
+                    <h2 className="sr-only">Composer Details</h2>
                     <h3 className="text-xl md:text-2xl font-bold font-serif break-words">
                       {selectedComposer.name}
                     </h3>

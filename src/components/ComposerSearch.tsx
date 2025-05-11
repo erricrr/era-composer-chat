@@ -298,17 +298,30 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
 
   // Track pointer vs keyboard interaction to suppress focus ring on click
   useEffect(() => {
-    const handlePointerDown = () => setPointerPressed(true);
-    const handleKeyDownGlobal = (e: KeyboardEvent) => {
-      if (e.key === 'Tab') setPointerPressed(false);
+    const handlePointerDown = () => {
+      setPointerPressed(true);
+      // Add a class to the document body to indicate pointer interaction
+      document.body.classList.add('using-mouse');
     };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Tab') {
+        setPointerPressed(false);
+        // Remove the class when keyboard navigation is detected
+        document.body.classList.remove('using-mouse');
+      }
+    };
+
     document.addEventListener('mousedown', handlePointerDown);
     document.addEventListener('touchstart', handlePointerDown);
-    document.addEventListener('keydown', handleKeyDownGlobal);
+    document.addEventListener('keydown', handleKeyDown);
+
     return () => {
       document.removeEventListener('mousedown', handlePointerDown);
       document.removeEventListener('touchstart', handlePointerDown);
-      document.removeEventListener('keydown', handleKeyDownGlobal);
+      document.removeEventListener('keydown', handleKeyDown);
+      // Clean up class on unmount
+      document.body.classList.remove('using-mouse');
     };
   }, []);
 
@@ -332,7 +345,9 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
           <TooltipTrigger asChild>
             <button
               type="button"
-              className="w-11 h-11 flex items-center justify-center rounded-md md:hidden hover:bg-muted transition-colors duration-200 focus-ring-inset"
+              onMouseDown={() => document.body.classList.add('using-mouse')}
+              style={{outline: 'none'}}
+              className="w-11 h-11 flex items-center justify-center rounded-md md:hidden hover:bg-muted transition-colors duration-200 focus:outline-0 focus:ring-0 focus:shadow-none"
               onClick={(e) => {
                 e.stopPropagation();
                 setTimeout(activateMobileSearch, 10);
@@ -351,7 +366,7 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
       {/* Search Input Container */}
       <div
         className={cn(
-          "relative overflow-visible bg-background focus-within:bg-primary/5 rounded-full transition-all duration-200",
+          "relative overflow-visible rounded-full border border-border transition-all duration-200",
           isMobileSearchActive ? "w-full" : "hidden",
           "md:block md:w-full"
         )}
@@ -359,39 +374,54 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
       >
         {/* Input with icons */}
         <div className="flex items-center px-3 rounded-full">
-          <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
-          <input
-            ref={inputRef}
-            type="text"
-            placeholder="Search all composers..."
-            className="flex-1 py-2 bg-transparent text-xs outline-none"
-            value={searchQuery}
-            onChange={(e) => handleInputChange(e.target.value)}
-            onKeyDown={handleKeyDown}
-            onFocus={(e) => {
-              // Suppress ring on pointer focus
-              if (pointerPressed) {
-                e.currentTarget.style.boxShadow = 'none';
-              }
-              // Handle opening results
-              if (searchQuery.trim().length > 0) {
-                performFilter(searchQuery);
-                setIsOpen(true);
-              }
-            }}
-            onBlur={(e) => {
-              // Restore default CSS behavior
-              e.currentTarget.style.removeProperty('box-shadow');
-            }}
-            aria-label="Search composers"
-          />
+          <div className="relative w-full">
+            <input
+              ref={inputRef}
+              type="text"
+              value={searchQuery}
+              onChange={(e) => handleInputChange(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Search composers..."
+              onMouseDown={() => document.body.classList.add('using-mouse')}
+              style={{outline: 'none'}}
+              className={cn(
+                "w-full px-4 py-2 pl-8 pr-8 text-sm bg-transparent placeholder:text-muted-foreground border-none",
+                "transition-colors duration-200",
+                "focus:outline-0 focus:shadow-none focus:scale-100 focus:ring-0"
+              )}
+              aria-label="Search for composers"
+              aria-expanded={isOpen}
+              aria-controls="search-results"
+              aria-autocomplete="list"
+              aria-activedescendant={activeResultIndex >= 0 ? `search-result-${activeResultIndex}` : undefined}
+            />
+
+            {/* Search results announcement */}
+            <div
+              className="sr-only"
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              {hasSearched && (
+                filteredComposers.length > 0
+                  ? `Found ${filteredComposers.length} composer${filteredComposers.length !== 1 ? 's' : ''} matching "${searchQuery}".`
+                  : `No composers found matching "${searchQuery}".`
+              )}
+            </div>
+
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <Search className="h-4 w-4 text-muted-foreground" />
+            </div>
+          </div>
           {/* Show X button in these cases:
               1. On ANY screen size when there's a search query
               2. OR on mobile only when the mobile search is active (to close/hide the search) */}
           {(searchQuery || (isMobileSearchActive && isMobileView)) && (
             <button
               onClick={handleClear}
-              className="w-11 h-11 flex items-center justify-center rounded-full hover:bg-secondary/30 text-muted-foreground/60 hover:text-muted-foreground focus-ring-inset"
+              onMouseDown={() => document.body.classList.add('using-mouse')}
+              style={{outline: 'none'}}
+              className="flex items-center justify-center rounded-full hover:bg-secondary/30 text-muted-foreground/60 hover:text-muted-foreground w-8 h-8 focus:outline-0 focus:ring-0 focus:shadow-none"
               type="button"
               aria-label={searchQuery ? "Clear search" : "Close search"}
               data-testid="search-clear-button"
@@ -401,11 +431,12 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
           )}
         </div>
 
-        {/* Results dropdown */}
-        {shouldShowResults && (
+        {/* Results dropdown - only render when needed */}
+        {shouldShowResults && isOpen && (
           <div
             className="absolute top-[calc(100%+4px)] left-0 right-0 w-full"
             style={{ zIndex: 65 }}
+            id="search-results"
           >
             <div className="rounded-lg border border-border bg-card shadow-md">
               <div className="max-h-[200px] overflow-y-auto p-1">

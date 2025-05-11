@@ -59,7 +59,7 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
   // helper to render the era icon trigger + tooltip in one place
   const renderIcon = (era: typeof eras[number]) => {
     const isSelectedIcon = selectedEra === era.name;
-    const baseButtonClasses = 'w-6 h-6 rounded-full flex items-center justify-center transition-all duration-300 ease-out relative before:absolute before:w-8 before:h-8 before:bg-background before:-z-10 before:rounded-full';
+    const baseButtonClasses = 'a11y-touch-target w-11 h-11 rounded-full transition-all duration-300 ease-out relative';
     const iconClass = cn(
       baseButtonClasses,
       isSelectedIcon
@@ -70,7 +70,7 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
       <button
         onClick={e => { e.stopPropagation(); handleIconClick(era.id); }}
         className={iconClass}
-        aria-label={`More info about ${era.name}`}
+        aria-label={`More info about ${era.name} era`}
       >
         <span className="text-xs font-medium">?</span>
       </button>

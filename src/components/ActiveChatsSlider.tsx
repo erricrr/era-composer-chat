@@ -118,6 +118,8 @@ export default function ActiveChatsSlider({
       ref={sliderRef}
       className={`fixed top-10 bottom-0 right-0 w-64 z-60 bg-primary-foreground border-l border-t border-border shadow-lg transform transition-transform duration-200 ease-out flex flex-col ${isOpen ? 'translate-x-0 pointer-events-auto' : 'translate-x-full pointer-events-none'}`}
       aria-label="Active Chats"
+      role="complementary"
+      aria-hidden={!isOpen}
     >
       <div className="border-b border-border">
         <div className="group flex items-center justify-between w-full p-4">

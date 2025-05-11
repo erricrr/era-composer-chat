@@ -234,3 +234,30 @@
   @apply bg-transparent text-foreground !important;
   opacity: 1;
 }
+
+/* Ensure all icon buttons meet accessibility standards for touch targets */
+.a11y-touch-target {
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Explicitly disable focus styles when using mouse */
+.using-mouse *:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  ring: none !important;
+  transform: none !important;
+  scale: none !important;
+}
+
+/* Only show focus styles when using keyboard and not mouse */
+.using-mouse *:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  ring: none !important;
+  transform: none !important;
+  scale: none !important;
+}
