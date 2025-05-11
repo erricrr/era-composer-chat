@@ -122,20 +122,28 @@ export default function ActiveChatsSlider({
       aria-label="Active Chats"
     >
       <div className="border-b border-border">
-        <div className="group flex items-center justify-between w-full p-4">
-          <div
-            ref={headerButtonRef}
-            tabIndex={0}
-            onClick={handleCloseClick}
-            className="cursor-pointer text-base font-semibold transition-colors focus-ring-inset focus:rounded-none"
-          >
+        <div
+          ref={headerButtonRef}
+          tabIndex={0}
+          role="button"
+          aria-label="Close active chats"
+          onClick={handleCloseClick}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              onClose();
+            }
+          }}
+          className="group flex items-center justify-between w-full p-4 cursor-pointer focus-ring-inset focus:rounded-none"
+        >
+          <div className="text-base font-semibold transition-colors">
             Active Chats
           </div>
           <button
             ref={closeButtonRef}
             type="button"
             onClick={handleCloseClick}
-            className="p-1 rounded-full transition-colors duration-200 hover:bg-muted group-hover:bg-muted focus-ring-inset"
+            className="p-1 rounded-full transition-colors duration-200 hover:bg-muted-foreground/25 group-hover:bg-muted-foreground/25"
             aria-label="Close active chats"
           >
             <X className="w-4 h-4" />
