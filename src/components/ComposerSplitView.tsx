@@ -247,7 +247,7 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
 
       {/* Fixed Header - Now outside ScrollArea */}
       <div
-        className="relative flex items-center justify-center border-b py-7 bg-secondary backdrop-blur-sm shadow-md z-10 mt-1 flex-shrink-0 group hover:bg-secondary/80 transition-colors w-full cursor-pointer focus-ring-inset focus:rounded-none"
+        className="relative flex items-center justify-center border-b py-7 bg-primary-foreground backdrop-blur-sm shadow-md z-10 mt-1 flex-shrink-0 group transition-colors w-full cursor-pointer focus-ring-inset focus:rounded-none"
         tabIndex={0}
         role="button"
         aria-label="Close split view"
@@ -513,7 +513,7 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
           defaultSize={isMobile ? 40 : 38}
           minSize={isMobile ? 30 : 35}
           maxSize={isMobile ? 60 : 65}
-          className="bg-secondary/50 backdrop-blur-sm flex flex-col"
+          className="bg-primary-foreground/50 backdrop-blur-sm flex flex-col"
           id={isMobile ? "composer-panel-mobile" : "composer-panel-desktop"}
           aria-label="Composer Panel"
           order={1}
