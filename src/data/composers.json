@@ -614,7 +614,7 @@
     {
       "id": "felix-mendelssohn",
       "name": "Felix Mendelssohn",
-      "era": ["Romantic"],
+      "era": ["Classical", "Romantic"],
       "birthYear": 1809,
       "deathYear": 1847,
       "shortBio": "Felix Mendelssohn was a German composer, pianist, organist, and conductor of the early Romantic period. He is known for his lyrical melodies and masterful orchestration. Mendelssohn founded the Leipzig Conservatory and revitalized interest in J.S. Bach’s music. He was born in Hamburg, Germany, and grew up in a highly cultured family. Mendelssohn’s works include symphonies, concertos, chamber music, and the famous ‘Wedding March’ from A Midsummer Night’s Dream.",
