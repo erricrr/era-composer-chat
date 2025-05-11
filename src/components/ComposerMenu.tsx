@@ -36,13 +36,21 @@ export function ComposerMenu({
   });
 
   // --- SCROLL POSITION STATE ---
-  const mobileScrollPositions = useRef<{ [era: string]: number }>({});
-  const desktopScrollPositions = useRef<{ [era: string]: number }>({});
-
-  const getMobileScrollPosition = useCallback((era: Era) => mobileScrollPositions.current[era] ?? 0, []);
-  const setMobileScrollPosition = useCallback((era: Era, pos: number) => { mobileScrollPositions.current[era] = pos; }, []);
-  const getDesktopScrollPosition = useCallback((era: Era) => desktopScrollPositions.current[era] ?? 0, []);
-  const setDesktopScrollPosition = useCallback((era: Era, pos: number) => { desktopScrollPositions.current[era] = pos; }, []);
+  // Persist scroll positions in localStorage so they survive page refresh
+  const getMobileScrollPosition = useCallback((era: Era) => {
+    const item = localStorage.getItem(`composerScrollPos-mobile-${era}`);
+    return item ? parseInt(item, 10) : 0;
+  }, []);
+  const setMobileScrollPosition = useCallback((era: Era, pos: number) => {
+    localStorage.setItem(`composerScrollPos-mobile-${era}`, pos.toString());
+  }, []);
+  const getDesktopScrollPosition = useCallback((era: Era) => {
+    const item = localStorage.getItem(`composerScrollPos-desktop-${era}`);
+    return item ? parseInt(item, 10) : 0;
+  }, []);
+  const setDesktopScrollPosition = useCallback((era: Era, pos: number) => {
+    localStorage.setItem(`composerScrollPos-desktop-${era}`, pos.toString());
+  }, []);
 
   // Helper function to check if a composer belongs to an era
   const composerBelongsToEra = (composer: Composer, era: Era): boolean => {
