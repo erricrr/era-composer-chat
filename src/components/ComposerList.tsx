@@ -82,12 +82,12 @@ interface ScrollIndicatorProps {
 const ScrollIndicator = ({ orientation, isAtStart, isAtEnd }: ScrollIndicatorProps) => {
   const containerClasses = orientation === 'horizontal'
     ? "flex justify-center mt-2 gap-1"
-    : "flex flex-col items-center justify-center h-full gap-1 ml-1";
+    : "flex flex-col gap-1 p-1";
 
   return (
     <div className={containerClasses}>
-      <div className={`w-1 h-1 rounded-full transition-colors duration-200 ${!isAtStart ? 'bg-primary/50' : 'bg-primary/20'}`} />
-      <div className={`w-1 h-1 rounded-full transition-colors duration-200 ${!isAtEnd ? 'bg-primary/50' : 'bg-primary/20'}`} />
+      <div className={`w-1.5 h-1.5 rounded-full transition-colors duration-200 ${!isAtStart ? 'bg-primary/70' : 'bg-primary/20'}`} />
+      <div className={`w-1.5 h-1.5 rounded-full transition-colors duration-200 ${!isAtEnd ? 'bg-primary/70' : 'bg-primary/20'}`} />
     </div>
   );
 };
@@ -500,9 +500,9 @@ export function ComposerList({
   }, []);
 
   return (
-    <div className="w-full mt-7 relative bg-primary-foreground" style={{ height: "65vh" }}>
+    <div className="w-full mt-7 relative bg-primary-foreground rounded-lg" style={{ height: "65vh" }}>
       <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] h-full">
-        <div className="overflow-hidden h-full flex flex-col relative z-[40]">
+        <div className="overflow-hidden h-full flex flex-col relative">
           {/* Mobile horizontal scroll */}
           <div className="md:hidden flex-shrink-0 relative">
             <div className="relative overflow-hidden">
@@ -559,8 +559,8 @@ export function ComposerList({
 
           {/* Desktop vertical scroll */}
           <div className="hidden md:flex flex-col flex-1 overflow-hidden relative py-0">
-            <div className="relative overflow-hidden h-full flex">
-              <ScrollArea ref={desktopScrollAreaRef} key={`${era}-desktop`} className="w-full h-full scroll-area flex-1">
+            <div className="relative overflow-hidden h-full">
+              <ScrollArea ref={desktopScrollAreaRef} key={`${era}-desktop`} className="w-full h-full scroll-area">
                 <div className="flex flex-col h-full relative">
                   {allComposers.map((composer, idx) => (
                     <div
@@ -597,14 +597,16 @@ export function ComposerList({
                 </div>
                 <ScrollBar orientation="vertical" className="select-none" />
               </ScrollArea>
-              <div className="flex-shrink-0 relative">
-                <ScrollIndicator
-                  orientation="vertical"
-                  isAtStart={verticalScroll.isAtTop}
-                  isAtEnd={verticalScroll.isAtBottom}
-                />
-              </div>
             </div>
+          </div>
+
+          {/* Vertical scroll indicators in the gap between columns */}
+          <div className="hidden md:block absolute right-[-4px] top-1/2 -translate-y-1/2 z-50">
+            <ScrollIndicator
+              orientation="vertical"
+              isAtStart={verticalScroll.isAtTop}
+              isAtEnd={verticalScroll.isAtBottom}
+            />
           </div>
         </div>
 
