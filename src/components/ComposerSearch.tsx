@@ -382,9 +382,11 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
               placeholder={SEARCH_PLACEHOLDER}
               className="composer-search-input w-full py-2 pl-10 pr-15 text-sm bg-transparent placeholder:text-muted-foreground transition-colors duration-200"
               aria-label="Search for composers"
+              role="combobox"
               aria-expanded={isOpen}
-              aria-controls="search-results"
+              aria-owns="search-results"
               aria-autocomplete="list"
+              aria-controls="search-results"
               aria-activedescendant={activeResultIndex >= 0 ? `search-result-${activeResultIndex}` : undefined}
             />
 
@@ -451,9 +453,12 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
                       <div
                         ref={(el) => resultRefs.current[index] = el}
                         key={composer.id}
+                        id={`search-result-${index}`}
                         onClick={() => handleSelect(composer)}
                         onMouseEnter={() => setActiveResultIndex(index)}
                         onMouseLeave={() => setActiveResultIndex(-1)}
+                        role="option"
+                        aria-selected={index === activeResultIndex}
                         className={`py-1.5 px-3 font-serif text-foreground rounded-md cursor-pointer text-xs md:text-sm
                           ${index === activeResultIndex
                             ? 'bg-secondary/80'
