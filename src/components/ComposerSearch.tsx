@@ -321,7 +321,15 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
   const shouldShowResults = searchQuery.trim().length > 0;
 
   return (
-    <div className="relative flex items-center w-full" ref={containerRef}>
+    <div
+      className={cn(
+        "relative flex items-center transition-all duration-200",
+        isMobileSearchActive ? "w-64" : "w-11",
+        "md:w-64",
+        isMobileView && !isMobileSearchActive && "justify-center"
+      )}
+      ref={containerRef}
+    >
       {/* Live region to announce result counts */}
       <div aria-live="polite" aria-atomic="true" className="sr-only">
         {hasSearched && (
@@ -356,14 +364,14 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
       {/* Search Input Container */}
       <div
         className={cn(
-          "relative overflow-visible rounded-full bg-secondary/30 transition-all duration-200",
+          "relative overflow-visible rounded-md bg-background transition-all duration-200",
           isMobileSearchActive ? "w-full" : "hidden",
           "md:block md:w-full"
         )}
         style={{ position: 'relative', zIndex: 65 }}
       >
         {/* Input with icons */}
-        <div className="flex items-center px-3 rounded-full">
+        <div className="flex items-center px-3">
           <div className="relative w-full">
             <input
               ref={inputRef}
@@ -372,7 +380,7 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
               onChange={(e) => handleInputChange(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder={SEARCH_PLACEHOLDER}
-              className="composer-search-input w-full px-4 py-2 pl-8 pr-10 text-sm bg-transparent placeholder:text-muted-foreground transition-colors duration-200"
+              className="composer-search-input w-full py-2 pl-10 pr-15 text-sm bg-transparent placeholder:text-muted-foreground transition-colors duration-200"
               aria-label="Search for composers"
               aria-expanded={isOpen}
               aria-controls="search-results"
@@ -446,7 +454,7 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
                         onClick={() => handleSelect(composer)}
                         onMouseEnter={() => setActiveResultIndex(index)}
                         onMouseLeave={() => setActiveResultIndex(-1)}
-                        className={`py-1.5 px-3 font-serif text-foreground rounded-full cursor-pointer text-xs md:text-sm
+                        className={`py-1.5 px-3 font-serif text-foreground rounded-md cursor-pointer text-xs md:text-sm
                           ${index === activeResultIndex
                             ? 'bg-secondary/80'
                             : 'hover:bg-secondary/30'}

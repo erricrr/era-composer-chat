@@ -447,13 +447,11 @@ const Index = () => {
             {/* Right Side: Search + Icons */}
             <div className="flex items-center gap-2">
               {/* Search Bar */}
-              <div className="max-w-xs">
-                <ComposerSearch
-                  composers={allComposersData}
-                  onSelectComposer={(composer) => handleSelectComposer(composer, { source: 'search' })}
-                  selectedComposer={selectedComposer}
-                />
-              </div>
+              <ComposerSearch
+                composers={allComposersData}
+                onSelectComposer={(composer) => handleSelectComposer(composer, { source: 'search' })}
+                selectedComposer={selectedComposer}
+              />
 
               {/* Active Chats Tab Icon */}
               <HeaderIcon tooltip="Active Chats">
