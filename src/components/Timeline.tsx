@@ -64,7 +64,7 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
       baseButtonClasses,
       isSelectedIcon
         ? 'bg-primary text-background shadow-md shadow-primary/30'
-        : 'bg-background border border-primary/60 text-primary/70 hover:border-primary hover:text-primary hover:bg-primary/10'
+        : 'bg-background border border-primary/60 text-primary/70 hover:border-primary hover:text-primary hover:scale-105 transition-transform'
     );
     const button = (
       <button

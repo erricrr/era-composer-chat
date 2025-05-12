@@ -5,10 +5,26 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import React from "react";
 
 const queryClient = new QueryClient();
 
 const App = () => {
+  // Global keyboard vs pointer detection for focus styling
+  React.useEffect(() => {
+    const handlePointer = () => document.body.classList.remove('using-keyboard');
+    const handleKey = (e: KeyboardEvent) => { if (e.key === 'Tab') document.body.classList.add('using-keyboard'); };
+    window.addEventListener('mousedown', handlePointer);
+    window.addEventListener('touchstart', handlePointer);
+    window.addEventListener('keydown', handleKey);
+    return () => {
+      window.removeEventListener('mousedown', handlePointer);
+      window.removeEventListener('touchstart', handlePointer);
+      window.removeEventListener('keydown', handleKey);
+      document.body.classList.remove('using-keyboard');
+    };
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>

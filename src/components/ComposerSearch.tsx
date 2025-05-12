@@ -12,6 +12,9 @@ interface ComposerSearchProps {
 }
 
 export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchProps) {
+  // Constants
+  const SEARCH_PLACEHOLDER = "Search composers...";
+
   // Core states
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredComposers, setFilteredComposers] = useState<Composer[]>([]);
@@ -35,9 +38,6 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const resultRefs = useRef<(HTMLDivElement | null)[]>([]);
-
-  // Track pointer vs keyboard interaction to suppress focus ring on click
-  const [pointerPressed, setPointerPressed] = useState(false);
 
   // Memoize text normalization function
   const normalizeText = useMemo(() => {
@@ -296,32 +296,24 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
     };
   }, [isMobileSearchActive]);
 
-  // Track pointer vs keyboard interaction to suppress focus ring on click
-  useEffect(() => {
-    const handlePointerDown = () => {
-      setPointerPressed(true);
-      // Add a class to the document body to indicate pointer interaction
-      document.body.classList.add('using-mouse');
-    };
+  // State to track if last interaction was keyboard navigation
+  const [usingKeyboard, setUsingKeyboard] = useState(false);
 
-    const handleKeyDown = (e: KeyboardEvent) => {
+  // Effect to update usingKeyboard based on interaction type
+  useEffect(() => {
+    const handlePointer = () => setUsingKeyboard(false);
+    const handleKey = (e: KeyboardEvent) => {
       if (e.key === 'Tab') {
-        setPointerPressed(false);
-        // Remove the class when keyboard navigation is detected
-        document.body.classList.remove('using-mouse');
+        setUsingKeyboard(true);
       }
     };
-
-    document.addEventListener('mousedown', handlePointerDown);
-    document.addEventListener('touchstart', handlePointerDown);
-    document.addEventListener('keydown', handleKeyDown);
-
+    window.addEventListener('mousedown', handlePointer);
+    window.addEventListener('touchstart', handlePointer);
+    window.addEventListener('keydown', handleKey);
     return () => {
-      document.removeEventListener('mousedown', handlePointerDown);
-      document.removeEventListener('touchstart', handlePointerDown);
-      document.removeEventListener('keydown', handleKeyDown);
-      // Clean up class on unmount
-      document.body.classList.remove('using-mouse');
+      window.removeEventListener('mousedown', handlePointer);
+      window.removeEventListener('touchstart', handlePointer);
+      window.removeEventListener('keydown', handleKey);
     };
   }, []);
 
@@ -329,7 +321,7 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
   const shouldShowResults = searchQuery.trim().length > 0;
 
   return (
-    <div className="relative flex items-center md:w-[200px]" ref={containerRef}>
+    <div className="relative flex items-center w-full" ref={containerRef}>
       {/* Live region to announce result counts */}
       <div aria-live="polite" aria-atomic="true" className="sr-only">
         {hasSearched && (
@@ -345,9 +337,7 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
           <TooltipTrigger asChild>
             <button
               type="button"
-              onMouseDown={() => document.body.classList.add('using-mouse')}
-              style={{outline: 'none'}}
-              className="w-11 h-11 flex items-center justify-center rounded-md md:hidden hover:bg-muted transition-colors duration-200 focus:outline-0 focus:ring-0 focus:shadow-none"
+              className="w-11 h-11 flex items-center justify-center rounded-md md:hidden hover:bg-muted transition-colors duration-200 composer-search-mobile-button"
               onClick={(e) => {
                 e.stopPropagation();
                 setTimeout(activateMobileSearch, 10);
@@ -358,7 +348,7 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
             </button>
           </TooltipTrigger>
           <TooltipContent side="bottom" sideOffset={5} className="text-xs">
-            Search composers
+            {SEARCH_PLACEHOLDER}
           </TooltipContent>
         </Tooltip>
       )}
@@ -366,7 +356,7 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
       {/* Search Input Container */}
       <div
         className={cn(
-          "relative overflow-visible rounded-full border border-border transition-all duration-200",
+          "relative overflow-visible rounded-full bg-secondary/30 transition-all duration-200",
           isMobileSearchActive ? "w-full" : "hidden",
           "md:block md:w-full"
         )}
@@ -381,14 +371,8 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
               value={searchQuery}
               onChange={(e) => handleInputChange(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Search composers..."
-              onMouseDown={() => document.body.classList.add('using-mouse')}
-              style={{outline: 'none'}}
-              className={cn(
-                "w-full px-4 py-2 pl-8 pr-8 text-sm bg-transparent placeholder:text-muted-foreground border-none",
-                "transition-colors duration-200",
-                "focus:outline-0 focus:shadow-none focus:scale-100 focus:ring-0"
-              )}
+              placeholder={SEARCH_PLACEHOLDER}
+              className="composer-search-input w-full px-4 py-2 pl-8 pr-10 text-sm bg-transparent placeholder:text-muted-foreground transition-colors duration-200"
               aria-label="Search for composers"
               aria-expanded={isOpen}
               aria-controls="search-results"
@@ -419,9 +403,7 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
           {(searchQuery || (isMobileSearchActive && isMobileView)) && (
             <button
               onClick={handleClear}
-              onMouseDown={() => document.body.classList.add('using-mouse')}
-              style={{outline: 'none'}}
-              className="flex items-center justify-center rounded-full hover:bg-secondary/30 text-muted-foreground/60 hover:text-muted-foreground w-8 h-8 focus:outline-0 focus:ring-0 focus:shadow-none"
+              className="flex items-center justify-center rounded-full hover:bg-secondary/30 text-muted-foreground/60 hover:text-muted-foreground w-8 h-8 composer-search-clear-button"
               type="button"
               aria-label={searchQuery ? "Clear search" : "Close search"}
               data-testid="search-clear-button"

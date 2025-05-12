@@ -105,9 +105,14 @@
     box-shadow: none !important;
   }
 
-  /* DRY: unify focus rings across all elements */
-  *:focus-visible {
+  /* Only show focus rings when navigating via keyboard (body has .using-keyboard) */
+  .using-keyboard *:focus-visible {
     @apply ring-2 ring-primary ring-offset-2 ring-offset-background outline-none;
+  }
+
+  /* Remove default focus styles when element is focused by mouse/pointer */
+  *:focus:not(:focus-visible) {
+    @apply outline-none ring-0;
   }
 }
 
@@ -190,6 +195,42 @@
   button:has(> img):focus-visible {
     @apply z-10 relative;
   }
+
+  /* ComposerSearch overrides */
+  .composer-search-input:focus {
+    outline: none !important;
+    box-shadow: none !important;
+    ring: none !important;
+  }
+  .using-keyboard .composer-search-input:focus-visible {
+    @apply ring-2 ring-primary ring-offset-2 ring-offset-background outline-none;
+  }
+
+  .composer-search-mobile-button:focus {
+    outline: none !important;
+    box-shadow: none !important;
+    ring: none !important;
+  }
+  .using-keyboard .composer-search-mobile-button:focus-visible {
+    @apply ring-2 ring-primary ring-offset-2 ring-offset-background outline-none;
+  }
+
+  .composer-search-clear-button:focus {
+    outline: none !important;
+    box-shadow: none !important;
+    ring: none !important;
+  }
+  .using-keyboard .composer-search-clear-button:focus-visible {
+    @apply ring-2 ring-primary ring-offset-2 ring-offset-background outline-none;
+  }
+
+  /* Explicit focus-visible override for ComposerSearch elements */
+  .using-keyboard .composer-search-input:focus-visible,
+  .using-keyboard .composer-search-mobile-button:focus-visible,
+  .using-keyboard .composer-search-clear-button:focus-visible {
+    outline: 2px solid hsl(var(--primary)) !important;
+    outline-offset: 2px !important;
+  }
 }
 
 
@@ -242,22 +283,4 @@
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-/* Explicitly disable focus styles when using mouse */
-.using-mouse *:focus {
-  outline: none !important;
-  box-shadow: none !important;
-  ring: none !important;
-  transform: none !important;
-  scale: none !important;
-}
-
-/* Only show focus styles when using keyboard and not mouse */
-.using-mouse *:focus-visible {
-  outline: none !important;
-  box-shadow: none !important;
-  ring: none !important;
-  transform: none !important;
-  scale: none !important;
 }
