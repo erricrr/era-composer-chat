@@ -527,6 +527,8 @@ const Index = () => {
                 top: '2.5rem',
                 height: 'calc(100vh - 2.5rem)'
               }}
+              role="complementary"
+              aria-label="Composer selection menu"
             >
               {/* Composer list rendered only when open */}
               <ComposerMenu
