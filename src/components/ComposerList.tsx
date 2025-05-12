@@ -496,132 +496,114 @@ export function ComposerList({
   }, []);
 
   return (
-    <div className="w-full mt-7 relative bg-primary-foreground rounded-lg" style={{ height: "65vh" }}>
+    <div className="w-full mt-7 relative" style={{ height: "65vh" }}>
       <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] h-full">
         <div className="overflow-hidden h-full flex flex-col">
           {/* Mobile horizontal scroll */}
-          <div className="md:hidden flex-shrink-0 relative px-4">
-            <ScrollArea ref={mobileScrollAreaRef} key={`${era}-mobile`} className="w-full h-auto scroll-area">
-              <div className="inline-flex h-full items-center">
-                {allComposers.map((composer, idx) => (
-                  <div
-                    key={composer.id}
-                    id={`mobile-composer-card-${composer.id}`}
-                    className="flex-shrink-0 w-56 h-full"
-                  >
-                    <ComposerCard
-                      composer={composer}
-                      onClick={(e: React.MouseEvent<HTMLElement>) => {
-                        const card = (e.currentTarget as HTMLElement).closest('[id^="mobile-composer-card-"]');
-                        handleComposerCardClick(composer, card as HTMLElement);
-                      }}
-                      isSelected={selectedComposer?.id === composer.id}
-                      tabIndex={0}
-                      role="button"
-                      ariaLabel={`Select composer ${composer.name}`}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault();
+          <div className="md:hidden flex-shrink-0 relative px-0">
+            <div className="relative overflow-hidden">
+              {/* Left fade indicator */}
+              <div
+                className={`pointer-events-none absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-primary-foreground to-transparent z-10 transition-opacity duration-200 ${horizontalScroll.isAtStart ? 'opacity-0' : 'opacity-100'}`}
+              />
+              <ScrollArea ref={mobileScrollAreaRef} key={`${era}-mobile`} className="w-full h-auto scroll-area">
+                <div className="inline-flex h-full items-center">
+                  {allComposers.map((composer, idx) => (
+                    <div
+                      key={composer.id}
+                      id={`mobile-composer-card-${composer.id}`}
+                      className="flex-shrink-0 w-56 h-full"
+                    >
+                      <ComposerCard
+                        composer={composer}
+                        onClick={(e: React.MouseEvent<HTMLElement>) => {
                           const card = (e.currentTarget as HTMLElement).closest('[id^="mobile-composer-card-"]');
                           handleComposerCardClick(composer, card as HTMLElement);
-                        } else if (e.key === 'ArrowRight') {
-                          const next = document.getElementById(`mobile-composer-card-${allComposers[idx + 1]?.id}`);
-                          if (next) (next.querySelector('[tabindex="0"]') as HTMLElement | null)?.focus();
-                        } else if (e.key === 'ArrowLeft') {
-                          const prev = document.getElementById(`mobile-composer-card-${allComposers[idx - 1]?.id}`);
-                          if (prev) (prev.querySelector('[tabindex="0"]') as HTMLElement | null)?.focus();
-                        }
-                      }}
-                    />
-                  </div>
-                ))}
-              </div>
-              <ScrollBar orientation="horizontal" />
-            </ScrollArea>
-
-            <ScrollChevron
-              direction="left"
-              onClick={() => {
-                const viewport = viewportRefs.current.mobile;
-                if (viewport) viewport.scrollTo({ left: Math.max(0, viewport.scrollLeft - 240), behavior: 'smooth' });
-              }}
-              disabled={horizontalScroll.isAtStart}
-            />
-            <ScrollChevron
-              direction="right"
-              onClick={() => {
-                const viewport = viewportRefs.current.mobile;
-                if (viewport) viewport.scrollTo({ left: viewport.scrollLeft + 240, behavior: 'smooth' });
-              }}
-              disabled={horizontalScroll.isAtEnd}
-            />
+                        }}
+                        isSelected={selectedComposer?.id === composer.id}
+                        tabIndex={0}
+                        role="button"
+                        ariaLabel={`Select composer ${composer.name}`}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            const card = (e.currentTarget as HTMLElement).closest('[id^="mobile-composer-card-"]');
+                            handleComposerCardClick(composer, card as HTMLElement);
+                          } else if (e.key === 'ArrowRight') {
+                            const next = document.getElementById(`mobile-composer-card-${allComposers[idx + 1]?.id}`);
+                            if (next) (next.querySelector('[tabindex="0"]') as HTMLElement | null)?.focus();
+                          } else if (e.key === 'ArrowLeft') {
+                            const prev = document.getElementById(`mobile-composer-card-${allComposers[idx - 1]?.id}`);
+                            if (prev) (prev.querySelector('[tabindex="0"]') as HTMLElement | null)?.focus();
+                          }
+                        }}
+                      />
+                    </div>
+                  ))}
+                </div>
+                <ScrollBar orientation="horizontal" />
+              </ScrollArea>
+              {/* Right fade indicator */}
+              <div
+                className={`pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-primary-foreground to-transparent z-10 transition-opacity duration-200 ${horizontalScroll.isAtEnd ? 'opacity-0' : 'opacity-100'}`}
+              />
+            </div>
           </div>
 
           {/* Desktop vertical scroll */}
           <div className="hidden md:flex flex-col flex-1 overflow-hidden relative py-0">
-            <ScrollArea ref={desktopScrollAreaRef} key={`${era}-desktop`} className="w-full h-full scroll-area">
-              <div className="flex flex-col h-full">
-                {allComposers.map((composer, idx) => (
-                  <div
-                    key={composer.id}
-                    id={`composer-card-${composer.id}`}
-                    className="flex-shrink-0"
-                  >
-                    <ComposerCard
-                      composer={composer}
-                      onClick={(e: React.MouseEvent<HTMLElement>) => {
-                        const card = (e.currentTarget as HTMLElement).closest('[id^="composer-card-"]');
-                        handleComposerCardClick(composer, card as HTMLElement);
-                      }}
-                      isSelected={selectedComposer?.id === composer.id}
-                      tabIndex={0}
-                      role="button"
-                      ariaLabel={`Select composer ${composer.name}`}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault();
+            <div className="relative overflow-hidden h-full">
+              {/* Top fade indicator */}
+              <div
+                className={`pointer-events-none absolute inset-x-0 top-0 h-8 bg-gradient-to-b from-primary-foreground to-transparent z-10 transition-opacity duration-200 ${verticalScroll.isAtTop ? 'opacity-0' : 'opacity-100'}`}
+              />
+              <ScrollArea ref={desktopScrollAreaRef} key={`${era}-desktop`} className="w-full h-full scroll-area">
+                <div className="flex flex-col h-full">
+                  {allComposers.map((composer, idx) => (
+                    <div
+                      key={composer.id}
+                      id={`composer-card-${composer.id}`}
+                      className="flex-shrink-0"
+                    >
+                      <ComposerCard
+                        composer={composer}
+                        onClick={(e: React.MouseEvent<HTMLElement>) => {
                           const card = (e.currentTarget as HTMLElement).closest('[id^="composer-card-"]');
                           handleComposerCardClick(composer, card as HTMLElement);
-                        } else if (e.key === 'ArrowDown') {
-                          const next = document.getElementById(`composer-card-${allComposers[idx + 1]?.id}`);
-                          if (next) (next.querySelector('[tabindex="0"]') as HTMLElement | null)?.focus();
-                        } else if (e.key === 'ArrowUp') {
-                          const prev = document.getElementById(`composer-card-${allComposers[idx - 1]?.id}`);
-                          if (prev) (prev.querySelector('[tabindex="0"]') as HTMLElement | null)?.focus();
-                        }
-                      }}
-                    />
-                  </div>
-                ))}
-              </div>
-              <ScrollBar orientation="vertical" className="select-none" />
-            </ScrollArea>
-
-            <div className="absolute top-0 left-0 right-0 flex justify-center z-20">
-              <ScrollChevron
-                direction="up"
-                onClick={() => {
-                  const viewport = viewportRefs.current.desktop;
-                  if (viewport) viewport.scrollTo({ top: Math.max(0, viewport.scrollTop - 180), behavior: 'smooth' });
-                }}
-                disabled={verticalScroll.isAtTop}
-              />
-            </div>
-            <div className="absolute bottom-0 left-0 right-0 flex justify-center z-20">
-              <ScrollChevron
-                direction="down"
-                onClick={() => {
-                  const viewport = viewportRefs.current.desktop;
-                  if (viewport) viewport.scrollTo({ top: viewport.scrollTop + 180, behavior: 'smooth' });
-                }}
-                disabled={verticalScroll.isAtBottom}
+                        }}
+                        isSelected={selectedComposer?.id === composer.id}
+                        tabIndex={0}
+                        role="button"
+                        ariaLabel={`Select composer ${composer.name}`}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            const card = (e.currentTarget as HTMLElement).closest('[id^="composer-card-"]');
+                            handleComposerCardClick(composer, card as HTMLElement);
+                          } else if (e.key === 'ArrowDown') {
+                            const next = document.getElementById(`composer-card-${allComposers[idx + 1]?.id}`);
+                            if (next) (next.querySelector('[tabindex="0"]') as HTMLElement | null)?.focus();
+                          } else if (e.key === 'ArrowUp') {
+                            const prev = document.getElementById(`composer-card-${allComposers[idx - 1]?.id}`);
+                            if (prev) (prev.querySelector('[tabindex="0"]') as HTMLElement | null)?.focus();
+                          }
+                        }}
+                      />
+                    </div>
+                  ))}
+                </div>
+                <ScrollBar orientation="vertical" className="select-none" />
+              </ScrollArea>
+              {/* Bottom fade indicator */}
+              <div
+                className={`pointer-events-none absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-primary-foreground to-transparent z-10 transition-opacity duration-200 ${verticalScroll.isAtBottom ? 'opacity-0' : 'opacity-100'}`}
               />
             </div>
           </div>
         </div>
 
         {selectedComposer && (
-          <div className="flex flex-col h-full overflow-hidden p-5">
+          <div className="flex flex-col h-full overflow-hidden p-3 bg-primary-foreground">
             <div className="relative flex-1 min-h-0 flex flex-col">
               <div className="px-3 md:px-4 pt-1 flex-shrink-0 relative z-20">
                 <div className="flex items-start md:items-center space-x-2 md:space-x-6 border-b pt-2 md:pt-0" style={{ paddingBottom: '10px' }}>
