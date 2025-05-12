@@ -744,7 +744,7 @@ export function ChatInterface({
         </div>
       </div>
 
-      <form onSubmit={handleSendMessage} className="sticky bottom-0 border-t bg-background/80 backdrop-blur-sm">
+      <form onSubmit={handleSendMessage} className="sticky bottom-0 border-t bg-background/80 backdrop-blur-sm pb-4">
         <div className="pt-4 relative mx-5 z-10">
           <div className="relative flex gap-2">
             <div key={`input-${isSplitViewOpen}`} className="flex-1 relative">
@@ -849,8 +849,19 @@ export function ChatInterface({
             </div>
           </div>
         </div>
-        <p className="text-xs text-muted-foreground text-center mx-11 pb-2 pt-2">
-        AI-generated chat. Not {getLastName(composer.name)}&apos;s own words.
+        <p
+          tabIndex={0}
+          className="
+            text-xs text-muted-foreground text-center
+            mx-11 py-1
+            focus:outline-none
+            focus-visible:ring-1
+            focus-visible:ring-primary
+            focus-visible:ring-offset-1
+            rounded-none
+          "
+        >
+          AI-generated chat. Not {getLastName(composer.name)}&apos;s own words.
         </p>
       </form>
 
