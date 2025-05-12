@@ -500,7 +500,7 @@ export function ComposerList({
   }, []);
 
   return (
-    <div className="w-full mt-7 relative bg-primary-foreground rounded-lg" style={{ height: "65vh" }}>
+    <div className="w-full mt-5 relative bg-primary-foreground rounded-lg" style={{ height: "60vh", maxHeight: "calc(100vh - 180px)" }}>
       <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] h-full">
         <div className="overflow-hidden h-full flex flex-col relative">
           {/* Mobile horizontal scroll */}
@@ -611,10 +611,10 @@ export function ComposerList({
         </div>
 
         {selectedComposer && (
-          <div className="flex flex-col h-full overflow-hidden p-3">
+          <div className="flex flex-col h-full overflow-hidden p-2 md:p-3">
             <div className="relative flex-1 min-h-0 flex flex-col">
-              <div className="px-3 md:px-4 pt-1 flex-shrink-0 relative z-20">
-                <div className="flex items-start md:items-center space-x-2 md:space-x-6 border-b pt-2 md:pt-0" style={{ paddingBottom: '10px' }}>
+              <div className="px-2 md:px-3 pt-1 flex-shrink-0 relative z-20">
+                <div className="flex items-start md:items-center space-x-2 md:space-x-4 border-b pt-1 md:pt-0" style={{ paddingBottom: '8px' }}>
                   <ComposerImageViewer
                     composer={selectedComposer}
                     size="xxl"
@@ -653,7 +653,7 @@ export function ComposerList({
                     onFocus={(e) => e.currentTarget.scrollIntoView({ behavior: 'smooth', block: 'nearest' })}
                     role="region"
                     aria-label={`About ${selectedComposer.name}: biography and notable works`}
-                    className="focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary p-3 space-y-2 md:space-y-4"
+                    className="focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary p-2 md:p-3 space-y-2 md:space-y-3"
                   >
                     <p className="text-sm md:text-base text-foreground/90">
                       {selectedComposer.shortBio}
@@ -671,7 +671,7 @@ export function ComposerList({
                 <div className="pointer-events-none absolute bottom-0 left-0 w-full h-5 bg-gradient-to-t from-primary-foreground to-transparent z-10" />
               </div>
             </div>
-            <div className="flex-shrink-0 h-14 md:h-16 px-3 md:px-4 py-2 relative z-20">
+            <div className="flex-shrink-0 h-12 md:h-14 px-2 md:px-3 py-2 relative z-20">
               <Button
                 onClick={() => {
                   if (selectedComposer && isComposerInPublicDomain(selectedComposer)) {
