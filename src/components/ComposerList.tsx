@@ -496,8 +496,8 @@ export function ComposerList({
   }, []);
 
   return (
-    <div className="w-full mt-3 relative" style={{ height: "65vh" }}>
-      <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] gap-1 md:gap-2 h-full">
+    <div className="w-full mt-7 relative bg-primary-foreground rounded-lg" style={{ height: "65vh" }}>
+      <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] h-full">
         <div className="overflow-hidden h-full flex flex-col">
           {/* Mobile horizontal scroll */}
           <div className="md:hidden flex-shrink-0 relative px-4">
@@ -558,7 +558,7 @@ export function ComposerList({
           </div>
 
           {/* Desktop vertical scroll */}
-          <div className="hidden md:flex flex-col flex-1 overflow-hidden relative py-4">
+          <div className="hidden md:flex flex-col flex-1 overflow-hidden relative py-0">
             <ScrollArea ref={desktopScrollAreaRef} key={`${era}-desktop`} className="w-full h-full scroll-area">
               <div className="flex flex-col h-full">
                 {allComposers.map((composer, idx) => (
@@ -621,7 +621,7 @@ export function ComposerList({
         </div>
 
         {selectedComposer && (
-          <div className="flex flex-col h-full overflow-hidden">
+          <div className="flex flex-col h-full overflow-hidden p-5">
             <div className="relative flex-1 min-h-0 flex flex-col">
               <div className="px-3 md:px-4 pt-1 flex-shrink-0 relative z-20">
                 <div className="flex items-start md:items-center space-x-2 md:space-x-6 border-b pt-2 md:pt-0" style={{ paddingBottom: '10px' }}>
@@ -678,10 +678,10 @@ export function ComposerList({
                     </div>
                   </div>
                 </ScrollArea>
-                <div className="pointer-events-none absolute bottom-0 left-0 w-full h-5 bg-gradient-to-t from-background to-transparent z-10" />
+                <div className="pointer-events-none absolute bottom-0 left-0 w-full h-5 bg-gradient-to-t from-primary-foreground to-transparent z-10" />
               </div>
             </div>
-            <div className="flex-shrink-0 h-14 md:h-16 px-3 md:px-4 py-2 bg-background relative z-20">
+            <div className="flex-shrink-0 h-14 md:h-16 px-3 md:px-4 py-2 relative z-20">
               <Button
                 onClick={() => {
                   if (selectedComposer && isComposerInPublicDomain(selectedComposer)) {

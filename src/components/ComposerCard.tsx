@@ -22,8 +22,8 @@ export function ComposerCard({ composer, onClick, isSelected, compact = false, t
         p-4 cursor-pointer select-none transition-transform duration-500 ease-in-out relative group
         focus:outline-none focus-visible:ring-inset focus-visible:ring-2 focus-visible:ring-primary
         ${isSelected
-          ? 'bg-background'
-          : 'bg-primary-foreground hover:bg-primary/5'
+          ? 'bg-primary-foreground'
+          : 'bg-background hover:bg-primary-foreground/50'
         }
       `}
     >
