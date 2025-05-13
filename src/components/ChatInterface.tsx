@@ -795,7 +795,11 @@ export function ChatInterface({
                   <button
                     type="submit"
                     disabled={!inputMessage.trim() || isComposerListOpen || isComposerMenuOpen}
-                    className="absolute bottom-3.5 right-10 h-8 w-8 rounded-full text-muted-foreground hover:text-primary flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 hover:scale-105 active:scale-95 shadow-sm"
+                    className={`absolute bottom-3.5 right-10 h-8 w-8 rounded-full flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:scale-105 active:scale-95 shadow-sm ${
+                      inputMessage.trim()
+                        ? 'bg-primary text-background hover:bg-primary/90'
+                        : 'text-muted-foreground hover:text-primary'
+                    }`}
                   >
                     <ArrowUp className="w-5 h-5" strokeWidth={2} />
                   </button>
