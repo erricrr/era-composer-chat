@@ -10,6 +10,7 @@ import { ComposerSplitView } from './ComposerSplitView';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useIsTouch } from '@/hooks/useIsTouch';
 import { useGeminiChat } from '@/hooks/useGeminiChat';
+import ReactMarkdown from 'react-markdown';
 
 // Add type definitions for Web Speech API
 interface SpeechRecognitionEvent extends Event {
@@ -705,9 +706,17 @@ export function ChatInterface({
                       ? 'max-w-[85%] rounded-2xl px-4 py-2 bg-primary text-background ml-auto shadow-sm'
                       : 'max-w-[85%] rounded-2xl px-4 py-2 text-foreground bg-background'
                     }
-                    style={{ whiteSpace: 'pre-line' }}
                   >
-                    {message.text}
+                    <ReactMarkdown
+                      components={{
+                        // Style italics with proper font style
+                        em: ({ node, ...props }) => <em className="italic" {...props} />,
+                        // Preserve line breaks
+                        p: ({ children }) => <p style={{ whiteSpace: 'pre-line' }}>{children}</p>
+                      }}
+                    >
+                      {message.text}
+                    </ReactMarkdown>
                   </div>
                 </div>
               ))}
