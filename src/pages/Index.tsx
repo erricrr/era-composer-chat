@@ -423,29 +423,31 @@ const Index = () => {
         <header className="fixed-header" style={{ position: 'relative', zIndex: 70 }}>
           <div className="container mx-auto px-2 flex items-center justify-between h-full">
             {/* Left Side: Menu Toggle Area */}
-            <HeaderIcon tooltip={isMenuOpen ? 'Close menu' : 'Open menu'}>
-              <button
-                type="button"
-                onClick={toggleMenu}
-                aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
-                aria-expanded={isMenuOpen}
-                className="w-11 h-11 flex items-center justify-center rounded-md hover:bg-muted transition-colors duration-200 focus-ring-inset"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 transform transition-transform duration-500 ease-out"
-                  style={{ transform: isMenuOpen ? 'rotate(90deg)' : 'rotate(0deg)' }}
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+            <nav aria-label="Main navigation">
+              <HeaderIcon tooltip={isMenuOpen ? 'Close menu' : 'Open menu'}>
+                <button
+                  type="button"
+                  onClick={toggleMenu}
+                  aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+                  aria-expanded={isMenuOpen}
+                  className="w-11 h-11 flex items-center justify-center rounded-md hover:bg-muted transition-colors duration-200 focus-ring-inset"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
-                </svg>
-              </button>
-            </HeaderIcon>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5 transform transition-transform duration-500 ease-out"
+                    style={{ transform: isMenuOpen ? 'rotate(90deg)' : 'rotate(0deg)' }}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
+                  </svg>
+                </button>
+              </HeaderIcon>
+            </nav>
 
             {/* Right Side: Search + Icons */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2" role="group" aria-label="App tools">
               {/* Search Bar */}
               <ComposerSearch
                 composers={allComposersData}
@@ -558,7 +560,7 @@ const Index = () => {
             }}
           >
             {selectedComposer && isComposerInPublicDomain(selectedComposer) && (
-              <div className="container mx-auto px-4 h-full">
+              <article className="container mx-auto px-4 h-full" aria-label={`Chat with ${selectedComposer.name}`}>
                 <ChatInterface
                   key={chatClearTrigger}
                   composer={selectedComposer}
@@ -568,17 +570,17 @@ const Index = () => {
                   isComposerListOpen={isMenuOpen}
                   isActiveChatsOpen={isActiveChatsOpen}
                 />
-              </div>
+              </article>
             )}
             {selectedComposer && !isComposerInPublicDomain(selectedComposer) && (
-              <div className="container mx-auto px-4 h-full flex items-center justify-center">
+              <article className="container mx-auto px-4 h-full flex items-center justify-center" aria-label="Copyright notice">
                 <div className="text-center p-6 bg-muted/50 rounded-lg shadow">
                   <h2 className="text-xl font-semibold mb-2">Chat Unavailable</h2>
                   <p className="text-muted-foreground">
                     Chatting with {selectedComposer.name} is unavailable due to copyright restrictions.
                   </p>
                 </div>
-              </div>
+              </article>
             )}
           </div>
         </main>

@@ -143,10 +143,27 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
     // On desktop with no query, do nothing when X is clicked
   }, [searchQuery, isMobileView]);
 
+  // Track last announcement for status changes
+  const [statusAnnouncement, setStatusAnnouncement] = useState<string>('');
+
+  // Update search status announcements
+  useEffect(() => {
+    if (!searchQuery && hasSearched) {
+      setStatusAnnouncement('Search cleared.');
+    } else if (!isOpen && hasSearched && filteredComposers.length > 0) {
+      setStatusAnnouncement('Search results closed.');
+    } else {
+      setStatusAnnouncement('');
+    }
+  }, [searchQuery, isOpen, hasSearched, filteredComposers.length]);
+
   // Handle selecting a composer
   const handleSelect = useCallback((composer: Composer) => {
     console.log("[Search] Selected composer:", composer.name);
     console.log("[Search] Current view is mobile:", isMobileView);
+
+    // Set status announcement for selected composer
+    setStatusAnnouncement(`Selected composer ${composer.name}. Navigating to composer page.`);
 
     onSelectComposer(composer);
 
@@ -317,6 +334,9 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
     };
   }, []);
 
+  // State to track when the search box has focus
+  const [isInputFocused, setIsInputFocused] = useState(false);
+
   // Determine whether to show results
   const shouldShowResults = searchQuery.trim().length > 0;
 
@@ -330,13 +350,24 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
       )}
       ref={containerRef}
     >
-      {/* Live region to announce result counts */}
-      <div aria-live="polite" aria-atomic="true" className="sr-only">
-        {hasSearched && (
+      {/* Enhanced live region for search results */}
+      <div
+        aria-live="assertive"
+        aria-atomic="true"
+        aria-relevant="additions text"
+        className="sr-only"
+      >
+        {statusAnnouncement && statusAnnouncement}
+        {isLoading && "Searching composers..."}
+        {isInputFocused && !searchQuery && "Type to search for composers. Results will appear as you type."}
+        {hasSearched && !isLoading && !statusAnnouncement && (
           filteredComposers.length > 0
-            ? `${filteredComposers.length} composer${filteredComposers.length > 1 ? 's' : ''} found.`
-            : 'No composers found.'
+            ? `Found ${filteredComposers.length} composer${filteredComposers.length !== 1 ? 's' : ''} matching "${searchQuery}". Use up and down arrow keys to navigate results.`
+            : `No composers found matching "${searchQuery}". Try a different search term.`
         )}
+        {activeResultIndex >= 0 && filteredComposers[activeResultIndex] &&
+          `Selected: ${filteredComposers[activeResultIndex].name}. Press Enter to view this composer.`
+        }
       </div>
 
       {/* Mobile-Only Search Icon Button with conditional tooltip */}
@@ -379,6 +410,8 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
               value={searchQuery}
               onChange={(e) => handleInputChange(e.target.value)}
               onKeyDown={handleKeyDown}
+              onFocus={() => setIsInputFocused(true)}
+              onBlur={() => setIsInputFocused(false)}
               placeholder={SEARCH_PLACEHOLDER}
               className="composer-search-input w-full py-2 pl-10 pr-15 text-sm bg-transparent placeholder:text-muted-foreground transition-colors duration-200"
               aria-label="Search for composers"
@@ -389,19 +422,6 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
               aria-controls="search-results"
               aria-activedescendant={activeResultIndex >= 0 ? `search-result-${activeResultIndex}` : undefined}
             />
-
-            {/* Search results announcement */}
-            <div
-              className="sr-only"
-              aria-live="polite"
-              aria-atomic="true"
-            >
-              {hasSearched && (
-                filteredComposers.length > 0
-                  ? `Found ${filteredComposers.length} composer${filteredComposers.length !== 1 ? 's' : ''} matching "${searchQuery}".`
-                  : `No composers found matching "${searchQuery}".`
-              )}
-            </div>
 
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <Search className="h-4 w-4 text-muted-foreground" />
