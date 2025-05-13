@@ -237,14 +237,14 @@ export function ChatInterface({
   useEffect(() => {
     if (currentMessages.length > prevMessagesLengthRef.current) {
       const lastMessage = currentMessages[currentMessages.length - 1];
-      if (lastMessage.sender === 'composer' && isMobile) {
+      if (lastMessage.sender === 'composer') {
         scrollComposerTop();
       } else {
         scrollToBottom();
       }
     }
     prevMessagesLengthRef.current = currentMessages.length;
-  }, [currentMessages, isMobile, scrollToBottom, scrollComposerTop]);
+  }, [currentMessages, scrollToBottom, scrollComposerTop]);
 
   // Add scroll listener to detect user scrolling
   useEffect(() => {
