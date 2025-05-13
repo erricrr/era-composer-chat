@@ -9,6 +9,7 @@ import { ComposerImageViewer } from './ComposerImageViewer';
 import { ComposerSplitView } from './ComposerSplitView';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useIsTouch } from '@/hooks/useIsTouch';
+import { useGeminiChat } from '@/hooks/useGeminiChat';
 
 // Add type definitions for Web Speech API
 interface SpeechRecognitionEvent extends Event {
@@ -111,6 +112,13 @@ export function ChatInterface({
     getConversationsForComposer,
     setActiveConversationId
   } = useConversations();
+
+  const {
+    isGenerating,
+    error: geminiError,
+    initializeChat,
+    generateResponse
+  } = useGeminiChat();
 
   const isTouch = useIsTouch();
 
@@ -334,15 +342,20 @@ export function ChatInterface({
     }
   }, [composer.id, isSplitViewOpen]);
 
+  // Initialize Gemini chat when composer changes
+  useEffect(() => {
+    initializeChat(composer);
+  }, [composer.id, initializeChat]);
+
   // Show loading state
   if (!activeConversationId && currentMessages.length === 0) {
     return <div className="flex items-center justify-center h-full">Loading conversation...</div>;
   }
 
-  const handleMessageSubmit = () => {
-    if (!inputMessage.trim()) return;
+  const handleMessageSubmit = async () => {
+    if (!inputMessage.trim() || isGenerating) return;
 
-    // Stop dictation if it's active when sending a message
+    // Stop dictation if active
     if (isDictating && recognitionRef.current) {
       recognitionRef.current.stop();
       setIsDictating(false);
@@ -369,70 +382,46 @@ export function ChatInterface({
     // Enable auto-scroll when user sends a message
     setShouldAutoScroll(true);
 
-    if (!conversationId) {
-      console.log("[ChatInterface] No conversation ID available, starting new conversation");
-      const newConversationId = startConversation(composer);
-      currentConversationIdRef.current = newConversationId;
-
-      // Update UI immediately
-      setCurrentMessages([userMessage]);
-
-      // Then persist to storage
-      setTimeout(() => {
-        addMessage(newConversationId, userMessage.text, 'user');
-
-        // Add composer response
-        setTimeout(() => {
-          const responseText = generatePlaceholderResponse(userMessage.text, composer);
-          const composerMessage: Message = {
-            id: uuidv4(),
-            text: responseText,
-            sender: 'composer',
-            timestamp: Date.now()
-          };
-
-          // Update UI
-          setCurrentMessages(messages => [...messages, composerMessage]);
-
-          // Persist to storage
-          addMessage(newConversationId, responseText, 'composer');
-        }, 1000);
-      }, 100);
-    } else {
-      // Update UI immediately
+    try {
+      // Update UI immediately with user message
       setCurrentMessages(messages => [...messages, userMessage]);
 
-      // Persist to storage
-      addMessage(conversationId, userMessage.text, 'user');
+      if (!conversationId) {
+        console.log("[ChatInterface] No conversation ID available, starting new conversation");
+        const newConversationId = startConversation(composer);
+        currentConversationIdRef.current = newConversationId;
+      }
 
-      // Handle composer response
-      setTimeout(() => {
-        const responseText = generatePlaceholderResponse(userMessage.text, composer);
-        const composerMessage: Message = {
-          id: uuidv4(),
-          text: responseText,
-          sender: 'composer',
-          timestamp: Date.now()
-        };
+      // Persist user message
+      addMessage(conversationId || currentConversationIdRef.current!, userMessage.text, 'user');
 
-        // Update UI
-        setCurrentMessages(messages => [...messages, composerMessage]);
+      // Generate AI response
+      const responseText = await generateResponse(cleanMessage);
 
-        // Persist to storage
-        addMessage(conversationId, responseText, 'composer');
-      }, 1000);
+      const composerMessage: Message = {
+        id: uuidv4(),
+        text: responseText,
+        sender: 'composer',
+        timestamp: Date.now()
+      };
+
+      // Update UI with composer's response
+      setCurrentMessages(messages => [...messages, composerMessage]);
+
+      // Persist composer message
+      addMessage(conversationId || currentConversationIdRef.current!, responseText, 'composer');
+
+    } catch (error) {
+      console.error('Error in message submission:', error);
+      // Error is handled by useGeminiChat and displayed in UI if needed
     }
 
-    // IMPORTANT: Clear the input immediately to ensure it's reset
+    // Clear input
     setInputMessage('');
-
-    // Clear any lingering input and reset textarea height
-    setTimeout(() => {
-      if (textareaRef.current) {
-        textareaRef.current.value = ''; // Force clear the DOM element
-        textareaRef.current.style.height = '48px'; // Reset to default height
-      }
-    }, 0);
+    if (textareaRef.current) {
+      textareaRef.current.value = '';
+      textareaRef.current.style.height = '48px';
+    }
   };
 
   const handleSendMessage = (e: React.FormEvent) => {
@@ -474,21 +463,6 @@ export function ChatInterface({
         }
       }, 0);
     }
-  };
-
-  const generatePlaceholderResponse = (userMessage: string, composer: Composer): string => {
-    const years = `${composer.birthYear}-${composer.deathYear || 'present'}`;
-
-    if (userMessage.toLowerCase().includes('work') || userMessage.toLowerCase().includes('composition')) {
-      return `As ${composer.name}, my most famous works include ${composer.famousWorks.join(', ')}. Each composition reflects my style from the ${composer.era} period.`;
-    }
-    if (userMessage.toLowerCase().includes('life') || userMessage.toLowerCase().includes('born')) {
-      return `I was born in ${composer.birthYear} in ${composer.nationality} and ${composer.deathYear ? `lived until ${composer.deathYear}` : 'am still composing'}. ${composer.shortBio}`;
-    }
-    if (userMessage.toLowerCase().includes('style') || userMessage.toLowerCase().includes('music')) {
-      return `My musical style is characteristic of the ${composer.era} era. ${composer.longBio.split('.')[1] || 'My compositions were known for their technical innovation and emotional depth.'}.`;
-    }
-    return `Thank you for your interest in my work. I was a composer from the ${composer.era} era, known for ${composer.famousWorks[0]}. ${composer.shortBio}`;
   };
 
   // Function to handle dictation
@@ -737,6 +711,20 @@ export function ChatInterface({
                   </div>
                 </div>
               ))}
+              {isGenerating && (
+                <div className="message-bubble flex justify-start">
+                  <div className="max-w-[85%] rounded-2xl px-4 py-2 text-foreground bg-background">
+                    <span className="animate-pulse">Composing response...</span>
+                  </div>
+                </div>
+              )}
+              {geminiError && (
+                <div className="message-bubble flex justify-start">
+                  <div className="max-w-[85%] rounded-2xl px-4 py-2 text-destructive bg-destructive/10">
+                    {geminiError}
+                  </div>
+                </div>
+              )}
             </div>
           )}
           {/* Keep this for the scroll-to-bottom logic */}

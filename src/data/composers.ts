@@ -3,8 +3,8 @@ import composersData from './composers.json';
 export interface Composer {
   id: string;
   name: string;
-  searchableName: string;
-  era: Era[];
+  searchableName?: string;
+  era: Era | Era[];
   birthYear: number;
   deathYear: number | null;
   shortBio: string;
@@ -13,6 +13,7 @@ export interface Composer {
   location: string;
   famousWorks: string[];
   imageUrl: string;
+  notableQuotes: string[];
 }
 
 export enum Era {

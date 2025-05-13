@@ -636,7 +636,10 @@ export function ComposerList({
                         {selectedComposer.nationality}, {selectedComposer.birthYear}–{selectedComposer.deathYear || 'present'}
                       </span>
                       <div className="flex flex-wrap gap-1 lg:ml-2">
-                        {selectedComposer.era.map((e, idx) => (
+                        {(Array.isArray(selectedComposer.era)
+                          ? selectedComposer.era
+                          : [selectedComposer.era]
+                        ).map((e, idx) => (
                           <Badge key={e + idx} variant="badge" className="text-xs">
                             {e}
                           </Badge>
