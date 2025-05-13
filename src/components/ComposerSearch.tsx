@@ -191,22 +191,55 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
     setTimeout(() => inputRef.current?.focus(), 0);
   }, []);
 
+  // Effect to update usingKeyboard based on interaction type
+  useEffect(() => {
+    const handlePointer = () => {
+      setUsingKeyboard(false);
+      document.body.classList.remove('using-keyboard');
+    };
+
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'Tab' || e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        setUsingKeyboard(true);
+        document.body.classList.add('using-keyboard');
+      }
+    };
+
+    window.addEventListener('mousedown', handlePointer);
+    window.addEventListener('touchstart', handlePointer);
+    window.addEventListener('keydown', handleKey);
+
+    return () => {
+      window.removeEventListener('mousedown', handlePointer);
+      window.removeEventListener('touchstart', handlePointer);
+      window.removeEventListener('keydown', handleKey);
+    };
+  }, []);
+
   // Keyboard navigation for search results
   const handleKeyDown = useCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
     if (!isOpen || filteredComposers.length === 0) return;
 
+    // Set using keyboard to true to display focus rings
+    if (['ArrowDown', 'ArrowUp'].includes(event.key)) {
+      setUsingKeyboard(true);
+      document.body.classList.add('using-keyboard');
+    }
+
     switch (event.key) {
       case 'ArrowDown':
         event.preventDefault();
-        setActiveResultIndex((prevIndex) =>
-          prevIndex < filteredComposers.length - 1 ? prevIndex + 1 : prevIndex
-        );
+        setActiveResultIndex((prevIndex) => {
+          const newIndex = prevIndex < filteredComposers.length - 1 ? prevIndex + 1 : prevIndex;
+          return newIndex;
+        });
         break;
       case 'ArrowUp':
         event.preventDefault();
-        setActiveResultIndex((prevIndex) =>
-          prevIndex > 0 ? prevIndex - 1 : -1
-        );
+        setActiveResultIndex((prevIndex) => {
+          const newIndex = prevIndex > 0 ? prevIndex - 1 : -1;
+          return newIndex;
+        });
         break;
       case 'Enter':
         event.preventDefault();
@@ -222,6 +255,13 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
     }
   }, [isOpen, filteredComposers, activeResultIndex, handleSelect]);
 
+  // When dropdown closes, reset active index and focus input
+  useEffect(() => {
+    if (!isOpen) {
+      setActiveResultIndex(-1);
+    }
+  }, [isOpen]);
+
   // Scroll active result into view
   useEffect(() => {
     if (activeResultIndex >= 0 && resultRefs.current[activeResultIndex]) {
@@ -231,6 +271,50 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
       });
     }
   }, [activeResultIndex]);
+
+  // State to track if last interaction was keyboard navigation
+  const [usingKeyboard, setUsingKeyboard] = useState(false);
+
+  // State to track when the search box has focus
+  const [isInputFocused, setIsInputFocused] = useState(false);
+
+  // Determine whether to show results
+  const shouldShowResults = searchQuery.trim().length > 0;
+
+  // Update status announcement when search results change
+  useEffect(() => {
+    if (hasSearched && !isLoading) {
+      if (filteredComposers.length === 0) {
+        setStatusAnnouncement(`No composers found matching "${searchQuery}". Try a different search term.`);
+      } else {
+        setStatusAnnouncement(`Found ${filteredComposers.length} composer${filteredComposers.length !== 1 ? 's' : ''} matching "${searchQuery}". Use up and down arrow keys to navigate results.`);
+      }
+
+      // Clear announcement after it's been read
+      const timer = setTimeout(() => {
+        setStatusAnnouncement('');
+      }, 2000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [filteredComposers.length, hasSearched, isLoading, searchQuery]);
+
+  // Handle selection changes for announcements
+  useEffect(() => {
+    if (activeResultIndex >= 0 && filteredComposers[activeResultIndex]) {
+      // Don't announce selection changes from mouse interaction
+      if (usingKeyboard) {
+        setStatusAnnouncement(`Selected: ${filteredComposers[activeResultIndex].name}. Press Enter to view this composer.`);
+
+        // Clear announcement after it's been read
+        const timer = setTimeout(() => {
+          setStatusAnnouncement('');
+        }, 1500);
+
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [activeResultIndex, filteredComposers, usingKeyboard]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -290,9 +374,6 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
     // Media query for md breakpoint (typically 768px)
     const mediaQuery = window.matchMedia('(min-width: 768px)');
 
-    // Initial check to see if we're on desktop
-    const isInitiallyDesktop = mediaQuery.matches;
-
     // Handler to reset mobile search if screen becomes larger than md breakpoint
     const handleScreenChange = (e: MediaQueryListEvent) => {
       // ONLY reset mobile search active state when transitioning FROM mobile TO desktop
@@ -313,33 +394,6 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
     };
   }, [isMobileSearchActive]);
 
-  // State to track if last interaction was keyboard navigation
-  const [usingKeyboard, setUsingKeyboard] = useState(false);
-
-  // Effect to update usingKeyboard based on interaction type
-  useEffect(() => {
-    const handlePointer = () => setUsingKeyboard(false);
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Tab') {
-        setUsingKeyboard(true);
-      }
-    };
-    window.addEventListener('mousedown', handlePointer);
-    window.addEventListener('touchstart', handlePointer);
-    window.addEventListener('keydown', handleKey);
-    return () => {
-      window.removeEventListener('mousedown', handlePointer);
-      window.removeEventListener('touchstart', handlePointer);
-      window.removeEventListener('keydown', handleKey);
-    };
-  }, []);
-
-  // State to track when the search box has focus
-  const [isInputFocused, setIsInputFocused] = useState(false);
-
-  // Determine whether to show results
-  const shouldShowResults = searchQuery.trim().length > 0;
-
   return (
     <div
       className={cn(
@@ -352,7 +406,7 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
     >
       {/* Enhanced live region for search results */}
       <div
-        aria-live="assertive"
+        aria-live="polite"
         aria-atomic="true"
         aria-relevant="additions text"
         className="sr-only"
@@ -448,10 +502,14 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
           <div
             className="absolute top-[calc(100%+4px)] left-0 right-0 w-full"
             style={{ zIndex: 65 }}
-            id="search-results"
           >
             <div className="rounded-lg border border-border bg-card shadow-md">
-              <div className="max-h-[200px] overflow-y-auto p-1">
+              <div
+                className="max-h-[200px] overflow-y-auto p-1"
+                id="search-results"
+                role="listbox"
+                aria-label="Search suggestions"
+              >
                 {/* Loading indicator */}
                 {isLoading && (
                   <div className="py-2 px-3 text-center text-sm text-muted-foreground">
@@ -475,13 +533,22 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
                         key={composer.id}
                         id={`search-result-${index}`}
                         onClick={() => handleSelect(composer)}
-                        onMouseEnter={() => setActiveResultIndex(index)}
-                        onMouseLeave={() => setActiveResultIndex(-1)}
+                        onMouseEnter={() => {
+                          setActiveResultIndex(index);
+                          // Avoid focusing with mouse interactions
+                          setUsingKeyboard(false);
+                          document.body.classList.remove('using-keyboard');
+                        }}
+                        onMouseLeave={() => {
+                          if (!usingKeyboard) setActiveResultIndex(-1);
+                        }}
                         role="option"
                         aria-selected={index === activeResultIndex}
                         className={`py-1.5 px-3 font-serif text-foreground rounded-md cursor-pointer text-xs md:text-sm
                           ${index === activeResultIndex
-                            ? 'bg-secondary/80'
+                            ? usingKeyboard
+                              ? 'bg-secondary/80 ring-2 ring-primary ring-inset'
+                              : 'bg-secondary/80'
                             : 'hover:bg-secondary/30'}
                         `}
                       >

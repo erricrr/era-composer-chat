@@ -231,6 +231,11 @@
     outline: 2px solid hsl(var(--primary)) !important;
     outline-offset: 2px !important;
   }
+
+  /* Search result focus styling */
+  .using-keyboard [role="option"][aria-selected="true"] {
+    @apply ring-2 ring-primary ring-inset outline-none !important;
+  }
 }
 
 
