@@ -663,7 +663,7 @@ export function ComposerList({
                     </p>
                     <div>
                       <h4 className="font-semibold mb-1 md:mb-2 text-base md:text-lg">Notable Works</h4>
-                      <ul className="list-disc pl-5 space-y-1">
+                      <ul className="list-disc pl-5 mb-2 space-y-1">
                         {selectedComposer.famousWorks.slice(0, 3).map((work, index) => (
                           <li key={index} className="text-sm md:text-base text-foreground/80">{work}</li>
                         ))}
