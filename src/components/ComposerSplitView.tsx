@@ -396,7 +396,7 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
                 }`}>
                   Notable Works
                 </h3>
-                <ul className="list-disc pl-5 space-y-1">
+                <ul className="list-disc pl-5 mb-2 space-y-1">
                   {composer.famousWorks.map((work, index) => (
                     <li
                       key={index}
