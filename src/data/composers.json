@@ -696,6 +696,28 @@
       ]
     },
     {
+      "id": "frederic-chopin",
+      "name": "Frédéric Chopin",
+      "searchableName": "Frederic Chopin",
+      "era": ["Romantic"],
+      "birthYear": 1810,
+      "deathYear": 1849,
+      "shortBio": "Frédéric Chopin was a Polish-French composer and virtuoso pianist of the Romantic era. He is renowned for his poetic and technically demanding piano works. Chopin's music remains central to the piano repertoire. He was born in Poland and spent much of his adult life in Paris. Chopin wrote almost exclusively for solo piano, creating nocturnes, preludes, polonaises, and waltzes. His music is celebrated for its lyricism, expressive depth, and technical brilliance.",
+      "longBio": "Frédéric Chopin was a leading composer and pianist of the Romantic period. Born in Poland, he spent much of his adult life in Paris. Chopin wrote almost exclusively for solo piano, creating nocturnes, preludes, polonaises, and waltzes. His music is celebrated for its lyricism, expressive depth, and technical brilliance. Chopin was also admired as a performer, captivating audiences with his nuanced playing. He influenced generations of pianists and composers. Despite his early death, Chopin's works are beloved and frequently performed worldwide.",
+      "nationality": "Polish-French",
+      "location": "Paris, France",
+      "famousWorks": [
+        "Nocturnes",
+        "Preludes",
+        "Polonaises"
+      ],
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Frederic_Chopin_photo.jpeg",
+      "notableQuotes": [
+        "Simplicity is the final achievement. After one has played a vast quantity of notes and more notes, it is simplicity that emerges as the crowning reward of art.",
+        "Every difficulty slurred over will be a ghost to disturb your repose later on."
+      ]
+    },
+    {
       "id": "gabriel-faure",
       "searchableName": "Gabriel Faure",
       "name": "Gabriel Fauré",
@@ -739,27 +761,6 @@
       ]
     },
     {
-      "id": "george-frideric-handel",
-      "name": "George Frideric Handel",
-      "era": ["Baroque"],
-      "birthYear": 1685,
-      "deathYear": 1759,
-      "shortBio": "George Frideric Handel was a German-British Baroque composer. He is celebrated for his operas, oratorios, and instrumental works. Handel's Messiah remains one of the most beloved choral pieces in history. He was born in Germany and later became a British citizen. Handel achieved fame as a composer of Italian operas in London. His oratorios, especially Messiah, are renowned for their dramatic power and memorable melodies.",
-      "longBio": "George Frideric Handel was born in Germany and later became a British citizen. He achieved fame as a composer of Italian operas in London. Handel's oratorios, especially Messiah, are renowned for their dramatic power and memorable melodies. He also composed concerti grossi, organ concertos, and anthems. Handel's music blended German, Italian, and English influences. He was a prominent figure in London's musical life and enjoyed royal patronage. Handel's works are still widely performed and admired today.",
-      "nationality": "German-British",
-      "location": "London, England",
-      "famousWorks": [
-        "Messiah",
-        "Water Music",
-        "Music for the Royal Fireworks"
-      ],
-      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/f/fa/George_Frideric_Handel_by_Balthasar_Denner.jpg",
-      "notableQuotes": [
-        "I should be sorry if I only entertained them, I wished to make them better.",
-        "I have always adhered to this principle: make an honest noise, and the money will roll in of itself."
-      ]
-    },
-    {
       "id": "georg-philipp-telemann",
       "name": "Georg Philipp Telemann",
       "era": ["Baroque"],
@@ -778,6 +779,27 @@
       "notableQuotes": [
         "Music is the language of the soul.",
         "The art of music is a divine gift, and those who possess it are blessed."
+      ]
+    },
+    {
+      "id": "george-frideric-handel",
+      "name": "George Frideric Handel",
+      "era": ["Baroque"],
+      "birthYear": 1685,
+      "deathYear": 1759,
+      "shortBio": "George Frideric Handel was a German-British Baroque composer. He is celebrated for his operas, oratorios, and instrumental works. Handel's Messiah remains one of the most beloved choral pieces in history. He was born in Germany and later became a British citizen. Handel achieved fame as a composer of Italian operas in London. His oratorios, especially Messiah, are renowned for their dramatic power and memorable melodies.",
+      "longBio": "George Frideric Handel was born in Germany and later became a British citizen. He achieved fame as a composer of Italian operas in London. Handel's oratorios, especially Messiah, are renowned for their dramatic power and memorable melodies. He also composed concerti grossi, organ concertos, and anthems. Handel's music blended German, Italian, and English influences. He was a prominent figure in London's musical life and enjoyed royal patronage. Handel's works are still widely performed and admired today.",
+      "nationality": "German-British",
+      "location": "London, England",
+      "famousWorks": [
+        "Messiah",
+        "Water Music",
+        "Music for the Royal Fireworks"
+      ],
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/f/fa/George_Frideric_Handel_by_Balthasar_Denner.jpg",
+      "notableQuotes": [
+        "I should be sorry if I only entertained them, I wished to make them better.",
+        "I have always adhered to this principle: make an honest noise, and the money will roll in of itself."
       ]
     },
     {
@@ -1096,49 +1118,6 @@
       ]
     },
     {
-      "id": "frederic-chopin",
-      "name": "Frédéric Chopin",
-      "searchableName": "Frederic Chopin",
-      "era": ["Romantic"],
-      "birthYear": 1810,
-      "deathYear": 1849,
-      "shortBio": "Frédéric Chopin was a Polish-French composer and virtuoso pianist of the Romantic era. He is renowned for his poetic and technically demanding piano works. Chopin's music remains central to the piano repertoire. He was born in Poland and spent much of his adult life in Paris. Chopin wrote almost exclusively for solo piano, creating nocturnes, preludes, polonaises, and waltzes. His music is celebrated for its lyricism, expressive depth, and technical brilliance.",
-      "longBio": "Frédéric Chopin was a leading composer and pianist of the Romantic period. Born in Poland, he spent much of his adult life in Paris. Chopin wrote almost exclusively for solo piano, creating nocturnes, preludes, polonaises, and waltzes. His music is celebrated for its lyricism, expressive depth, and technical brilliance. Chopin was also admired as a performer, captivating audiences with his nuanced playing. He influenced generations of pianists and composers. Despite his early death, Chopin's works are beloved and frequently performed worldwide.",
-      "nationality": "Polish-French",
-      "location": "Paris, France",
-      "famousWorks": [
-        "Nocturnes",
-        "Preludes",
-        "Polonaises"
-      ],
-      "imageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Frederic_Chopin_photo.jpeg",
-      "notableQuotes": [
-        "Simplicity is the final achievement. After one has played a vast quantity of notes and more notes, it is simplicity that emerges as the crowning reward of art.",
-        "Every difficulty slurred over will be a ghost to disturb your repose later on."
-      ]
-    },
-    {
-      "id": "pyotr-ilyich-tchaikovsky",
-      "name": "Pyotr Ilyich Tchaikovsky",
-      "era": ["Romantic"],
-      "birthYear": 1840,
-      "deathYear": 1893,
-      "shortBio": "Pyotr Ilyich Tchaikovsky was a Russian Romantic composer known for his expressive melodies and emotional depth. He wrote symphonies, concertos, operas, and ballets that are beloved worldwide. Tchaikovsky's music remains a cornerstone of the classical repertoire. He was born in Votkinsk, Russia, and studied at the Saint Petersburg Conservatory. Tchaikovsky composed iconic works such as 'Swan Lake,' 'The Nutcracker,' and the '1812 Overture.'",
-      "longBio": "Pyotr Ilyich Tchaikovsky was one of Russia's most celebrated composers. He studied at the Saint Petersburg Conservatory and achieved early success with his Piano Concerto No. 1. Tchaikovsky composed iconic works such as 'Swan Lake,' 'The Nutcracker,' and the '1812 Overture.' His music is noted for its lyricism, vivid orchestration, and emotional intensity. Despite professional success, he struggled with personal crises and depression. Tchaikovsky's openness to Western European influences set him apart from his Russian contemporaries. Today, his works are regularly performed and cherished worldwide.",
-      "nationality": "Russian",
-      "location": "Saint Petersburg, Russia",
-      "famousWorks": [
-        "The Nutcracker",
-        "Swan Lake",
-        "1812 Overture"
-      ],
-      "imageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Portr%C3%A4t_des_Komponisten_Pjotr_I._Tschaikowski_%281840-1893%29.jpg",
-      "notableQuotes": [
-        "To regret one's own experiences is to arrest one's own development. To deny one's own experiences is to put a lie into the lips of one's own life. It is no less than a denial of the soul.",
-        "Inspiration is a guest that does not willingly visit the lazy."
-      ]
-    },
-    {
       "id": "johannes-brahms",
       "name": "Johannes Brahms",
       "era": ["Romantic"],
@@ -1347,6 +1326,27 @@
       "notableQuotes": [
         "Music is the arithmetic of sounds as optics is the geometry of light.",
         "The art of music is that of sounds in time, expressing ideas of the mind or feelings of the heart."
+      ]
+    },
+    {
+      "id": "pyotr-ilyich-tchaikovsky",
+      "name": "Pyotr Ilyich Tchaikovsky",
+      "era": ["Romantic"],
+      "birthYear": 1840,
+      "deathYear": 1893,
+      "shortBio": "Pyotr Ilyich Tchaikovsky was a Russian Romantic composer known for his expressive melodies and emotional depth. He wrote symphonies, concertos, operas, and ballets that are beloved worldwide. Tchaikovsky's music remains a cornerstone of the classical repertoire. He was born in Votkinsk, Russia, and studied at the Saint Petersburg Conservatory. Tchaikovsky composed iconic works such as 'Swan Lake,' 'The Nutcracker,' and the '1812 Overture.'",
+      "longBio": "Pyotr Ilyich Tchaikovsky was one of Russia's most celebrated composers. He studied at the Saint Petersburg Conservatory and achieved early success with his Piano Concerto No. 1. Tchaikovsky composed iconic works such as 'Swan Lake,' 'The Nutcracker,' and the '1812 Overture.' His music is noted for its lyricism, vivid orchestration, and emotional intensity. Despite professional success, he struggled with personal crises and depression. Tchaikovsky's openness to Western European influences set him apart from his Russian contemporaries. Today, his works are regularly performed and cherished worldwide.",
+      "nationality": "Russian",
+      "location": "Saint Petersburg, Russia",
+      "famousWorks": [
+        "The Nutcracker",
+        "Swan Lake",
+        "1812 Overture"
+      ],
+      "imageUrl": "https://commons.wikimedia.org/wiki/Special:FilePath/Portr%C3%A4t_des_Komponisten_Pjotr_I._Tschaikowski_%281840-1893%29.jpg",
+      "notableQuotes": [
+        "To regret one's own experiences is to arrest one's own development. To deny one's own experiences is to put a lie into the lips of one's own life. It is no less than a denial of the soul.",
+        "Inspiration is a guest that does not willingly visit the lazy."
       ]
     },
     {
