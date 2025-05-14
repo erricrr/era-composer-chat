@@ -386,6 +386,13 @@ export function ChatInterface({
       // Update UI immediately with user message
       setCurrentMessages(messages => [...messages, userMessage]);
 
+      // Clear input immediately so the textarea empties before the AI responds
+      setInputMessage('');
+      if (textareaRef.current) {
+        textareaRef.current.value = '';
+        textareaRef.current.style.height = '48px';
+      }
+
       if (!conversationId) {
         console.log("[ChatInterface] No conversation ID available, starting new conversation");
         const newConversationId = startConversation(composer);
@@ -414,13 +421,6 @@ export function ChatInterface({
     } catch (error) {
       console.error('Error in message submission:', error);
       // Error is handled by useGeminiChat and displayed in UI if needed
-    }
-
-    // Clear input
-    setInputMessage('');
-    if (textareaRef.current) {
-      textareaRef.current.value = '';
-      textareaRef.current.style.height = '48px';
     }
   };
 
