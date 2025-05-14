@@ -19,7 +19,7 @@ export interface SafetySetting {
 }
 
 export interface GeminiServiceInterface {
-  initializeChat: (composer: Composer) => Promise<void>;
+  initializeChat: (composer: Composer, previousChatHistory?: ChatMessage[]) => Promise<void>;
   generateResponse: (userMessage: string) => Promise<string>;
   saveChatHistory: () => Promise<void>;
   loadChatHistory: () => Promise<void>;

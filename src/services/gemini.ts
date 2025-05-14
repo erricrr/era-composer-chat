@@ -110,10 +110,10 @@ ${composer.notableQuotes.map(quote => `- "${quote}"`).join('\n')}
 Remember: You are speaking as ${composer.name} in first person. Maintain your historical perspective and personality throughout the conversation.`;
   }
 
-  public async initializeChat(composer: Composer) {
+  public async initializeChat(composer: Composer, previousChatHistory: ChatMessage[] = []) {
     this.composer = composer;
-    this.chatHistory = [];
-    // Future consideration: Load chat history from Firebase here
+    // Initialize chat history with previous messages to prevent duplicate greetings
+    this.chatHistory = previousChatHistory;
   }
 
   public async generateResponse(userMessage: string): Promise<string> {

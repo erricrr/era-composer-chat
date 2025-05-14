@@ -11,6 +11,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { useIsTouch } from '@/hooks/useIsTouch';
 import { useGeminiChat } from '@/hooks/useGeminiChat';
 import ReactMarkdown from 'react-markdown';
+import { ChatMessage } from '@/types/gemini';
 
 // Add type definitions for Web Speech API
 interface SpeechRecognitionEvent extends Event {
@@ -166,15 +167,16 @@ export function ChatInterface({
     return result;
   };
 
-  // Effect to handle composer changes
+  // Effect to handle composer changes and initialize Gemini chat with existing messages
   useEffect(() => {
     console.log(`[ChatInterface] Composer changed to: ${composer.id}`);
 
-    // Reset message display when changing composers
+    // Reset UI state
     setCurrentMessages([]);
-    setShouldAutoScroll(true); // Reset auto-scroll when composer changes
+    setShouldAutoScroll(true);
 
     const composerConversations = getConversationsForComposer(composer.id);
+    let loadedMessages: Message[] = [];
 
     if (composerConversations.length > 0) {
       // Use the most recent conversation
@@ -187,30 +189,32 @@ export function ChatInterface({
       setActiveConversationId(conversationId);
       currentConversationIdRef.current = conversationId;
 
-      // Get the most accurate message data directly from localStorage
+      // Load messages from localStorage if available
       const storageConversation = getConversationFromStorage(conversationId);
-
       if (storageConversation && storageConversation.messages.length > 0) {
-        console.log(`[ChatInterface] Found ${storageConversation.messages.length} messages in localStorage`);
-
-        // Count messages by type
-        const userMsgs = storageConversation.messages.filter(m => m.sender === 'user').length;
-        const composerMsgs = storageConversation.messages.filter(m => m.sender === 'composer').length;
-        console.log(`[ChatInterface] Message counts - User: ${userMsgs}, Composer: ${composerMsgs}`);
-
-        // Directly set messages from storage
-        setCurrentMessages(storageConversation.messages);
+        loadedMessages = storageConversation.messages;
       } else {
-        // Fallback to the state data if localStorage fails
-        setCurrentMessages(mostRecentConversation.messages);
+        loadedMessages = mostRecentConversation.messages;
       }
     } else {
-      // Start a new conversation if none exists
+      // Start a new conversation
       const newConversationId = startConversation(composer);
       currentConversationIdRef.current = newConversationId;
-      setCurrentMessages([]);
+      loadedMessages = [];
     }
-  }, [composer.id, getConversationsForComposer, startConversation, setActiveConversationId]);
+
+    // Update UI messages
+    setCurrentMessages(loadedMessages);
+
+    // Seed Gemini service with existing chat history to prevent duplicate greeting
+    const serviceChatHistory = (
+      loadedMessages.map(msg => ({
+        role: msg.sender === 'user' ? 'user' : 'model',
+        text: msg.text,
+      }))
+    ) as ChatMessage[];
+    initializeChat(composer, serviceChatHistory);
+  }, [composer.id, initializeChat]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Function to scroll user messages to bottom
   const scrollToBottom = useCallback(() => {
@@ -342,11 +346,6 @@ export function ChatInterface({
       textareaRef.current.focus();
     }
   }, [composer.id, isSplitViewOpen]);
-
-  // Initialize Gemini chat when composer changes
-  useEffect(() => {
-    initializeChat(composer);
-  }, [composer.id, initializeChat]);
 
   // Show loading state
   if (!activeConversationId && currentMessages.length === 0) {
