@@ -304,7 +304,7 @@ export function ChatInterface({
 
   // Add global CSS for mic pulse animation
   useEffect(() => {
-    // Add global CSS for mic pulse animation and height utilities
+    // Add global CSS for mic pulse animation
     const style = document.createElement('style');
     style.textContent = `
       @keyframes micPulse {
@@ -321,55 +321,11 @@ export function ChatInterface({
       .mic-pulse-animation {
         animation: micPulse 1.5s infinite;
       }
-      .full-height {
-        height: 100vh;
-        height: -webkit-fill-available;
-        height: fill-available;
-        height: -moz-available;
-        display: flex;
-        flex-direction: column;
-      }
-      .chat-messages {
-        flex-grow: 1;
-        overflow-y: auto;
-      }
     `;
     document.head.appendChild(style);
 
     return () => {
       document.head.removeChild(style);
-    };
-  }, []);
-
-  // Add effect to ensure proper viewport on mobile
-  useEffect(() => {
-    // Fix for viewport issues on all devices
-    const viewportMetaTag = document.querySelector('meta[name="viewport"]');
-
-    if (viewportMetaTag) {
-      viewportMetaTag.setAttribute('content', 'width=device-width, initial-scale=1, height=device-height, viewport-fit=cover');
-    } else {
-      const newViewportMetaTag = document.createElement('meta');
-      newViewportMetaTag.name = 'viewport';
-      newViewportMetaTag.content = 'width=device-width, initial-scale=1, height=device-height, viewport-fit=cover';
-      document.head.appendChild(newViewportMetaTag);
-    }
-
-    // Set initial viewport height
-    const setVh = () => {
-      const vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty('--vh', `${vh}px`);
-    };
-
-    // Set it initially
-    setVh();
-
-    // Update on resize
-    window.addEventListener('resize', setVh);
-
-    // Cleanup
-    return () => {
-      window.removeEventListener('resize', setVh);
     };
   }, []);
 
@@ -387,17 +343,9 @@ export function ChatInterface({
   // Auto-focus textarea when composer changes or split view toggles
   useEffect(() => {
     if (!isSplitViewOpen && textareaRef.current) {
-      // Timeout to make sure the focus happens after rendering
-      setTimeout(() => {
-        textareaRef.current?.focus();
-
-        // For mobile devices, scroll to the bottom to ensure the input is visible
-        if (isMobile) {
-          window.scrollTo(0, document.body.scrollHeight);
-        }
-      }, 100);
+      textareaRef.current.focus();
     }
-  }, [composer.id, isSplitViewOpen, isMobile]);
+  }, [composer.id, isSplitViewOpen]);
 
   // Show loading state
   if (!activeConversationId && currentMessages.length === 0) {
@@ -443,10 +391,6 @@ export function ChatInterface({
       if (textareaRef.current) {
         textareaRef.current.value = '';
         textareaRef.current.style.height = '48px';
-        // Blur the textarea to dismiss the keyboard on mobile
-        if (isMobile) {
-          textareaRef.current.blur();
-        }
       }
 
       if (!conversationId) {
@@ -680,7 +624,9 @@ export function ChatInterface({
   };
 
   const chatContent = (
-    <div className="relative flex flex-col h-full bg-background overflow-hidden full-height">
+    <div
+      className="relative flex flex-col h-full bg-background overflow-hidden"
+    >
       <div className="relative flex items-center justify-end px-2">
         {(!isSplitViewOpen) ? (
           <div className="flex items-center justify-between px-5 py-5 pb-2.5 -mt-1 w-full bg-primary-foreground border-b shadow-md z-10">
@@ -738,8 +684,8 @@ export function ChatInterface({
       </div>
 
       {/* Assign ref to chat container */}
-      <div className="flex-1 overflow-y-auto p-4 relative chat-messages" ref={chatContainerRef}>
-        <div className="flex flex-col min-h-full">
+      <div className="flex-1 overflow-y-auto p-4 relative" ref={chatContainerRef}>
+        <div className="flex flex-col min-h-[calc(100%-2rem)]">
           {currentMessages.length === 0 ? (
             <div className="flex-1 flex items-center justify-center text-muted-foreground text-sm">
               <p>Start a conversation with {getLastName(composer.name)}. Ask them about their music.</p>
@@ -794,18 +740,10 @@ export function ChatInterface({
         </div>
       </div>
 
-      <form onSubmit={handleSendMessage} className="sticky bottom-0 border-t bg-background/80 backdrop-blur-sm pb-4 z-20" style={{ flexShrink: 0 }}>
+      <form onSubmit={handleSendMessage} className="sticky bottom-0 border-t bg-background/80 backdrop-blur-sm pb-4">
         <div className="pt-4 relative mx-5 z-10">
           <div className="relative flex gap-2">
-            <div
-              key={`input-${isSplitViewOpen}`}
-              className="flex-1 relative"
-              onClick={() => {
-                if (isMobile && textareaRef.current) {
-                  textareaRef.current.focus();
-                }
-              }}
-            >
+            <div key={`input-${isSplitViewOpen}`} className="flex-1 relative">
               <textarea
                 id="chat-input"
                 aria-label="Type your message"
@@ -820,15 +758,6 @@ export function ChatInterface({
                   e.target.style.height = `${Math.min(e.target.scrollHeight, 300)}px`;
                 }}
                 onKeyDown={handleKeyPress}
-                onBlur={() => isMobile && window.scrollTo(0, 0)}
-                onFocus={() => {
-                  if (isMobile) {
-                    // Slight delay to account for keyboard opening
-                    setTimeout(() => {
-                      window.scrollTo(0, document.body.scrollHeight);
-                    }, 300);
-                  }
-                }}
                 placeholder={`Ask a question...`}
                 className={`w-full bg-background pl-5 pr-32 py-3 border border-input text-sm text-foreground
                   outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0
@@ -940,7 +869,7 @@ export function ChatInterface({
   );
 
   return (
-    <div className="relative w-full h-full flex flex-col full-height">
+    <div className="relative w-full h-full">
       {/* Regular chat view: only show when split view is closed */}
       <div
         className={`absolute inset-0 transition-all duration-300 ease-out ${
