@@ -112,8 +112,9 @@ Remember: You are speaking as ${composer.name} in first person. Maintain your hi
 
   public async initializeChat(composer: Composer, previousChatHistory: ChatMessage[] = []) {
     this.composer = composer;
-    // Initialize chat history with previous messages to prevent duplicate greetings
-    this.chatHistory = previousChatHistory;
+    // Seed system prompt as a user message followed by previous messages to ensure instructions are always applied
+    const systemPrompt = this.buildSystemPrompt(composer);
+    this.chatHistory = [{ role: 'user', text: systemPrompt }, ...previousChatHistory];
   }
 
   public async generateResponse(userMessage: string): Promise<string> {
@@ -122,34 +123,31 @@ Remember: You are speaking as ${composer.name} in first person. Maintain your hi
     }
 
     try {
-      // Add user message to history
-      this.chatHistory.push({ role: 'user', text: userMessage });
-
-      // Format the conversation history
+      // Prepare conversation history including system prompt and past messages
       const formattedHistory = this.chatHistory.map(msg => ({
+        // Use ChatMessage.role directly ('system','user','model') as supported by SDK
         role: msg.role,
         parts: [{ text: msg.text }],
       }));
 
-      // Create the chat
+      // Start the chat with seeded history
       const chat = this.model.startChat({
         history: formattedHistory,
-        generationConfig: DEFAULT_CONFIG,
+        generationConfig: {
+          ...DEFAULT_CONFIG,
+          // preserve stop sequences as configured in model
+          stopSequences: ["\n\nUser:", "\n\nAssistant:"],
+        },
       });
 
-      // Send the message with the system prompt for the first message,
-      // or just the user message for subsequent messages
-      const messageToSend = this.chatHistory.length <= 1
-        ? `${this.buildSystemPrompt(this.composer)}\n\nUser: ${userMessage}`
-        : userMessage;
-
       console.log('Sending request to Gemini:', {
-        messageToSend,
+        messageToSend: userMessage,
         historyLength: this.chatHistory.length,
         config: DEFAULT_CONFIG
       });
 
-      const result = await chat.sendMessage(messageToSend);
+      // Send the user message
+      const result = await chat.sendMessage(userMessage);
 
       if (!result.response) {
         throw new Error('Empty response received from Gemini');
@@ -158,7 +156,8 @@ Remember: You are speaking as ${composer.name} in first person. Maintain your hi
       const response = result.response.text();
       console.log('Received response from Gemini:', response);
 
-      // Add response to history
+      // Record user and model messages in history
+      this.chatHistory.push({ role: 'user', text: userMessage });
       this.chatHistory.push({ role: 'model', text: response });
 
       // Future consideration: Save chat history to Firebase here
