@@ -71,20 +71,29 @@
     --sidebar-ring: 45 30% 65%;
   }
 
-
-
-
-
   html, body {
-    @apply min-h-screen overflow-hidden;
+    @apply min-h-screen overflow-hidden font-sans antialiased bg-background text-foreground;
+    overflow-x: hidden;
+
+    @media screen and (max-width: 768px) {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+      overscroll-behavior: none;
+      background-color: hsl(var(--background));
+    }
   }
 
+  @media screen and (max-width: 768px) {
+    html::-webkit-scrollbar,
+    body::-webkit-scrollbar {
+      display: none;
+    }
+  }
 
   #root {
     @apply min-h-screen;
   }
 }
-
 
 @layer base {
   * {
@@ -237,7 +246,6 @@
     @apply ring-2 ring-primary ring-inset outline-none !important;
   }
 }
-
 
 /* Add animations */
 @keyframes expandVertical {
