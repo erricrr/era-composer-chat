@@ -526,8 +526,8 @@ const Index = () => {
               }`}
               style={{
                 width: '100%',
-                top: '2.5rem',
-                height: 'calc(100vh - 2.5rem)'
+                top: '2.75rem',
+                height: 'calc(100dvh - 2.75rem)'
               }}
               role="complementary"
               aria-label="Composer selection menu"
@@ -552,8 +552,8 @@ const Index = () => {
             style={{
               left: 0,
               right: isSplitViewOpenFromChat ? '0' : isActiveChatsOpen ? '16rem' : '0',
-              top: '2.5rem',
-              height: 'calc(100vh - 2.5rem)',
+              top: '2.75rem',
+              height: 'calc(100dvh - 2.75rem)',
               backdropFilter: 'blur(8px)',
               boxShadow: '0 -10px 25px rgba(0,0,0,0.1)',
               zIndex: 40

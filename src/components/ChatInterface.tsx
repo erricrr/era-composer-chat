@@ -684,7 +684,7 @@ export function ChatInterface({
       </div>
 
       {/* Assign ref to chat container */}
-      <div className="flex-1 overflow-y-auto p-4 relative" ref={chatContainerRef}>
+      <div className="flex-1 overflow-y-auto overscroll-contain p-4 relative" ref={chatContainerRef}>
         <div className="flex flex-col min-h-[calc(100%-2rem)]">
           {currentMessages.length === 0 ? (
             <div className="flex-1 flex items-center justify-center text-muted-foreground text-sm">
