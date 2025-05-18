@@ -4,6 +4,21 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Viewport and mobile fixes */
+@viewport {
+  width: device-width;
+  zoom: 1.0;
+  min-zoom: 1.0;
+  max-zoom: 1.0;
+  user-zoom: fixed;
+}
+
+/* Prevent iOS text size adjustment on orientation change */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 @layer base {
   :root {
     /* Light Mode - Elegant Classical */
@@ -74,19 +89,20 @@
   html, body {
     @apply min-h-screen overflow-hidden font-sans antialiased bg-background text-foreground;
     overflow-x: hidden;
+    /* Add these properties to prevent unwanted scrolling/zooming */
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    touch-action: manipulation;
+    overscroll-behavior: none;
 
     @media screen and (max-width: 768px) {
       -ms-overflow-style: none;
       scrollbar-width: none;
       overscroll-behavior: none;
       background-color: hsl(var(--background));
-    }
-  }
-
-  @media screen and (max-width: 768px) {
-    html::-webkit-scrollbar,
-    body::-webkit-scrollbar {
-      display: none;
+      /* Prevent iOS double-tap zoom */
+      touch-action: pan-y pinch-zoom;
     }
   }
 

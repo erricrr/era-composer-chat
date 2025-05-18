@@ -741,9 +741,9 @@ export function ChatInterface({
       </div>
 
       <form onSubmit={handleSendMessage} className="sticky bottom-0 border-t bg-background/80 backdrop-blur-sm pb-4">
-        <div className="pt-4 relative mx-5 z-10">
-          <div className="relative flex gap-2">
-            <div key={`input-${isSplitViewOpen}`} className="flex-1 relative">
+        <div className="pt-4 px-3 sm:px-5 relative z-10">
+          <div className="relative flex gap-2 max-w-full">
+            <div key={`input-${isSplitViewOpen}`} className="flex-1 relative max-w-full">
               <textarea
                 id="chat-input"
                 aria-label="Type your message"
@@ -759,7 +759,7 @@ export function ChatInterface({
                 }}
                 onKeyDown={handleKeyPress}
                 placeholder={`Ask a question...`}
-                className={`w-full bg-background pl-5 pr-32 py-3 border border-input text-sm text-foreground
+                className={`w-full bg-background pl-4 pr-28 py-3 border border-input text-sm text-foreground
                   outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0
                   ${isDictating ? 'ring-1 ring-primary' : ''}
                   min-h-[48px] max-h-[300px] overflow-y-auto resize-none`}
@@ -767,85 +767,88 @@ export function ChatInterface({
                 disabled={isComposerListOpen || isComposerMenuOpen}
               />
 
-              {/* Dictation Button - Wrap in a positioned div for tooltip context */}
-              <div className="absolute bottom-3.5 right-20 z-10">
+              {/* Control buttons container - make it stick to viewport on mobile */}
+              <div className="absolute bottom-3.5 right-1 flex items-center gap-1.5 px-1.5 bg-background/50 backdrop-blur-sm">
+                {/* Dictation Button */}
+                <div className="z-10">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button
+                        type="button"
+                        disabled={isComposerListOpen || isComposerMenuOpen}
+                        onClick={handleDictation}
+                        className={`h-8 w-8 rounded-full flex items-center justify-center
+                          ${isComposerListOpen || isComposerMenuOpen ? 'opacity-50 cursor-not-allowed' : ''}
+                          ${isDictating
+                            ? 'bg-destructive text-background mic-pulse-animation'
+                            : 'text-muted-foreground hover:text-primary'
+                          } transition-colors duration-200 hover:scale-105 active:scale-95 shadow-sm`}
+                        aria-label={isDictating ? "Stop dictating" : "Dictate"}
+                      >
+                        <Mic className="w-5 h-5" strokeWidth={2} />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent
+                      side="top"
+                      align="center"
+                      className="text-xs z-50"
+                      sideOffset={5}
+                    >
+                      {isDictating ? 'Stop dictating' : 'Dictate'}
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
+
+                {/* Send Button */}
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <button
-                      type="button"
-                      disabled={isComposerListOpen || isComposerMenuOpen}
-                      onClick={handleDictation}
-                      className={`h-8 w-8 rounded-full flex items-center justify-center
-                        ${isComposerListOpen || isComposerMenuOpen ? 'opacity-50 cursor-not-allowed' : ''}
-                        ${isDictating
-                          ? 'bg-destructive text-background mic-pulse-animation'
+                      type="submit"
+                      disabled={!inputMessage.trim() || isComposerListOpen || isComposerMenuOpen}
+                      className={`h-8 w-8 rounded-full flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:scale-105 active:scale-95 shadow-sm ${
+                        inputMessage.trim()
+                          ? 'bg-primary text-background hover:bg-primary/90'
                           : 'text-muted-foreground hover:text-primary'
-                        } transition-colors duration-200 hover:scale-105 active:scale-95 shadow-sm`}
-                      aria-label={isDictating ? "Stop dictating" : "Dictate"}
+                      }`}
                     >
-                      <Mic className="w-5 h-5" strokeWidth={2} />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent
-                    side="top"
-                    align="center"
-                    className="text-xs z-50"
-                    sideOffset={5}
-                  >
-                    {isDictating ? 'Stop dictating' : 'Dictate'}
-                  </TooltipContent>
-                </Tooltip>
-              </div>
-
-              {/* Send Button */}
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    type="submit"
-                    disabled={!inputMessage.trim() || isComposerListOpen || isComposerMenuOpen}
-                    className={`absolute bottom-3.5 right-10 h-8 w-8 rounded-full flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:scale-105 active:scale-95 shadow-sm ${
-                      inputMessage.trim()
-                        ? 'bg-primary text-background hover:bg-primary/90'
-                        : 'text-muted-foreground hover:text-primary'
-                    }`}
-                  >
-                    <ArrowUp className="w-5 h-5" strokeWidth={2} />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent side="top" align="center" className="text-xs">
-                  Send
-                </TooltipContent>
-              </Tooltip>
-
-              {/* Reset Button */}
-              {!isTouch ? (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <button
-                      type="button"
-                      disabled={isComposerListOpen || isComposerMenuOpen}
-                      onClick={handleResetChat}
-                      className="absolute bottom-3.5 right-1 h-8 w-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-primary transition-colors duration-200 hover:scale-105 active:scale-95 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                      aria-label="Reset chat"
-                    >
-                      <RefreshCcw className="w-5 h-5" strokeWidth={2} />
+                      <ArrowUp className="w-5 h-5" strokeWidth={2} />
                     </button>
                   </TooltipTrigger>
                   <TooltipContent side="top" align="center" className="text-xs">
-                    Reset chat
+                    Send
                   </TooltipContent>
                 </Tooltip>
-              ) : (
-                <button
-                  type="button"
-                  disabled={isComposerListOpen || isComposerMenuOpen}
-                  onClick={handleResetChat}
-                  className="absolute bottom-3.5 right-1 h-8 w-8 rounded-full flex items-center justify-center text-muted-foreground transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
-                  aria-label="Reset chat"
-                >
-                  <RefreshCcw className="w-5 h-5" strokeWidth={2} />
-                </button>
-              )}
+
+                {/* Reset Button */}
+                {!isTouch ? (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button
+                        type="button"
+                        disabled={isComposerListOpen || isComposerMenuOpen}
+                        onClick={handleResetChat}
+                        className="h-8 w-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-primary transition-colors duration-200 hover:scale-105 active:scale-95 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                        aria-label="Reset chat"
+                      >
+                        <RefreshCcw className="w-5 h-5" strokeWidth={2} />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent side="top" align="center" className="text-xs">
+                      Reset chat
+                    </TooltipContent>
+                  </Tooltip>
+                ) : (
+                  <button
+                    type="button"
+                    disabled={isComposerListOpen || isComposerMenuOpen}
+                    onClick={handleResetChat}
+                    className="h-8 w-8 rounded-full flex items-center justify-center text-muted-foreground transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                    aria-label="Reset chat"
+                  >
+                    <RefreshCcw className="w-5 h-5" strokeWidth={2} />
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>
