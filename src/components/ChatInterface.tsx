@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, KeyboardEvent, useCallback } from 'react';
-import { Composer, Message, Era, Conversation, getLastName } from '@/data/composers';
+import { Composer, Message, Conversation, getLastName } from '@/data/composers';
 import { useConversations } from '@/hooks/useConversations';
 import { RefreshCcw, ArrowUp, Music, Mic } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
