@@ -559,6 +559,31 @@ const Index = () => {
               zIndex: 40
             }}
           >
+            {!selectedComposer && (
+              <div className="container mx-auto px-4 h-full flex flex-col items-center justify-center">
+                <div className="text-center p-6 max-w-md">
+                  <h2 className="text-xl font-semibold mb-3">Welcome to Era Composer Chat</h2>
+                  <p className="text-muted-foreground mb-4">
+                    Select a composer from the menu to start chatting with them about their life, music, and legacy. You can also use the search bar in the top right to quickly find a specific composer.
+                  </p>
+                  <button
+                    onClick={toggleMenu}
+                    className="flex items-center justify-center mx-auto px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5 mr-2"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                    Open Composer Menu
+                  </button>
+                </div>
+              </div>
+            )}
             {selectedComposer && isComposerInPublicDomain(selectedComposer) && (
               <article className="container mx-auto px-4 h-full" aria-label={`Chat with ${selectedComposer.name}`}>
                 <ChatInterface
