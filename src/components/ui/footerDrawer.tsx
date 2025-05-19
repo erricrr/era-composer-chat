@@ -136,7 +136,7 @@ const FooterDrawer: React.FC<FooterDrawerProps> = ({ onTrigger, onVisibilityChan
         {/* close drawer when transparent background is touched */}
         <DrawerContent
           ref={drawerContentRef}
-          className="z-[150]"
+          className="z-[150] select-text"
           onOverlayClick={() => setIsOpen(false)}
           role="dialog"
           aria-modal="true"
@@ -144,10 +144,10 @@ const FooterDrawer: React.FC<FooterDrawerProps> = ({ onTrigger, onVisibilityChan
         >
           <div className="flex flex-col max-h-[85vh]">
             <DrawerHeader className="pb-2">
-              <DrawerTitle className="text-center text-lg font-semibold text-primary" tabIndex={0}>
+              <DrawerTitle className="text-center text-lg font-semibold text-primary" tabIndex={0} data-vaul-no-drag="true">
                 Era Composer Chat
               </DrawerTitle>
-              <DrawerDescription className="text-center text-muted-foreground" tabIndex={0}>
+              <DrawerDescription className="text-center text-muted-foreground" tabIndex={0} data-vaul-no-drag="true">
                 An educational tool for exploring classical music through interactive conversations
               </DrawerDescription>
             </DrawerHeader>
@@ -159,13 +159,14 @@ const FooterDrawer: React.FC<FooterDrawerProps> = ({ onTrigger, onVisibilityChan
                     <h3
                       className="font-medium text-lg text-primary inline-block"
                       tabIndex={0}
+                      data-vaul-no-drag="true"
                     >
-                      <span className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:rounded-sm p-1 focus-visible:ring-offset-2">
+                      <span className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:rounded-sm p-1 focus-visible:ring-offset-2" data-vaul-no-drag="true">
                         Educational Purpose
                       </span>
                     </h3>
                   </div>
-                  <p className="text-sm text-muted-foreground" tabIndex={0}>
+                  <p className="text-sm text-muted-foreground" tabIndex={0} data-vaul-no-drag="true">
                     This application was designed to make classical music more accessible and engaging
                     through interactive AI conversations with historical composers. Explore music history and discover
                     the stories behind famous works.
@@ -176,13 +177,14 @@ const FooterDrawer: React.FC<FooterDrawerProps> = ({ onTrigger, onVisibilityChan
                     <h3
                       className="font-medium text-lg text-primary inline-block"
                       tabIndex={0}
+                      data-vaul-no-drag="true"
                     >
-                      <span className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:rounded-sm p-1 focus-visible:ring-offset-2">
+                      <span className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:rounded-sm p-1 focus-visible:ring-offset-2" data-vaul-no-drag="true">
                         AI Generated Content
                       </span>
                     </h3>
                   </div>
-                  <p className="text-sm text-muted-foreground" tabIndex={0}>
+                  <p className="text-sm text-muted-foreground" tabIndex={0} data-vaul-no-drag="true">
                     Responses are AI generated and do not represent the actual views or words of the composers.
                     AI technology is used to create historically informed representations of composers.
                   </p>
@@ -192,13 +194,14 @@ const FooterDrawer: React.FC<FooterDrawerProps> = ({ onTrigger, onVisibilityChan
                     <h3
                       className="font-medium text-lg text-primary inline-block"
                       tabIndex={0}
+                      data-vaul-no-drag="true"
                     >
-                      <span className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:rounded-sm p-1 focus-visible:ring-offset-2">
+                      <span className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:rounded-sm p-1 focus-visible:ring-offset-2" data-vaul-no-drag="true">
                         Contact / Feedback
                       </span>
                     </h3>
                   </div>
-                  <p className="text-sm text-muted-foreground" tabIndex={0}>
+                  <p className="text-sm text-muted-foreground" tabIndex={0} data-vaul-no-drag="true">
                     We value your feedback and suggestions. If you have ideas for improving the app or
                     adding new composers, please contact our support team through the support portal.
                   </p>
@@ -206,17 +209,17 @@ const FooterDrawer: React.FC<FooterDrawerProps> = ({ onTrigger, onVisibilityChan
               </div>
 
               <div className="mt-4 mb-2 text-xs text-muted-foreground text-center">
-                <p tabIndex={0}>
+                <p tabIndex={0} data-vaul-no-drag="true">
                   Privacy Policy: We do not collect or store personal data. Chat conversations are not permanently stored.
                 </p>
-                <p tabIndex={0}>
+                <p tabIndex={0} data-vaul-no-drag="true">
                   Terms of Use: This application is intended for educational purposes only.
                 </p>
               </div>
             </div>
 
             <DrawerFooter className="mt-auto border-t border-border">
-              <p className="text-xs text-muted-foreground text-center" tabIndex={0}>
+              <p className="text-xs text-muted-foreground text-center" tabIndex={0} data-vaul-no-drag="true">
                 © {new Date().getFullYear()} AI Composer Chat - An educational tool for exploring classical music
               </p>
               <DrawerClose asChild>

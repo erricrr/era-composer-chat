@@ -343,3 +343,29 @@ html {
   align-items: center;
   justify-content: center;
 }
+
+/* Footer drawer text selection fix */
+[data-vaul-drawer-content] {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  touch-action: pan-y !important;
+}
+
+[data-vaul-drawer-content] p,
+[data-vaul-drawer-content] h3,
+[data-vaul-drawer-content] span {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+}
+
+/* Add special attribute to prevent drag events on text elements */
+[data-vaul-no-drag="true"] {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+}
