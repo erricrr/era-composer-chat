@@ -674,7 +674,7 @@ export function ComposerList({
                 <div className="pointer-events-none absolute bottom-0 left-0 w-full h-5 bg-gradient-to-t from-primary-foreground to-transparent z-10" />
               </div>
             </div>
-            <div className="flex-shrink-0 h-12 md:h-14 px-2 md:px-3 py-2 relative z-20">
+            <div className="flex-shrink-0 h-12 md:h-14 px-2 md:px-3 py-2 pb-3 md:pb-2 relative z-20">
               <Button
                 onClick={() => {
                   if (selectedComposer && isComposerInPublicDomain(selectedComposer)) {
