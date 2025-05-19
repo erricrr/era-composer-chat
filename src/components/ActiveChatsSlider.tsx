@@ -199,7 +199,7 @@ export default function ActiveChatsSlider({
         <button
           ref={clearAllButtonRef}
           onClick={handleClearAllClick}
-          className="w-full text-sm text-destructive hover:underline transition-colors focus-ring-inset focus:rounded-none"
+          className="w-full p-2 text-sm text-destructive hover:bg-destructive/10 rounded transition-colors focus-ring-inset"
           aria-label="Clear all active chats"
         >
           Clear All
