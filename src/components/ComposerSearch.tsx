@@ -174,14 +174,9 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
     setHasSearched(false);
     setActiveResultIndex(-1);
 
-    // Keep the search bar open on mobile devices
-    // Only close it if we're on desktop
-    if (!isMobileView) {
-      console.log("[Search] On desktop, closing search bar");
-      setIsMobileSearchActive(false);
-    } else {
-      console.log("[Search] On mobile, keeping search bar open");
-    }
+    // Always close the mobile search after selecting a composer
+    // This ensures the zoom state is reset on mobile
+    setIsMobileSearchActive(false);
   }, [onSelectComposer, isMobileView]);
 
   // Activate mobile search
@@ -467,7 +462,8 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
               onFocus={() => setIsInputFocused(true)}
               onBlur={() => setIsInputFocused(false)}
               placeholder={SEARCH_PLACEHOLDER}
-              className="composer-search-input w-full py-2 pl-10 pr-15 text-sm bg-transparent placeholder:text-muted-foreground transition-colors duration-200"
+              className="composer-search-input w-full py-2 pl-10 pr-15 text-sm md:text-sm bg-transparent placeholder:text-muted-foreground transition-colors duration-200"
+              style={{ fontSize: isMobileView ? '16px' : '' }}
               aria-label="Search for composers"
               role="combobox"
               aria-expanded={isOpen}
