@@ -302,9 +302,9 @@ export function ChatInterface({
     }
   }, [isSplitViewOpen]);
 
-  // Add global CSS for mic pulse animation and mobile header fix
+  // Add global CSS for mic pulse animation
   useEffect(() => {
-    // Add global CSS for mic pulse animation and mobile header positioning
+    // Add global CSS for mic pulse animation
     const style = document.createElement('style');
     style.textContent = `
       @keyframes micPulse {
@@ -320,21 +320,6 @@ export function ChatInterface({
       }
       .mic-pulse-animation {
         animation: micPulse 1.5s infinite;
-      }
-
-      /* Mobile header position fix for Chrome/Safari */
-      @supports (-webkit-touch-callout: none) {
-        /* For iOS Safari/Chrome */
-        .chat-container {
-          max-height: 100svh;
-        }
-
-        .chat-header-fixed {
-          position: sticky;
-          top: 0;
-          z-index: 40;
-          background-color: var(--background);
-        }
       }
     `;
     document.head.appendChild(style);
@@ -642,7 +627,7 @@ export function ChatInterface({
     <div
       className="relative flex flex-col h-full bg-background overflow-hidden chat-container"
     >
-      <div className="relative flex items-center justify-end px-2 chat-header-fixed">
+      <div className="relative flex items-center justify-end px-2">
         {(!isSplitViewOpen) ? (
           <div className="flex items-center justify-between px-5 py-5 pb-2.5 -mt-1 w-full bg-primary-foreground border-b shadow-md z-10">
             <Tooltip>

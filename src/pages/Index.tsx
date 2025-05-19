@@ -13,8 +13,10 @@ import HeaderIcon from '@/components/ui/HeaderIcon';
 import { ComposerSearch } from '@/components/ComposerSearch';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { toast } from "sonner";
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const Index = () => {
+  const isMobile = useIsMobile();
   const [selectedComposer, setSelectedComposer] = useState<Composer | null>(() => {
     try {
       const saved = localStorage.getItem('selectedComposer');
@@ -524,7 +526,7 @@ const Index = () => {
               style={{
                 width: '100%',
                 top: '2.75rem',
-                height: 'calc(100dvh - 2.75rem)'
+                ...(isMobile ? { bottom: '0' } : { height: 'calc(100dvh - 2.75rem)' })
               }}
               role="complementary"
               aria-label="Composer selection menu"
@@ -550,7 +552,7 @@ const Index = () => {
               left: 0,
               right: isSplitViewOpenFromChat ? '0' : isActiveChatsOpen ? '16rem' : '0',
               top: '2.75rem',
-              height: 'calc(100dvh - 2.75rem)',
+              ...(isMobile ? { bottom: '0' } : { height: 'calc(100dvh - 2.75rem)' }),
               backdropFilter: 'blur(8px)',
               boxShadow: '0 -10px 25px rgba(0,0,0,0.1)',
               zIndex: 40
