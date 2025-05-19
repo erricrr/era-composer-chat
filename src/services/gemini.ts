@@ -60,7 +60,7 @@ export class GeminiService implements GeminiServiceInterface {
 
     this.genAI = new GoogleGenerativeAI(apiKey);
     this.model = this.genAI.getGenerativeModel({
-      model: 'gemini-2.0-flash-lite',  // gemini-2.0-flash
+      model: 'gemini-2.0-flash',  // gemini-2.0-flash-lite
       safetySettings: SAFETY_SETTINGS,
       generationConfig: {
         ...DEFAULT_CONFIG,

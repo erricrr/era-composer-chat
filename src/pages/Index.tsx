@@ -44,10 +44,10 @@ const Index = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(() => {
     try {
       const saved = localStorage.getItem('isMenuOpen');
-      return saved ? JSON.parse(saved) : true;
+      return saved ? JSON.parse(saved) : false;
     } catch (e) {
       console.error('Error parsing isMenuOpen from localStorage:', e);
-      return true;
+      return false;
     }
   });
 
