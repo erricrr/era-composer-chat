@@ -65,7 +65,7 @@ export const getComposersByEra = (era: Era): Composer[] => {
   });
 };
 
-// Function to extract the last name, handling prefixes like "de" and "de La"
+// Function to extract the last name, handling prefixes like "de" and "de La", and suffixes like "II", "III", "Jr", "Sr"
 export const getLastName = (fullName: string): string => {
   if (!fullName) {
     return "";
@@ -80,18 +80,32 @@ export const getLastName = (fullName: string): string => {
     return parts[0];
   }
 
+  // Common suffixes that should be ignored when extracting last name
+  const suffixes = ['ii', 'iii', 'iv', 'v', 'jr', 'jr.', 'sr', 'sr.'];
+
+  // Check if the last part is a suffix (case-insensitive)
+  let effectiveLength = n;
+  if (suffixes.includes(parts[n - 1].toLowerCase())) {
+    effectiveLength = n - 1;
+  }
+
+  // If after removing suffix we only have one part, return it
+  if (effectiveLength === 1) {
+    return parts[0];
+  }
+
   // Check for "de La Xyz" (case-insensitive)
-  if (n >= 3 && parts[n - 2].toLowerCase() === 'la' && parts[n - 3].toLowerCase() === 'de') {
-    return parts.slice(n - 3).join(' ');
+  if (effectiveLength >= 3 && parts[effectiveLength - 2].toLowerCase() === 'la' && parts[effectiveLength - 3].toLowerCase() === 'de') {
+    return parts.slice(effectiveLength - 3, effectiveLength).join(' ');
   }
 
   // Check for "de Xyz" (case-insensitive)
-  if (n >= 2 && parts[n - 2].toLowerCase() === 'de') {
-    return parts.slice(n - 2).join(' ');
+  if (effectiveLength >= 2 && parts[effectiveLength - 2].toLowerCase() === 'de') {
+    return parts.slice(effectiveLength - 2, effectiveLength).join(' ');
   }
 
-  // Default: last word
-  return parts[n - 1];
+  // Default: last word before any suffix
+  return parts[effectiveLength - 1];
 };
 
 // Function to check if composer is likely in the public domain (died <= 1954)
