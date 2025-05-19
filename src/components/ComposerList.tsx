@@ -500,7 +500,7 @@ export function ComposerList({
   }, []);
 
   return (
-    <div className="w-full mt-5 relative bg-primary-foreground rounded-lg" style={{ height: "60vh", maxHeight: "calc(100vh - 180px - env(safe-area-inset-bottom, 0px))" }}>
+    <div className="w-full mt-5 relative bg-primary-foreground rounded-lg" style={{ height: "60svh", maxHeight: "calc(100svh - 180px - env(safe-area-inset-bottom, 0px))" }}>
       <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] h-full">
         <div className="overflow-hidden h-full flex flex-col relative">
           {/* Mobile horizontal scroll */}
