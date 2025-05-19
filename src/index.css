@@ -113,6 +113,15 @@ html {
   }
 }
 
+/* --- Mobile SVH Height Fix for Chrome/Safari (ensures headers stay visible) --- */
+@media (max-width: 768px) {
+  html, body, #root {
+    height: 100svh !important;
+    min-height: 100svh !important;
+    max-height: 100svh !important;
+  }
+}
+
 @layer base {
   * {
     @apply border-border;
