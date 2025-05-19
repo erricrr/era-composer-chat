@@ -203,7 +203,16 @@ const FooterDrawer: React.FC<FooterDrawerProps> = ({ onTrigger, onVisibilityChan
                   </div>
                   <p className="text-sm text-muted-foreground" tabIndex={0} data-vaul-no-drag="true">
                     I value your feedback and suggestions. If you have ideas for improving the app or
-                    adding new composers, please <a href="mailto:voicevoz321@gmail.com" className="text-primary hover:underline focus:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:rounded-sm inline-flex items-center gap-1" data-vaul-no-drag="true" onClick={(e) => e.stopPropagation()} data-vaul-drawer-ignore="true">email me <FontAwesomeIcon icon={faEnvelope} className="h-3 w-3" /></a>.
+                    adding new composers, please <a
+                      href="mailto:voicevoz321@gmail.com"
+                      className="text-primary hover:underline focus:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:rounded-sm inline-flex items-center gap-1"
+                      data-vaul-no-drag="true"
+                      onClick={(e) => e.stopPropagation()}
+                      data-vaul-drawer-ignore="true"
+                      aria-label="email me (opens email client)"
+                    >
+                      email me <FontAwesomeIcon icon={faEnvelope} className="h-3 w-3" aria-hidden="true" />
+                    </a>.
                   </p>
                 </div>
               </div>
