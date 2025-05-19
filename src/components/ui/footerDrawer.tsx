@@ -10,7 +10,7 @@ import {
 } from "./drawer";
 import { Button } from "@/components/ui/button";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { faInfoCircle, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 
 interface FooterDrawerProps {
   onTrigger?: () => void;
@@ -202,8 +202,8 @@ const FooterDrawer: React.FC<FooterDrawerProps> = ({ onTrigger, onVisibilityChan
                     </h3>
                   </div>
                   <p className="text-sm text-muted-foreground" tabIndex={0} data-vaul-no-drag="true">
-                    We value your feedback and suggestions. If you have ideas for improving the app or
-                    adding new composers, please contact our support team through the support portal.
+                    I value your feedback and suggestions. If you have ideas for improving the app or
+                    adding new composers, please <a href="mailto:voicevoz321@gmail.com" className="text-primary hover:underline focus:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:rounded-sm inline-flex items-center gap-1" data-vaul-no-drag="true" onClick={(e) => e.stopPropagation()} data-vaul-drawer-ignore="true">email me <FontAwesomeIcon icon={faEnvelope} className="h-3 w-3" /></a>.
                   </p>
                 </div>
               </div>
