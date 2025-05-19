@@ -500,7 +500,7 @@ export function ComposerList({
   }, []);
 
   return (
-    <div className="w-full mt-5 relative bg-primary-foreground rounded-lg" style={{ height: "60vh", maxHeight: "calc(100vh - 180px)" }}>
+    <div className="w-full mt-5 relative bg-primary-foreground rounded-lg" style={{ height: "60vh", maxHeight: "calc(100vh - 180px - env(safe-area-inset-bottom, 0px))" }}>
       <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] h-full">
         <div className="overflow-hidden h-full flex flex-col relative">
           {/* Mobile horizontal scroll */}
@@ -674,7 +674,14 @@ export function ComposerList({
                 <div className="pointer-events-none absolute bottom-0 left-0 w-full h-5 bg-gradient-to-t from-primary-foreground to-transparent z-10" />
               </div>
             </div>
-            <div className="flex-shrink-0 h-12 md:h-14 px-2 md:px-3 py-2 pb-3 md:pb-2 relative z-20">
+            <div
+              className="flex-shrink-0 px-2 md:px-3 py-2 pb-3 md:pb-2 relative z-20"
+              style={{
+                paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom, 0px))",
+                height: "auto",
+                minHeight: "3rem"
+              }}
+            >
               <Button
                 onClick={() => {
                   if (selectedComposer && isComposerInPublicDomain(selectedComposer)) {
@@ -683,7 +690,7 @@ export function ComposerList({
                 }}
                 disabled={!selectedComposer || !isComposerInPublicDomain(selectedComposer)}
                 className={`
-                  w-full h-full text-sm md:text-base transition-transform duration-300
+                  w-full h-10 md:h-full text-sm md:text-base transition-transform duration-300
                   ${selectedComposer && isComposerInPublicDomain(selectedComposer)
                     ? 'bg-primary text-primary-foreground hover:bg-primary/90 hover:scale-[1.02]'
                     : 'bg-muted text-muted-foreground opacity-70 cursor-not-allowed'
