@@ -13,7 +13,7 @@ interface ComposerSearchProps {
 
 export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchProps) {
   // Constants
-  const SEARCH_PLACEHOLDER = "Search composers...";
+  const SEARCH_PLACEHOLDER = "Search composers";
 
   // Core states
   const [searchQuery, setSearchQuery] = useState('');

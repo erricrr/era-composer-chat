@@ -90,6 +90,11 @@ html {
     @apply min-h-screen font-sans antialiased bg-background text-foreground;
     overflow-x: hidden;
     touch-action: manipulation;
+    /* Prevent unwanted scrolling */
+    overscroll-behavior: none;
+    /* Prevent Firefox zoom on focus */
+    -moz-text-size-adjust: none;
+    text-size-adjust: none;
 
     @media screen and (max-width: 768px) {
       -ms-overflow-style: none;
@@ -101,7 +106,10 @@ html {
   }
 
   #root {
-    @apply min-h-screen;
+    @apply min-h-screen overflow-hidden;
+    position: relative;
+    width: 100%;
+    height: 100%;
   }
 }
 
@@ -132,6 +140,40 @@ html {
   /* Remove default focus styles when element is focused by mouse/pointer */
   *:focus:not(:focus-visible) {
     @apply outline-none ring-0;
+  }
+
+  /* Ensure fixed header stays in place */
+  .fixed-header {
+    @apply fixed top-0 left-0 right-0 bg-background z-70;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    width: 100%;
+    overflow: visible;
+    padding-right: env(safe-area-inset-right);
+    padding-left: env(safe-area-inset-left);
+  }
+
+  /* Ensure header content is properly contained */
+  .fixed-header .container {
+    @apply relative;
+    width: 100%;
+    max-width: 100%;
+    padding-right: max(1rem, env(safe-area-inset-right));
+    padding-left: max(1rem, env(safe-area-inset-left));
+  }
+
+  /* Ensure header icons are always visible */
+  .fixed-header button,
+  .fixed-header .header-icon {
+    @apply relative z-[60];
+    position: relative;
+  }
+
+  /* Prevent content from causing overflow */
+  .chat-container {
+    @apply overflow-hidden;
+    overscroll-behavior: contain;
   }
 }
 
@@ -166,12 +208,6 @@ html {
 
   .chat-message-composer {
     @apply bg-primary/20 text-foreground p-2 md:p-3 rounded-lg rounded-tl-none max-w-[90%] md:max-w-[80%] mr-auto my-1 text-sm md:text-base;
-  }
-
-  .fixed-header {
-    @apply fixed top-0 left-0 right-0 bg-background z-70 flex items-center;
-    height: 2.75rem;
-    transform: translateY(-100%);
   }
 
   html.ready .fixed-header {

@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { v4 as uuidv4 } from 'uuid';
 import { ComposerImageViewer } from './ComposerImageViewer';
 import { ComposerSplitView } from './ComposerSplitView';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipPortal } from '@/components/ui/tooltip';
 import { useIsTouch } from '@/hooks/useIsTouch';
 import { useGeminiChat } from '@/hooks/useGeminiChat';
 import ReactMarkdown from 'react-markdown';
@@ -625,7 +625,7 @@ export function ChatInterface({
 
   const chatContent = (
     <div
-      className="relative flex flex-col h-full bg-background overflow-hidden"
+      className="relative flex flex-col h-full bg-background overflow-hidden chat-container"
     >
       <div className="relative flex items-center justify-end px-2">
         {(!isSplitViewOpen) ? (
@@ -684,7 +684,7 @@ export function ChatInterface({
       </div>
 
       {/* Assign ref to chat container */}
-      <div className="flex-1 overflow-y-auto overscroll-contain p-4 relative" ref={chatContainerRef}>
+      <div className="flex-1 overflow-y-auto overscroll-contain p-4 relative chat-container" ref={chatContainerRef}>
         <div className="flex flex-col min-h-[calc(100%-2rem)]">
           {currentMessages.length === 0 ? (
             <div className="flex-1 flex items-center justify-center text-muted-foreground text-sm">
@@ -740,7 +740,7 @@ export function ChatInterface({
         </div>
       </div>
 
-      <form onSubmit={handleSendMessage} className="sticky bottom-0 border-t bg-background/80 backdrop-blur-sm pb-4">
+      <form onSubmit={handleSendMessage} className="sticky bottom-0 border-t bg-background/80 backdrop-blur-sm pb-4 chat-container">
         <div className="pt-4 px-3 sm:px-5 relative z-10">
           <div className="relative flex gap-2 max-w-full">
             <div key={`input-${isSplitViewOpen}`} className="flex-1 relative max-w-full">
@@ -762,15 +762,25 @@ export function ChatInterface({
                 className={`w-full bg-background pl-4 pr-28 py-3 border border-input text-sm text-foreground
                   outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0
                   ${isDictating ? 'ring-1 ring-primary' : ''}
-                  min-h-[48px] max-h-[300px] overflow-y-auto resize-none`}
+                  min-h-[48px] max-h-[300px] overflow-y-auto resize-none
+                  [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]
+                  touch-manipulation`}
+                style={{
+                  fontSize: '16px', // Prevent iOS zoom
+                  maxWidth: '100%',
+                  boxSizing: 'border-box',
+                  WebkitTextSizeAdjust: '100%',
+                  MozTextSizeAdjust: '100%',
+                  textSizeAdjust: '100%'
+                }}
                 rows={1}
                 disabled={isComposerListOpen || isComposerMenuOpen}
               />
 
               {/* Control buttons container - make it stick to viewport on mobile */}
-              <div className="absolute bottom-3.5 right-1 flex items-center gap-1.5 px-1.5 bg-background/50 backdrop-blur-sm">
+              <div className="absolute bottom-3.5 right-1 flex items-center gap-1.5 px-1.5 bg-background/50 backdrop-blur-sm z-20">
                 {/* Dictation Button */}
-                <div className="z-10">
+                <div className="z-20">
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <button
@@ -782,20 +792,22 @@ export function ChatInterface({
                           ${isDictating
                             ? 'bg-destructive text-background mic-pulse-animation'
                             : 'text-muted-foreground hover:text-primary'
-                          } transition-colors duration-200 hover:scale-105 active:scale-95 shadow-sm`}
+                          } transition-colors duration-200 hover:scale-105 active:scale-95`}
                         aria-label={isDictating ? "Stop dictating" : "Dictate"}
                       >
                         <Mic className="w-5 h-5" strokeWidth={2} />
                       </button>
                     </TooltipTrigger>
-                    <TooltipContent
-                      side="top"
-                      align="center"
-                      className="text-xs z-50"
-                      sideOffset={5}
-                    >
-                      {isDictating ? 'Stop dictating' : 'Dictate'}
-                    </TooltipContent>
+                    <TooltipPortal>
+                      <TooltipContent
+                        side="top"
+                        align="center"
+                        className="text-xs"
+                        sideOffset={5}
+                      >
+                        {isDictating ? 'Stop dictating' : 'Dictate'}
+                      </TooltipContent>
+                    </TooltipPortal>
                   </Tooltip>
                 </div>
 
@@ -814,9 +826,11 @@ export function ChatInterface({
                       <ArrowUp className="w-5 h-5" strokeWidth={2} />
                     </button>
                   </TooltipTrigger>
-                  <TooltipContent side="top" align="center" className="text-xs">
-                    Send
-                  </TooltipContent>
+                  <TooltipPortal>
+                    <TooltipContent side="top" align="center" className="text-xs">
+                      Send
+                    </TooltipContent>
+                  </TooltipPortal>
                 </Tooltip>
 
                 {/* Reset Button */}
@@ -833,9 +847,11 @@ export function ChatInterface({
                         <RefreshCcw className="w-5 h-5" strokeWidth={2} />
                       </button>
                     </TooltipTrigger>
-                    <TooltipContent side="top" align="center" className="text-xs">
-                      Reset chat
-                    </TooltipContent>
+                    <TooltipPortal>
+                      <TooltipContent side="top" align="center" className="text-xs">
+                        Reset chat
+                      </TooltipContent>
+                    </TooltipPortal>
                   </Tooltip>
                 ) : (
                   <button
