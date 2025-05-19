@@ -778,7 +778,7 @@ export function ChatInterface({
               />
 
               {/* Control buttons container - make it stick to viewport on mobile */}
-              <div className="absolute bottom-3.5 right-1 flex items-center gap-1.5 px-1.5 bg-background/50 backdrop-blur-sm z-20">
+              <div className="absolute bottom-3.5 right-0 flex items-center gap-1.5 px-1.5">
                 {/* Dictation Button */}
                 <div className="z-20">
                   <Tooltip>
