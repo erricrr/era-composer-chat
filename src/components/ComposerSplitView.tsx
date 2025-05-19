@@ -439,20 +439,20 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
         className="fixed inset-0 z-40"
         style={{
           right: isActiveChatsOpen ? '16rem' : 0,
-          transition: 'right 200ms ease-out'
+          transition: 'right 200ms ease-in-out'
         }}
       >
         <ResizablePanelGroup
           direction="vertical"
-          className="h-full transition-opacity duration-300 ease-in-out"
+          className="h-full transition-opacity duration-200 ease-in-out"
         >
           {/* Composer Panel */}
           <ResizablePanel
             defaultSize={40}
             minSize={30}
             maxSize={60}
-            className={`bg-secondary/50 backdrop-blur-sm flex flex-col transition-transform duration-300 ease-in-out ${
-              isOpen ? 'translate-y-0 opacity-100' : '-translate-y-2 opacity-0 pointer-events-none'
+            className={`bg-secondary/50 backdrop-blur-sm flex flex-col transition-all duration-200 ease-in-out ${
+              isOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
             }`}
             id="composer-panel-mobile"
             aria-label="Composer Panel"
@@ -462,7 +462,7 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
 
           <ResizableHandle
             withHandle
-            className={`transition-opacity duration-300 ${
+            className={`transition-opacity duration-200 ease-in-out ${
               isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
             }`}
             aria-controls="composer-panel-mobile chat-panel-mobile"
@@ -473,8 +473,8 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
             defaultSize={60}
             minSize={40}
             maxSize={70}
-            className={`bg-background transition-transform duration-300 ease-in-out ${
-              isOpen ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0 pointer-events-none'
+            className={`bg-background transition-all duration-200 ease-in-out ${
+              isOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-105 pointer-events-none'
             }`}
             id="chat-panel-mobile"
             aria-label="Chat Panel"
@@ -493,19 +493,19 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
       className="fixed inset-0 z-40"
       style={{
         right: isActiveChatsOpen ? '16rem' : 0,
-        transition: 'right 200ms ease-out'
+        transition: 'right 200ms ease-in-out'
       }}
     >
       <div
-        className={`absolute inset-0 bg-background/80 backdrop-blur-sm transition-all duration-300 ease-out ${
+        className={`absolute inset-0 bg-background/80 backdrop-blur-sm transition-all duration-200 ease-in-out ${
           isOpen ? 'opacity-100' : 'opacity-0'
         }`}
       >
       </div>
       <ResizablePanelGroup
         direction={isMobile ? "vertical" : "horizontal"}
-        className={`h-full w-full transition-all duration-300 ease-out ${
-          isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2'
+        className={`h-full w-full transition-all duration-200 ease-in-out ${
+          isOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
         }`}
       >
         {/* Composer Panel */}

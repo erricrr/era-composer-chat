@@ -891,10 +891,10 @@ export function ChatInterface({
     <div className="relative w-full h-full">
       {/* Regular chat view: only show when split view is closed */}
       <div
-        className={`absolute inset-0 transition-all duration-300 ease-out ${
+        className={`absolute inset-0 transition-all duration-200 ease-in-out ${
           !isSplitViewOpen
-            ? 'opacity-100 translate-x-0'
-            : 'opacity-0 translate-x-4 pointer-events-none'
+            ? 'opacity-100 scale-100'
+            : 'opacity-0 scale-95 pointer-events-none'
         }`}
       >
         {!isSplitViewOpen && chatContent}
@@ -902,10 +902,10 @@ export function ChatInterface({
 
       {/* Split view: only render chatContent inside split view when open */}
       <div
-        className={`fixed inset-0 transition-all duration-300 ease-out ${
+        className={`fixed inset-0 transition-all duration-200 ease-in-out ${
           isSplitViewOpen
-            ? 'opacity-100 translate-x-0'
-            : 'opacity-0 -translate-x-4 pointer-events-none'
+            ? 'opacity-100 scale-100'
+            : 'opacity-0 scale-105 pointer-events-none'
         }`}
       >
         {isSplitViewOpen && (
