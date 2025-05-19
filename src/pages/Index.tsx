@@ -192,9 +192,6 @@ const Index = () => {
         setIsChatting(true);
         localStorage.setItem('isChatting', 'true');
       }, 500);
-
-      // Add to active chats, keep most recent at front, max 5
-      handleAddActiveChat(composer);
     }
   };
 
