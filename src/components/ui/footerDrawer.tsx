@@ -161,7 +161,7 @@ const FooterDrawer: React.FC<FooterDrawerProps> = ({ onTrigger, onVisibilityChan
                       tabIndex={0}
                       data-vaul-no-drag="true"
                     >
-                      <span className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:rounded-sm p-1 focus-visible:ring-offset-2" data-vaul-no-drag="true">
+                      <span className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:rounded-sm focus-visible:ring-offset-2" data-vaul-no-drag="true">
                         Educational Purpose
                       </span>
                     </h3>
@@ -179,7 +179,7 @@ const FooterDrawer: React.FC<FooterDrawerProps> = ({ onTrigger, onVisibilityChan
                       tabIndex={0}
                       data-vaul-no-drag="true"
                     >
-                      <span className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:rounded-sm p-1 focus-visible:ring-offset-2" data-vaul-no-drag="true">
+                      <span className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:rounded-sm focus-visible:ring-offset-2" data-vaul-no-drag="true">
                         AI Generated Content
                       </span>
                     </h3>
@@ -196,7 +196,7 @@ const FooterDrawer: React.FC<FooterDrawerProps> = ({ onTrigger, onVisibilityChan
                       tabIndex={0}
                       data-vaul-no-drag="true"
                     >
-                      <span className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:rounded-sm p-1 focus-visible:ring-offset-2" data-vaul-no-drag="true">
+                      <span className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:rounded-sm focus-visible:ring-offset-2" data-vaul-no-drag="true">
                         Contact / Feedback
                       </span>
                     </h3>
@@ -220,7 +220,7 @@ const FooterDrawer: React.FC<FooterDrawerProps> = ({ onTrigger, onVisibilityChan
 
             <DrawerFooter className="mt-auto border-t border-border">
               <p className="text-xs text-muted-foreground text-center" tabIndex={0} data-vaul-no-drag="true">
-                © {new Date().getFullYear()} AI Composer Chat - An educational tool for exploring classical music
+                © {new Date().getFullYear()} Era Composer Chat - An educational tool for exploring classical music
               </p>
               <DrawerClose asChild>
                 <Button
