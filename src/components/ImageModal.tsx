@@ -119,11 +119,14 @@ const ModalHeader: React.FC<ModalHeaderProps> = ({
 };
 
 const ModalImage: React.FC<ModalImageProps> = ({ imageSrc, altText }) => (
-  <div className="flex items-center justify-center p-2" style={{ backgroundColor: 'hsl(var(--background))' }}>
+  <div
+    className="flex items-center justify-center p-2"
+    style={{ backgroundColor: 'hsl(var(--background))' }}
+  >
     <img
       src={imageSrc}
       alt={altText}
-      className="max-h-[70vh] max-w-full w-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+      className="max-h-[70vh] w-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
       style={{ objectFit: 'contain' }}
       tabIndex={0}
     />
@@ -312,12 +315,15 @@ export function ImageModal({
 
   // Update ModalImage component to use the ref
   const ModalImageWithRef = ({ imageSrc, altText }: ModalImageProps) => (
-    <div className="flex items-center justify-center p-2" style={{ backgroundColor: 'hsl(var(--background))' }}>
+    <div
+      className="flex items-center justify-center p-2"
+      style={{ backgroundColor: 'hsl(var(--background))' }}
+    >
       <img
         ref={imageRef}
         src={imageSrc}
         alt={altText}
-        className="max-h-[70vh] max-w-full w-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 z-10"
+        className="max-h-[70vh] w-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 z-10"
         style={{ objectFit: 'contain' }}
         tabIndex={0}
       />
@@ -344,13 +350,19 @@ export function ImageModal({
         <div
             ref={modalRef}
             onClick={(e) => e.stopPropagation()} // Prevent clicks from reaching the backdrop
-            className="bg-card rounded-lg overflow-hidden shadow-2xl md:min-w-[300px]"
+            className="bg-card rounded-lg overflow-hidden min-w-[300px] shadow-2xl"
             style={{
                 transform: isOpen ? 'scale(1)' : 'scale(0.95)',
                 opacity: isOpen ? 1 : 0,
                 transition: `transform ${ANIMATION_DURATION_MS}ms ease-in-out, opacity ${ANIMATION_DURATION_MS}ms ease-in-out`,
-                maxWidth: 'calc(100vw - 2rem)',
-                maxHeight: 'calc(100vh - 2rem)',
+                maxWidth: '95vw',
+                // Responsive modal height for mobile: avoid header overlap
+                maxHeight: typeof window !== 'undefined' && window.innerWidth <= 768
+                  ? 'calc(100svh - 56px)'
+                  : '95vh',
+                marginTop: typeof window !== 'undefined' && window.innerWidth <= 768
+                  ? 56
+                  : undefined,
                 display: 'flex',
                 flexDirection: 'column',
                 border: '1px solid',
