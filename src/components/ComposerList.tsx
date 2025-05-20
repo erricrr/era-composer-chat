@@ -124,16 +124,19 @@ export function ComposerList({
   // Refs for scroll containers
   const mobileScrollAreaRef = useRef<HTMLDivElement>(null);
   const desktopScrollAreaRef = useRef<HTMLDivElement>(null);
+  const composerDetailsScrollRef = useRef<HTMLDivElement>(null);
 
   // Store viewport refs in refs to ensure their stability
   const viewportRefs = useRef({
     mobile: null as HTMLElement | null,
-    desktop: null as HTMLElement | null
+    desktop: null as HTMLElement | null,
+    details: null as HTMLElement | null
   });
 
   // Scroll states
   const [horizontalScroll, setHorizontalScroll] = useState({ isAtStart: true, isAtEnd: false });
   const [verticalScroll, setVerticalScroll] = useState({ isAtTop: true, isAtBottom: false });
+  const [detailsScroll, setDetailsScroll] = useState({ isAtTop: true, isAtBottom: false });
 
   // Timeout refs to avoid closure issues
   const timeoutRefs = useRef({
@@ -150,6 +153,10 @@ export function ComposerList({
 
     if (desktopScrollAreaRef.current) {
       viewportRefs.current.desktop = desktopScrollAreaRef.current.querySelector('[data-radix-scroll-area-viewport]');
+    }
+
+    if (composerDetailsScrollRef.current) {
+      viewportRefs.current.details = composerDetailsScrollRef.current.querySelector('[data-radix-scroll-area-viewport]');
     }
 
     return viewportRefs.current;
@@ -384,6 +391,17 @@ export function ComposerList({
           isAtBottom: Math.abs(scrollHeight - (scrollTop + clientHeight)) <= buffer
         });
       }
+
+      // Check details scroll
+      const detailsViewport = composerDetailsScrollRef.current?.querySelector('[data-radix-scroll-area-viewport]');
+      if (detailsViewport) {
+        const { scrollTop, scrollHeight, clientHeight } = detailsViewport;
+        const buffer = 2;
+        setDetailsScroll({
+          isAtTop: scrollTop <= buffer,
+          isAtBottom: Math.abs(scrollHeight - (scrollTop + clientHeight)) <= buffer
+        });
+      }
     };
 
     // Use requestAnimationFrame for smoother performance
@@ -399,6 +417,7 @@ export function ComposerList({
     // Set up event listeners
     const mobileViewport = mobileScrollAreaRef.current?.querySelector('[data-radix-scroll-area-viewport]');
     const desktopViewport = desktopScrollAreaRef.current?.querySelector('[data-radix-scroll-area-viewport]');
+    const detailsViewport = composerDetailsScrollRef.current?.querySelector('[data-radix-scroll-area-viewport]');
 
     const handleScroll = () => {
       scheduleCheck();
@@ -410,6 +429,10 @@ export function ComposerList({
 
     if (desktopViewport) {
       desktopViewport.addEventListener('scroll', handleScroll, { passive: true });
+    }
+
+    if (detailsViewport) {
+      detailsViewport.addEventListener('scroll', handleScroll, { passive: true });
     }
 
     // Handle resize events
@@ -427,6 +450,9 @@ export function ComposerList({
       }
       if (desktopViewport) {
         desktopViewport.removeEventListener('scroll', handleScroll);
+      }
+      if (detailsViewport) {
+        detailsViewport.removeEventListener('scroll', handleScroll);
       }
 
       window.removeEventListener('resize', scheduleCheck);
@@ -500,17 +526,23 @@ export function ComposerList({
   }, []);
 
   return (
-    <div className="w-full mt-5 relative bg-primary-foreground rounded-lg" style={{ height: "60svh", maxHeight: "calc(100svh - 180px - env(safe-area-inset-bottom, 0px))" }}>
+    <div className="w-full mt-5 relative bg-primary-foreground rounded-lg"
+         style={{
+           height: "60svh",
+           maxHeight: "calc(100svh - 180px - env(safe-area-inset-bottom, 0px))",
+           minHeight: "400px" // Ensure minimum height to prevent collapse on very small viewports
+         }}>
       <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] h-full">
         <div className="overflow-hidden h-full flex flex-col relative">
           {/* Mobile horizontal scroll */}
           <div className="md:hidden flex-shrink-0 relative">
             <div className="relative overflow-hidden">
+              {/* We only need subtle shadows for horizontal scrolling on mobile */}
               {!horizontalScroll.isAtStart && (
-                <div className="absolute left-0 top-0 bottom-0 w-12 z-10 pointer-events-none" />
+                <div className="absolute left-0 top-0 bottom-0 w-8 z-10 pointer-events-none bg-gradient-to-r from-primary-foreground to-transparent opacity-70" />
               )}
               {!horizontalScroll.isAtEnd && (
-                <div className="absolute right-0 top-0 bottom-0 w-12 z-10 pointer-events-none" />
+                <div className="absolute right-0 top-0 bottom-0 w-8 z-10 pointer-events-none bg-gradient-to-l from-primary-foreground to-transparent opacity-70" />
               )}
               <ScrollArea ref={mobileScrollAreaRef} key={`${era}-mobile`} className="w-full h-auto scroll-area">
                 <div className="inline-flex h-full items-center relative">
@@ -560,6 +592,7 @@ export function ComposerList({
           {/* Desktop vertical scroll */}
           <div className="hidden md:flex flex-col flex-1 overflow-hidden relative py-0">
             <div className="relative overflow-hidden h-full">
+              {/* Remove desktop vertical scroll shadows */}
               <ScrollArea ref={desktopScrollAreaRef} key={`${era}-desktop`} className="w-full h-full scroll-area">
                 <div className="flex flex-col h-full relative">
                   {allComposers.map((composer, idx) => (
@@ -612,74 +645,75 @@ export function ComposerList({
 
         {selectedComposer && (
           <div className="flex flex-col h-full overflow-hidden p-2 md:p-3">
-            <div className="relative flex-1 min-h-0 flex flex-col">
-              <div className="px-2 md:px-3 pt-1 flex-shrink-0 relative z-20">
-                <div className="flex items-start md:items-center space-x-2 md:space-x-4 border-b pt-1 md:pt-0" style={{ paddingBottom: '8px' }}>
-                  <ComposerImageViewer
-                    composer={selectedComposer}
-                    size="xxl"
-                    allowModalOnDesktop={true}
-                    className="focus-visible:z-10 relative"
-                  />
-                  <div
-                    tabIndex={0}
-                    role="region"
-                    aria-label={`Composer details: ${selectedComposer.name}, ${selectedComposer.nationality}, ${selectedComposer.birthYear}-${selectedComposer.deathYear || 'present'}`}
-                    className="focus:outline-none focus-visible:ring-2 focus-visible:ring-primary flex-1 min-w-0"
-                  >
-                    <h2 className="sr-only">Composer Details</h2>
-                    <h3 className="text-xl md:text-2xl font-bold font-serif break-words">
-                      {selectedComposer.name}
-                    </h3>
-                    <div className="flex flex-col lg:flex-row lg:items-center gap-1 lg:gap-2 mt-1">
-                      <span className="text-xs md:text-sm text-muted-foreground">
-                        {selectedComposer.nationality}, {selectedComposer.birthYear}–{selectedComposer.deathYear || 'present'}
-                      </span>
-                      <div className="flex flex-wrap gap-1 lg:ml-2">
-                        {(Array.isArray(selectedComposer.era)
-                          ? selectedComposer.era
-                          : [selectedComposer.era]
-                        ).map((e, idx) => (
-                          <Badge key={e + idx} variant="badge" className="text-xs">
-                            {e}
-                          </Badge>
-                        ))}
-                      </div>
+            {/* Fixed header containing composer details */}
+            <div className="flex-shrink-0 px-2 md:px-3 pt-1 pb-2 md:pb-3 relative z-20 bg-primary-foreground">
+              <div className="flex items-start md:items-center space-x-2 md:space-x-4 border-b pt-1 md:pt-0 pb-2">
+                <ComposerImageViewer
+                  composer={selectedComposer}
+                  size="xxl"
+                  allowModalOnDesktop={true}
+                  className="focus-visible:z-10 relative"
+                />
+                <div
+                  tabIndex={0}
+                  role="region"
+                  aria-label={`Composer details: ${selectedComposer.name}, ${selectedComposer.nationality}, ${selectedComposer.birthYear}-${selectedComposer.deathYear || 'present'}`}
+                  className="focus:outline-none focus-visible:ring-2 focus-visible:ring-primary flex-1 min-w-0"
+                >
+                  <h2 className="sr-only">Composer Details</h2>
+                  <h3 className="text-xl md:text-2xl font-bold font-serif break-words">
+                    {selectedComposer.name}
+                  </h3>
+                  <div className="flex flex-col lg:flex-row lg:items-center gap-1 lg:gap-2 mt-1">
+                    <span className="text-xs md:text-sm text-muted-foreground">
+                      {selectedComposer.nationality}, {selectedComposer.birthYear}–{selectedComposer.deathYear || 'present'}
+                    </span>
+                    <div className="flex flex-wrap gap-1 lg:ml-2">
+                      {(Array.isArray(selectedComposer.era)
+                        ? selectedComposer.era
+                        : [selectedComposer.era]
+                      ).map((e, idx) => (
+                        <Badge key={e + idx} variant="badge" className="text-xs">
+                          {e}
+                        </Badge>
+                      ))}
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="relative flex-1 min-h-0">
-                <ScrollArea key={selectedComposer.id} className="h-full">
-                  <div
-                    tabIndex={0}
-                    onFocus={(e) => e.currentTarget.scrollIntoView({ behavior: 'smooth', block: 'nearest' })}
-                    role="region"
-                    aria-label={`About ${selectedComposer.name}: biography and notable works`}
-                    className="focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary p-2 md:p-3 space-y-2 md:space-y-3"
-                  >
-                    <p className="text-sm md:text-base text-foreground/90">
-                      {selectedComposer.shortBio}
-                    </p>
-                    <div>
-                      <h4 className="font-semibold mb-1 md:mb-2 text-base md:text-lg">Notable Works</h4>
-                      <ul className="list-disc pl-5 mb-2 space-y-1">
-                        {selectedComposer.famousWorks.slice(0, 3).map((work, index) => (
-                          <li key={index} className="text-sm md:text-base text-foreground/80">{work}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                </ScrollArea>
-                <div className="pointer-events-none absolute bottom-0 left-0 w-full h-5 bg-gradient-to-t from-primary-foreground to-transparent z-10" />
-              </div>
             </div>
+
+            {/* Scrollable content area - only bio and works */}
+            <div className="flex-1 min-h-0 relative overflow-hidden">
+              {/* Only show bottom shadow when needed */}
+              {!detailsScroll.isAtBottom && (
+                <div className="absolute bottom-0 left-0 right-0 h-8 z-10 pointer-events-none bg-gradient-to-t from-primary-foreground to-transparent" />
+              )}
+              <ScrollArea ref={composerDetailsScrollRef} className="w-full h-full">
+                <div className="px-2 md:px-3 py-2 space-y-4">
+                  <p className="text-sm md:text-base text-foreground/90">
+                    {selectedComposer.shortBio}
+                  </p>
+                  <div>
+                    <h4 className="font-semibold mb-1 md:mb-2 text-base md:text-lg">Notable Works</h4>
+                    <ul className="list-disc pl-5 mb-2 space-y-1">
+                      {selectedComposer.famousWorks.slice(0, 3).map((work, index) => (
+                        <li key={index} className="text-sm md:text-base text-foreground/80">{work}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+                <ScrollBar orientation="vertical" />
+              </ScrollArea>
+            </div>
+
+            {/* Fixed bottom button area */}
             <div
-              className="flex-shrink-0 px-2 md:px-3 py-2 pb-3 md:pb-2 relative z-20"
+              className="flex-shrink-0 px-2 md:px-3 py-2 md:py-3 sticky bottom-0 left-0 right-0 bg-primary-foreground border-t"
               style={{
                 paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom, 0px))",
-                height: "auto",
-                minHeight: "3rem"
+                minHeight: "60px",
+                zIndex: 30
               }}
             >
               <Button

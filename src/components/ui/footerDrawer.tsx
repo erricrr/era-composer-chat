@@ -22,6 +22,7 @@ const FooterDrawer: React.FC<FooterDrawerProps> = ({ onTrigger, onVisibilityChan
   const infoButtonRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const drawerContentRef = useRef<HTMLDivElement>(null);
+  const drawerWrapperRef = useRef<HTMLDivElement>(null);
 
   // Refs to track previous state for focus management
   const initialMount = useRef(true);
@@ -43,6 +44,17 @@ const FooterDrawer: React.FC<FooterDrawerProps> = ({ onTrigger, onVisibilityChan
       onVisibilityChange(isOpen);
     }
   }, [isOpen, onVisibilityChange]);
+
+  // Scroll to top when drawer opens
+  useEffect(() => {
+    if (isOpen && drawerWrapperRef.current) {
+      setTimeout(() => {
+        if (drawerWrapperRef.current) {
+          drawerWrapperRef.current.scrollTop = 0;
+        }
+      }, 100);
+    }
+  }, [isOpen]);
 
   // Focus management when drawer opens/closes
   useEffect(() => {
@@ -142,7 +154,10 @@ const FooterDrawer: React.FC<FooterDrawerProps> = ({ onTrigger, onVisibilityChan
           aria-modal="true"
           aria-label="About Era Composer Chat"
         >
-          <div className="flex flex-col max-h-[85vh] overflow-y-auto">
+          <div
+            ref={drawerWrapperRef}
+            className="flex flex-col max-h-[85vh] overflow-y-auto"
+          >
             <DrawerHeader className="pb-2 flex-shrink-0">
               <DrawerTitle className="text-center text-lg font-semibold text-primary" tabIndex={0} data-vaul-no-drag="true">
                 Era Composer Chat

@@ -16,6 +16,9 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
   const isTouch = useIsTouch();
   // Add refs for label buttons and keyboard navigation handler
   const eraLabelRefs = useRef<Array<HTMLButtonElement | null>>([]);
+  const popoverTriggerRefs = useRef<Array<HTMLButtonElement | null>>([]);
+  const popoverContentRefs = useRef<Array<HTMLDivElement | null>>([]);
+
   const handleLabelKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>, index: number, eraName: Era) => {
     if (e.key === 'ArrowRight') {
       e.preventDefault();
@@ -48,6 +51,33 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
     setOpenPopoverId(openPopoverId === id ? null : id);
   };
 
+  // Function to handle keyboard events on the popover button
+  const handlePopoverKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>, id: string) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleIconClick(id);
+    }
+  };
+
+  // Handle tab out of the popover content
+  const handleContentKeyDown = (e: React.KeyboardEvent<HTMLDivElement>, index: number) => {
+    if (e.key === 'Tab' && !e.shiftKey) {
+      // If tabbing forward and at the end of the content
+      e.preventDefault();
+      setOpenPopoverId(null);
+      setTimeout(() => {
+        popoverTriggerRefs.current[index]?.focus();
+      }, 0);
+    } else if (e.key === 'Tab' && e.shiftKey) {
+      // If tabbing backward from content to trigger
+      e.preventDefault();
+      setOpenPopoverId(null);
+      setTimeout(() => {
+        popoverTriggerRefs.current[index]?.focus();
+      }, 0);
+    }
+  };
+
   // Display label map for era names that need to be shortened/modified
   const displayLabels: Record<string, string> = {
     'Baroque': 'Baroque',
@@ -57,7 +87,7 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
   };
 
  // helper to render the era icon trigger + tooltip in one place
-const renderIcon = (era: typeof eras[number]) => {
+const renderIcon = (era: typeof eras[number], index: number) => {
   const isSelectedIcon = selectedEra === era.name;
   const baseButtonClasses = 'a11y-touch-target w-11 h-11 rounded-full transition-all duration-300 ease-out relative';
   const iconClass = cn(
@@ -68,9 +98,12 @@ const renderIcon = (era: typeof eras[number]) => {
   );
   const button = (
     <button
+      ref={el => popoverTriggerRefs.current[index] = el}
       onClick={e => { e.stopPropagation(); handleIconClick(era.id); }}
+      onKeyDown={e => handlePopoverKeyDown(e, era.id)}
       className={iconClass}
       aria-label={`More info about ${era.name} era`}
+      aria-expanded={openPopoverId === era.id}
       aria-pressed={isSelectedIcon}
     >
       <span className="text-xs font-medium">?</span>
@@ -164,19 +197,43 @@ const renderIcon = (era: typeof eras[number]) => {
 
             {/* Timeline icons */}
             <div className="flex justify-between relative px-1 h-full">
-              {eras.map(era => (
+              {eras.map((era, index) => (
                 <div
                   key={era.id}
                   className="flex flex-col items-center w-1/4 relative z-10"
                 >
-                  <Popover open={openPopoverId === era.id} onOpenChange={(open) => setOpenPopoverId(open ? era.id : null)}>
-                    {renderIcon(era)}
-                    <PopoverContent className="relative max-w-sm p-2 shadow-xl overflow-hidden">
-                      <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-primary rounded-l-md animate-[expandVertical_0.3s_ease-in-out] origin-top" />
-                      <div className="p-3">
-                        <h4 className="text-xs xs:text-sm sm:text-base md:text-lg lg:text-xl font-semibold mb-2 text-primary">{era.name}</h4>
+                  <Popover
+                    open={openPopoverId === era.id}
+                    onOpenChange={(open) => {
+                      setOpenPopoverId(open ? era.id : null);
+                      if (!open) {
+                        // When closing, focus the trigger button that opened the popover
+                        setTimeout(() => {
+                          popoverTriggerRefs.current[index]?.focus();
+                        }, 0);
+                      }
+                    }}
+                  >
+                    {renderIcon(era, index)}
+                    <PopoverContent
+                      ref={el => popoverContentRefs.current[index] = el}
+                      className="relative max-w-sm p-2 shadow-xl overflow-hidden focus:outline-none focus-visible:ring focus-visible:ring-primary focus-visible:ring-opacity-75"
+                      onEscapeKeyDown={() => {
+                        setOpenPopoverId(null);
+                      }}
+                      tabIndex={0}
+                      onKeyDown={(e) => handleContentKeyDown(e, index)}
+                    >
+                      <div
+                        className="p-3"
+                        role="dialog"
+                        aria-labelledby={`era-title-${era.id}`}
+                        aria-modal="true"
+                      >
+                        <h4 id={`era-title-${era.id}`} className="text-xs xs:text-sm sm:text-base md:text-lg lg:text-xl font-semibold mb-2 text-primary">{era.name}</h4>
                         <p className="text-[10px] xs:text-xs sm:text-sm text-muted-foreground">{era.description}</p>
                       </div>
+                      <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-primary rounded-l-md animate-[expandVertical_0.3s_ease-in-out] origin-top" />
                     </PopoverContent>
                   </Popover>
                 </div>
