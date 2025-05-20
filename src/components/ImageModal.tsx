@@ -40,6 +40,7 @@ interface ModalFooterProps {
   caption?: string;
   copyrightDetails: CopyrightDetails | null;
   sourceUrl?: string;
+  composerName: string;
 }
 
 // --- Sub-Components ---
@@ -67,26 +68,23 @@ const ModalHeader: React.FC<ModalHeaderProps> = ({
 
   return (
     <div
-      className="flex justify-between items-center p-3 border-b rounded-t-lg group cursor-pointer"
+      className="flex justify-between items-center p-3 border-b rounded-t-lg"
       style={{ borderColor: 'hsl(var(--border))' }}
-      onClick={onClose} // Close when clicking the header area
     >
       <div>
         <h2
           id={MODAL_TITLE_ID} // For aria-labelledby
           className="text-lg font-medium"
           style={{ color: 'hsl(var(--foreground))' }}
-          tabIndex={0}
         >
           {composerName}
         </h2>
         <div
           className="flex text-sm"
           style={{ color: 'hsl(var(--muted-foreground))' }}
-          tabIndex={0}
         >
           {nationality && <span>{nationality}</span>}
-          {nationality && years && <span className="mx-2">•</span>}
+          {nationality && years && <span className="mx-2" aria-hidden="true">•</span>}
           {years && <span>{years}</span>}
         </div>
       </div>
@@ -94,10 +92,10 @@ const ModalHeader: React.FC<ModalHeaderProps> = ({
       <button
         ref={closeButtonRef}
         onClick={(e) => {
-          e.stopPropagation(); // Prevent header click from triggering onClose twice
+          e.stopPropagation();
           onClose();
         }}
-        className="w-11 h-11 flex items-center justify-center rounded-full transition-colors duration-200 hover:bg-muted-foreground/25 group-hover:bg-muted-foreground/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+        className="w-11 h-11 flex items-center justify-center rounded-full transition-colors duration-200 hover:bg-muted-foreground/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
         aria-label="Close modal"
       >
         {/* Close Icon SVG */}
@@ -106,6 +104,8 @@ const ModalHeader: React.FC<ModalHeaderProps> = ({
           className="h-4 w-4"
           viewBox="0 0 20 20"
           fill="currentColor"
+          aria-hidden="true"
+          focusable="false"
         >
           <path
             fillRule="evenodd"
@@ -120,16 +120,20 @@ const ModalHeader: React.FC<ModalHeaderProps> = ({
 
 const ModalImage: React.FC<ModalImageProps> = ({ imageSrc, altText }) => (
   <div
-    className="flex items-center justify-center p-2"
+    className="flex items-center justify-center p-2 w-full h-full"
     style={{ backgroundColor: 'hsl(var(--background))' }}
   >
-    <img
-      src={imageSrc}
-      alt={altText}
-      className="max-h-[70vh] w-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-      style={{ objectFit: 'contain' }}
-      tabIndex={0}
-    />
+    <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
+      <img
+        src={imageSrc}
+        alt={altText}
+        className="max-h-[65vh] max-w-full w-auto h-auto object-contain focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+        style={{
+          margin: '0 auto',
+          display: 'block'
+        }}
+      />
+    </div>
   </div>
 );
 
@@ -137,6 +141,7 @@ const ModalFooter: React.FC<ModalFooterProps> = ({
   caption,
   copyrightDetails,
   sourceUrl,
+  composerName,
 }) => (
   <div
     id={MODAL_DESCRIPTION_ID} // For aria-describedby
@@ -147,7 +152,6 @@ const ModalFooter: React.FC<ModalFooterProps> = ({
       <p
         className="text-sm mb-2"
         style={{ color: 'hsl(var(--foreground))' }}
-        tabIndex={0}
       >
         {caption}
       </p>
@@ -155,7 +159,6 @@ const ModalFooter: React.FC<ModalFooterProps> = ({
     <div className="flex items-center justify-between text-xs">
       <span
         style={{ color: 'hsl(var(--muted-foreground))' }}
-        tabIndex={0}
       >
         {copyrightDetails ? (
           <CopyrightAttribution
@@ -170,6 +173,7 @@ const ModalFooter: React.FC<ModalFooterProps> = ({
           rel="noopener noreferrer"
           className="underline hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
           style={{ color: 'hsl(var(--primary))' }}
+          aria-label={`View source for ${composerName}'s portrait (opens in new tab)`}
         >
           Source
         </a>
@@ -199,8 +203,6 @@ export function ImageModal({
   // Refs for focus trapping
   const modalRef = useRef<HTMLDivElement>(null);
   const previousActiveElementRef = useRef<Element | null>(null);
-  // Additional ref for the image
-  const imageRef = useRef<HTMLImageElement>(null);
   // Additional ref for the close button to ensure proper focus
   const headerCloseButtonRef = useRef<HTMLButtonElement | null>(null);
 
@@ -232,6 +234,11 @@ export function ImageModal({
         setTimeout(() => {
           returnFocusRef.current?.focus();
         }, ANIMATION_DURATION_MS + 50);
+      } else if (previousActiveElementRef.current instanceof HTMLElement) {
+        // If no specific return focus element is provided, focus the previously active element
+        setTimeout(() => {
+          (previousActiveElementRef.current as HTMLElement).focus();
+        }, ANIMATION_DURATION_MS + 50);
       }
     }
   }, [isOpen, isMounted, returnFocusRef, composerId]);
@@ -252,7 +259,7 @@ export function ImageModal({
       if (e.key === 'Tab' && modalRef.current) {
         // Get all focusable elements in modal
         const focusableElements = modalRef.current.querySelectorAll(
-          'button, [href], input, select, textarea, img[tabindex="0"], [tabindex]:not([tabindex="-1"])'
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
         );
 
         if (focusableElements.length === 0) return;
@@ -260,12 +267,6 @@ export function ImageModal({
         const focusables = Array.from(focusableElements) as HTMLElement[];
         const firstElement = focusables[0];
         const lastElement = focusables[focusables.length - 1];
-
-        // Add the image to the tab order if it's not already included
-        if (imageRef.current && !focusables.includes(imageRef.current)) {
-          // If image isn't in the tab sequence, make it so
-          imageRef.current.tabIndex = 0;
-        }
 
         // Shift+Tab on first element goes to last element
         if (e.shiftKey && document.activeElement === firstElement) {
@@ -284,6 +285,7 @@ export function ImageModal({
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
 
+  // Prevent scrolling of background content when modal is open
   useEffect(() => {
     let timeoutId: ReturnType<typeof setTimeout>;
     if (isOpen) {
@@ -294,7 +296,7 @@ export function ImageModal({
     } else {
       timeoutId = setTimeout(() => {
         setIsMounted(false);
-        document.body.style.overflow = 'unset';
+        document.body.style.overflow = '';
         // Clear modal state
         sessionStorage.removeItem('modalOpen');
       }, ANIMATION_DURATION_MS);
@@ -303,32 +305,15 @@ export function ImageModal({
     return () => {
       clearTimeout(timeoutId);
       if (document.body.style.overflow === 'hidden') {
-        document.body.style.overflow = 'unset';
+        document.body.style.overflow = '';
       }
     };
-  }, [isOpen, onClose]);
+  }, [isOpen]);
 
   // Render nothing if the modal is closed and the unmount animation is finished
   if (!isMounted && !isOpen) { // Check both to handle the delay
       return null;
   }
-
-  // Update ModalImage component to use the ref
-  const ModalImageWithRef = ({ imageSrc, altText }: ModalImageProps) => (
-    <div
-      className="flex items-center justify-center p-2"
-      style={{ backgroundColor: 'hsl(var(--background))' }}
-    >
-      <img
-        ref={imageRef}
-        src={imageSrc}
-        alt={altText}
-        className="max-h-[70vh] w-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 z-10"
-        style={{ objectFit: 'contain' }}
-        tabIndex={0}
-      />
-    </div>
-  );
 
   // Use createPortal to render the modal into document.body
   // This avoids CSS stacking context issues
@@ -350,21 +335,20 @@ export function ImageModal({
         <div
             ref={modalRef}
             onClick={(e) => e.stopPropagation()} // Prevent clicks from reaching the backdrop
-            className="bg-card rounded-lg overflow-hidden min-w-[300px] shadow-2xl"
+            className="bg-card rounded-lg overflow-hidden min-w-[300px] shadow-2xl flex flex-col"
             style={{
                 transform: isOpen ? 'scale(1)' : 'scale(0.95)',
                 opacity: isOpen ? 1 : 0,
                 transition: `transform ${ANIMATION_DURATION_MS}ms ease-in-out, opacity ${ANIMATION_DURATION_MS}ms ease-in-out`,
                 maxWidth: '95vw',
+                width: 'auto',
                 // Responsive modal height for mobile: avoid header overlap
                 maxHeight: typeof window !== 'undefined' && window.innerWidth <= 768
-                  ? 'calc(100svh - 56px)'
-                  : '95vh',
+                  ? 'calc(100svh - 80px)'
+                  : '85vh',
                 marginTop: typeof window !== 'undefined' && window.innerWidth <= 768
-                  ? 56
+                  ? 80
                   : undefined,
-                display: 'flex',
-                flexDirection: 'column',
                 border: '1px solid',
                 borderColor: 'hsl(var(--border))',
             }}
@@ -376,13 +360,14 @@ export function ImageModal({
                 deathYear={deathYear}
                 onClose={onClose}
             />
-            <div className="flex-grow overflow-auto">
-                <ModalImageWithRef imageSrc={imageSrc} altText={`Portrait of ${composerName}`} />
+            <div className="flex-grow overflow-auto relative">
+                <ModalImage imageSrc={imageSrc} altText={`Portrait of ${composerName}`} />
             </div>
             <ModalFooter
                 caption={caption}
                 copyrightDetails={copyrightDetails}
                 sourceUrl={sourceUrl}
+                composerName={composerName}
             />
         </div>
     </div>,
