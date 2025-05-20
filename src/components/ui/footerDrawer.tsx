@@ -142,8 +142,8 @@ const FooterDrawer: React.FC<FooterDrawerProps> = ({ onTrigger, onVisibilityChan
           aria-modal="true"
           aria-label="About Era Composer Chat"
         >
-          <div className="flex flex-col max-h-[85vh]">
-            <DrawerHeader className="pb-2">
+          <div className="flex flex-col max-h-[85vh] overflow-y-auto">
+            <DrawerHeader className="pb-2 flex-shrink-0">
               <DrawerTitle className="text-center text-lg font-semibold text-primary" tabIndex={0} data-vaul-no-drag="true">
                 Era Composer Chat
               </DrawerTitle>
@@ -152,7 +152,7 @@ const FooterDrawer: React.FC<FooterDrawerProps> = ({ onTrigger, onVisibilityChan
               </DrawerDescription>
             </DrawerHeader>
 
-            <div className="px-4 overflow-y-auto">
+            <div className="px-4">
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 <div className="space-y-1">
                   <div className="relative py-2">
@@ -226,7 +226,7 @@ const FooterDrawer: React.FC<FooterDrawerProps> = ({ onTrigger, onVisibilityChan
               </div>
             </div>
 
-            <DrawerFooter className="mt-auto border-t border-border">
+            <DrawerFooter className="mt-auto border-t border-border flex-shrink-0">
               <p className="text-xs text-muted-foreground text-center" tabIndex={0} data-vaul-no-drag="true">
                 © {new Date().getFullYear()} Era Composer Chat - An educational tool for exploring classical music
               </p>
