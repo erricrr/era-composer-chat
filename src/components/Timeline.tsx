@@ -114,7 +114,7 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
                     {/* Era name */}
                     <h3 className={`
                       text-center transition-all duration-300 ease-out whitespace-nowrap
-                      text-[10px] text-sm md:text-base lg:text-lg
+                      text-[10px] text-base lg:text-lg
                       ${selectedEra === era.name
                         ? 'text-primary font-medium scale-[1.02]'
                         : 'text-muted-foreground group-hover:text-primary/80 group-hover:scale-[1.02]'
