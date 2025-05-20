@@ -94,6 +94,10 @@ export function ChatInterface({
   });
   const [isDictating, setIsDictating] = useState(false);
 
+  // Add state to track keyboard visibility and original viewport height
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+  const originalViewportHeightRef = useRef<number | null>(null);
+
   // Display state controlled entirely by this component
   const [currentMessages, setCurrentMessages] = useState<Message[]>([]);
 
@@ -166,6 +170,54 @@ export function ChatInterface({
 
     return result;
   };
+
+  // Add effect to handle mobile keyboard visibility in Safari and Chrome
+  useEffect(() => {
+    if (!isMobile) return;
+
+    // Store initial viewport height
+    originalViewportHeightRef.current = window.innerHeight;
+
+    // Function to check if keyboard is likely visible
+    const checkKeyboardVisibility = () => {
+      if (!originalViewportHeightRef.current) return;
+
+      // If current height is significantly less than original, keyboard is likely open
+      // 30% threshold is common for most mobile keyboard heights
+      const heightDifference = originalViewportHeightRef.current - window.innerHeight;
+      const isKeyboard = heightDifference > (originalViewportHeightRef.current * 0.3);
+
+      if (isKeyboard !== isKeyboardVisible) {
+        setIsKeyboardVisible(isKeyboard);
+
+        // When keyboard appears, add a class to ensure headers stay fixed
+        if (isKeyboard) {
+          document.documentElement.classList.add('keyboard-visible');
+          // ScrollIntoView to ensure the input is visible and focused
+          setTimeout(() => {
+            if (textareaRef.current) {
+              textareaRef.current.scrollIntoView({ block: 'center', behavior: 'smooth' });
+              textareaRef.current.focus();
+            }
+          }, 150);
+        } else {
+          document.documentElement.classList.remove('keyboard-visible');
+        }
+      }
+    };
+
+    // Add listeners for various events that might indicate keyboard visibility changes
+    window.addEventListener('resize', checkKeyboardVisibility);
+    window.addEventListener('focusin', checkKeyboardVisibility);
+    window.addEventListener('focusout', checkKeyboardVisibility);
+
+    return () => {
+      window.removeEventListener('resize', checkKeyboardVisibility);
+      window.removeEventListener('focusin', checkKeyboardVisibility);
+      window.removeEventListener('focusout', checkKeyboardVisibility);
+      document.documentElement.classList.remove('keyboard-visible');
+    };
+  }, [isMobile, isKeyboardVisible]);
 
   // Effect to handle composer changes and initialize Gemini chat with existing messages
   useEffect(() => {
@@ -629,7 +681,7 @@ export function ChatInterface({
     >
       <div className="relative flex items-center justify-end px-2">
         {(!isSplitViewOpen) ? (
-          <div className="flex items-center justify-between px-5 py-5 pb-2.5 -mt-1 w-full bg-primary-foreground border-b shadow-md z-10">
+          <div className="flex items-center justify-between px-5 py-5 pb-2.5 -mt-1 w-full bg-primary-foreground border-b shadow-md z-10 chat-header">
             <Tooltip>
               <TooltipTrigger asChild>
                 <button

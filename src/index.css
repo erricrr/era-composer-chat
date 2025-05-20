@@ -120,6 +120,43 @@ html {
     min-height: 100svh !important;
     max-height: 100svh !important;
   }
+
+  /* Fix for Chrome/Safari mobile keyboard positioning */
+  html.keyboard-visible {
+    /* Prevent scrolling of background when keyboard is open */
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+  }
+
+  /* Force the fixed-header to maintain its position */
+  html.keyboard-visible .fixed-header {
+    position: fixed !important;
+    top: 0 !important;
+    transform: none !important;
+    z-index: 100;
+  }
+
+  /* Make chat header visible */
+  html.keyboard-visible .chat-container .chat-header {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 99;
+  }
+
+  /* Ensure the split view header stays visible when keyboard appears */
+  html.keyboard-visible .ComposerSplitView-header {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 50;
+  }
+
+  /* Ensure input area stays visible */
+  html.keyboard-visible .chat-container form {
+    position: sticky !important;
+    bottom: 0 !important;
+    z-index: 50;
+  }
 }
 
 @layer base {

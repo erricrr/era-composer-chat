@@ -247,7 +247,7 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
 
       {/* Fixed Header - Now outside ScrollArea */}
       <div
-        className="relative flex items-center justify-center border-b py-7 bg-primary-foreground backdrop-blur-sm shadow-md z-10 mt-1 flex-shrink-0 group transition-colors w-full cursor-pointer focus-ring-inset focus:rounded-none"
+        className="relative flex items-center justify-center border-b py-7 bg-primary-foreground backdrop-blur-sm shadow-md z-10 mt-1 flex-shrink-0 group transition-colors w-full cursor-pointer focus-ring-inset focus:rounded-none ComposerSplitView-header"
         tabIndex={0}
         role="button"
         aria-label="Close split view"
