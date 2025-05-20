@@ -19,10 +19,11 @@ interface FooterDrawerProps {
 
 const FooterDrawer: React.FC<FooterDrawerProps> = ({ onTrigger, onVisibilityChange }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [resetKey, setResetKey] = useState(0); // This key will force re-render
   const infoButtonRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const drawerContentRef = useRef<HTMLDivElement>(null);
-  const drawerWrapperRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   // Refs to track previous state for focus management
   const initialMount = useRef(true);
@@ -33,28 +34,30 @@ const FooterDrawer: React.FC<FooterDrawerProps> = ({ onTrigger, onVisibilityChan
     e.stopPropagation();
     const newIsOpen = !isOpen;
     setIsOpen(newIsOpen);
-    if (newIsOpen && onTrigger) {
-      onTrigger();
+    if (newIsOpen) {
+      if (onTrigger) {
+        onTrigger();
+      }
+      // Reset key to force re-render of content when opening
+      setResetKey(prev => prev + 1);
     }
   };
 
-  // Effect to report visibility changes
+  // Effect to report visibility changes and reset scroll position
   useEffect(() => {
     if (onVisibilityChange) {
       onVisibilityChange(isOpen);
     }
-  }, [isOpen, onVisibilityChange]);
 
-  // Scroll to top when drawer opens
-  useEffect(() => {
-    if (isOpen && drawerWrapperRef.current) {
+    if (isOpen && contentRef.current) {
+      // Ensure scroll position is at the top when drawer opens
       setTimeout(() => {
-        if (drawerWrapperRef.current) {
-          drawerWrapperRef.current.scrollTop = 0;
+        if (contentRef.current) {
+          contentRef.current.scrollTop = 0;
         }
-      }, 100);
+      }, 10);
     }
-  }, [isOpen]);
+  }, [isOpen, onVisibilityChange, resetKey]);
 
   // Focus management when drawer opens/closes
   useEffect(() => {
@@ -144,8 +147,10 @@ const FooterDrawer: React.FC<FooterDrawerProps> = ({ onTrigger, onVisibilityChan
         <FontAwesomeIcon icon={faInfoCircle} className="h-4 w-4" />
       </button>
 
-      <Drawer open={isOpen} onOpenChange={setIsOpen}>
-        {/* close drawer when transparent background is touched */}
+      <Drawer
+        open={isOpen}
+        onOpenChange={setIsOpen}
+      >
         <DrawerContent
           ref={drawerContentRef}
           className="z-[150] select-text"
@@ -154,90 +159,94 @@ const FooterDrawer: React.FC<FooterDrawerProps> = ({ onTrigger, onVisibilityChan
           aria-modal="true"
           aria-label="About Era Composer Chat"
         >
-          <div
-            ref={drawerWrapperRef}
-            className="flex flex-col max-h-[85vh] overflow-y-auto"
-          >
-            <DrawerHeader className="pb-2 flex-shrink-0">
-              <DrawerTitle className="text-center text-lg font-semibold text-primary" tabIndex={0} data-vaul-no-drag="true">
-                Era Composer Chat
-              </DrawerTitle>
-              <DrawerDescription className="text-center text-muted-foreground" tabIndex={0} data-vaul-no-drag="true">
-                An educational tool for exploring classical music through interactive conversations
-              </DrawerDescription>
-            </DrawerHeader>
+          {/* Use key to force recreation of this element */}
+          <div key={resetKey} className="flex flex-col h-[85vh]">
+            <div
+              ref={contentRef}
+              className="flex-grow overflow-y-auto"
+              style={{ scrollBehavior: 'smooth' }}
+            >
+              <DrawerHeader className="pb-2">
+                <DrawerTitle className="text-center text-lg font-semibold text-primary" tabIndex={0} data-vaul-no-drag="true">
+                  Era Composer Chat
+                </DrawerTitle>
+                <DrawerDescription className="text-center text-muted-foreground" tabIndex={0} data-vaul-no-drag="true">
+                  An educational tool for exploring classical music through interactive conversations
+                </DrawerDescription>
+              </DrawerHeader>
 
-            <div className="px-4">
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                <div className="space-y-1">
-                  <div className="relative py-2">
-                    <h3
-                      className="font-medium text-lg text-primary inline-block"
-                      tabIndex={0}
-                      data-vaul-no-drag="true"
-                    >
-                      <span className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:rounded-sm focus-visible:ring-offset-2" data-vaul-no-drag="true">
-                        Educational Purpose
-                      </span>
-                    </h3>
+              <div className="px-4">
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                  <div className="space-y-1">
+                    <div className="relative py-2">
+                      <h3
+                        className="font-medium text-lg text-primary inline-block"
+                        tabIndex={0}
+                        data-vaul-no-drag="true"
+                      >
+                        <span className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:rounded-sm focus-visible:ring-offset-2" data-vaul-no-drag="true">
+                          Educational Purpose
+                        </span>
+                      </h3>
+                    </div>
+                    <p className="text-sm text-muted-foreground" tabIndex={0} data-vaul-no-drag="true">
+                      This application was designed to make classical music more accessible and engaging
+                      through interactive AI conversations with historical composers. Explore music history and discover
+                      the stories behind famous works.
+                    </p>
                   </div>
-                  <p className="text-sm text-muted-foreground" tabIndex={0} data-vaul-no-drag="true">
-                    This application was designed to make classical music more accessible and engaging
-                    through interactive AI conversations with historical composers. Explore music history and discover
-                    the stories behind famous works.
-                  </p>
-                </div>
-                <div className="space-y-1">
-                  <div className="relative py-2">
-                    <h3
-                      className="font-medium text-lg text-primary inline-block"
-                      tabIndex={0}
-                      data-vaul-no-drag="true"
-                    >
-                      <span className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:rounded-sm focus-visible:ring-offset-2" data-vaul-no-drag="true">
-                        AI Generated Content
-                      </span>
-                    </h3>
+                  <div className="space-y-1">
+                    <div className="relative py-2">
+                      <h3
+                        className="font-medium text-lg text-primary inline-block"
+                        tabIndex={0}
+                        data-vaul-no-drag="true"
+                      >
+                        <span className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:rounded-sm focus-visible:ring-offset-2" data-vaul-no-drag="true">
+                          AI Generated Content
+                        </span>
+                      </h3>
+                    </div>
+                    <p className="text-sm text-muted-foreground" tabIndex={0} data-vaul-no-drag="true">
+                      Responses are AI generated and do not represent the actual views or words of the composers.
+                      AI technology is used to create historically informed representations of composers.
+                    </p>
                   </div>
-                  <p className="text-sm text-muted-foreground" tabIndex={0} data-vaul-no-drag="true">
-                    Responses are AI generated and do not represent the actual views or words of the composers.
-                    AI technology is used to create historically informed representations of composers.
-                  </p>
-                </div>
-                <div className="space-y-1">
-                  <div className="relative py-2">
-                    <h3
-                      className="font-medium text-lg text-primary inline-block"
-                      tabIndex={0}
-                      data-vaul-no-drag="true"
-                    >
-                      <span className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:rounded-sm focus-visible:ring-offset-2" data-vaul-no-drag="true">
-                        Contact / Feedback
-                      </span>
-                    </h3>
+                  <div className="space-y-1">
+                    <div className="relative py-2">
+                      <h3
+                        className="font-medium text-lg text-primary inline-block"
+                        tabIndex={0}
+                        data-vaul-no-drag="true"
+                      >
+                        <span className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:rounded-sm focus-visible:ring-offset-2" data-vaul-no-drag="true">
+                          Contact / Feedback
+                        </span>
+                      </h3>
+                    </div>
+                    <p className="text-sm text-muted-foreground" tabIndex={0} data-vaul-no-drag="true">
+                      I'd love to hear your feedback and ideas for improving the app or adding new composers! Drop me an <a
+                        href="mailto:voicevoz321@gmail.com"
+                        className="text-primary hover:underline focus:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:rounded-sm inline-flex items-center gap-1"
+                        data-vaul-no-drag="true"
+                        onClick={(e) => e.stopPropagation()}
+                        data-vaul-drawer-ignore="true"
+                        aria-label="email me (opens email client)"
+                      >
+                        email <FontAwesomeIcon icon={faEnvelope} className="h-3 w-3" aria-hidden="true" />
+                      </a>. And if I'm accidentally breaking any laws (except maybe murdering Beethoven's 5th), do let me know—my lawyer will thank you!
+                    </p>
                   </div>
-                  <p className="text-sm text-muted-foreground" tabIndex={0} data-vaul-no-drag="true">
-                    I'd love to hear your feedback and ideas for improving the app or adding new composers! Drop me an <a
-                      href="mailto:voicevoz321@gmail.com"
-                      className="text-primary hover:underline focus:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:rounded-sm inline-flex items-center gap-1"
-                      data-vaul-no-drag="true"
-                      onClick={(e) => e.stopPropagation()}
-                      data-vaul-drawer-ignore="true"
-                      aria-label="email me (opens email client)"
-                    >
-                      email <FontAwesomeIcon icon={faEnvelope} className="h-3 w-3" aria-hidden="true" />
-                    </a>. And if I'm accidentally breaking any laws (except maybe murdering Beethoven's 5th), do let me know—my lawyer will thank you!
-                  </p>
                 </div>
-              </div>
 
-              <div className="mt-4 mb-2 text-xs text-muted-foreground text-center">
-                <p tabIndex={0} data-vaul-no-drag="true">
-                  Privacy Policy: We do not collect or store personal data. Chat conversations are not permanently stored.
-                </p>
-                <p tabIndex={0} data-vaul-no-drag="true">
-                  Terms of Use: This application is intended for educational purposes only.
-                </p>
+                <div className="mt-4 mb-2 text-xs text-muted-foreground text-center">
+                  <p tabIndex={0} data-vaul-no-drag="true">
+                    Privacy Policy: We do not collect or store personal data. Chat conversations are not permanently stored.
+                  </p>
+                  <p tabIndex={0} data-vaul-no-drag="true">
+                    Terms of Use: This application is intended for educational purposes only.
+                  </p>
+                </div>
               </div>
             </div>
 
