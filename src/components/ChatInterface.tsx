@@ -178,31 +178,68 @@ export function ChatInterface({
     // Store initial viewport height
     originalViewportHeightRef.current = window.innerHeight;
 
+    // Check if we're on iOS
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+
     // Function to check if keyboard is likely visible
     const checkKeyboardVisibility = () => {
       if (!originalViewportHeightRef.current) return;
 
-      // If current height is significantly less than original, keyboard is likely open
-      // 30% threshold is common for most mobile keyboard heights
+      // Special case for iOS with visualViewport API
+      if (isIOS && window.visualViewport) {
+        const heightDifference = originalViewportHeightRef.current - window.visualViewport.height;
+        const isKeyboard = heightDifference > (originalViewportHeightRef.current * 0.15);
+
+        if (isKeyboard !== isKeyboardVisible) {
+          handleKeyboardVisibilityChange(isKeyboard);
+        }
+        return;
+      }
+
+      // Standard approach for other browsers
       const heightDifference = originalViewportHeightRef.current - window.innerHeight;
-      const isKeyboard = heightDifference > (originalViewportHeightRef.current * 0.3);
+      const isKeyboard = heightDifference > (originalViewportHeightRef.current * 0.2);
 
       if (isKeyboard !== isKeyboardVisible) {
-        setIsKeyboardVisible(isKeyboard);
+        handleKeyboardVisibilityChange(isKeyboard);
+      }
+    };
 
-        // When keyboard appears, add a class to ensure headers stay fixed
-        if (isKeyboard) {
-          document.documentElement.classList.add('keyboard-visible');
-          // ScrollIntoView to ensure the input is visible and focused
-          setTimeout(() => {
-            if (textareaRef.current) {
-              textareaRef.current.scrollIntoView({ block: 'center', behavior: 'smooth' });
-              textareaRef.current.focus();
+    // Helper function to handle keyboard visibility changes
+    const handleKeyboardVisibilityChange = (isKeyboard: boolean) => {
+      setIsKeyboardVisible(isKeyboard);
+
+      // When keyboard appears, add a class to ensure headers stay fixed
+      if (isKeyboard) {
+        document.documentElement.classList.add('keyboard-visible');
+        // Prevent body scrolling when keyboard is open
+        document.body.style.height = `${originalViewportHeightRef.current}px`;
+        document.body.style.overflow = 'hidden';
+        document.body.style.position = 'fixed';
+        document.body.style.width = '100%';
+
+        // ScrollIntoView to ensure the input is visible and focused
+        setTimeout(() => {
+          if (textareaRef.current) {
+            textareaRef.current.scrollIntoView({ block: 'center', behavior: 'smooth' });
+            textareaRef.current.focus();
+
+            // Explicitly make sure the parent form stays visible and the buttons keep their positions
+            const buttonsContainer = textareaRef.current.parentElement?.querySelector('.absolute');
+            if (buttonsContainer) {
+              (buttonsContainer as HTMLElement).style.opacity = '1';
+              (buttonsContainer as HTMLElement).style.zIndex = '100';
+              (buttonsContainer as HTMLElement).style.visibility = 'visible';
             }
-          }, 150);
-        } else {
-          document.documentElement.classList.remove('keyboard-visible');
-        }
+          }
+        }, 150);
+      } else {
+        document.documentElement.classList.remove('keyboard-visible');
+        // Restore normal scrolling behavior
+        document.body.style.height = '';
+        document.body.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.width = '';
       }
     };
 
@@ -211,11 +248,28 @@ export function ChatInterface({
     window.addEventListener('focusin', checkKeyboardVisibility);
     window.addEventListener('focusout', checkKeyboardVisibility);
 
+    // Additional event to catch more iOS/Safari keyboard events
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', checkKeyboardVisibility);
+      window.visualViewport.addEventListener('scroll', checkKeyboardVisibility);
+    }
+
     return () => {
       window.removeEventListener('resize', checkKeyboardVisibility);
       window.removeEventListener('focusin', checkKeyboardVisibility);
       window.removeEventListener('focusout', checkKeyboardVisibility);
+
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', checkKeyboardVisibility);
+        window.visualViewport.removeEventListener('scroll', checkKeyboardVisibility);
+      }
+
       document.documentElement.classList.remove('keyboard-visible');
+      // Ensure we clean up all styles
+      document.body.style.height = '';
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
     };
   }, [isMobile, isKeyboardVisible]);
 
@@ -792,7 +846,15 @@ export function ChatInterface({
         </div>
       </div>
 
-      <form onSubmit={handleSendMessage} className="sticky bottom-0 border-t bg-background/80 backdrop-blur-sm pb-4 chat-container">
+      <form
+        onSubmit={handleSendMessage}
+        className="sticky bottom-0 border-t bg-background/80 backdrop-blur-sm pb-4 chat-container"
+        style={{
+          zIndex: 40,
+          position: 'sticky',
+          bottom: 0
+        }}
+      >
         <div className="pt-4 px-3 sm:px-5 relative z-10">
           <div className="relative flex gap-2 max-w-full">
             <div key={`input-${isSplitViewOpen}`} className="flex-1 relative max-w-full">
@@ -810,6 +872,15 @@ export function ChatInterface({
                   e.target.style.height = `${Math.min(e.target.scrollHeight, 300)}px`;
                 }}
                 onKeyDown={handleKeyPress}
+                onFocus={() => {
+                  // For mobile browsers, ensure elements are visible when keyboard appears
+                  if (isMobile) {
+                    setTimeout(() => {
+                      window.scrollTo(0, 0);
+                      document.body.scrollTop = 0;
+                    }, 50);
+                  }
+                }}
                 placeholder={`Ask a question...`}
                 className={`w-full bg-background pl-4 pr-28 py-3 border border-input text-sm text-foreground
                   outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0
@@ -823,16 +894,19 @@ export function ChatInterface({
                   boxSizing: 'border-box',
                   WebkitTextSizeAdjust: '100%',
                   MozTextSizeAdjust: '100%',
-                  textSizeAdjust: '100%'
+                  textSizeAdjust: '100%',
+                  position: 'relative',
+                  zIndex: 30,
+                  paddingRight: '9rem', // Ensure enough space for buttons
                 }}
                 rows={1}
                 disabled={isComposerListOpen || isComposerMenuOpen}
               />
 
               {/* Control buttons container - make it stick to viewport on mobile */}
-              <div className="absolute bottom-3.5 right-0 flex items-center gap-1.5 px-1.5">
+              <div className="absolute bottom-3.5 right-0 flex items-center gap-1.5 px-1.5" style={{ zIndex: 50 }}>
                 {/* Dictation Button */}
-                <div className="z-20">
+                <div className="z-50">
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <button
@@ -846,6 +920,7 @@ export function ChatInterface({
                             : 'text-muted-foreground hover:text-primary'
                           } transition-colors duration-200 hover:scale-105 active:scale-95`}
                         aria-label={isDictating ? "Stop dictating" : "Dictate"}
+                        style={{ zIndex: 50 }}
                       >
                         <Mic className="w-5 h-5" strokeWidth={2} />
                       </button>
@@ -874,6 +949,7 @@ export function ChatInterface({
                           ? 'bg-primary text-background hover:bg-primary/90'
                           : 'text-muted-foreground hover:text-primary'
                       }`}
+                      style={{ zIndex: 50 }}
                     >
                       <ArrowUp className="w-5 h-5" strokeWidth={2} />
                     </button>
@@ -895,6 +971,7 @@ export function ChatInterface({
                         onClick={handleResetChat}
                         className="h-8 w-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-primary transition-colors duration-200 hover:scale-105 active:scale-95 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                         aria-label="Reset chat"
+                        style={{ zIndex: 50 }}
                       >
                         <RefreshCcw className="w-5 h-5" strokeWidth={2} />
                       </button>
@@ -912,6 +989,7 @@ export function ChatInterface({
                     onClick={handleResetChat}
                     className="h-8 w-8 rounded-full flex items-center justify-center text-muted-foreground transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                     aria-label="Reset chat"
+                    style={{ zIndex: 50 }}
                   >
                     <RefreshCcw className="w-5 h-5" strokeWidth={2} />
                   </button>

@@ -415,6 +415,46 @@ const Index = () => {
     }
   }, [selectedComposer, selectedEra, isChatting, isMenuOpen]);
 
+  // Add effect to handle iOS Safari viewport issues
+  useEffect(() => {
+    if (!isMobile) return;
+
+    // Check if we're on iOS
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+
+    if (isIOS) {
+      // Add a meta viewport tag to prevent scaling issues
+      const existingViewport = document.querySelector('meta[name="viewport"]');
+      if (existingViewport) {
+        existingViewport.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover');
+      } else {
+        const metaTag = document.createElement('meta');
+        metaTag.name = 'viewport';
+        metaTag.content = 'width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover';
+        document.head.appendChild(metaTag);
+      }
+
+      // Add a listener to force repaint when orientation changes
+      const handleOrientationChange = () => {
+        // Force browser repaint
+        setTimeout(() => {
+          const el = document.documentElement;
+          const originalHeight = el.style.height;
+          el.style.height = 'initial';
+          setTimeout(() => {
+            el.style.height = originalHeight;
+          }, 10);
+        }, 300);
+      };
+
+      window.addEventListener('orientationchange', handleOrientationChange);
+
+      return () => {
+        window.removeEventListener('orientationchange', handleOrientationChange);
+      };
+    }
+  }, [isMobile]);
+
   return (
     <TooltipProvider>
       <div className="min-h-screen overflow-hidden bg-background">
