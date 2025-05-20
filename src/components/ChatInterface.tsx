@@ -72,12 +72,6 @@ interface ChatInterfaceProps {
   isActiveChatsOpen?: boolean;
 }
 
-// Utility to detect real mobile browsers (not just small screens)
-function isRealMobile() {
-  if (typeof navigator === 'undefined') return false;
-  return /Mobi|Android|iPhone|iPad|iPod|Mobile|Tablet/i.test(navigator.userAgent);
-}
-
 export function ChatInterface({
   composer,
   onUserTyping,
@@ -129,8 +123,6 @@ export function ChatInterface({
   } = useGeminiChat();
 
   const isTouch = useIsTouch();
-
-  const mainContainerRef = useRef<HTMLDivElement>(null);
 
   // Format era display text
   const getEraDisplayText = (era: string): string => {
@@ -354,23 +346,6 @@ export function ChatInterface({
       textareaRef.current.focus();
     }
   }, [composer.id, isSplitViewOpen]);
-
-  // Mobile keyboard/viewport fix for Chrome/Safari: set height to window.innerHeight
-  useEffect(() => {
-    if (!isMobile || !isRealMobile()) return;
-    const el = mainContainerRef.current;
-    if (!el) return;
-
-    function setHeight() {
-      el.style.height = window.innerHeight + 'px';
-    }
-    setHeight();
-    window.addEventListener('resize', setHeight);
-    return () => {
-      window.removeEventListener('resize', setHeight);
-      el.style.height = '';
-    };
-  }, [isMobile]);
 
   // Show loading state
   if (!activeConversationId && currentMessages.length === 0) {
@@ -913,7 +888,7 @@ export function ChatInterface({
   );
 
   return (
-    <div ref={mainContainerRef} className="relative w-full h-full">
+    <div className="relative w-full h-full">
       {/* Regular chat view: only show when split view is closed */}
       <div
         className={`absolute inset-0 transition-all duration-200 ease-in-out ${
