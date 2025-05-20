@@ -56,38 +56,39 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
     '20th Century': '20th Century'
   };
 
-  // helper to render the era icon trigger + tooltip in one place
-  const renderIcon = (era: typeof eras[number]) => {
-    const isSelectedIcon = selectedEra === era.name;
-    const baseButtonClasses = 'a11y-touch-target w-11 h-11 rounded-full transition-all duration-300 ease-out relative';
-    const iconClass = cn(
-      baseButtonClasses,
-      isSelectedIcon
-        ? 'bg-primary text-background shadow-md shadow-primary/30'
-        : 'bg-background border border-primary/60 text-primary/70 hover:border-primary hover:text-primary hover:scale-105 transition-transform'
-    );
-    const button = (
-      <button
-        onClick={e => { e.stopPropagation(); handleIconClick(era.id); }}
-        className={iconClass}
-        aria-label={`More info about ${era.name} era`}
-      >
-        <span className="text-xs font-medium">?</span>
-      </button>
-    );
-    const trigger = <PopoverTrigger asChild>{button}</PopoverTrigger>;
-    if (isTouch) {
-      return trigger;
-    }
-    return (
-      <Tooltip>
-        <TooltipTrigger asChild>{trigger}</TooltipTrigger>
-        <TooltipContent side="top" className="text-xs">
-          {isSelectedIcon ? 'Active Era' : 'Era Details'}
-        </TooltipContent>
-      </Tooltip>
-    );
-  };
+ // helper to render the era icon trigger + tooltip in one place
+const renderIcon = (era: typeof eras[number]) => {
+  const isSelectedIcon = selectedEra === era.name;
+  const baseButtonClasses = 'a11y-touch-target w-11 h-11 rounded-full transition-all duration-300 ease-out relative';
+  const iconClass = cn(
+    baseButtonClasses,
+    isSelectedIcon
+      ? 'bg-background border-2 border-primary text-primary shadow-sm shadow-primary/20'
+      : 'bg-background border border-primary/60 text-primary/70 hover:border-primary hover:text-primary hover:scale-105 transition-transform'
+  );
+  const button = (
+    <button
+      onClick={e => { e.stopPropagation(); handleIconClick(era.id); }}
+      className={iconClass}
+      aria-label={`More info about ${era.name} era`}
+      aria-pressed={isSelectedIcon}
+    >
+      <span className="text-xs font-medium">?</span>
+    </button>
+  );
+  const trigger = <PopoverTrigger asChild>{button}</PopoverTrigger>;
+  if (isTouch) {
+    return trigger;
+  }
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>{trigger}</TooltipTrigger>
+      <TooltipContent side="top" className="text-xs">
+        {isSelectedIcon ? 'Active Era' : 'Era Details'}
+      </TooltipContent>
+    </Tooltip>
+  );
+};
 
   return (
     <TooltipProvider>
