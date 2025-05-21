@@ -1,56 +1,50 @@
-# Welcome to your Lovable project
+# Era Composer Chat
 
-## Project info
+[![Netlify Status](https://api.netlify.com/api/v1/badges/cd0a4968-622f-4a4e-aa1f-0dfc4424e202/deploy-status)](https://app.netlify.com/sites/era-composer-chat/deploys)
 
-**URL**: https://lovable.dev/projects/8c6b2ca7-9c30-4916-977b-ee8003fa919e
+Welcome to Era Composer Chat - a unique web application that allows you to chat with classical music composers across different eras.
 
-## How can I edit this code?
+## Project Overview
 
-There are several ways of editing your application.
+This interactive application lets users engage in simulated conversations with classical composers from the Baroque, Classical, Romantic, and 20th Century eras. Through a modern AI-powered chat interface, you can ask questions, learn about their work, and gain insights into their musical style and historical context.
 
-**Use Lovable**
+## Getting Started
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/8c6b2ca7-9c30-4916-977b-ee8003fa919e) and start prompting.
+There are several ways to work with this codebase:
 
-Changes made via Lovable will be committed automatically to this repo.
+### Local Development
 
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+To run the project locally:
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
+# Step 1: Clone the repository
 git clone <YOUR_GIT_URL>
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Step 2: Navigate to the project directory
+cd composer-conversations-chronicles
 
-# Step 3: Install the necessary dependencies.
+# Step 3: Install dependencies
 npm i
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Step 4: Start the development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+### Edit Files Directly in GitHub
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+- Navigate to the desired file(s)
+- Click the "Edit" button (pencil icon) at the top right of the file view
+- Make your changes and commit them
 
-**Use GitHub Codespaces**
+### Use GitHub Codespaces
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+- Navigate to the main page of your repository
+- Click on the "Code" button (green button) near the top right
+- Select the "Codespaces" tab
+- Click on "New codespace" to launch a new environment
+- Edit files directly within the Codespace and commit your changes
 
-## What technologies are used for this project?
+## Technologies
 
 This project is built with:
 
@@ -59,15 +53,20 @@ This project is built with:
 - React
 - shadcn-ui
 - Tailwind CSS
+- React Router
+- React Query
+- And more modern web technologies
 
-## How can I deploy this project?
+## Deployment
 
-Simply open [Lovable](https://lovable.dev/projects/8c6b2ca7-9c30-4916-977b-ee8003fa919e) and click on Share -> Publish.
+The project is currently deployed on Netlify.
 
-## Can I connect a custom domain to my Lovable project?
+## Custom Domain Setup
 
-Yes, you can!
+You can connect a custom domain to this project.
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+To connect a domain, navigate to your hosting provider's settings panel and follow their instructions for connecting a custom domain.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+## Contributing
+
+Contributions are welcome! Feel free to submit issues or pull requests to help improve this project.
