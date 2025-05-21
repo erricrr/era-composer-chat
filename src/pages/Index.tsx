@@ -4,7 +4,6 @@ import { ComposerMenu } from '@/components/ComposerMenu';
 import { ChatInterface } from '@/components/ChatInterface';
 import ActiveChatsSlider from '@/components/ActiveChatsSlider';
 import { ThemeToggle } from '@/components/ThemeToggle';
-import { MusicNoteDecoration } from '@/components/MusicNoteDecoration';
 import { useConversations } from '@/hooks/useConversations';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { MessageSquare, AlertTriangle, MessageSquareOff, X } from 'lucide-react';
@@ -601,10 +600,6 @@ const Index = () => {
             {!selectedComposer && (
               <div className="container mx-auto px-4 h-full flex flex-col items-center justify-center">
                 <div className="text-center p-4 max-w-md overflow-y-auto max-h-[calc(100vh-5.5rem)] scrollbar-thin scrollbar-thumb-muted-foreground/40 scrollbar-track-transparent relative">
-                  {/* Background Music Notes with enhanced visibility */}
-                  <div className="absolute inset-0 overflow-hidden -z-10">
-                    <MusicNoteDecoration lightModeOpacity="10%" darkModeOpacity="15%" />
-                  </div>
 
                   <h2 className="text-xl font-semibold mb-2">Welcome to Era Composer Chat</h2>
                   <p className="text-muted-foreground mb-3">
