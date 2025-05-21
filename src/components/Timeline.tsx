@@ -148,9 +148,9 @@ const renderIcon = (era: typeof eras[number], index: number) => {
                     {/* Era name */}
                     <h3 className={`
                       text-center transition-all duration-300 ease-out whitespace-nowrap
-                      text-[10px] text-base lg:text-lg
+                      font-semibold text-base lg:text-lg
                       ${selectedEra === era.name
-                        ? 'text-primary font-medium scale-[1.02]'
+                        ? 'text-primary font-bold scale-[1.02]'
                         : 'text-muted-foreground group-hover:text-primary/80 group-hover:scale-[1.02]'
                       }
                     `}>
@@ -160,7 +160,7 @@ const renderIcon = (era: typeof eras[number], index: number) => {
                     {/* Period years */}
                     <p className={`
                       text-xs sm:text-sm text-muted-foreground mt-1 text-center whitespace-nowrap
-                      transition-all duration-300 ease-out
+                      font-medium transition-all duration-300 ease-out
                       ${selectedEra === era.name
                         ? 'opacity-100 scale-[1.02]'
                         : 'opacity-70 group-hover:opacity-100 group-hover:scale-[1.02]'
@@ -230,9 +230,9 @@ const renderIcon = (era: typeof eras[number], index: number) => {
                         aria-labelledby={`era-title-${era.id}`}
                         aria-modal="true"
                       >
-                        <h4 id={`era-title-${era.id}`} className="text-xs xs:text-sm sm:text-base md:text-lg lg:text-xl font-semibold mb-2 text-primary">{era.name}</h4>
-                        <p className="text-[10px] xs:text-xs sm:text-sm text-muted-foreground">{era.description}</p>
-                      </div>
+                        <h4 id={`era-title-${era.id}`} className="text-base xs:text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold mb-2 text-primary">{era.name}</h4>
+                        <p className="text-sm xs:text-base sm:text-lg text-muted-foreground">{era.description}</p>
+                        </div>
                       <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-primary rounded-l-md animate-[expandVertical_0.3s_ease-in-out] origin-top" />
                     </PopoverContent>
                   </Popover>
