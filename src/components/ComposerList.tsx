@@ -236,6 +236,14 @@ export function ComposerList({
     initializeViewportRefs();
   }, [era, initializeViewportRefs]);
 
+  // Reset details scroll position when selected composer changes
+  useEffect(() => {
+    const detailsViewport = viewportRefs.current.details;
+    if (detailsViewport && selectedComposer) {
+      detailsViewport.scrollTo({ top: 0, behavior: 'instant' });
+    }
+  }, [selectedComposer]);
+
   // Scroll to selected composer when requested
   useEffect(() => {
     if (!selectedComposer || !shouldScrollToComposer) return;
