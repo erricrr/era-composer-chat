@@ -600,14 +600,19 @@ const Index = () => {
           >
             {!selectedComposer && (
               <div className="container mx-auto px-4 h-full flex flex-col items-center justify-center">
-                <div className="text-center p-6 max-w-md">
-                  <h2 className="text-xl font-semibold mb-3">Welcome to Era Composer Chat</h2>
-                  <p className="text-muted-foreground mb-4">
-                    Select a composer from the menu to start chatting with them about their life, music, and legacy. You can also use the search bar in the top right to quickly find a specific composer.
+                <div className="text-center p-4 max-w-md overflow-y-auto max-h-[calc(100vh-5.5rem)] scrollbar-thin scrollbar-thumb-muted-foreground/40 scrollbar-track-transparent relative">
+                  <div className="absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-background to-transparent pointer-events-none" aria-hidden="true"></div>
+                  <h2 className="text-xl font-semibold mb-2">Welcome to Era Composer Chat</h2>
+                  <p className="text-muted-foreground mb-3">
+                  Select a composer from the menu to start chatting with them about their life, music, and legacy. You can also use the search bar in the top right to quickly find a specific composer.
+                  </p>
+                  <p className="text-muted-foreground mb-3">
+                    For the best experience, consider listening to classical music while chatting&mdash;it adds wonderful context to your conversations! Try searching for 'classical music essentials' on your preferred music streaming service if you'd like to enhance your experience.
                   </p>
                   <button
                     onClick={toggleMenu}
-                    className="flex items-center justify-center mx-auto px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+                    className="flex items-center justify-center mx-auto px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors mb-1"
+                    aria-label="Open composer menu"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -615,6 +620,7 @@ const Index = () => {
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
+                      aria-hidden="true"
                     >
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
