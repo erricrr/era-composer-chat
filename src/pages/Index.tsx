@@ -15,6 +15,27 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { toast } from "sonner";
 import { useIsMobile } from '@/hooks/use-mobile';
 
+// Custom component with enhanced visibility for welcome page only
+const EnhancedMusicNoteDecoration = () => {
+  return (
+    <div aria-hidden="true" role="presentation" className="absolute inset-0 pointer-events-none opacity-[10%] dark:opacity-[15%]">
+      {/* Musical notes with multi-directional floating animations */}
+      <div className="absolute top-[10%] left-[5%] text-2xl rotate-12 animate-float-1" style={{ animationDelay: "0.3s" }}>♩</div>
+      <div className="absolute top-[25%] right-[15%] text-4xl -rotate-6 animate-float-2" style={{ animationDelay: "1.2s" }}>♪</div>
+      <div className="absolute top-[65%] left-[25%] text-3xl rotate-3 animate-float-3" style={{ animationDelay: "0.8s" }}>♫</div>
+      <div className="absolute top-[35%] right-[20%] text-5xl -rotate-12 animate-float-4" style={{ animationDelay: "2.1s" }}>♬</div>
+      <div className="absolute top-[75%] right-[5%] text-3xl rotate-9 animate-float-1" style={{ animationDelay: "1.5s" }}>♩</div>
+      <div className="absolute top-[45%] left-[8%] text-4xl -rotate-3 animate-float-2" style={{ animationDelay: "0.7s" }}>♪</div>
+      <div className="absolute top-[15%] right-[30%] text-2xl rotate-6 animate-float-3" style={{ animationDelay: "1.9s" }}>♫</div>
+      <div className="absolute top-[85%] left-[40%] text-4xl -rotate-9 animate-float-4" style={{ animationDelay: "0.4s" }}>♬</div>
+      <div className="absolute top-[55%] left-[65%] text-3xl rotate-15 animate-float-2" style={{ animationDelay: "1.1s" }}>♩</div>
+      <div className="absolute top-[32%] left-[45%] text-2xl -rotate-9 animate-float-3" style={{ animationDelay: "0.6s" }}>♪</div>
+      <div className="absolute top-[8%] left-[80%] text-4xl rotate-3 animate-float-1" style={{ animationDelay: "1.7s" }}>♬</div>
+      <div className="absolute top-[90%] right-[25%] text-3xl -rotate-6 animate-float-4" style={{ animationDelay: "2.3s" }}>♫</div>
+    </div>
+  );
+};
+
 const Index = () => {
   const isMobile = useIsMobile();
   const [selectedComposer, setSelectedComposer] = useState<Composer | null>(() => {
@@ -601,6 +622,11 @@ const Index = () => {
             {!selectedComposer && (
               <div className="container mx-auto px-4 h-full flex flex-col items-center justify-center">
                 <div className="text-center p-4 max-w-md overflow-y-auto max-h-[calc(100vh-5.5rem)] scrollbar-thin scrollbar-thumb-muted-foreground/40 scrollbar-track-transparent relative">
+                  {/* Background Music Notes with enhanced visibility */}
+                  <div className="absolute inset-0 overflow-hidden -z-10">
+                    <EnhancedMusicNoteDecoration />
+                  </div>
+
                   <h2 className="text-xl font-semibold mb-2">Welcome to Era Composer Chat</h2>
                   <p className="text-muted-foreground mb-3">
                   Select a composer from the menu to start chatting with them about their life, music, and legacy. You can also use the search bar in the top right to quickly find a specific composer.
