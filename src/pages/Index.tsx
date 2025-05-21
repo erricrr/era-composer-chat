@@ -601,13 +601,9 @@ const Index = () => {
             {!selectedComposer && (
               <div className="container mx-auto px-4 h-full flex flex-col items-center justify-center">
                 <div className="text-center p-4 max-w-md overflow-y-auto max-h-[calc(100vh-5.5rem)] scrollbar-thin scrollbar-thumb-muted-foreground/40 scrollbar-track-transparent relative">
-                  <div className="absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-background to-transparent pointer-events-none" aria-hidden="true"></div>
                   <h2 className="text-xl font-semibold mb-2">Welcome to Era Composer Chat</h2>
                   <p className="text-muted-foreground mb-3">
                   Select a composer from the menu to start chatting with them about their life, music, and legacy. You can also use the search bar in the top right to quickly find a specific composer.
-                  </p>
-                  <p className="text-muted-foreground mb-3">
-                    For the best experience, consider listening to classical music while chatting&mdash;it adds wonderful context to your conversations! Try searching for 'classical music essentials' on your preferred music streaming service if you'd like to enhance your experience.
                   </p>
                   <button
                     onClick={toggleMenu}
@@ -626,6 +622,10 @@ const Index = () => {
                     </svg>
                     Open Composer Menu
                   </button>
+                  <p className="text-muted-foreground my-3">
+                  <strong>For the best experience, consider listening to classical music while chatting</strong>&mdash;it adds wonderful context to your conversations! Try searching for 'classical music essentials' on your preferred music streaming service if you'd like to enhance your experience.
+                  </p>
+
                 </div>
               </div>
             )}
