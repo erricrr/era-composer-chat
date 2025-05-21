@@ -125,7 +125,7 @@ const renderIcon = (era: typeof eras[number], index: number) => {
 
   return (
     <TooltipProvider>
-      <div className="w-full max-w-4xl mx-auto my-4 md:my-6">
+      <div className="w-full max-w-4xl mx-auto my-7">
         {/* Era Timeline */}
         <div className="relative flex flex-col">
           {/* Era labels */}
