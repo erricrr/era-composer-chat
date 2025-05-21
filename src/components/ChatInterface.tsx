@@ -212,27 +212,27 @@ export function ChatInterface({
       // When keyboard appears, add a class to ensure headers stay fixed
       if (isKeyboard) {
         document.documentElement.classList.add('keyboard-visible');
-        // Prevent body scrolling when keyboard is open
-        document.body.style.height = `${originalViewportHeightRef.current}px`;
-        document.body.style.overflow = 'hidden';
-        document.body.style.position = 'fixed';
-        document.body.style.width = '100%';
 
-        // ScrollIntoView to ensure the input is visible and focused
+        // Instead of position fixed which causes issues on mobile Chrome/Safari
+        // We'll use a more reliable approach for mobile
+        const chatForm = document.querySelector('form.chat-container');
+        const chatInput = document.getElementById('chat-input');
+
+        // Make sure the form is visible
+        if (chatForm) {
+          (chatForm as HTMLElement).style.position = 'sticky';
+          (chatForm as HTMLElement).style.bottom = '0';
+          (chatForm as HTMLElement).style.zIndex = '40';
+        }
+
+        // Ensure the text area is visible
         setTimeout(() => {
           if (textareaRef.current) {
-            textareaRef.current.scrollIntoView({ block: 'center', behavior: 'smooth' });
+            // Scroll the textarea into view with a slight delay to allow keyboard to settle
+            textareaRef.current.scrollIntoView({ block: 'center' });
             textareaRef.current.focus();
-
-            // Explicitly make sure the parent form stays visible and the buttons keep their positions
-            const buttonsContainer = textareaRef.current.parentElement?.querySelector('.absolute');
-            if (buttonsContainer) {
-              (buttonsContainer as HTMLElement).style.opacity = '1';
-              (buttonsContainer as HTMLElement).style.zIndex = '100';
-              (buttonsContainer as HTMLElement).style.visibility = 'visible';
-            }
           }
-        }, 150);
+        }, 300);
       } else {
         document.documentElement.classList.remove('keyboard-visible');
         // Restore normal scrolling behavior
@@ -427,6 +427,20 @@ export function ChatInterface({
       .mic-pulse-animation {
         animation: micPulse 1.5s infinite;
       }
+
+      /* Mobile keyboard fixes */
+      @media (max-width: 768px) {
+        .keyboard-visible .chat-container {
+          position: relative !important;
+          z-index: 50 !important;
+        }
+
+        .keyboard-visible form.chat-container {
+          position: sticky !important;
+          bottom: 0 !important;
+          z-index: 50 !important;
+        }
+      }
     `;
     document.head.appendChild(style);
 
@@ -435,7 +449,7 @@ export function ChatInterface({
     };
   }, []);
 
-  // Effect to handle edge cases with input clearing
+  // Add effect to handle edge cases with input clearing
   useEffect(() => {
     // If the input should be empty but contains only dictation markers, clear it
     if (inputMessage === '[listening]' || inputMessage.trim() === '') {
@@ -445,6 +459,46 @@ export function ChatInterface({
       }
     }
   }, [inputMessage]);
+
+  // Add mobile-specific effect to ensure the chat form scrolls into view when keyboard appears
+  useEffect(() => {
+    if (!isMobile) return;
+
+    // Helper function to ensure the chat input is visible when focused
+    const ensureChatInputVisible = () => {
+      const chatForm = document.querySelector('form.chat-container');
+      if (chatForm && textareaRef.current) {
+        // Use requestAnimationFrame to ensure this runs after layout calculations
+        requestAnimationFrame(() => {
+          // Scroll the bottom of the form into view to ensure the input is visible
+          textareaRef.current.scrollIntoView({ block: 'center', behavior: 'smooth' });
+
+          // For Chrome and Safari where the virtual keyboard might still obscure the input
+          setTimeout(() => {
+            // Additional scroll to ensure visibility after keyboard is fully shown
+            if (textareaRef.current) {
+              textareaRef.current.scrollIntoView({ block: 'center' });
+            }
+          }, 500);
+        });
+      }
+    };
+
+    // Event listeners for mobile input focus
+    const handleInputFocus = () => {
+      ensureChatInputVisible();
+    };
+
+    if (textareaRef.current) {
+      textareaRef.current.addEventListener('focus', handleInputFocus);
+    }
+
+    return () => {
+      if (textareaRef.current) {
+        textareaRef.current.removeEventListener('focus', handleInputFocus);
+      }
+    };
+  }, [isMobile]);
 
   // Auto-focus textarea when composer changes or split view toggles
   useEffect(() => {
@@ -852,7 +906,11 @@ export function ChatInterface({
         style={{
           zIndex: 40,
           position: 'sticky',
-          bottom: 0
+          bottom: 0,
+          ...(isMobile ? {
+            paddingBottom: 'max(env(safe-area-inset-bottom), 0.5rem)',
+            marginBottom: 0
+          } : {})
         }}
       >
         <div className="pt-4 px-3 sm:px-5 relative z-10">
@@ -875,10 +933,13 @@ export function ChatInterface({
                 onFocus={() => {
                   // For mobile browsers, ensure elements are visible when keyboard appears
                   if (isMobile) {
+                    // Enhanced mobile focus handler to ensure input is visible with keyboard
                     setTimeout(() => {
-                      window.scrollTo(0, 0);
-                      document.body.scrollTop = 0;
-                    }, 50);
+                      if (textareaRef.current) {
+                        // This improves visibility on Chrome/Safari mobile
+                        textareaRef.current.scrollIntoView({ block: 'center', behavior: 'smooth' });
+                      }
+                    }, 300);
                   }
                 }}
                 placeholder={`Ask a question...`}
