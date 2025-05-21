@@ -532,18 +532,12 @@ export function ComposerList({
            maxHeight: "calc(100svh - 180px - env(safe-area-inset-bottom, 0px))",
            minHeight: "400px" // Ensure minimum height to prevent collapse on very small viewports
          }}>
-      <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] h-full">
+     <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] h-full">
         <div className="overflow-hidden h-full flex flex-col relative">
           {/* Mobile horizontal scroll */}
           <div className="md:hidden flex-shrink-0 relative">
             <div className="relative overflow-hidden">
-              {/* We only need subtle shadows for horizontal scrolling on mobile */}
-              {!horizontalScroll.isAtStart && (
-                <div className="absolute left-0 top-0 bottom-0 w-8 z-10 pointer-events-none bg-gradient-to-r from-primary-foreground to-transparent opacity-70" />
-              )}
-              {!horizontalScroll.isAtEnd && (
-                <div className="absolute right-0 top-0 bottom-0 w-8 z-10 pointer-events-none bg-gradient-to-l from-primary-foreground to-transparent opacity-70" />
-              )}
+              {/* Removed the shadow divs that were here */}
               <ScrollArea ref={mobileScrollAreaRef} key={`${era}-mobile`} className="w-full h-auto scroll-area">
                 <div className="inline-flex h-full items-center relative">
                   {allComposers.map((composer, idx) => (
@@ -588,7 +582,6 @@ export function ComposerList({
               />
             </div>
           </div>
-
           {/* Desktop vertical scroll */}
           <div className="hidden md:flex flex-col flex-1 overflow-hidden relative py-0">
             <div className="relative overflow-hidden h-full">
