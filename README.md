@@ -21,7 +21,7 @@ To run the project locally:
 git clone <YOUR_GIT_URL>
 
 # Step 2: Navigate to the project directory
-cd composer-conversations-chronicles
+cd era-composer-chat
 
 # Step 3: Install dependencies
 npm i
