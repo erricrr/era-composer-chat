@@ -533,7 +533,7 @@ export function ComposerList({
            minHeight: "400px" // Ensure minimum height to prevent collapse on very small viewports
          }}>
      <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] h-full">
-        <div className="overflow-hidden h-full flex flex-col relative">
+        <nav className="overflow-hidden h-full flex flex-col relative" aria-label="Composer navigation">
           {/* Mobile horizontal scroll */}
           <div className="md:hidden flex-shrink-0 relative">
             <div className="relative overflow-hidden">
@@ -634,13 +634,13 @@ export function ComposerList({
               isAtEnd={verticalScroll.isAtBottom}
             />
           </div>
-        </div>
+        </nav>
 
         {selectedComposer && (
-          <div className="flex flex-col h-full overflow-hidden p-2 md:p-3">
+          <main className="flex flex-col h-full overflow-hidden p-2 md:p-3" aria-label="Composer details">
             {/* Fixed header containing composer details */}
-            <div className="flex-shrink-0 px-2 md:px-3 pt-1 pb-2 md:pb-3 relative z-20 bg-primary-foreground">
-              <div className="flex items-start md:items-center space-x-2 md:space-x-4 border-b pt-1 md:pt-0 pb-2">
+            <div className="flex-shrink-0 px-2 md:px-3 pt-1 pb-1 relative z-20 bg-primary-foreground">
+              <div className="flex items-start md:items-center space-x-2 md:space-x-4 pt-0 md:pt-0 pb-2">
                 <ComposerImageViewer
                   composer={selectedComposer}
                   size="xxl"
@@ -683,7 +683,7 @@ export function ComposerList({
                 <div className="absolute bottom-0 left-0 right-0 h-8 z-10 pointer-events-none bg-gradient-to-t from-primary-foreground to-transparent" />
               )}
               <ScrollArea ref={composerDetailsScrollRef} className="w-full h-full">
-                <div className="px-2 md:px-3 py-2 space-y-4">
+                <div className="px-4 md:px-5 py-3 space-y-4">
                   <p className="text-sm md:text-base text-foreground/90">
                     {selectedComposer.shortBio}
                   </p>
@@ -730,7 +730,7 @@ export function ComposerList({
                   : 'Chat unavailable due to rights restrictions'}
               </Button>
             </div>
-          </div>
+          </main>
         )}
 
         {!selectedComposer && (

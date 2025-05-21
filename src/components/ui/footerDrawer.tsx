@@ -142,7 +142,7 @@ const FooterDrawer: React.FC<FooterDrawerProps> = ({ onTrigger, onVisibilityChan
         className="w-11 h-11 flex items-center justify-center rounded-md hover:bg-muted transition-colors duration-200 text-muted-foreground hover:text-muted-foreground focus-ring-inset"
         onClick={toggleDrawer}
         aria-label="About"
-        aria-expanded={isOpen}
+        aria-expanded={isOpen ? "true" : "false"}
       >
         <FontAwesomeIcon icon={faInfoCircle} className="h-4 w-4" />
       </button>

@@ -103,8 +103,8 @@ const renderIcon = (era: typeof eras[number], index: number) => {
       onKeyDown={e => handlePopoverKeyDown(e, era.id)}
       className={iconClass}
       aria-label={`More info about ${era.name} era`}
-      aria-expanded={openPopoverId === era.id}
-      aria-pressed={isSelectedIcon}
+      aria-expanded={openPopoverId === era.id ? "true" : "false"}
+      aria-pressed={isSelectedIcon ? "true" : "false"}
     >
       <span className="text-xs font-medium">?</span>
     </button>
@@ -139,7 +139,7 @@ const renderIcon = (era: typeof eras[number], index: number) => {
                   ref={el => eraLabelRefs.current[index] = el}
                   type="button"
                   role="tab"
-                  aria-selected={selectedEra === era.name}
+                  aria-selected={selectedEra === era.name ? "true" : "false"}
                   onClick={() => onSelectEra(era.name)}
                   onKeyDown={e => handleLabelKeyDown(e, index, era.name)}
                   className="flex flex-col items-center w-1/4 group p-0 m-0 bg-transparent border-none appearance-none"
@@ -148,10 +148,10 @@ const renderIcon = (era: typeof eras[number], index: number) => {
                     {/* Era name */}
                     <h3 className={`
                       text-center transition-all duration-300 ease-out whitespace-nowrap
-                      font-semibold text-base lg:text-lg
+                      font-bold text-base lg:text-lg
                       ${selectedEra === era.name
-                        ? 'text-primary font-bold scale-[1.02]'
-                        : 'text-muted-foreground group-hover:text-primary/80 group-hover:scale-[1.02]'
+                        ? 'text-primary font-bold scale-[1.04]'
+                        : 'text-muted-foreground group-hover:font-bold group-hover:scale-[1.04]'
                       }
                     `}>
                       {displayLabel}
@@ -162,8 +162,8 @@ const renderIcon = (era: typeof eras[number], index: number) => {
                       text-xs sm:text-sm text-muted-foreground mt-1 text-center whitespace-nowrap
                       font-medium transition-all duration-300 ease-out
                       ${selectedEra === era.name
-                        ? 'opacity-100 scale-[1.02]'
-                        : 'opacity-70 group-hover:opacity-100 group-hover:scale-[1.02]'
+                        ? 'opacity-100 scale-[1.04]'
+                        : 'opacity-70 group-hover:opacity-100 group-hover:scale-[1.04]'
                       }
                     `}>
                       ({era.period})
