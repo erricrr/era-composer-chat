@@ -7,6 +7,12 @@ import { ComposerImageViewer } from './ComposerImageViewer';
 import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { ChevronLeft, ChevronRight, ChevronUp, ChevronDown, LucideIcon } from 'lucide-react';
 
+// Helper to detect Safari browser
+const isSafari = () => {
+  const ua = navigator.userAgent.toLowerCase();
+  return ua.indexOf('safari') !== -1 && ua.indexOf('chrome') === -1 && ua.indexOf('android') === -1;
+};
+
 interface ScrollChevronProps {
   direction: 'left' | 'right' | 'up' | 'down';
   onClick?: () => void;
@@ -125,6 +131,8 @@ export function ComposerList({
   const mobileScrollAreaRef = useRef<HTMLDivElement>(null);
   const desktopScrollAreaRef = useRef<HTMLDivElement>(null);
   const composerDetailsScrollRef = useRef<HTMLDivElement>(null);
+  const announcerRef = useRef<HTMLDivElement>(null);
+  const detailsContentRef = useRef<HTMLDivElement>(null);
 
   // Store viewport refs in refs to ensure their stability
   const viewportRefs = useRef({
@@ -164,6 +172,26 @@ export function ComposerList({
 
   // Handle composer selection
   const handleComposerSelect = useCallback((composer: Composer) => {
+    // Reset the details scroll position before selecting the new composer
+    const resetDetailsScroll = () => {
+      const detailsViewport = viewportRefs.current.details;
+      if (detailsViewport) {
+        detailsViewport.scrollTop = 0;
+      }
+
+      const scrollAreaElement = composerDetailsScrollRef.current;
+      if (scrollAreaElement) {
+        const viewport = scrollAreaElement.querySelector('[data-radix-scroll-area-viewport]');
+        if (viewport && viewport instanceof HTMLElement) {
+          viewport.scrollTop = 0;
+        }
+      }
+    };
+
+    // Reset scroll first
+    resetDetailsScroll();
+
+    // Then select the composer
     onSelectComposer(composer, { source: 'list' });
   }, [onSelectComposer]);
 
@@ -238,10 +266,94 @@ export function ComposerList({
 
   // Reset details scroll position when selected composer changes
   useEffect(() => {
-    const detailsViewport = viewportRefs.current.details;
-    if (detailsViewport && selectedComposer) {
-      detailsViewport.scrollTo({ top: 0, behavior: 'instant' });
+    if (!selectedComposer) return;
+
+    // Check if we're on Safari
+    const isSafariBrowser = isSafari();
+
+    // Use multiple approaches for cross-browser compatibility
+    const resetScroll = () => {
+      // 1. Try using the viewport ref from Radix UI ScrollArea
+      const detailsViewport = viewportRefs.current.details;
+      if (detailsViewport) {
+        detailsViewport.scrollTop = 0;
+        // Also try the smooth method as a backup
+        try {
+          detailsViewport.scrollTo({ top: 0, behavior: 'instant' });
+        } catch (e) {
+          // Some browsers might not support this
+        }
+      }
+
+      // 2. Try direct DOM access to the ScrollArea component
+      const scrollAreaElement = composerDetailsScrollRef.current;
+      if (scrollAreaElement) {
+        // Try to find the viewport through different selectors for better compatibility
+        const viewports = [
+          scrollAreaElement.querySelector('[data-radix-scroll-area-viewport]'),
+          scrollAreaElement.querySelector('.scroll-area-viewport'),
+          scrollAreaElement.querySelector('[role="presentation"]')
+        ];
+
+        viewports.forEach(viewport => {
+          if (viewport && viewport instanceof HTMLElement) {
+            viewport.scrollTop = 0;
+            try {
+              viewport.scrollTo({ top: 0, behavior: 'instant' });
+            } catch (e) {
+              // Some browsers might not support this
+            }
+          }
+        });
+      }
+
+      // Safari-specific fix: force a reflow by toggling a class
+      if (isSafariBrowser && scrollAreaElement) {
+        // More aggressive fix for Safari
+        scrollAreaElement.style.display = 'none';
+        // Force a reflow
+        void scrollAreaElement.offsetHeight;
+        scrollAreaElement.style.display = '';
+
+        // Also try a class toggle approach
+        scrollAreaElement.classList.add('force-reflow');
+        setTimeout(() => scrollAreaElement.classList.remove('force-reflow'), 10);
+      }
+
+      // 3. Use a setTimeout as a last resort to ensure the scroll is reset
+      // after the component has fully rendered
+      setTimeout(() => {
+        // Try again with the viewport ref
+        const delayedViewport = composerDetailsScrollRef.current?.querySelector('[data-radix-scroll-area-viewport]');
+        if (delayedViewport && delayedViewport instanceof HTMLElement) {
+          delayedViewport.scrollTop = 0;
+        }
+
+        // Announce for screen readers that details have been loaded and scrolled to top
+        if (announcerRef.current) {
+          announcerRef.current.textContent = `Details for ${selectedComposer.name} loaded and scrolled to the beginning.`;
+        }
+      }, 50);
+    };
+
+    // Call immediately
+    resetScroll();
+
+    // And also after a short delay to ensure DOM is ready
+    const timer = setTimeout(resetScroll, 100);
+
+    // For Safari, run an additional reset after layout calculations with longer delays
+    const safariTimers: NodeJS.Timeout[] = [];
+    if (isSafariBrowser) {
+      [300, 500, 800].forEach(delay => {
+        safariTimers.push(setTimeout(resetScroll, delay));
+      });
     }
+
+    return () => {
+      clearTimeout(timer);
+      safariTimers.forEach(clearTimeout);
+    };
   }, [selectedComposer]);
 
   // Scroll to selected composer when requested
@@ -524,6 +636,44 @@ export function ComposerList({
     };
   }, [scrollToSelectedComposerOnResize, initializeViewportRefs]);
 
+  // Use IntersectionObserver to detect when the content is visible
+  useEffect(() => {
+    if (!selectedComposer || !detailsContentRef.current) return;
+
+    // This is especially helpful for Safari
+    const resetScrollOnVisible = (entries: IntersectionObserverEntry[]) => {
+      const [entry] = entries;
+
+      if (entry.isIntersecting) {
+        // Content is visible, force reset scroll
+        const detailsViewport = viewportRefs.current.details;
+        if (detailsViewport) {
+          detailsViewport.scrollTop = 0;
+        }
+
+        // Also try direct query
+        const scrollAreaElement = composerDetailsScrollRef.current;
+        if (scrollAreaElement) {
+          const viewport = scrollAreaElement.querySelector('[data-radix-scroll-area-viewport]');
+          if (viewport && viewport instanceof HTMLElement) {
+            viewport.scrollTop = 0;
+          }
+        }
+      }
+    };
+
+    const observer = new IntersectionObserver(resetScrollOnVisible, {
+      root: null,
+      threshold: 0.1 // Trigger when at least 10% is visible
+    });
+
+    observer.observe(detailsContentRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [selectedComposer]);
+
   // Clean up timeouts on unmount
   useEffect(() => {
     return () => {
@@ -540,6 +690,12 @@ export function ComposerList({
            maxHeight: "calc(100svh - 180px - env(safe-area-inset-bottom, 0px))",
            minHeight: "400px" // Ensure minimum height to prevent collapse on very small viewports
          }}>
+      <div
+        ref={announcerRef}
+        className="sr-only"
+        aria-live="polite"
+        aria-atomic="true"
+      ></div>
      <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] h-full">
         <nav className="overflow-hidden h-full flex flex-col relative" aria-label="Composer navigation">
           {/* Mobile horizontal scroll */}
@@ -691,13 +847,13 @@ export function ComposerList({
                 <div className="absolute bottom-0 left-0 right-0 h-8 z-10 pointer-events-none bg-gradient-to-t from-primary-foreground to-transparent" />
               )}
               <ScrollArea ref={composerDetailsScrollRef} className="w-full h-full">
-                <div className="px-4 md:px-5 py-3 space-y-4">
+                <div className="px-4 md:px-5 py-3 space-y-4" ref={detailsContentRef}>
                   <p className="text-sm md:text-base text-foreground/90">
                     {selectedComposer.shortBio}
                   </p>
                   <div>
                     <h4 className="font-semibold mb-2 text-base md:text-lg">Notable Works</h4>
-                    <ul className="list-disc pl-5 mb-2 space-y-1">
+                    <ul className="list-disc pl-5 mb-4 space-y-1">
                       {selectedComposer.famousWorks.slice(0, 3).map((work, index) => (
                         <li key={index} className="text-sm md:text-base text-foreground/80">{work}</li>
                       ))}
