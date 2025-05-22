@@ -220,12 +220,12 @@ const renderIcon = (era: typeof eras[number], index: number) => {
                     {renderIcon(era, index)}
                     <PopoverContent
                       ref={el => popoverContentRefs.current[index] = el}
-                      className="relative max-w-sm p-2 shadow-xl overflow-hidden focus:outline-none focus-visible:ring focus-visible:ring-primary focus-visible:ring-opacity-75 opacity-0 data-[state=open]:opacity-100 transition-opacity"
+                      className="relative w-[280px] sm:w-[320px] md:w-[340px] lg:max-w-sm p-2 shadow-xl overflow-hidden focus:outline-none focus-visible:ring focus-visible:ring-primary focus-visible:ring-opacity-75 opacity-0 data-[state=open]:opacity-100 transition-opacity"
                       onEscapeKeyDown={() => setOpenPopoverId(null)}
                       tabIndex={0}
                       onKeyDown={(e) => handleContentKeyDown(e, index)}
                       side="bottom"
-                      align="center"
+                      align={index === 0 ? "start" : index === eras.length - 1 ? "end" : "center"}
                       avoidCollisions={false}
                       sideOffset={5}
                     >
@@ -235,8 +235,8 @@ const renderIcon = (era: typeof eras[number], index: number) => {
                         aria-labelledby={`era-title-${era.id}`}
                         aria-modal="true"
                       >
-                        <h4 id={`era-title-${era.id}`} className="text-lg font-semibold mb-2 text-primary">{era.name}</h4>
-                        <p className="text-base text-muted-foreground">{era.description}</p>
+                        <h4 id={`era-title-${era.id}`} className="text-base sm:text-lg font-semibold mb-2 text-primary">{era.name}</h4>
+                        <p className="text-sm sm:text-base text-muted-foreground">{era.description}</p>
                         </div>
                       <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-primary rounded-l-md animate-[expandVertical_0.3s_ease-in-out] origin-top" />
                     </PopoverContent>
