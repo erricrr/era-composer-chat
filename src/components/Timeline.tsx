@@ -48,7 +48,8 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
   }, [openPopoverId]);
 
   const handleIconClick = (id: string) => {
-    setOpenPopoverId(openPopoverId === id ? null : id);
+    // Direct state update without conditions
+    setOpenPopoverId(id);
   };
 
   // Function to handle keyboard events on the popover button
@@ -113,8 +114,12 @@ const renderIcon = (era: typeof eras[number], index: number) => {
   if (isTouch) {
     return trigger;
   }
+  // Only show tooltip if popover is not open
+  if (openPopoverId === era.id) {
+    return trigger;
+  }
   return (
-    <Tooltip>
+    <Tooltip delayDuration={100}>
       <TooltipTrigger asChild>{trigger}</TooltipTrigger>
       <TooltipContent side="top" className="text-xs">
         {isSelectedIcon ? 'Active Era' : 'Era Details'}
@@ -205,24 +210,24 @@ const renderIcon = (era: typeof eras[number], index: number) => {
                   <Popover
                     open={openPopoverId === era.id}
                     onOpenChange={(open) => {
-                      setOpenPopoverId(open ? era.id : null);
                       if (!open) {
-                        // When closing, focus the trigger button that opened the popover
-                        setTimeout(() => {
-                          popoverTriggerRefs.current[index]?.focus();
-                        }, 0);
+                        // Only handle close events here
+                        setOpenPopoverId(null);
                       }
+                      // Opening is handled by handleIconClick
                     }}
                   >
                     {renderIcon(era, index)}
                     <PopoverContent
                       ref={el => popoverContentRefs.current[index] = el}
-                      className="relative max-w-sm p-2 shadow-xl overflow-hidden focus:outline-none focus-visible:ring focus-visible:ring-primary focus-visible:ring-opacity-75"
-                      onEscapeKeyDown={() => {
-                        setOpenPopoverId(null);
-                      }}
+                      className="relative max-w-sm p-2 shadow-xl overflow-hidden focus:outline-none focus-visible:ring focus-visible:ring-primary focus-visible:ring-opacity-75 opacity-0 data-[state=open]:opacity-100 transition-opacity"
+                      onEscapeKeyDown={() => setOpenPopoverId(null)}
                       tabIndex={0}
                       onKeyDown={(e) => handleContentKeyDown(e, index)}
+                      side="bottom"
+                      align="center"
+                      avoidCollisions={false}
+                      sideOffset={5}
                     >
                       <div
                         className="p-3"
