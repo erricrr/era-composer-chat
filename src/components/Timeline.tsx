@@ -225,8 +225,8 @@ const renderIcon = (era: typeof eras[number], index: number) => {
                       tabIndex={0}
                       onKeyDown={(e) => handleContentKeyDown(e, index)}
                       side="bottom"
-                      align={index === 0 ? "start" : index === eras.length - 1 ? "end" : "center"}
-                      avoidCollisions={false}
+                      align="center"
+                      avoidCollisions={true}
                       sideOffset={5}
                     >
                       <div
