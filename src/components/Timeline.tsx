@@ -230,8 +230,8 @@ const renderIcon = (era: typeof eras[number], index: number) => {
                         aria-labelledby={`era-title-${era.id}`}
                         aria-modal="true"
                       >
-                        <h4 id={`era-title-${era.id}`} className="text-base xs:text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold mb-2 text-primary">{era.name}</h4>
-                        <p className="text-sm xs:text-base sm:text-lg text-muted-foreground">{era.description}</p>
+                        <h4 id={`era-title-${era.id}`} className="text-lg font-semibold mb-2 text-primary">{era.name}</h4>
+                        <p className="text-base text-muted-foreground">{era.description}</p>
                         </div>
                       <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-primary rounded-l-md animate-[expandVertical_0.3s_ease-in-out] origin-top" />
                     </PopoverContent>

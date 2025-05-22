@@ -110,6 +110,9 @@ export function ChatInterface({
   // Reference for speech recognition
   const recognitionRef = useRef<SpeechRecognition | null>(null);
 
+  // Add state to track recognition initialization errors
+  const [recognitionErrors, setRecognitionErrors] = useState<string[]>([]);
+
   const {
     activeConversation,
     activeConversationId,
@@ -512,6 +515,93 @@ export function ChatInterface({
     return <div className="flex items-center justify-center h-full">Loading conversation...</div>;
   }
 
+  // Function to safely initialize and clean up speech recognition
+  const initializeSpeechRecognition = () => {
+    // Always ensure previous recognition instance is properly cleaned up
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.stop();
+        recognitionRef.current.onresult = null;
+        recognitionRef.current.onerror = null;
+        recognitionRef.current.onend = null;
+        recognitionRef.current.onstart = null;
+        recognitionRef.current = null;
+      } catch (e) {
+        console.error('Error cleaning up previous recognition instance:', e);
+      }
+    }
+
+    // Check for browser compatibility
+    if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
+      setRecognitionErrors(prev => [...prev, "Browser incompatible with SpeechRecognition API"]);
+      return null;
+    }
+
+    try {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const recognition = new SpeechRecognition();
+
+      // Detect if Edge browser and apply optimizations
+      const isEdge = navigator.userAgent.indexOf("Edg") !== -1;
+
+      // Configure recognition settings
+      recognition.lang = isEdge ? 'en-US' : (navigator.language || 'en-US');
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.maxAlternatives = 1;
+
+      // For Edge browser, log that we're using optimized settings
+      if (isEdge) {
+        console.log("Edge browser detected, using optimized speech recognition settings");
+      }
+
+      return recognition;
+    } catch (e) {
+      console.error('Error initializing speech recognition:', e);
+      setRecognitionErrors(prev => [...prev, `Initialization error: ${e}`]);
+      return null;
+    }
+  };
+
+  // Check if microphone permissions are available (relevant for Edge)
+  const checkMicrophonePermission = async (): Promise<boolean> => {
+    try {
+      // Check if permissions API is available
+      if (navigator.permissions && navigator.permissions.query) {
+        // Request microphone permission status
+        const permissionStatus = await navigator.permissions.query({ name: 'microphone' as PermissionName });
+
+        if (permissionStatus.state === 'granted') {
+          return true;
+        } else if (permissionStatus.state === 'prompt') {
+          // We need to request permission explicitly
+          try {
+            await navigator.mediaDevices.getUserMedia({ audio: true });
+            return true;
+          } catch (e) {
+            console.error('Error requesting microphone permission:', e);
+            return false;
+          }
+        } else {
+          // Permission denied
+          return false;
+        }
+      } else {
+        // Permissions API not available, try direct access
+        try {
+          await navigator.mediaDevices.getUserMedia({ audio: true });
+          return true;
+        } catch (e) {
+          console.error('Error accessing microphone:', e);
+          return false;
+        }
+      }
+    } catch (e) {
+      console.error('Error checking microphone permission:', e);
+      return false;
+    }
+  };
+
   const handleMessageSubmit = async () => {
     if (!inputMessage.trim() || isGenerating) return;
 
@@ -626,7 +716,7 @@ export function ChatInterface({
   };
 
   // Function to handle dictation
-  const handleDictation = () => {
+  const handleDictation = async () => {
     // If already dictating, stop it
     if (isDictating && recognitionRef.current) {
       recognitionRef.current.stop();
@@ -635,14 +725,20 @@ export function ChatInterface({
       return;
     }
 
-    if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
-      // Show error if browser doesn't support Speech Recognition
-      alert("Your browser doesn't support speech recognition. Please try using Chrome or Edge.");
+    // Check microphone permissions first (important for Edge)
+    const hasMicrophonePermission = await checkMicrophonePermission();
+    if (!hasMicrophonePermission) {
+      alert("Microphone access is required for dictation. Please allow microphone access and try again.");
       return;
     }
 
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    const recognition = new SpeechRecognition();
+    // Initialize a new speech recognition instance
+    const recognition = initializeSpeechRecognition();
+
+    if (!recognition) {
+      alert("Your browser doesn't support speech recognition. Please try using Chrome or Safari.");
+      return;
+    }
 
     // Store reference to recognition object
     recognitionRef.current = recognition;
@@ -652,10 +748,27 @@ export function ChatInterface({
     // Store the last transcript to avoid duplications
     let lastTranscript = '';
 
-    recognition.lang = 'en-US';
-    recognition.continuous = true; // Keep listening until explicitly stopped
-    recognition.interimResults = true; // Show interim results
-    recognition.maxAlternatives = 1;
+    // Set a timeout to check if recognition started properly
+    let startTimeoutId = setTimeout(() => {
+      // If we reach this point and still dictating but no results, there's likely an issue
+      if (isDictating && recognitionRef.current === recognition && lastTranscript === '') {
+        console.log("Speech recognition failed to start properly, restarting");
+
+        // Try to reset and restart
+        try {
+          recognition.stop();
+        } catch (e) {
+          console.error("Error stopping stalled recognition:", e);
+        }
+
+        // Reset state
+        setIsDictating(false);
+        recognitionRef.current = null;
+
+        // Show error message
+        alert("Speech recognition failed to start properly. This can happen in some browsers. Please try again or use Chrome.");
+      }
+    }, 5000);
 
     recognition.onstart = () => {
       setIsDictating(true);
@@ -667,6 +780,9 @@ export function ChatInterface({
     };
 
     recognition.onresult = (event) => {
+      // Clear the timeout since we've received results
+      clearTimeout(startTimeoutId);
+
       // Build the complete transcript from current recognition session
       let finalTranscript = '';
       let interimTranscript = '';
@@ -714,6 +830,9 @@ export function ChatInterface({
     };
 
     recognition.onend = () => {
+      // Clear the start timeout if it exists
+      clearTimeout(startTimeoutId);
+
       // Remove any [listening] markers
       setInputMessage(prevInput => {
         if (prevInput && prevInput.includes('[listening]')) {
@@ -748,7 +867,66 @@ export function ChatInterface({
     };
 
     recognition.onerror = (event) => {
-      console.error('Speech recognition error', event.error);
+      console.error('Speech recognition error', event.error, event);
+
+      // Handle specific error cases
+      if (event.error === 'language-not-supported') {
+        console.log("Language not supported, trying with en-US");
+        // Try again with en-US if there's a language issue
+        recognition.lang = 'en-US';
+
+        // Clean up [listening] markers for cleaner UI
+        setInputMessage(prevInput => {
+          if (prevInput && prevInput.includes('[listening]')) {
+            return prevInput.split('[listening]')[0].trim();
+          }
+          return prevInput;
+        });
+
+        // Try to restart with the new language
+        try {
+          setTimeout(() => {
+            if (isDictating && recognitionRef.current) {
+              recognition.start();
+            }
+          }, 500);
+          return; // Keep state as dictating
+        } catch (e) {
+          console.error('Failed to restart with new language', e);
+          // Show a more helpful error message
+          alert("Your browser doesn't seem to support speech recognition in your current language. Please try Chrome or check your browser settings.");
+        }
+      }
+
+      // Special handling for Edge
+      const isEdge = navigator.userAgent.indexOf("Edg") !== -1;
+      if (isEdge && event.error === 'network') {
+        console.log("Edge browser network error, attempting to restart");
+        // Edge sometimes has network issues with speech recognition
+        try {
+          // Completely reinitialize
+          recognitionRef.current = null;
+          setTimeout(() => {
+            // Create a fresh recognition instance and start again
+            const newRecognition = initializeSpeechRecognition();
+            if (newRecognition) {
+              // Set the handlers again (simplified for retry)
+              newRecognition.onresult = recognition.onresult;
+              newRecognition.onend = recognition.onend;
+              newRecognition.onerror = recognition.onerror;
+              newRecognition.onstart = recognition.onstart;
+
+              // Store and start
+              recognitionRef.current = newRecognition;
+              newRecognition.start();
+              return;
+            }
+          }, 1000);
+          return; // Keep state as dictating
+        } catch (e) {
+          console.error('Failed to restart after network error in Edge', e);
+        }
+      }
 
       // Clean up any [listening] markers
       setInputMessage(prevInput => {
@@ -780,7 +958,32 @@ export function ChatInterface({
       recognitionRef.current = null;
     };
 
-    recognition.start();
+    try {
+      recognition.start();
+    } catch (e) {
+      console.error('Failed to start speech recognition:', e);
+
+      // Special case for Edge which might need a moment before starting
+      const isEdge = navigator.userAgent.indexOf("Edg") !== -1;
+      if (isEdge) {
+        console.log("Edge browser detected, trying delayed start");
+        setTimeout(() => {
+          try {
+            recognition.start();
+          } catch (delayedError) {
+            console.error('Failed to start speech recognition even after delay:', delayedError);
+            alert("There was an error starting speech recognition. Please try again or use a different browser.");
+            setIsDictating(false);
+            recognitionRef.current = null;
+          }
+        }, 500);
+        return;
+      }
+
+      alert("There was an error starting speech recognition. Please try again or use a different browser.");
+      setIsDictating(false);
+      recognitionRef.current = null;
+    }
   };
 
   const chatContent = (
