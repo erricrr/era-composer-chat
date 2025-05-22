@@ -540,7 +540,7 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
                         }}
                         role="option"
                         aria-selected={index === activeResultIndex}
-                        className={`py-1.5 px-3 font-serif text-foreground rounded-md cursor-pointer text-xs md:text-sm
+                        className={`py-1.5 px-3 text-foreground rounded-md cursor-pointer text-xs md:text-sm
                           ${index === activeResultIndex
                             ? usingKeyboard
                               ? 'bg-secondary/80 ring-2 ring-primary ring-inset'
