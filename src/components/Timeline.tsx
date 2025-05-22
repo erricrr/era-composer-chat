@@ -103,11 +103,12 @@ const renderIcon = (era: typeof eras[number], index: number) => {
       onClick={e => { e.stopPropagation(); handleIconClick(era.id); }}
       onKeyDown={e => handlePopoverKeyDown(e, era.id)}
       className={iconClass}
-      aria-label={`More info about ${era.name} era`}
-      aria-expanded={openPopoverId === era.id ? "true" : "false"}
-      aria-pressed={isSelectedIcon ? "true" : "false"}
+      aria-label={`More information about ${era.name} era`}
+      aria-expanded={openPopoverId === era.id}
+      aria-controls={`era-content-${era.id}`}
+      aria-haspopup="dialog"
     >
-      <span className="text-xs font-medium">?</span>
+      <span className="text-xs font-medium" aria-hidden="true">?</span>
     </button>
   );
   const trigger = <PopoverTrigger asChild>{button}</PopoverTrigger>;
@@ -228,6 +229,7 @@ const renderIcon = (era: typeof eras[number], index: number) => {
                       align="center"
                       avoidCollisions={true}
                       sideOffset={5}
+                      aria-describedby={`era-description-${era.id}`}
                     >
                       <div
                         className="p-3"
@@ -236,8 +238,8 @@ const renderIcon = (era: typeof eras[number], index: number) => {
                         aria-modal="true"
                       >
                         <h4 id={`era-title-${era.id}`} className="text-base sm:text-lg font-semibold mb-2 text-primary">{era.name}</h4>
-                        <p className="text-sm sm:text-base text-muted-foreground">{era.description}</p>
-                        </div>
+                        <p id={`era-description-${era.id}`} className="text-sm sm:text-base text-muted-foreground">{era.description}</p>
+                      </div>
                       <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-primary rounded-l-md animate-[expandVertical_0.3s_ease-in-out] origin-top" />
                     </PopoverContent>
                   </Popover>
