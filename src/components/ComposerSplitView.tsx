@@ -269,7 +269,7 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
               e.stopPropagation();
               onClose();
             }}
-            className="cursor-pointer font-bold font-serif text-lg md:text-xl truncate max-w-[calc(100%-5rem)] px-4 transition-colors"
+            className="cursor-pointer font-bold font-serif text-lg md:text-xl truncate max-w-[calc(100%-6.5rem)] px-4 transition-colors"
           >
             {composer.name}
           </div>
@@ -282,7 +282,7 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
             e.stopPropagation();
             onClose();
           }}
-          className="absolute right-4 rounded-full hover:bg-primary/20 transition-all duration-200 group-hover:bg-primary/20 w-11 h-11 flex items-center justify-center text-foreground/70 hover:text-foreground/90 z-10"
+          className="absolute right-4 rounded-full hover:bg-primary/20 transition-all duration-200 group-hover:bg-primary/20 w-11 h-11 flex items-center justify-center text-foreground/70 hover:text-foreground/90 z-10 isolate"
         >
           <X className="h-4 w-4" />
         </Button>
