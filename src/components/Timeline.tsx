@@ -12,12 +12,25 @@ interface TimelineProps {
 }
 
 export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
-  const localStorageKey = 'timelineOpenPopoverId';
   const isTouch = useIsTouch();
   // Add refs for label buttons and keyboard navigation handler
   const eraLabelRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const popoverTriggerRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const popoverContentRefs = useRef<Array<HTMLDivElement | null>>([]);
+
+  // Remove localStorage and initialize as null
+  const [openPopoverId, setOpenPopoverId] = useState<string | null>(null);
+
+  // Add cleanup effect
+  useEffect(() => {
+    // Close popover when era changes
+    setOpenPopoverId(null);
+
+    // Also close on unmount
+    return () => {
+      setOpenPopoverId(null);
+    };
+  }, [selectedEra]);
 
   const handleLabelKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>, index: number, eraName: Era) => {
     if (e.key === 'ArrowRight') {
@@ -33,19 +46,6 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
       onSelectEra(eraName);
     }
   };
-
-  const [openPopoverId, setOpenPopoverId] = useState<string | null>(() => {
-    // Only run in client-side
-    if (typeof window !== 'undefined') {
-      const storedValue = localStorage.getItem(localStorageKey);
-      return storedValue && storedValue !== 'null' ? JSON.parse(storedValue) : null;
-    }
-    return null;
-  });
-
-  useEffect(() => {
-    localStorage.setItem(localStorageKey, openPopoverId ? JSON.stringify(openPopoverId) : 'null');
-  }, [openPopoverId]);
 
   const handleIconClick = (id: string) => {
     // Direct state update without conditions
