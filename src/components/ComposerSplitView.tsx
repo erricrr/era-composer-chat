@@ -116,7 +116,7 @@ function ContainedImageModal({
   return (
     // Full-screen backdrop - positioned to avoid header collision
     <div
-      className="absolute inset-x-0 top-[57px] bottom-0 z-10 flex items-start justify-center overflow-auto"
+      className="absolute inset-x-0 top-[50px] bottom-0 z-[5] flex items-start justify-center overflow-auto"
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
       style={{
         backgroundColor: 'hsl(var(--background) / 0.8)',
@@ -130,7 +130,7 @@ function ContainedImageModal({
       {/* Content container with proper spacing */}
       <div
         ref={modalRef}
-        className="relative bg-background rounded-lg shadow-xl z-10 overflow-hidden mt-5 max-w-[90%]"
+        className="relative bg-background rounded-lg shadow-xl z-10 overflow-hidden mt-5 mb-6 max-w-[90%]"
         onClick={e => e.stopPropagation()} // Prevent click from closing modal
         style={{
           transform: isOpen ? 'scale(1)' : 'scale(0.95)',
@@ -162,7 +162,7 @@ function ContainedImageModal({
           </div>
 
           {/* Footer */}
-          <div className="py-1 px-2 text-left bg-background dark:bg-secondary">
+          <div className="py-2 px-2 text-left bg-background dark:bg-secondary">
             <div
               className="text-xs text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
               tabIndex={0}
@@ -247,7 +247,7 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
 
       {/* Fixed Header - Now outside ScrollArea */}
       <div
-        className="relative flex items-center justify-center border-b py-7 bg-primary-foreground backdrop-blur-sm shadow-md z-10 flex-shrink-0 group transition-colors w-full cursor-pointer focus-ring-inset focus:rounded-none ComposerSplitView-header"
+        className="relative flex items-center justify-center border-b py-7 bg-primary-foreground backdrop-blur-sm shadow-md z-[20] flex-shrink-0 group transition-colors w-full cursor-pointer focus-ring-inset focus:rounded-none ComposerSplitView-header"
         tabIndex={0}
         role="button"
         aria-label="Close split view"
