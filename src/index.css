@@ -249,7 +249,7 @@ html {
 
   /* Ensure fixed header stays in place */
   .fixed-header {
-    @apply fixed top-0 left-0 right-0 bg-background z-70;
+    @apply fixed top-1 left-0 right-0 bg-background z-70 pb-1;
     transform: translateZ(0);
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
