@@ -239,7 +239,7 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
 
   const composerContent = (
     // Add relative positioning context for the modal
-    <div className="relative h-full flex flex-col">
+    <div className="relative h-full flex flex-col pt-2">
       {/* Background Music Notes */}
       <div className="absolute inset-0 overflow-hidden -z-10">
         <MusicNoteDecoration />
