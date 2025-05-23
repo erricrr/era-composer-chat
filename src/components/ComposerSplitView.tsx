@@ -116,7 +116,7 @@ function ContainedImageModal({
   return (
     // Full-screen backdrop - positioned to avoid header collision
     <div
-      className="absolute inset-x-0 top-[55px] bottom-0 z-10 flex items-start justify-center overflow-auto"
+      className="absolute inset-x-0 top-[57px] bottom-0 z-10 flex items-start justify-center overflow-auto"
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
       style={{
         backgroundColor: 'hsl(var(--background) / 0.8)',
