@@ -16,56 +16,18 @@ import { useIsMobile } from '@/hooks/use-mobile';
 
 const Index = () => {
   const isMobile = useIsMobile();
-  const [selectedComposer, setSelectedComposer] = useState<Composer | null>(() => {
-    try {
-      const saved = localStorage.getItem('selectedComposer');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (parsed && parsed.id && parsed.name) {
-          return parsed;
-        }
-      }
-      return null;
-    } catch (e) {
-      console.error('Error parsing selectedComposer from localStorage:', e);
-      return null;
-    }
-  });
+  const [selectedComposer, setSelectedComposer] = useState<Composer | null>(null);
 
-  const [selectedEra, setSelectedEra] = useState<Era>(() => {
-    try {
-      const saved = localStorage.getItem('selectedEra');
-      return saved && Object.values(Era).includes(saved as Era) ? (saved as Era) : Era.Baroque;
-    } catch (e) {
-      console.error('Error parsing selectedEra from localStorage:', e);
-      return Era.Baroque;
-    }
-  });
+  const [selectedEra, setSelectedEra] = useState<Era>(Era.Baroque);
 
-  const [isMenuOpen, setIsMenuOpen] = useState(() => {
-    try {
-      const saved = localStorage.getItem('isMenuOpen');
-      return saved ? JSON.parse(saved) : false;
-    } catch (e) {
-      console.error('Error parsing isMenuOpen from localStorage:', e);
-      return false;
-    }
-  });
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Track whether the menu is mounted for enter/exit transitions
   const [isMenuMounted, setIsMenuMounted] = useState(isMenuOpen);
   // Control enter (true) / exit (false) animation state
   const [isMenuAnimating, setIsMenuAnimating] = useState(false);
 
-  const [isChatting, setIsChatting] = useState(() => {
-    try {
-      const saved = localStorage.getItem('isChatting');
-      return saved ? JSON.parse(saved) : false;
-    } catch (e) {
-      console.error('Error parsing isChatting from localStorage:', e);
-      return false;
-    }
-  });
+  const [isChatting, setIsChatting] = useState(false);
 
   const [shouldScrollToComposer, setShouldScrollToComposer] = useState(false);
   const [pendingScrollComposerId, setPendingScrollComposerId] = useState<string | null>(null);
@@ -394,25 +356,7 @@ const Index = () => {
     }
   }, [isMenuOpen]);
 
-  // Effect to restore chat state on page load if a composer is selected
-  useEffect(() => {
-    if (selectedComposer) {
-      // Ensure the selected composer belongs to the current era
-      const composerEras = Array.isArray(selectedComposer.era)
-        ? selectedComposer.era
-        : [selectedComposer.era];
 
-      if (composerEras.includes(selectedEra)) {
-        // If composer belongs to current era, ensure chat is open
-        if (!isChatting && !isMenuOpen) {
-          setIsChatting(true);
-        }
-      } else {
-        // If composer doesn't belong to current era, update era to match composer
-        setSelectedEra(composerEras[0]);
-      }
-    }
-  }, [selectedComposer, selectedEra, isChatting, isMenuOpen]);
 
   // Add effect to handle iOS Safari viewport issues
   useEffect(() => {
