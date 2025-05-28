@@ -991,7 +991,7 @@ export function ChatInterface({
       {(!isSplitViewOpen) ? (
         <header className="absolute left-0 right-0 -mx-[100vw] bg-primary-foreground border-b shadow-md z-10" role="banner">
           <div className="mx-[100vw]">
-            <nav className="flex items-center justify-between px-5 py-6 pb-[0.65rem]" aria-label="Composer information">
+            <nav className="flex items-center justify-between px-5 pt-4 pb-1.5 md:px-5 md:pt-6 md:pb-3" aria-label="Composer information">
               <Tooltip>
                 <TooltipTrigger asChild>
                   <button
@@ -1013,7 +1013,7 @@ export function ChatInterface({
                     }}
                   >
                     <div className="flex items-center gap-4">
-                      <div className="flex-shrink-0">
+                      <div className="flex-shrink-0" aria-hidden="true">
                         <ComposerImageViewer
                           composer={composer}
                           size="lg"
@@ -1048,21 +1048,30 @@ export function ChatInterface({
           </div>
         </header>
       ) : null}
-      <div className="flex-1 overflow-y-auto overscroll-contain p-4 relative chat-container mt-[7.5rem]" ref={chatContainerRef} role="log" aria-label="Chat messages">
-        <div className="flex flex-col min-h-[calc(100%-2rem)]">
+      <main
+        className={`flex-1 overflow-y-auto overscroll-contain px-5 py-4 relative chat-container ${
+          !isSplitViewOpen ? 'mt-28 md:mt-36' : ''
+        }`}
+        ref={chatContainerRef}
+        role="log"
+        aria-label="Chat messages"
+        aria-live="polite"
+      >
+        <div className="flex flex-col min-h-[calc(100%-2rem)] pb-2">
           {currentMessages.length === 0 ? (
             <div className="flex-1 flex items-center justify-center text-muted-foreground text-sm">
               <p>Start a conversation with {getLastName(composer.name)}. Ask them about their music.</p>
             </div>
           ) : (
-            <div className="space-y-4 w-full pr-7" aria-live="polite" aria-relevant="additions">
+            <div className="space-y-4 w-full max-w-full">
               {currentMessages.map((message: Message) => (
-                <div
+                <article
                   key={message.id}
                   className={`message-bubble flex ${
                     message.sender === 'user' ? 'justify-end' : 'justify-start'
                   }`}
                   data-sender={message.sender}
+                  aria-label={`${message.sender === 'user' ? 'Your message' : `${composer.name}'s response`}`}
                 >
                   <div
                     className={message.sender === 'user'
@@ -1081,28 +1090,28 @@ export function ChatInterface({
                       {message.text}
                     </ReactMarkdown>
                   </div>
-                </div>
+                </article>
               ))}
               {isGenerating && (
-                <div className="message-bubble flex justify-start">
+                <article className="message-bubble flex justify-start">
                   <div className="max-w-[85%] rounded-2xl px-4 py-2 text-foreground bg-background">
                     <span className="animate-pulse">Composing response...</span>
                   </div>
-                </div>
+                </article>
               )}
               {geminiError && (
-                <div className="message-bubble flex justify-start">
+                <article className="message-bubble flex justify-start">
                   <div className="max-w-[85%] rounded-2xl px-4 py-2 text-destructive bg-destructive/10">
                     {geminiError}
                   </div>
-                </div>
+                </article>
               )}
             </div>
           )}
           {/* Keep this for the scroll-to-bottom logic */}
           <div ref={messagesEndRef} className="h-0" />
         </div>
-      </div>
+      </main>
 
       <form
         onSubmit={handleSendMessage}
