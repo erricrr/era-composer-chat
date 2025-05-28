@@ -131,6 +131,11 @@ export function ChatInterface({
 
   const isTouch = useIsTouch();
 
+  // Add Chrome detection helper
+  const isChrome = typeof window !== 'undefined' &&
+    (navigator.userAgent.indexOf("Chrome") !== -1 ||
+     navigator.userAgent.indexOf("Chromium") !== -1);
+
   // Format era display text
   const getEraDisplayText = (era: string): string => {
     return era;
@@ -532,78 +537,80 @@ export function ChatInterface({
     }
 
     // Check for browser compatibility
-    if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
-      setRecognitionErrors(prev => [...prev, "Browser incompatible with SpeechRecognition API"]);
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Speech recognition is not supported in your browser. Please try Chrome, Edge, or Safari.");
       return null;
     }
 
     try {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       const recognition = new SpeechRecognition();
 
-      // Detect if Edge browser and apply optimizations
+      // Detect browser for optimal settings
       const isEdge = navigator.userAgent.indexOf("Edg") !== -1;
+      const isFirefox = navigator.userAgent.indexOf("Firefox") !== -1;
+      const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
-      // Configure recognition settings
-      recognition.lang = isEdge ? 'en-US' : (navigator.language || 'en-US');
-      recognition.continuous = true;
+      // Configure recognition settings based on browser
+      recognition.lang = navigator.language || 'en-US';
+      recognition.continuous = !isSafari; // Safari works better with continuous: false
       recognition.interimResults = true;
       recognition.maxAlternatives = 1;
 
-      // For Edge browser, log that we're using optimized settings
+      // Special handling for Firefox
+      if (isFirefox) {
+        recognition.continuous = false;
+        recognition.interimResults = false;
+      }
+
+      // For Edge, use specific settings
       if (isEdge) {
-        console.log("Edge browser detected, using optimized speech recognition settings");
+        recognition.lang = 'en-US'; // Edge works best with en-US
       }
 
       return recognition;
     } catch (e) {
       console.error('Error initializing speech recognition:', e);
-      setRecognitionErrors(prev => [...prev, `Initialization error: ${e}`]);
+      alert("There was an error initializing speech recognition. Please try again or use a different browser.");
       return null;
     }
   };
 
-  // Check if microphone permissions are available (relevant for Edge)
+  // Enhanced microphone permission check
   const checkMicrophonePermission = async (): Promise<boolean> => {
     try {
-      // Check if permissions API is available
+      // First try the permissions API
       if (navigator.permissions && navigator.permissions.query) {
-        // Request microphone permission status
-        const permissionStatus = await navigator.permissions.query({ name: 'microphone' as PermissionName });
+        try {
+          const result = await navigator.permissions.query({ name: 'microphone' as PermissionName });
 
-        if (permissionStatus.state === 'granted') {
-          return true;
-        } else if (permissionStatus.state === 'prompt') {
-          // We need to request permission explicitly
-          try {
-            await navigator.mediaDevices.getUserMedia({ audio: true });
-            return true;
-          } catch (e) {
-            console.error('Error requesting microphone permission:', e);
+          if (result.state === 'granted') return true;
+          if (result.state === 'denied') {
+            alert("Microphone access is blocked. Please allow microphone access in your browser settings.");
             return false;
           }
-        } else {
-          // Permission denied
-          return false;
-        }
-      } else {
-        // Permissions API not available, try direct access
-        try {
-          await navigator.mediaDevices.getUserMedia({ audio: true });
-          return true;
         } catch (e) {
-          console.error('Error accessing microphone:', e);
-          return false;
+          console.log('Permissions API not fully supported, falling back to getUserMedia');
         }
       }
+
+      // Fallback to getUserMedia
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      // Stop all tracks immediately - we just needed the permission
+      stream.getTracks().forEach(track => track.stop());
+      return true;
     } catch (e) {
       console.error('Error checking microphone permission:', e);
+      alert("Unable to access microphone. Please ensure microphone permissions are granted and your microphone is working.");
       return false;
     }
   };
 
   const handleMessageSubmit = async () => {
     if (!inputMessage.trim() || isGenerating) return;
+
+    // Store the clean message before clearing state
+    const cleanMessage = inputMessage.trim().replace(/\s*\[listening\]\s*$/g, '');
 
     // Stop dictation if active
     if (isDictating && recognitionRef.current) {
@@ -612,8 +619,8 @@ export function ChatInterface({
       recognitionRef.current = null;
     }
 
-    // Clean up any [listening] markers from message text
-    const cleanMessage = inputMessage.trim().replace(/\s*\[listening\]\s*$/g, '');
+    // Clear input state
+    setInputMessage('');
 
     // Notify parent that user sent a message (activate chat)
     onUserSend?.(composer);
@@ -635,13 +642,6 @@ export function ChatInterface({
     try {
       // Update UI immediately with user message
       setCurrentMessages(messages => [...messages, userMessage]);
-
-      // Clear input immediately so the textarea empties before the AI responds
-      setInputMessage('');
-      if (textareaRef.current) {
-        textareaRef.current.value = '';
-        textareaRef.current.style.height = '48px';
-      }
 
       if (!conversationId) {
         console.log("[ChatInterface] No conversation ID available, starting new conversation");
@@ -670,26 +670,30 @@ export function ChatInterface({
 
     } catch (error) {
       console.error('Error in message submission:', error);
-      // Error is handled by useGeminiChat and displayed in UI if needed
     }
   };
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
     handleMessageSubmit();
-    // Clear inline height after submission
-    if (textareaRef.current) {
-      textareaRef.current.style.height = '';
-    }
   };
 
   const handleKeyPress = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (!isMobile && e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleMessageSubmit();
-      // Clear inline height after Enter press
-      (e.target as HTMLTextAreaElement).style.height = '';
     }
+  };
+
+  // Handle textarea value changes
+  const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    setInputMessage(value);
+    onUserTyping(true);
+
+    // Adjust height
+    e.target.style.height = '48px';
+    e.target.style.height = `${Math.min(e.target.scrollHeight, 300)}px`;
   };
 
   const handleResetChat = () => {
@@ -715,258 +719,169 @@ export function ChatInterface({
     }
   };
 
-  // Function to handle dictation
+  // Enhanced dictation handler
   const handleDictation = async () => {
     // If already dictating, stop it
     if (isDictating && recognitionRef.current) {
-      recognitionRef.current.stop();
-      setIsDictating(false);
-      recognitionRef.current = null;
-      return;
-    }
-
-    // Check microphone permissions first (important for Edge)
-    const hasMicrophonePermission = await checkMicrophonePermission();
-    if (!hasMicrophonePermission) {
-      alert("Microphone access is required for dictation. Please allow microphone access and try again.");
-      return;
-    }
-
-    // Initialize a new speech recognition instance
-    const recognition = initializeSpeechRecognition();
-
-    if (!recognition) {
-      alert("Your browser doesn't support speech recognition. Please try using Chrome or Safari.");
-      return;
-    }
-
-    // Store reference to recognition object
-    recognitionRef.current = recognition;
-
-    // Track the base input before dictation started - will be empty after sending a message
-    const baseInput = inputMessage;
-    // Store the last transcript to avoid duplications
-    let lastTranscript = '';
-
-    // Set a timeout to check if recognition started properly
-    let startTimeoutId = setTimeout(() => {
-      // If we reach this point and still dictating but no results, there's likely an issue
-      if (isDictating && recognitionRef.current === recognition && lastTranscript === '') {
-        console.log("Speech recognition failed to start properly, restarting");
-
-        // Try to reset and restart
-        try {
-          recognition.stop();
-        } catch (e) {
-          console.error("Error stopping stalled recognition:", e);
-        }
-
-        // Reset state
+      try {
+        recognitionRef.current.stop();
         setIsDictating(false);
         recognitionRef.current = null;
-
-        // Show error message
-        alert("Speech recognition failed to start properly. This can happen in some browsers. Please try again or use Chrome.");
+        return;
+      } catch (e) {
+        console.error('Error stopping dictation:', e);
       }
-    }, 5000);
+    }
 
+    // Check microphone permissions first
+    const hasMicrophonePermission = await checkMicrophonePermission();
+    if (!hasMicrophonePermission) return;
+
+    // Detect browser for optimal settings
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+    // Initialize recognition with browser-specific settings
+    const recognition = initializeSpeechRecognition();
+    if (!recognition) return;
+
+    // Store reference and base input
+    recognitionRef.current = recognition;
+    const baseInput = inputMessage;
+    let lastTranscript = '';
+    let retryCount = 0;
+    const MAX_RETRIES = 3;
+
+    // Set up recognition handlers
     recognition.onstart = () => {
       setIsDictating(true);
-
-      // Focus the textarea when dictation starts to show the focus ring
       if (textareaRef.current) {
         textareaRef.current.focus();
       }
     };
 
     recognition.onresult = (event) => {
-      // Clear the timeout since we've received results
-      clearTimeout(startTimeoutId);
-
-      // Build the complete transcript from current recognition session
       let finalTranscript = '';
       let interimTranscript = '';
 
-      // Process all results from this session
       for (let i = 0; i < event.results.length; i++) {
         const result = event.results[i];
         if (result.isFinal) {
           finalTranscript += result[0].transcript;
+          retryCount = 0; // Reset retry count on successful result
         } else {
           interimTranscript += result[0].transcript;
         }
       }
 
-      // Combine with the base input
-      const combinedTranscript = finalTranscript;
-
       // Only update if we have new content
-      if (combinedTranscript !== lastTranscript) {
-        lastTranscript = combinedTranscript;
-
-        // Set the input with appropriate formatting
+      if (finalTranscript !== lastTranscript || interimTranscript) {
+        lastTranscript = finalTranscript;
         setInputMessage(
           baseInput
-            ? `${baseInput} ${combinedTranscript}${interimTranscript ? ' ' + interimTranscript + ' [listening]' : ''}`
-            : `${combinedTranscript}${interimTranscript ? ' ' + interimTranscript + ' [listening]' : ''}`
+            ? `${baseInput} ${finalTranscript}${interimTranscript ? ' ' + interimTranscript + ' [listening]' : ''}`
+            : `${finalTranscript}${interimTranscript ? ' ' + interimTranscript + ' [listening]' : ''}`
         );
-      } else if (interimTranscript) {
-        // Only update interim results if they've changed
-        setInputMessage(
-          baseInput
-            ? `${baseInput} ${finalTranscript} ${interimTranscript} [listening]`
-            : `${finalTranscript} ${interimTranscript} [listening]`
-        );
-      }
 
-      // Ensure textarea stays focused while dictating
-      if (textareaRef.current) {
-        textareaRef.current.focus();
-
-        // Resize the textarea after adding text
-        textareaRef.current.style.height = '48px';
-        textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 300)}px`;
+        // Ensure textarea stays focused and properly sized
+        if (textareaRef.current) {
+          textareaRef.current.focus();
+          textareaRef.current.style.height = '48px';
+          textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 300)}px`;
+        }
       }
     };
 
     recognition.onend = () => {
-      // Clear the start timeout if it exists
-      clearTimeout(startTimeoutId);
+      // Remove [listening] marker
+      setInputMessage(prev => prev.replace(/\s*\[listening\]\s*$/g, ''));
 
-      // Remove any [listening] markers
-      setInputMessage(prevInput => {
-        if (prevInput && prevInput.includes('[listening]')) {
-          return prevInput.split('[listening]')[0].trim();
-        }
-        return prevInput;
-      });
-
-      // If dictation should continue but ended automatically, restart it
-      if (isDictating && recognitionRef.current) {
+      // Handle retry logic
+      if (isDictating && recognitionRef.current && retryCount < MAX_RETRIES) {
+        retryCount++;
         try {
-          recognition.start();
-          return; // Don't reset state if continuing
+          setTimeout(() => {
+            recognition.start();
+          }, 100);
+          return;
         } catch (e) {
-          console.error('Failed to restart recognition', e);
-          // Fall through to reset state
+          console.error('Failed to restart recognition:', e);
         }
       }
 
-      // Default handling if we're stopping
+      // If we're not retrying or max retries reached, clean up
       setIsDictating(false);
       recognitionRef.current = null;
 
-      // If the input is now empty (like after sending), make sure it stays empty
-      if (!inputMessage.trim() || inputMessage.trim() === '[listening]') {
-        setInputMessage('');
-        if (textareaRef.current) {
-          textareaRef.current.value = '';
-          textareaRef.current.style.height = '48px';
-        }
+      // Additional cleanup for Safari
+      if (textareaRef.current) {
+        // Force Safari to update the textarea display
+        const temp = textareaRef.current.style.display;
+        textareaRef.current.style.display = 'none';
+        textareaRef.current.offsetHeight; // Force reflow
+        textareaRef.current.style.display = temp;
       }
     };
 
     recognition.onerror = (event) => {
-      console.error('Speech recognition error', event.error, event);
+      console.error('Speech recognition error:', event.error);
 
       // Handle specific error cases
-      if (event.error === 'language-not-supported') {
-        console.log("Language not supported, trying with en-US");
-        // Try again with en-US if there's a language issue
-        recognition.lang = 'en-US';
-
-        // Clean up [listening] markers for cleaner UI
-        setInputMessage(prevInput => {
-          if (prevInput && prevInput.includes('[listening]')) {
-            return prevInput.split('[listening]')[0].trim();
+      switch (event.error) {
+        case 'network':
+          // Attempt restart for network errors
+          if (retryCount < MAX_RETRIES) {
+            retryCount++;
+            setTimeout(() => {
+              try {
+                recognition.start();
+                return;
+              } catch (e) {
+                console.error('Failed to restart after network error:', e);
+              }
+            }, 1000);
           }
-          return prevInput;
-        });
-
-        // Try to restart with the new language
-        try {
-          setTimeout(() => {
-            if (isDictating && recognitionRef.current) {
-              recognition.start();
-            }
-          }, 500);
-          return; // Keep state as dictating
-        } catch (e) {
-          console.error('Failed to restart with new language', e);
-          // Show a more helpful error message
-          alert("Your browser doesn't seem to support speech recognition in your current language. Please try Chrome or check your browser settings.");
-        }
-      }
-
-      // Special handling for Edge
-      const isEdge = navigator.userAgent.indexOf("Edg") !== -1;
-      if (isEdge && event.error === 'network') {
-        console.log("Edge browser network error, attempting to restart");
-        // Edge sometimes has network issues with speech recognition
-        try {
-          // Completely reinitialize
+          break;
+        case 'not-allowed':
+        case 'service-not-allowed':
+          alert("Microphone access is required for dictation. Please allow microphone access and try again.");
+          setIsDictating(false);
           recognitionRef.current = null;
-          setTimeout(() => {
-            // Create a fresh recognition instance and start again
-            const newRecognition = initializeSpeechRecognition();
-            if (newRecognition) {
-              // Set the handlers again (simplified for retry)
-              newRecognition.onresult = recognition.onresult;
-              newRecognition.onend = recognition.onend;
-              newRecognition.onerror = recognition.onerror;
-              newRecognition.onstart = recognition.onstart;
-
-              // Store and start
-              recognitionRef.current = newRecognition;
-              newRecognition.start();
+          break;
+        case 'no-speech':
+          // Just retry for no speech detected
+          if (isDictating && recognitionRef.current) {
+            try {
+              recognition.start();
               return;
+            } catch (e) {
+              console.error('Failed to restart after no-speech:', e);
             }
-          }, 1000);
-          return; // Keep state as dictating
-        } catch (e) {
-          console.error('Failed to restart after network error in Edge', e);
-        }
+          }
+          break;
+        default:
+          // For other errors, try to restart if still dictating
+          if (isDictating && recognitionRef.current && retryCount < MAX_RETRIES) {
+            retryCount++;
+            setTimeout(() => {
+              try {
+                recognition.start();
+                return;
+              } catch (e) {
+                console.error('Failed to restart after error:', e);
+              }
+            }, 1000);
+          }
       }
-
-      // Clean up any [listening] markers
-      setInputMessage(prevInput => {
-        if (prevInput && prevInput.includes('[listening]')) {
-          return prevInput.split('[listening]')[0].trim();
-        }
-        return prevInput;
-      });
-
-      // Only stop if it's a fatal error
-      if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
-        setIsDictating(false);
-        recognitionRef.current = null;
-      } else if (isDictating && recognitionRef.current) {
-        // For other errors, try to restart if still active
-        try {
-          setTimeout(() => {
-            recognition.start();
-          }, 1000);
-          return; // Keep state as dictating
-        } catch (e) {
-          console.error('Failed to restart after error', e);
-          // Fall through to reset state
-        }
-      }
-
-      // Default error handling
-      setIsDictating(false);
-      recognitionRef.current = null;
     };
 
+    // Start recognition with error handling
     try {
       recognition.start();
     } catch (e) {
       console.error('Failed to start speech recognition:', e);
 
-      // Special case for Edge which might need a moment before starting
-      const isEdge = navigator.userAgent.indexOf("Edg") !== -1;
-      if (isEdge) {
-        console.log("Edge browser detected, trying delayed start");
+      // Special case for Safari which might need a moment
+      if (isSafari) {
         setTimeout(() => {
           try {
             recognition.start();
@@ -976,7 +891,7 @@ export function ChatInterface({
             setIsDictating(false);
             recognitionRef.current = null;
           }
-        }, 500);
+        }, 100);
         return;
       }
 
@@ -987,7 +902,11 @@ export function ChatInterface({
   };
 
   const chatContent = (
-    <div className="relative flex flex-col h-full bg-background overflow-visible chat-container">
+    <div
+      className="relative flex flex-col h-full bg-background overflow-visible chat-container"
+      role="region"
+      aria-label="Chat interface"
+    >
       {(!isSplitViewOpen) ? (
         <header className="absolute left-0 right-0 -mx-[100vw] bg-primary-foreground border-b shadow-md z-10" role="banner">
           <div className="mx-[100vw]">
@@ -1024,9 +943,14 @@ export function ChatInterface({
                         <h1 className="font-serif font-bold text-lg md:text-xl hover:text-primary transition-colors">{composer.name}</h1>
                         <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-1">
                           <span className="text-sm md:text-base text-muted-foreground hover:text-primary transition-colors">
+                            <span className="sr-only">Nationality and years: </span>
                             {composer.nationality}, {composer.birthYear}-{composer.deathYear || 'present'}
                           </span>
-                          <div className="flex flex-wrap gap-1 truncate" role="list" aria-label="Musical eras">
+                          <div
+                            className="flex flex-wrap gap-1 truncate"
+                            role="list"
+                            aria-label="Musical eras"
+                          >
                             {Array.isArray(composer.era)
                               ? composer.era.map((era, idx) => (
                                   <div key={era + idx} role="listitem">
@@ -1059,7 +983,11 @@ export function ChatInterface({
       >
         <div className="flex flex-col min-h-[calc(100%-2rem)] pb-2">
           {currentMessages.length === 0 ? (
-            <div className="flex-1 flex items-center justify-center text-muted-foreground text-sm">
+            <div
+              className="flex-1 flex items-center justify-center text-muted-foreground text-sm"
+              role="status"
+              aria-label="Empty chat"
+            >
               <p>Start a conversation with {getLastName(composer.name)}. Ask them about their music.</p>
             </div>
           ) : (
@@ -1071,6 +999,7 @@ export function ChatInterface({
                     message.sender === 'user' ? 'justify-end' : 'justify-start'
                   }`}
                   data-sender={message.sender}
+                  role="article"
                   aria-label={`${message.sender === 'user' ? 'Your message' : `${composer.name}'s response`}`}
                 >
                   <div
@@ -1081,9 +1010,7 @@ export function ChatInterface({
                   >
                     <ReactMarkdown
                       components={{
-                        // Style italics with proper font style
                         em: ({ node, ...props }) => <em className="italic" {...props} />,
-                        // Preserve line breaks
                         p: ({ children }) => <p style={{ whiteSpace: 'pre-line' }}>{children}</p>
                       }}
                     >
@@ -1093,14 +1020,22 @@ export function ChatInterface({
                 </article>
               ))}
               {isGenerating && (
-                <article className="message-bubble flex justify-start">
+                <article
+                  className="message-bubble flex justify-start"
+                  role="status"
+                  aria-label="Composing response"
+                >
                   <div className="max-w-[85%] rounded-2xl px-4 py-2 text-foreground bg-background">
                     <span className="animate-pulse">Composing response...</span>
                   </div>
                 </article>
               )}
               {geminiError && (
-                <article className="message-bubble flex justify-start">
+                <article
+                  className="message-bubble flex justify-start"
+                  role="alert"
+                  aria-label="Error message"
+                >
                   <div className="max-w-[85%] rounded-2xl px-4 py-2 text-destructive bg-destructive/10">
                     {geminiError}
                   </div>
@@ -1108,8 +1043,7 @@ export function ChatInterface({
               )}
             </div>
           )}
-          {/* Keep this for the scroll-to-bottom logic */}
-          <div ref={messagesEndRef} className="h-0" />
+          <div ref={messagesEndRef} className="h-0" aria-hidden="true" />
         </div>
       </main>
 
@@ -1135,13 +1069,7 @@ export function ChatInterface({
                 key={`textarea-${isSplitViewOpen}`}
                 ref={textareaRef}
                 value={inputMessage}
-                onChange={(e) => {
-                  setInputMessage(e.target.value);
-                  onUserTyping(true);
-                  // Reset then resize
-                  e.target.style.height = '48px';
-                  e.target.style.height = `${Math.min(e.target.scrollHeight, 300)}px`;
-                }}
+                onChange={handleTextareaChange}
                 onKeyDown={handleKeyPress}
                 onFocus={() => {
                   // For mobile browsers, ensure elements are visible when keyboard appears

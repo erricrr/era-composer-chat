@@ -182,10 +182,17 @@ Remember: You are speaking as ${composer.name} in first person. Maintain your hi
       const era = Array.isArray(this.composer.era) ? this.composer.era[0] : this.composer.era;
 
       if (!import.meta.env.VITE_GEMINI_API_KEY) {
-        return `${greeting}! I apologize, but I cannot respond at the moment as the API key is missing. Please ensure the VITE_GEMINI_API_KEY environment variable is set.`;
+        return `${greeting}! The API key is missing. Please ensure the VITE_GEMINI_API_KEY environment variable is set.`;
       }
 
-      return `${greeting}! I apologize for the technical difficulty. As ${this.composer.name}, I would be delighted to discuss my work *${this.composer.famousWorks[0]}* or my experiences during the ${era} period. What would you like to know?`;
+      // Check if the last message was an error message to prevent duplicates
+      const lastMessage = this.chatHistory[this.chatHistory.length - 1];
+      if (lastMessage?.text?.includes('technical difficulty')) {
+        // If the last message was an error, provide a different response
+        return `Perhaps we could discuss my composition *${this.composer.famousWorks[0]}* or my experiences during the ${era} period instead?`;
+      }
+
+      return `${greeting}! I apologize for the technical difficulty. Shall we discuss my composition *${this.composer.famousWorks[0]}* or my experiences during the ${era} period instead?`;
     }
   }
 
