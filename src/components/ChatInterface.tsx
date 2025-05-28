@@ -987,7 +987,7 @@ export function ChatInterface({
       ) : null}
       <main
         className={`flex-1 overflow-y-auto overscroll-contain px-5 py-4 relative chat-container ${
-          !isSplitViewOpen ? 'mt-28 md:mt-36' : ''
+          !isSplitViewOpen ? 'mt-32 md:mt-40' : ''
         }`}
         ref={chatContainerRef}
         role="log"
@@ -1017,7 +1017,7 @@ export function ChatInterface({
                 >
                   <div
                     className={message.sender === 'user'
-                      ? 'max-w-[85%] rounded-2xl px-4 py-2 bg-primary text-background ml-auto shadow-sm'
+                      ? 'max-w-[75%] rounded-2xl px-4 py-2 bg-primary text-background ml-auto shadow-sm'
                       : 'max-w-[85%] rounded-2xl px-4 py-2 text-foreground bg-background'
                     }
                   >
