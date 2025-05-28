@@ -606,6 +606,19 @@ export function ChatInterface({
     }
   };
 
+  // Add a robust cleanup function
+  const cleanupTextarea = () => {
+    // Clear React state
+    setInputMessage('');
+
+    // Force cleanup of the textarea
+    if (textareaRef.current) {
+      // Clear value and reset height
+      textareaRef.current.value = '';
+      textareaRef.current.style.height = '48px';
+    }
+  };
+
   const handleMessageSubmit = async () => {
     if (!inputMessage.trim() || isGenerating) return;
 
@@ -619,8 +632,8 @@ export function ChatInterface({
       recognitionRef.current = null;
     }
 
-    // Clear input state
-    setInputMessage('');
+    // Clean up the textarea
+    cleanupTextarea();
 
     // Notify parent that user sent a message (activate chat)
     onUserSend?.(composer);
