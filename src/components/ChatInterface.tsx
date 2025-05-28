@@ -987,67 +987,68 @@ export function ChatInterface({
   };
 
   const chatContent = (
-    <div
-      className="relative flex flex-col h-full bg-background overflow-hidden chat-container"
-    >
-      <div className="relative flex items-center justify-end px-2">
-        {(!isSplitViewOpen) ? (
-          <div className="flex items-center justify-between px-5 py-6 pb-[0.65rem] w-full bg-primary-foreground border-b shadow-md z-10 chat-header">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  type="button"
-                  aria-label={`Open split view for ${composer.name}`}
-                  aria-expanded={isSplitViewOpen}
-                  className="chat-split-btn appearance-none border-none outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0 flex items-center space-x-6 cursor-pointer hover:opacity-90 transition-all duration-300"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsSplitViewOpen(true);
-                  }}
-                  onKeyDown={(e) => {
-                    e.stopPropagation();
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
+    <div className="relative flex flex-col h-full bg-background overflow-visible chat-container">
+      {(!isSplitViewOpen) ? (
+        <header className="absolute left-0 right-0 -mx-[100vw] bg-primary-foreground border-b shadow-md z-10" role="banner">
+          <div className="mx-[100vw]">
+            <nav className="flex items-center justify-between px-5 py-6 pb-[0.65rem]" aria-label="Composer information">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    type="button"
+                    aria-label={`View more information about ${composer.name}`}
+                    aria-expanded={isSplitViewOpen}
+                    aria-haspopup="dialog"
+                    className="chat-split-btn appearance-none border-none outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0 flex items-center space-x-6 cursor-pointer hover:opacity-90 transition-all duration-300"
+                    onClick={(e) => {
+                      e.stopPropagation();
                       setIsSplitViewOpen(true);
-                    }
-                  }}
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="flex-shrink-0">
-                      <ComposerImageViewer
-                        composer={composer}
-                        size="sm"
-                        className="!scale-100"
-                      />
-                    </div>
-                    <div className="flex flex-col justify-center text-left">
-                      <h2 className="font-serif font-bold text-base md:text-lg hover:text-primary transition-colors">{composer.name}</h2>
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-1">
-                        <span className="text-xs md:text-base text-muted-foreground hover:text-primary transition-colors">
-                          {composer.nationality}, {composer.birthYear}-{composer.deathYear || 'present'}
-                        </span>
-                        <div className="flex flex-wrap gap-1 truncate">
-                          {Array.isArray(composer.era)
-                            ? composer.era.map((era, idx) => (
-                                <Badge key={era + idx} variant="badge">{era}</Badge>
-                              ))
-                            : <Badge variant="badge">{composer.era}</Badge>}
+                    }}
+                    onKeyDown={(e) => {
+                      e.stopPropagation();
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setIsSplitViewOpen(true);
+                      }
+                    }}
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="flex-shrink-0">
+                        <ComposerImageViewer
+                          composer={composer}
+                          size="lg"
+                          className="!scale-100 !w-24 !h-24 md:!w-28 md:!h-28"
+                        />
+                      </div>
+                      <div className="flex flex-col justify-center text-left">
+                        <h1 className="font-serif font-bold text-lg md:text-xl hover:text-primary transition-colors">{composer.name}</h1>
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-1">
+                          <span className="text-sm md:text-base text-muted-foreground hover:text-primary transition-colors">
+                            {composer.nationality}, {composer.birthYear}-{composer.deathYear || 'present'}
+                          </span>
+                          <div className="flex flex-wrap gap-1 truncate" role="list" aria-label="Musical eras">
+                            {Array.isArray(composer.era)
+                              ? composer.era.map((era, idx) => (
+                                  <div key={era + idx} role="listitem">
+                                    <Badge variant="badge">{era}</Badge>
+                                  </div>
+                                ))
+                              : <div role="listitem"><Badge variant="badge">{composer.era}</Badge></div>}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" align="start" alignOffset={-20} className="text-xs">
-                More about {getLastName(composer.name)}
-              </TooltipContent>
-            </Tooltip>
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" align="start" alignOffset={-20} className="text-xs">
+                  More about {getLastName(composer.name)}
+                </TooltipContent>
+              </Tooltip>
+            </nav>
           </div>
-        ) : null}
-      </div>
-
-      {/* Assign ref to chat container */}
-      <div className="flex-1 overflow-y-auto overscroll-contain p-4 relative chat-container" ref={chatContainerRef}>
+        </header>
+      ) : null}
+      <div className="flex-1 overflow-y-auto overscroll-contain p-4 relative chat-container mt-[7.5rem]" ref={chatContainerRef} role="log" aria-label="Chat messages">
         <div className="flex flex-col min-h-[calc(100%-2rem)]">
           {currentMessages.length === 0 ? (
             <div className="flex-1 flex items-center justify-center text-muted-foreground text-sm">
@@ -1264,20 +1265,11 @@ export function ChatInterface({
         </div>
         <p
           tabIndex={0}
-          className="
-            text-xs text-muted-foreground text-center
-            mx-11 py-1
-            focus:outline-none
-            focus-visible:ring-1
-            focus-visible:ring-primary
-            focus-visible:ring-offset-1
-            rounded-none
-          "
+          className="text-xs text-muted-foreground text-center mx-11 py-1 focus:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-1 rounded-none"
         >
           AI-generated chat. Not {getLastName(composer.name)}&apos;s own words.
         </p>
       </form>
-
     </div>
   );
 
