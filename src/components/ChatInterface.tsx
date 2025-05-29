@@ -982,13 +982,17 @@ export function ChatInterface({
                       </div>
                       <div className="flex flex-col justify-center text-left">
                         <h1 className="font-serif font-bold text-lg md:text-xl hover:text-primary transition-colors">{composer.name}</h1>
-                        <div className={`flex flex-col sm:flex-row sm:items-center gap-1.5 mt-0.5`}>
+                        <div className={`flex ${
+                          Array.isArray(composer.era) && composer.era.length === 2
+                            ? 'flex-col sm:flex-row sm:items-center'
+                            : 'items-center'
+                        } gap-1.5 mt-0.5`}>
                           <span className="text-sm md:text-base text-muted-foreground hover:text-primary transition-colors whitespace-nowrap">
                             <span className="sr-only">Nationality and years: </span>
                             {composer.nationality}, {composer.birthYear}-{composer.deathYear || 'present'}
                           </span>
                           <div
-                            className="flex flex-wrap gap-1 -mt-0.5 sm:mt-0"
+                            className="flex flex-wrap gap-1 -translate-y-[1.5px]"
                             role="list"
                             aria-label="Musical eras"
                           >
