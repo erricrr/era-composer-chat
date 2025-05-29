@@ -611,11 +611,27 @@ export function ChatInterface({
     // Clear React state
     setInputMessage('');
 
-    // Force cleanup of the textarea
+    // Force cleanup of the textarea with multiple approaches for Safari compatibility
     if (textareaRef.current) {
-      // Clear value and reset height
+      // Directly set value and reset height
       textareaRef.current.value = '';
       textareaRef.current.style.height = '48px';
+
+      // Force Safari to update the textarea
+      textareaRef.current.style.display = 'none';
+      textareaRef.current.offsetHeight; // Force reflow
+      textareaRef.current.style.display = '';
+
+      // Ensure focus is maintained
+      textareaRef.current.focus();
+
+      // Additional cleanup for Safari
+      requestAnimationFrame(() => {
+        if (textareaRef.current) {
+          textareaRef.current.value = '';
+          textareaRef.current.style.height = '48px';
+        }
+      });
     }
   };
 
@@ -627,13 +643,22 @@ export function ChatInterface({
 
     // Stop dictation if active
     if (isDictating && recognitionRef.current) {
-      recognitionRef.current.stop();
-      setIsDictating(false);
-      recognitionRef.current = null;
+      try {
+        recognitionRef.current.stop();
+        setIsDictating(false);
+        recognitionRef.current = null;
+      } catch (e) {
+        console.error('Error stopping dictation:', e);
+      }
     }
 
-    // Clean up the textarea
+    // Immediate cleanup
     cleanupTextarea();
+
+    // Additional cleanup with delay for Safari
+    setTimeout(() => {
+      cleanupTextarea();
+    }, 50);
 
     // Notify parent that user sent a message (activate chat)
     onUserSend?.(composer);
@@ -680,6 +705,9 @@ export function ChatInterface({
 
       // Persist composer message
       addMessage(conversationId || currentConversationIdRef.current!, responseText, 'composer');
+
+      // Final cleanup to ensure textarea is clear
+      cleanupTextarea();
 
     } catch (error) {
       console.error('Error in message submission:', error);
