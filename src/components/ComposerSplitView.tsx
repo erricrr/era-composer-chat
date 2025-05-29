@@ -164,7 +164,7 @@ function ContainedImageModal({
           {/* Footer */}
           <div className="py-2 px-2 text-left bg-background dark:bg-secondary">
             <div
-              className="text-xs text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+              className="text-sm text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
               tabIndex={0}
             >
               {copyrightDetails ? (
@@ -328,10 +328,10 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
               >
                 <span className={`text-muted-foreground ${
                   isMobile
-                    ? 'text-sm'
+                    ? 'text-base'
                     : isActiveChatsOpen
-                      ? 'text-xs'
-                      : 'text-sm md:text-base'
+                      ? 'text-sm'
+                      : 'text-base'
                 }`}>
                   {composer.nationality}, {composer.birthYear}-{composer.deathYear || 'present'}
                 </span>
@@ -343,7 +343,7 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
                         variant="badge"
                         className={
                           isMobile
-                            ? 'text-xs px-2 py-0.5'
+                            ? 'text-sm px-2 py-0.5'
                             : isActiveChatsOpen
                               ? 'text-[10px] px-1.5 py-0.5'
                               : ''
@@ -357,7 +357,7 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
                       variant="badge"
                       className={
                         isMobile
-                          ? 'text-xs px-2 py-0.5'
+                          ? 'text-sm px-2 py-0.5'
                           : isActiveChatsOpen
                             ? 'text-[10px] px-1.5 py-0.5'
                             : ''
@@ -377,10 +377,10 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
               <div>
                 <p className={`text-foreground/90 ${
                   isMobile
-                    ? 'text-sm'
+                    ? 'text-base'
                     : isActiveChatsOpen
-                      ? 'text-xs md:text-sm'
-                      : 'text-sm md:text-base'
+                      ? 'text-sm md:text-base'
+                      : 'text-base'
                 }`}>
                   {composer.longBio}
                 </p>
@@ -389,10 +389,10 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
               <div>
                 <h3 className={`font-semibold mb-2 ${
                   isMobile
-                    ? 'text-base'
+                    ? 'text-lg'
                     : isActiveChatsOpen
-                      ? 'text-sm md:text-base'
-                      : 'text-base md:text-lg'
+                      ? 'text-base'
+                      : 'text-lg'
                 }`}>
                   Notable Works
                 </h3>
@@ -402,10 +402,10 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
                       key={index}
                       className={`text-foreground/80 ${
                         isMobile
-                          ? 'text-sm'
+                          ? 'text-base'
                           : isActiveChatsOpen
-                            ? 'text-xs md:text-sm'
-                            : 'text-sm md:text-base'
+                            ? 'text-sm md:text-base'
+                            : 'text-base'
                       }`}>
                       {work}
                     </li>

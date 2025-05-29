@@ -987,12 +987,12 @@ export function ChatInterface({
                             ? 'flex-col sm:flex-row sm:items-center'
                             : 'items-center'
                         } gap-1.5 mt-0.5`}>
-                          <span className="text-sm md:text-base text-muted-foreground hover:text-primary transition-colors whitespace-nowrap">
+                          <span className="text-base md:text-lg text-muted-foreground hover:text-primary transition-colors whitespace-nowrap">
                             <span className="sr-only">Nationality and years: </span>
                             {composer.nationality}, {composer.birthYear}-{composer.deathYear || 'present'}
                           </span>
                           <div
-                            className="flex flex-wrap gap-1 -translate-y-[1.5px]"
+                            className="flex flex-wrap gap-1 -translate-y-[1px]"
                             role="list"
                             aria-label="Musical eras"
                           >
@@ -1029,7 +1029,7 @@ export function ChatInterface({
         <div className="flex flex-col min-h-[calc(100%-2rem)] pb-2">
           {currentMessages.length === 0 ? (
             <div
-              className="flex-1 flex items-center justify-center text-muted-foreground text-sm"
+              className="flex-1 flex items-center justify-center text-muted-foreground text-base"
               role="status"
               aria-label="Empty chat"
             >
@@ -1129,7 +1129,7 @@ export function ChatInterface({
                   }
                 }}
                 placeholder={`Ask a question...`}
-                className={`w-full bg-background pl-4 pr-28 py-3 border border-input text-sm text-foreground
+                className={`w-full bg-background pl-4 pr-28 py-3 border border-input text-base text-foreground
                   outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0
                   ${isDictating ? 'ring-1 ring-primary' : ''}
                   min-h-[48px] max-h-[300px] overflow-y-auto resize-none
