@@ -821,8 +821,8 @@ export function ComposerList({
                   <h3 className="text-xl md:text-2xl font-bold font-serif break-words">
                     {selectedComposer.name}
                   </h3>
-                  <div className="flex flex-col lg:flex-row lg:items-center gap-1 lg:gap-2 mt-1">
-                    <span className="text-xs md:text-sm text-muted-foreground">
+                  <div className="flex flex-col lg:flex-row lg:items-center gap-1 mt-1">
+                    <span className="text-base md:text-lg text-muted-foreground">
                       {selectedComposer.nationality}, {selectedComposer.birthYear}–{selectedComposer.deathYear || 'present'}
                     </span>
                     <div className="flex flex-wrap gap-1 lg:ml-2">
@@ -848,14 +848,14 @@ export function ComposerList({
               )}
               <ScrollArea ref={composerDetailsScrollRef} className="w-full h-full">
                 <div className="px-4 md:px-5 py-3 space-y-4" ref={detailsContentRef}>
-                  <p className="text-sm md:text-base text-foreground/90">
+                  <p className="text-base md:text-lg text-foreground/90">
                     {selectedComposer.shortBio}
                   </p>
                   <div>
-                    <h4 className="font-semibold mb-2 text-base md:text-lg">Notable Works</h4>
+                    <h4 className="font-semibold mb-2 text-lg md:text-xl">Notable Works</h4>
                     <ul className="list-disc pl-5 mb-4 space-y-1">
                       {selectedComposer.famousWorks.slice(0, 3).map((work, index) => (
-                        <li key={index} className="text-sm md:text-base text-foreground/80">{work}</li>
+                        <li key={index} className="text-base md:text-lg text-foreground/80">{work}</li>
                       ))}
                     </ul>
                   </div>
