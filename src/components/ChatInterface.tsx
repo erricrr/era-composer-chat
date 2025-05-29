@@ -921,9 +921,9 @@ export function ChatInterface({
       aria-label="Chat interface"
     >
       {(!isSplitViewOpen) ? (
-        <header className="absolute left-0 right-0 -mx-[100vw] bg-primary-foreground border-b shadow-md z-10" role="banner">
-          <div className="mx-[100vw]">
-            <nav className="flex items-center justify-between px-5 pt-4 pb-1.5 md:px-5 md:pt-6 md:pb-3" aria-label="Composer information">
+        <header className="absolute left-0 right-0 -mx-[100vw] bg-primary-foreground border-b shadow-md z-10 pt-2.5 md:pt-3" role="banner">
+          <div className="mx-[100vw] pb-2">
+            <nav className="flex items-center justify-between px-5 pt-4 pb-1 md:px-5 md:pt-5 md:pb-2" aria-label="Composer information">
               <Tooltip>
                 <TooltipTrigger asChild>
                   <button
@@ -949,18 +949,18 @@ export function ChatInterface({
                         <ComposerImageViewer
                           composer={composer}
                           size="lg"
-                          className="!scale-100 !w-24 !h-24 md:!w-28 md:!h-28"
+                          className="!scale-100 !w-20 !h-20 md:!w-24 md:!h-24"
                         />
                       </div>
                       <div className="flex flex-col justify-center text-left">
                         <h1 className="font-serif font-bold text-lg md:text-xl hover:text-primary transition-colors">{composer.name}</h1>
-                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-1">
-                          <span className="text-sm md:text-base text-muted-foreground hover:text-primary transition-colors">
+                        <div className={`flex ${isActiveChatsOpen ? 'flex-col sm:flex-row sm:items-center' : 'items-center'} gap-1.5 mt-0.5`}>
+                          <span className="text-sm md:text-base text-muted-foreground hover:text-primary transition-colors whitespace-nowrap">
                             <span className="sr-only">Nationality and years: </span>
                             {composer.nationality}, {composer.birthYear}-{composer.deathYear || 'present'}
                           </span>
                           <div
-                            className="flex flex-wrap gap-1 truncate"
+                            className="flex flex-wrap gap-1"
                             role="list"
                             aria-label="Musical eras"
                           >
@@ -986,8 +986,8 @@ export function ChatInterface({
         </header>
       ) : null}
       <main
-        className={`flex-1 overflow-y-auto overscroll-contain px-5 py-4 relative chat-container ${
-          !isSplitViewOpen ? 'mt-32 md:mt-40' : ''
+        className={`flex-1 overflow-y-auto overscroll-contain px-5 relative chat-container ${
+          !isSplitViewOpen ? 'pt-24 md:pt-32 pb-4' : 'py-4'
         }`}
         ref={chatContainerRef}
         role="log"
@@ -1004,7 +1004,7 @@ export function ChatInterface({
               <p>Start a conversation with {getLastName(composer.name)}. Ask them about their music.</p>
             </div>
           ) : (
-            <div className="space-y-4 w-full max-w-full">
+            <div className="space-y-2 w-full max-w-full">
               {currentMessages.map((message: Message) => (
                 <article
                   key={message.id}
