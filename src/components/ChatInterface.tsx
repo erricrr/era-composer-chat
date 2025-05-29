@@ -921,7 +921,7 @@ export function ChatInterface({
       aria-label="Chat interface"
     >
       {(!isSplitViewOpen) ? (
-        <header className="absolute left-0 right-0 -mx-[100vw] bg-primary-foreground border-b shadow-md z-10 pt-2.5 md:pt-3" role="banner">
+        <header className="sticky top-0 left-0 right-0 -mx-[100vw] bg-primary-foreground border-b shadow-md z-40" role="banner">
           <div className="mx-[100vw] pb-2">
             <nav className="flex items-center justify-between px-5 pt-4 pb-1 md:px-5 md:pt-5 md:pb-2" aria-label="Composer information">
               <Tooltip>
@@ -987,7 +987,7 @@ export function ChatInterface({
       ) : null}
       <main
         className={`flex-1 overflow-y-auto overscroll-contain px-5 relative chat-container ${
-          !isSplitViewOpen ? 'pt-24 md:pt-32 pb-4' : 'py-4'
+          !isSplitViewOpen ? 'pt-4' : 'py-4'
         }`}
         ref={chatContainerRef}
         role="log"
