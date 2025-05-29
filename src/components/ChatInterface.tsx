@@ -1017,8 +1017,8 @@ export function ChatInterface({
                 >
                   <div
                     className={message.sender === 'user'
-                      ? 'max-w-[75%] rounded-2xl px-4 py-2 bg-primary text-background ml-auto shadow-sm'
-                      : 'max-w-[85%] rounded-2xl px-4 py-2 text-foreground bg-background'
+                      ? 'max-w-[75%] rounded-2xl px-4 py-2 bg-primary text-background ml-auto mr-1 shadow-sm'
+                      : 'max-w-[85%] rounded-2xl px-4 py-2 text-foreground bg-background -ml-4'
                     }
                   >
                     <ReactMarkdown
