@@ -194,7 +194,7 @@ export default function ActiveChatsSlider({
           })
         )}
       </div>
-
+{/*
       <div className="p-4 border-t border-border">
         <button
           ref={clearAllButtonRef}
@@ -204,7 +204,7 @@ export default function ActiveChatsSlider({
         >
           Clear All
         </button>
-      </div>
+      </div> */}
     </aside>
   );
 }
