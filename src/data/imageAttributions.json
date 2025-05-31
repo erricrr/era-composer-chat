@@ -516,5 +516,12 @@
     "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ruth_Crawford_Seeger_early_1920s.jpg",
     "license": "Public Domain",
     "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
+  },
+  "edward-elgar": {
+    "author": "Unknown",
+    "source": "Wikimedia Commons",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Edward_Elgar.jpg",
+    "license": "Public Domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/"
   }
 }

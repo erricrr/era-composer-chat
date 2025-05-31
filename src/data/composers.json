@@ -570,6 +570,27 @@
       ]
     },
     {
+  "id": "edward-elgar",
+  "name": "Edward Elgar",
+  "era": ["Romantic", "20th Century"],
+  "birthYear": 1857,
+  "deathYear": 1934,
+  "shortBio": "Edward Elgar was an English composer known for his rich orchestral works and nationalistic music. He gained fame with pieces like the Enigma Variations and the Pomp and Circumstance Marches. Elgar's music is celebrated for its emotional depth and craftsmanship. He was born in Worcestershire, England, and became one of the leading figures in British music during the late 19th and early 20th centuries.",
+  "longBio": "Edward Elgar was born in 1857 in Broadheath, Worcestershire, England. He rose from modest beginnings to become one of the most prominent English composers of his time. Elgar's compositions include orchestral works, choral music, concertos, and chamber music. His best-known works include the Enigma Variations, which feature a series of musical portraits of his friends, and the Pomp and Circumstance Marches, which remain popular worldwide. Elgar’s style blends Romantic lyricism with a distinctly English character. He was knighted in 1904 and later became Master of the King’s Musick. Despite periods of self-doubt, Elgar’s legacy endures as a symbol of English musical identity.",
+  "nationality": "English",
+  "location": "Worcestershire, England",
+  "famousWorks": [
+    "Enigma Variations",
+    "Pomp and Circumstance Marches",
+    "Cello Concerto in E minor"
+  ],
+  "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/c/ce/Edward_Elgar.jpg",
+  "notableQuotes": [
+    "Music is the spirit of the air.",
+    "The true spirit of music is its power to move the soul."
+  ]
+},
+    {
       "id": "erik-satie",
       "name": "Erik Satie",
       "era": ["20th Century"],
