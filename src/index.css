@@ -121,6 +121,23 @@ html {
     max-height: 100svh !important;
   }
 
+    /* Force immediate color transitions on mobile to prevent theme toggle delays */
+  *[class*="text-"],
+  *[class*="bg-"],
+  *[class*="border-"],
+  .hover\\:text-primary:hover,
+  h1, h2, h3, h4, h5, h6,
+  span {
+    transition: none !important;
+  }
+
+  /* Force immediate updates for mobile keyboard visibility styles */
+  html.keyboard-visible .chat-container .chat-header,
+  html.keyboard-visible .ComposerSplitView-header,
+  html.keyboard-visible .chat-container form {
+    transition: none !important;
+  }
+
   /* Fix for Chrome/Safari mobile keyboard positioning */
   html.keyboard-visible {
     /* Prevent scrolling of background when keyboard is open */
