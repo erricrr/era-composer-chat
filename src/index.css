@@ -125,10 +125,43 @@ html {
   *[class*="text-"],
   *[class*="bg-"],
   *[class*="border-"],
+  .hover\\:text-primary,
   .hover\\:text-primary:hover,
   h1, h2, h3, h4, h5, h6,
   span {
     transition: none !important;
+  }
+
+  /* Specific fix for chat interface composer name */
+  header h1.font-serif,
+  header span.text-muted-foreground,
+  .chat-container header h1,
+  .chat-container header span {
+    transition: none !important;
+    -webkit-transition: none !important;
+    -moz-transition: none !important;
+    -o-transition: none !important;
+  }
+
+  /* Force immediate repainting for text elements on mobile */
+  h1, h2, h3, h4, h5, h6, span, p {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+
+  /* Override Tailwind's default transition-colors on mobile */
+  .transition-colors {
+    transition: none !important;
+  }
+
+  /* Force immediate color updates by disabling all color-related transitions */
+  [class*="hover:text-"],
+  [class*="text-primary"],
+  [class*="text-muted-foreground"] {
+    transition: none !important;
+    -webkit-transition: none !important;
   }
 
   /* Force immediate updates for mobile keyboard visibility styles */
