@@ -959,7 +959,7 @@ export function ChatInterface({
                     aria-label={`View more information about ${composer.name}`}
                     aria-expanded={isSplitViewOpen}
                     aria-haspopup="dialog"
-                    className="chat-split-btn appearance-none border-none outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0 flex items-center space-x-6 cursor-pointer hover:opacity-90 transition-all duration-300"
+                    className="chat-split-btn appearance-none border-none outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0 flex items-center space-x-6 cursor-pointer hover:opacity-90 transition-opacity duration-300"
                     onClick={(e) => {
                       e.stopPropagation();
                       setIsSplitViewOpen(true);
