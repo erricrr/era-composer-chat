@@ -981,13 +981,13 @@ export function ChatInterface({
                         />
                       </div>
                       <div className="flex flex-col justify-center text-left">
-                        <h1 className="font-serif font-bold text-lg md:text-xl hover:text-primary transition-colors">{composer.name}</h1>
+                        <h1 className="font-serif font-bold text-lg md:text-xl hover:text-primary">{composer.name}</h1>
                         <div className={`flex ${
                           Array.isArray(composer.era) && composer.era.length === 2
                             ? 'flex-col sm:flex-row sm:items-center'
                             : 'items-center'
                         } gap-1.5 mt-0.5`}>
-                          <span className="text-base md:text-lg text-muted-foreground hover:text-primary transition-colors whitespace-nowrap">
+                          <span className="text-base md:text-lg text-muted-foreground hover:text-primary whitespace-nowrap">
                             <span className="sr-only">Nationality and years: </span>
                             {composer.nationality}, {composer.birthYear}-{composer.deathYear || 'present'}
                           </span>
