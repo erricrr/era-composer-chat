@@ -4,7 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "resolutions": {
-    "@eslint/plugin-kit": "^0.3.3"
+    "@eslint/plugin-kit": "^0.3.3",
+    "esbuild": "^0.25.0"
   },
   "scripts": {
     "dev": "vite",
