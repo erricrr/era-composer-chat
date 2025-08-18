@@ -208,4 +208,14 @@ Remember: You are speaking as ${composer.name} in first person. Maintain your hi
   }
 }
 
-export const geminiService = new GeminiService();
+// Lazy singleton pattern to avoid initialization during build
+let _geminiService: GeminiService | null = null;
+
+export const geminiService = {
+  get instance(): GeminiService {
+    if (!_geminiService) {
+      _geminiService = new GeminiService();
+    }
+    return _geminiService;
+  }
+};

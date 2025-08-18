@@ -9,7 +9,7 @@ export function useGeminiChat() {
 
   const initializeChat = useCallback(async (composer: Composer, previousChatHistory: ChatMessage[] = []) => {
     try {
-      await geminiService.initializeChat(composer, previousChatHistory);
+      await geminiService.instance.initializeChat(composer, previousChatHistory);
       setError(null);
     } catch (err) {
       setError('Failed to initialize chat');
@@ -22,7 +22,7 @@ export function useGeminiChat() {
     setError(null);
 
     try {
-      const response = await geminiService.generateResponse(userMessage);
+      const response = await geminiService.instance.generateResponse(userMessage);
       return response;
     } catch (err) {
       setError('Failed to generate response');
