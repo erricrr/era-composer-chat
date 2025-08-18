@@ -1230,25 +1230,16 @@ export function ChatInterface({
                     </TooltipPortal>
                   </Tooltip>
                 ) : (
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <button
-                        type="button"
-                        disabled={isComposerListOpen || isComposerMenuOpen}
-                        onClick={handleResetChat}
-                        className="h-8 w-8 rounded-full flex items-center justify-center text-muted-foreground transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
-                        aria-label="Reset chat"
-                        style={{ zIndex: 50 }}
-                      >
-                        <RefreshCcw className="w-5 h-5" strokeWidth={2} />
-                      </button>
-                    </TooltipTrigger>
-                    <TooltipPortal>
-                      <TooltipContent side="top" align="center" className="text-xs">
-                        Reset chat
-                      </TooltipContent>
-                    </TooltipPortal>
-                  </Tooltip>
+                  <button
+                    type="button"
+                    disabled={isComposerListOpen || isComposerMenuOpen}
+                    onClick={handleResetChat}
+                    className="h-8 w-8 rounded-full flex items-center justify-center text-muted-foreground transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                    aria-label="Reset chat"
+                    style={{ zIndex: 50 }}
+                  >
+                    <RefreshCcw className="w-5 h-5" strokeWidth={2} />
+                  </button>
                 )}
               </div>
             </div>
