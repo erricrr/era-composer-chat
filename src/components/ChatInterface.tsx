@@ -985,7 +985,7 @@ export function ChatInterface({
                         <div className={`flex ${
                           Array.isArray(composer.era) && composer.era.length === 2
                             ? 'flex-col sm:flex-row sm:items-center'
-                            : 'items-center'
+                            : 'flex-col sm:flex-row sm:items-center'
                         } gap-1.5 mt-0.5`}>
                           <span className="text-base md:text-lg text-muted-foreground hover:text-primary whitespace-nowrap">
                             <span className="sr-only">Nationality and years: </span>
