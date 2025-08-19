@@ -7,6 +7,9 @@
     "@eslint/plugin-kit": "^0.3.3",
     "esbuild": "^0.25.9"
   },
+  "overrides": {
+    "esbuild": "^0.25.9"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
