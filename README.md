@@ -1,58 +1,72 @@
-[![Netlify Status](https://api.netlify.com/api/v1/badges/cd0a4968-622f-4a4e-aa1f-0dfc4424e202/deploy-status)](https://app.netlify.com/sites/era-composer-chat/deploys)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/cd0a4968-622f-4a4e-aa1f-0dfc4424e202/deploy-status)](https://app.netlify.com/projects/era-composer-chat/deploys)
 
 # Era Composer Chat
 
-Welcome to Era Composer Chat - a unique web application that allows you to chat with classical music composers across different eras.
+After taking an online classical music appreciation course, I found myself with questions. Questions for the deceased composers. For fun, I put together this chat experience with a touch of educational elements. Powered by Gemini (gemini-2.0-flash).
 
-## Project Overview
+## Quick Start
 
-This interactive application lets users engage in simulated conversations with classical composers from the Baroque, Classical, Romantic, and 20th Century eras. Through a modern AI-powered chat interface, you can ask questions, learn about their work, and gain insights into their musical style and historical context.
+### Prerequisites
 
-## Getting Started
+- Node.js 18+ and npm
+- A Google Gemini API key ([Get one here](https://makersuite.google.com/app/apikey))
 
-There are several ways to work with this codebase:
+### Installation
 
-### Local Development
+1. **Clone the repository**
+   ```bash
+   git clone <your-repo-url>
+   cd era-composer-chat
+   ```
 
-To run the project locally:
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-```sh
-# Step 1: Clone the repository
-git clone <YOUR_GIT_URL>
+3. **Set up environment variables**
 
-# Step 2: Navigate to the project directory
-cd era-composer-chat
+   Create a `.env` file in the root directory:
+   ```env
+   VITE_GEMINI_API_KEY=your_gemini_api_key_here
+   ```
 
-# Step 3: Install dependencies
-npm i
+4. **Start the development server**
+   ```bash
+   npm run dev
+   ```
 
-# Step 4: Start the development server
-npm run dev
+5. **Open your browser**
+
+   Navigate to `http://localhost:8080`
+
+## Environment Variables
+
+The application requires a Google Gemini API key. The `VITE_` prefix is required by Vite to expose the variable to the frontend:
+
+```env
+VITE_GEMINI_API_KEY=your_gemini_api_key_here
 ```
 
-## Technologies
+Note: This is the same API key you get from Google - the `VITE_` prefix is just Vite's naming convention for client-side environment variables.
 
-This project is built with:
+## Available Scripts
 
+- `npm run dev` - Start development server (runs on port 8080)
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
+
+## Tech Stack
+
+- React + TypeScript
 - Vite
-- TypeScript
-- React
-- shadcn-ui
 - Tailwind CSS
+- shadcn/ui components
+- Google Gemini AI
 - React Router
 - React Query
-- And more modern web technologies
 
 ## Deployment
 
-The project is currently deployed on Netlify.
-
-## Custom Domain Setup
-
-You can connect a custom domain to this project.
-
-To connect a domain, navigate to your hosting provider's settings panel and follow their instructions for connecting a custom domain.
-
-## Contributing
-
-Contributions are welcome! Feel free to submit issues or pull requests to help improve this project.
+The project is deployed on Netlify. For production deployment, ensure your `VITE_GEMINI_API_KEY` environment variable is properly configured in your hosting platform.
