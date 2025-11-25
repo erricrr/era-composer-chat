@@ -392,7 +392,7 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
   return (
     <div
       className={cn(
-        "relative flex items-center transition-all duration-200",
+        "relative flex items-center transition-[width] duration-200",
         isMobileSearchActive ? "w-64" : "w-11",
         "md:w-64",
         isMobileView && !isMobileSearchActive && "justify-center"
@@ -425,7 +425,7 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
           <TooltipTrigger asChild>
             <button
               type="button"
-              className="w-11 h-11 flex items-center justify-center rounded-md md:hidden hover:bg-muted transition-colors duration-200 composer-search-mobile-button"
+              className="w-11 h-11 flex items-center justify-center rounded-md md:hidden hover:bg-muted composer-search-mobile-button"
               onClick={(e) => {
                 e.stopPropagation();
                 setTimeout(activateMobileSearch, 10);
@@ -444,7 +444,7 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
       {/* Search Input Container */}
       <div
         className={cn(
-          "relative overflow-visible rounded-md bg-background transition-all duration-200",
+          "relative overflow-visible rounded-md bg-background transition-[width,opacity] duration-200",
           isMobileSearchActive ? "w-full" : "hidden",
           "md:block md:w-full"
         )}
@@ -462,7 +462,7 @@ export function ComposerSearch({ composers, onSelectComposer }: ComposerSearchPr
               onFocus={() => setIsInputFocused(true)}
               onBlur={() => setIsInputFocused(false)}
               placeholder={SEARCH_PLACEHOLDER}
-              className="composer-search-input w-full py-2 pl-10 pr-15 text-sm md:text-sm bg-transparent placeholder:text-muted-foreground transition-colors duration-200"
+              className="composer-search-input w-full py-2 pl-10 pr-15 text-sm md:text-sm bg-transparent placeholder:text-muted-foreground"
               style={{ fontSize: isMobileView ? '16px' : '' }}
               aria-label="Search for composers"
               role="combobox"

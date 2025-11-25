@@ -127,14 +127,14 @@ export default function ActiveChatsSlider({
             ref={closeButtonRef}
             type="button"
             onClick={handleCloseClick}
-            className="order-1 w-11 h-11 flex items-center justify-center rounded-full transition-colors duration-200 hover:bg-muted-foreground/25 focus-ring-inset"
+            className="order-1 w-11 h-11 flex items-center justify-center rounded-full hover:bg-muted-foreground/25 focus-ring-inset"
             aria-label="Close active chats"
           >
             <X className="w-4 h-4" />
           </button>
           <div
             tabIndex={0}
-            className="order-0 text-base font-semibold transition-colors focus-ring-inset focus:rounded-none"
+            className="order-0 text-base font-semibold focus-ring-inset focus:rounded-none"
           >
             Active Chats
           </div>
@@ -166,7 +166,7 @@ export default function ActiveChatsSlider({
               <div key={id} className="flex items-center justify-between">
                 <button
                   onClick={() => onSelectComposer(composer)}
-                  className="flex-1 text-left p-2 rounded hover:bg-muted transition-colors focus-ring-inset"
+                  className="flex-1 text-left p-2 rounded hover:bg-muted focus-ring-inset"
                   aria-label={`Open chat with ${composer.name}`}
                 >
                   <div className="text-sm font-medium">{composer.name}</div>
@@ -179,7 +179,7 @@ export default function ActiveChatsSlider({
                     <button
                       type="button"
                       onClick={(e) => handleRemoveChat(composer, e)}
-                      className="w-11 h-11 flex items-center justify-center rounded-full hover:bg-muted transition-colors focus-ring-inset"
+                      className="w-11 h-11 flex items-center justify-center rounded-full hover:bg-muted focus-ring-inset"
                       aria-label={`Remove chat with ${composer.name}`}
                     >
                       <MessageSquareOff className="w-4 h-4 text-destructive" />
@@ -199,7 +199,7 @@ export default function ActiveChatsSlider({
         <button
           ref={clearAllButtonRef}
           onClick={handleClearAllClick}
-          className="w-full p-2 text-sm text-destructive hover:bg-destructive/10 rounded transition-colors focus-ring-inset"
+          className="w-full p-2 text-sm text-destructive hover:bg-destructive/10 rounded focus-ring-inset"
           aria-label="Clear all active chats"
         >
           Clear All

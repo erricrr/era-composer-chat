@@ -95,7 +95,7 @@ const ModalHeader: React.FC<ModalHeaderProps> = ({
           e.stopPropagation();
           onClose();
         }}
-        className="w-11 h-11 flex items-center justify-center rounded-full transition-colors duration-200 hover:bg-muted-foreground/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+        className="w-11 h-11 flex items-center justify-center rounded-full hover:bg-muted-foreground/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
         aria-label="Close modal"
       >
         {/* Close Icon SVG */}

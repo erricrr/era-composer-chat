@@ -36,7 +36,7 @@ export function ThemeToggle({ onThemeChange }: { onThemeChange?: (isDark: boolea
   return (
     <button
       onClick={toggleTheme}
-      className="w-11 h-11 flex items-center justify-center rounded-md hover:bg-muted transition-colors duration-200 focus-ring-inset"
+      className="w-11 h-11 flex items-center justify-center rounded-md hover:bg-muted focus-ring-inset"
       aria-label="Toggle theme"
       data-theme={isDarkMode ? 'dark' : 'light'}
     >

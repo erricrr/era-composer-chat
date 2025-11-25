@@ -247,7 +247,7 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
 
       {/* Fixed Header - Now outside ScrollArea */}
       <div
-        className="relative flex items-center justify-center border-b py-7 bg-primary-foreground backdrop-blur-sm shadow-md z-[20] flex-shrink-0 group transition-colors w-full cursor-pointer focus-ring-inset focus:rounded-none ComposerSplitView-header"
+        className="relative flex items-center justify-center border-b py-7 bg-primary-foreground backdrop-blur-sm shadow-md z-[20] flex-shrink-0 group w-full cursor-pointer focus-ring-inset focus:rounded-none ComposerSplitView-header"
         tabIndex={0}
         role="button"
         aria-label="Close split view"
@@ -269,7 +269,7 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
               e.stopPropagation();
               onClose();
             }}
-            className="cursor-pointer font-bold font-serif text-lg md:text-xl truncate max-w-[calc(100%-6.5rem)] px-4 transition-colors"
+            className="cursor-pointer font-bold font-serif text-lg md:text-xl truncate max-w-[calc(100%-6.5rem)] px-4"
           >
             {composer.name}
           </div>
@@ -282,7 +282,7 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
             e.stopPropagation();
             onClose();
           }}
-          className="absolute right-4 rounded-full hover:bg-primary/20 transition-all duration-200 group-hover:bg-primary/20 w-11 h-11 flex items-center justify-center text-foreground/70 hover:text-foreground/90 z-10 isolate"
+          className="absolute right-4 rounded-full hover:bg-primary/20 group-hover:bg-primary/20 w-11 h-11 flex items-center justify-center text-foreground/70 hover:text-foreground/90 z-10 isolate"
         >
           <X className="h-4 w-4" />
         </Button>
@@ -451,7 +451,7 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
             defaultSize={40}
             minSize={30}
             maxSize={60}
-            className={`bg-secondary/50 backdrop-blur-sm flex flex-col transition-all duration-200 ease-in-out p-0 overflow-hidden ${
+            className={`bg-secondary/50 backdrop-blur-sm flex flex-col transition-[opacity,transform] duration-200 ease-in-out p-0 overflow-hidden ${
               isOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
             }`}
             id="composer-panel-mobile"
@@ -473,7 +473,7 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
             defaultSize={60}
             minSize={40}
             maxSize={70}
-            className={`bg-background transition-all duration-200 ease-in-out ${
+            className={`bg-background transition-[opacity,transform] duration-200 ease-in-out ${
               isOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-105 pointer-events-none'
             }`}
             id="chat-panel-mobile"
@@ -497,14 +497,14 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
       }}
     >
       <div
-        className={`absolute inset-0 bg-background/80 backdrop-blur-sm transition-all duration-200 ease-in-out ${
+        className={`absolute inset-0 bg-background/80 backdrop-blur-sm transition-opacity duration-200 ease-in-out ${
           isOpen ? 'opacity-100' : 'opacity-0'
         }`}
       >
       </div>
       <ResizablePanelGroup
         direction={isMobile ? "vertical" : "horizontal"}
-        className={`h-full w-full transition-all duration-200 ease-in-out ${
+        className={`h-full w-full transition-[opacity,transform] duration-200 ease-in-out ${
           isOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
         }`}
       >

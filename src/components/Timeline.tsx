@@ -90,7 +90,7 @@ export function Timeline({ selectedEra, onSelectEra }: TimelineProps) {
  // helper to render the era icon trigger + tooltip in one place
 const renderIcon = (era: typeof eras[number], index: number) => {
   const isSelectedIcon = selectedEra === era.name;
-  const baseButtonClasses = 'a11y-touch-target w-11 h-11 rounded-full transition-all duration-300 ease-out relative';
+  const baseButtonClasses = 'a11y-touch-target w-11 h-11 rounded-full transition-[transform] duration-300 relative';
   const iconClass = cn(
     baseButtonClasses,
     isSelectedIcon
@@ -153,7 +153,7 @@ const renderIcon = (era: typeof eras[number], index: number) => {
                   <div className="relative flex flex-col items-center">
                     {/* Era name */}
                     <h3 className={`
-                      text-center transition-all duration-300 ease-out whitespace-nowrap
+                      text-center transition-[transform] duration-300 whitespace-nowrap
                       font-bold text-base lg:text-lg
                       ${selectedEra === era.name
                         ? 'text-primary font-bold scale-[1.04]'
@@ -166,7 +166,7 @@ const renderIcon = (era: typeof eras[number], index: number) => {
                     {/* Period years */}
                     <p className={`
                       text-xs sm:text-sm text-muted-foreground mt-1 text-center whitespace-nowrap
-                      font-medium transition-all duration-300 ease-out
+                      font-medium transition-[opacity,transform] duration-300
                       ${selectedEra === era.name
                         ? 'opacity-100 scale-[1.04]'
                         : 'opacity-70 group-hover:opacity-100 group-hover:scale-[1.04]'
@@ -178,7 +178,7 @@ const renderIcon = (era: typeof eras[number], index: number) => {
                    {/* Hover underline */}
                    <div className={`
                       absolute -bottom-1.5 left-0 right-0 h-1.5 rounded-b-md bg-primary/15
-                      transform origin-left transition-all duration-300 ease-out
+                      transform origin-left transition-[transform] duration-300
                       scale-x-0 w-full
                       ${selectedEra !== era.name && 'group-hover:scale-x-100'}
                     `} />
@@ -240,7 +240,7 @@ const renderIcon = (era: typeof eras[number], index: number) => {
                         <h4 id={`era-title-${era.id}`} className="text-base sm:text-lg font-semibold mb-2 text-primary">{era.name}</h4>
                         <p id={`era-description-${era.id}`} className="text-sm sm:text-base text-muted-foreground">{era.description}</p>
                       </div>
-                      <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-primary rounded-l-md animate-[expandVertical_0.3s_ease-in-out] origin-top" />
+                      <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-primary rounded-l-md animate-[expandVertical_0.3s] origin-top" />
                     </PopoverContent>
                   </Popover>
                 </div>

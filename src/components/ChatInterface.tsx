@@ -1165,7 +1165,7 @@ export function ChatInterface({
                           ${isDictating
                             ? 'bg-destructive text-background mic-pulse-animation'
                             : 'text-muted-foreground hover:text-primary'
-                          } transition-colors duration-200 hover:scale-105 active:scale-95`}
+                          } hover:scale-105 active:scale-95`}
                         aria-label={isDictating ? "Stop dictating" : "Dictate"}
                         style={{ zIndex: 50 }}
                       >
@@ -1191,7 +1191,7 @@ export function ChatInterface({
                     <button
                       type="submit"
                       disabled={!inputMessage.trim() || isComposerListOpen || isComposerMenuOpen}
-                      className={`h-8 w-8 rounded-full flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:scale-105 active:scale-95 shadow-sm ${
+                      className={`h-8 w-8 rounded-full flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-[transform] duration-200 hover:scale-105 active:scale-95 shadow-sm ${
                         inputMessage.trim()
                           ? 'bg-primary text-background hover:bg-primary/90'
                           : 'text-muted-foreground hover:text-primary'
@@ -1216,7 +1216,7 @@ export function ChatInterface({
                         type="button"
                         disabled={isComposerListOpen || isComposerMenuOpen}
                         onClick={handleResetChat}
-                        className="h-8 w-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-primary transition-colors duration-200 hover:scale-105 active:scale-95 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="h-8 w-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-primary hover:scale-105 active:scale-95 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                         aria-label="Reset chat"
                         style={{ zIndex: 50 }}
                       >
@@ -1234,7 +1234,7 @@ export function ChatInterface({
                     type="button"
                     disabled={isComposerListOpen || isComposerMenuOpen}
                     onClick={handleResetChat}
-                    className="h-8 w-8 rounded-full flex items-center justify-center text-muted-foreground transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="h-8 w-8 rounded-full flex items-center justify-center text-muted-foreground transition-[transform] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                     aria-label="Reset chat"
                     style={{ zIndex: 50 }}
                   >
@@ -1259,7 +1259,7 @@ export function ChatInterface({
     <div className="relative w-full h-full">
       {/* Regular chat view: only show when split view is closed */}
       <div
-        className={`absolute inset-0 transition-all duration-200 ease-in-out ${
+        className={`absolute inset-0 transition-[opacity,transform] duration-200 ease-in-out ${
           !isSplitViewOpen
             ? 'opacity-100 scale-100'
             : 'opacity-0 scale-95 pointer-events-none'
@@ -1270,7 +1270,7 @@ export function ChatInterface({
 
       {/* Split view: only render chatContent inside split view when open */}
       <div
-        className={`fixed inset-0 transition-all duration-200 ease-in-out ${
+        className={`fixed inset-0 transition-[opacity,transform] duration-200 ease-in-out ${
           isSplitViewOpen
             ? 'opacity-100 scale-100'
             : 'opacity-0 scale-105 pointer-events-none'

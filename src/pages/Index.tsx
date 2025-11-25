@@ -412,7 +412,7 @@ const Index = () => {
                   onClick={toggleMenu}
                   aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
                   aria-expanded={isMenuOpen}
-                  className="w-11 h-11 flex items-center justify-center rounded-md hover:bg-muted transition-colors duration-200 focus-ring-inset"
+                  className="w-11 h-11 flex items-center justify-center rounded-md hover:bg-muted focus-ring-inset"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -445,7 +445,7 @@ const Index = () => {
                   onClick={(e) => { e.stopPropagation(); setIsActiveChatsOpen(prev => !prev); }}
                   aria-label="Active Chats"
                   aria-expanded={isActiveChatsOpen}
-                  className="w-11 h-11 flex items-center justify-center rounded-md hover:bg-muted transition-colors duration-200 relative z-[60] focus-ring-inset"
+                  className="w-11 h-11 flex items-center justify-center rounded-md hover:bg-muted relative z-[60] focus-ring-inset"
                 >
                   <MessageSquare className={`h-5 w-5 transform transition-transform ${isActiveChatsOpen ? 'rotate-180' : ''}`} />
                 </button>
@@ -550,7 +550,7 @@ const Index = () => {
                   Select a composer from the menu to start chatting with them about their life, music, and legacy, or use the top search bar to find a specific composer.                  </p>
                   <button
                     onClick={toggleMenu}
-                    className="flex items-center justify-center mx-auto px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors mb-1"
+                    className="flex items-center justify-center mx-auto px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 mb-1"
                     aria-label="Open composer menu"
                   >
                     <svg

@@ -31,7 +31,7 @@ export function ComposerCard({ composer, onClick, isSelected, compact = false, t
       <div
         className={`
           absolute left-0 top-0.5 bottom-0.5 w-1.5 rounded-l-md bg-primary/15
-          transform origin-center transition-all duration-300 ease-out
+          transform origin-center transition-[opacity,transform] duration-300 ease-out
           opacity-0 scale-y-0
           ${!isSelected && 'group-hover:opacity-100 group-hover:scale-y-100'}
         `}
@@ -73,7 +73,6 @@ export function ComposerCard({ composer, onClick, isSelected, compact = false, t
           `}>
             <h3 className={`
               font-medium leading-tight truncate
-              transition-colors duration-200
               ${compact ? 'text-sm' : 'text-base'}
               ${isSelected ? 'text-primary' : 'group-hover:text-primary'}
             `}>

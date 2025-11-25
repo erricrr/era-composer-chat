@@ -44,8 +44,6 @@ const ScrollChevron = ({ direction, onClick = () => {}, disabled = false }: Scro
     ${roundedClass}
     flex items-center justify-center
     relative
-    transition-colors
-    duration-200
     select-none
     cursor-pointer
     ${dimensionAndMarginClass}
@@ -92,8 +90,8 @@ const ScrollIndicator = ({ orientation, isAtStart, isAtEnd }: ScrollIndicatorPro
 
   return (
     <div className={containerClasses}>
-      <div className={`w-1.5 h-1.5 rounded-full transition-colors duration-200 ${!isAtStart ? 'bg-primary/70' : 'bg-primary/20'}`} />
-      <div className={`w-1.5 h-1.5 rounded-full transition-colors duration-200 ${!isAtEnd ? 'bg-primary/70' : 'bg-primary/20'}`} />
+      <div className={`w-1.5 h-1.5 rounded-full ${!isAtStart ? 'bg-primary/70' : 'bg-primary/20'}`} />
+      <div className={`w-1.5 h-1.5 rounded-full ${!isAtEnd ? 'bg-primary/70' : 'bg-primary/20'}`} />
     </div>
   );
 };
