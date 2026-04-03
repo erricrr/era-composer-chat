@@ -29,6 +29,7 @@ const Index = () => {
 
   const [isChatting, setIsChatting] = useState(false);
   const [isChatClosing, setIsChatClosing] = useState(false);
+  const [wasChatActiveBeforeMenu, setWasChatActiveBeforeMenu] = useState(false);
 
   const [shouldScrollToComposer, setShouldScrollToComposer] = useState(false);
   const [pendingScrollComposerId, setPendingScrollComposerId] = useState<string | null>(null);
@@ -312,6 +313,8 @@ const Index = () => {
     setIsMenuOpen(newIsMenuOpen);
 
     if (newIsMenuOpen) {
+      // Track if chat was active when opening menu
+      setWasChatActiveBeforeMenu(!!selectedComposer);
       // If opening menu, stop chat
       setIsChatting(false);
       localStorage.setItem('isChatting', 'false');
@@ -321,6 +324,8 @@ const Index = () => {
     } else {
       // Restore body scrolling when menu is closed
       document.body.style.overflow = '';
+      // Reset the tracking state
+      setWasChatActiveBeforeMenu(false);
     }
 
     // Update localStorage for menu state
@@ -354,10 +359,14 @@ const Index = () => {
   // Effect to manage mounting/unmounting with slide animations
   useEffect(() => {
     if (isMenuOpen) {
-      // Mount the menu, then trigger enter animation
+      // Mount the menu first
       setIsMenuMounted(true);
-      const openTimer = setTimeout(() => setIsMenuAnimating(true), 10);
-      return () => clearTimeout(openTimer);
+      // Use double RAF to ensure browser paints initial -translate-x-full state before animating
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setIsMenuAnimating(true);
+        });
+      });
     } else {
       // Trigger exit animation, then unmount
       setIsMenuAnimating(false);
@@ -513,7 +522,7 @@ const Index = () => {
           {/* Composer Selection Menu - Only render when open to remove from tab order when closed */}
           {isMenuMounted && (
             <aside
-              className={`fixed inset-y-0 left-0 z-50 bg-background backdrop-blur-sm border-r border-border shadow-lg transform transition-transform duration-300 ease-out ${
+              className={`fixed inset-y-0 left-0 z-50 bg-background border-r border-border shadow-lg slider-animate ${
                 isMenuAnimating ? 'translate-x-0' : '-translate-x-full'
               }`}
               style={{
@@ -539,10 +548,14 @@ const Index = () => {
           )}
 
           {/* Chat Interface - Fixed positioning with proper overflow handling */}
+          {/* If chat was active before menu opened, fade it out. Otherwise, don't render it at all */}
+          {(!isMenuOpen || wasChatActiveBeforeMenu) && (
           <div
             className={`fixed bg-background transition-all duration-300 ease-in-out ${
               isChatClosing
                 ? 'opacity-0 translate-y-4'
+                : isMenuOpen
+                ? 'opacity-0 pointer-events-none'
                 : 'opacity-100 translate-y-0'
             }`}
             style={{
@@ -610,6 +623,7 @@ const Index = () => {
               </article>
             )}
           </div>
+          )}
         </main>
 
         {/* Active Chats Slider */}
