@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, KeyboardEvent, useCallback } from 'react';
 import { Composer, Message, Conversation, getLastName } from '@/data/composers';
 import { useConversations } from '@/hooks/useConversations';
-import { RefreshCcw, ArrowUp, Music, Mic } from 'lucide-react';
+import { RefreshCcw, ArrowUp, Music, Mic, X } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Badge } from "@/components/ui/badge";
 import { v4 as uuidv4 } from 'uuid';
@@ -17,7 +17,7 @@ import { ChatMessage } from '@/types/gemini';
 interface SpeechRecognitionEvent extends Event {
   results: SpeechRecognitionResultList;
   resultIndex: number;
-  error: any;
+  error: unknown;
 }
 
 interface SpeechRecognitionResultList {
@@ -70,6 +70,7 @@ interface ChatInterfaceProps {
   onSplitViewToggle?: (isOpen: boolean) => void;
   isComposerListOpen?: boolean;
   isActiveChatsOpen?: boolean;
+  onClose?: () => void;
 }
 
 export function ChatInterface({
@@ -79,6 +80,7 @@ export function ChatInterface({
   onSplitViewToggle,
   isComposerListOpen = false,
   isActiveChatsOpen = false,
+  onClose,
 }: ChatInterfaceProps) {
   const [inputMessage, setInputMessage] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -187,7 +189,7 @@ export function ChatInterface({
     originalViewportHeightRef.current = window.innerHeight;
 
     // Check if we're on iOS
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as Window & { MSStream?: unknown }).MSStream;
 
     // Function to check if keyboard is likely visible
     const checkKeyboardVisibility = () => {
@@ -497,13 +499,14 @@ export function ChatInterface({
       ensureChatInputVisible();
     };
 
-    if (textareaRef.current) {
-      textareaRef.current.addEventListener('focus', handleInputFocus);
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.addEventListener('focus', handleInputFocus);
     }
 
     return () => {
-      if (textareaRef.current) {
-        textareaRef.current.removeEventListener('focus', handleInputFocus);
+      if (textarea) {
+        textarea.removeEventListener('focus', handleInputFocus);
       }
     };
   }, [isMobile]);
@@ -619,7 +622,7 @@ export function ChatInterface({
 
       // Force Safari to update the textarea
       textareaRef.current.style.display = 'none';
-      textareaRef.current.offsetHeight; // Force reflow
+      void textareaRef.current.offsetHeight; // Force reflow
       textareaRef.current.style.display = '';
 
       // Ensure focus is maintained
@@ -858,7 +861,7 @@ export function ChatInterface({
         // Force Safari to update the textarea display
         const temp = textareaRef.current.style.display;
         textareaRef.current.style.display = 'none';
-        textareaRef.current.offsetHeight; // Force reflow
+        void textareaRef.current.offsetHeight; // Force reflow
         textareaRef.current.style.display = temp;
       }
     };
@@ -1013,6 +1016,24 @@ export function ChatInterface({
                   More about {getLastName(composer.name)}
                 </TooltipContent>
               </Tooltip>
+
+              {onClose && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      type="button"
+                      onClick={onClose}
+                      aria-label="Close chat"
+                      className="w-11 h-11 flex items-center justify-center rounded-md hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0 transition-colors"
+                    >
+                      <X className="h-5 w-5" />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom" align="end" className="text-xs">
+                    Close chat
+                  </TooltipContent>
+                </Tooltip>
+              )}
             </nav>
           </div>
         </header>

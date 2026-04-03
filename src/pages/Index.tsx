@@ -28,6 +28,7 @@ const Index = () => {
   const [isMenuAnimating, setIsMenuAnimating] = useState(false);
 
   const [isChatting, setIsChatting] = useState(false);
+  const [isChatClosing, setIsChatClosing] = useState(false);
 
   const [shouldScrollToComposer, setShouldScrollToComposer] = useState(false);
   const [pendingScrollComposerId, setPendingScrollComposerId] = useState<string | null>(null);
@@ -76,6 +77,15 @@ const Index = () => {
     return () => {
       document.body.style.overflow = '';
     };
+  }, []);
+
+  const handleCloseChat = useCallback(() => {
+    setIsChatClosing(true);
+    setTimeout(() => {
+      setSelectedComposer(null);
+      localStorage.removeItem('selectedComposer');
+      setIsChatClosing(false);
+    }, 300); // Match animation duration
   }, []);
 
   const handleSelectComposer = useCallback((composer: Composer | null, options?: { source?: string }) => {
@@ -227,7 +237,7 @@ const Index = () => {
 
       return ids;
     });
-  }, [setActiveChatIds, getConversationsForComposer, deleteConversation, allComposersData]);
+  }, [setActiveChatIds, getConversationsForComposer, deleteConversation]);
 
   // Handler for clicking an active chat entry
   const handleActiveChatClick = useCallback((composer: Composer) => {
@@ -363,7 +373,7 @@ const Index = () => {
     if (!isMobile) return;
 
     // Check if we're on iOS
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as Window & { MSStream?: unknown }).MSStream;
 
     if (isIOS) {
       // Add a meta viewport tag to prevent scaling issues
@@ -530,7 +540,11 @@ const Index = () => {
 
           {/* Chat Interface - Fixed positioning with proper overflow handling */}
           <div
-            className="fixed bg-background"
+            className={`fixed bg-background transition-all duration-300 ease-in-out ${
+              isChatClosing
+                ? 'opacity-0 translate-y-4'
+                : 'opacity-100 translate-y-0'
+            }`}
             style={{
               left: 0,
               right: isSplitViewOpenFromChat ? '0' : isActiveChatsOpen ? '16rem' : '0',
@@ -581,6 +595,7 @@ const Index = () => {
                   onSplitViewToggle={setIsSplitViewOpenFromChat}
                   isComposerListOpen={isMenuOpen}
                   isActiveChatsOpen={isActiveChatsOpen}
+                  onClose={handleCloseChat}
                 />
               </article>
             )}
