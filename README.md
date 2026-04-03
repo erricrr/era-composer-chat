@@ -2,7 +2,7 @@
 
 # Era Composer Chat
 
-After taking an online classical music appreciation course, I found myself with questions. Questions for the deceased composers. For fun, I put together this chat experience with a touch of educational elements. Powered by Gemini (gemini-2.0-flash).
+After taking an online classical music appreciation course, I found myself with questions. Questions for the deceased composers. For fun, I put together this chat experience with a touch of educational elements. Powered by Gemini (gemini-2.5-flash-lite).
 
 ## Quick Start
 

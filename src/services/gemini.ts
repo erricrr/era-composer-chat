@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from '@google/generative-ai';
+import { GoogleGenerativeAI, GenerativeModel, HarmCategory, HarmBlockThreshold } from '@google/generative-ai';
 import { Composer } from '@/data/composers';
 import { ChatMessage, GeminiConfig, SafetySetting, GeminiServiceInterface } from '@/types/gemini';
 
@@ -48,7 +48,7 @@ const GREETINGS: { [key: string]: string } = {
 
 export class GeminiService implements GeminiServiceInterface {
   private genAI: GoogleGenerativeAI;
-  private model: any; // Type will be more specific when @google/generative-ai types are updated
+  private model: GenerativeModel;
   private chatHistory: ChatMessage[] = [];
   private composer: Composer | null = null;
 
@@ -60,7 +60,7 @@ export class GeminiService implements GeminiServiceInterface {
 
     this.genAI = new GoogleGenerativeAI(apiKey);
     this.model = this.genAI.getGenerativeModel({
-      model: 'gemini-2.0-flash',  // gemini-2.0-flash-lite
+      model: 'gemini-2.5-flash-lite',
       safetySettings: SAFETY_SETTINGS,
       generationConfig: {
         ...DEFAULT_CONFIG,
