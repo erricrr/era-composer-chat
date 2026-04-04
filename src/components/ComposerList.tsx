@@ -4,8 +4,9 @@ import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ComposerImageViewer } from './ComposerImageViewer';
-import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react';
+import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { ChevronLeft, ChevronRight, ChevronUp, ChevronDown, LucideIcon } from 'lucide-react';
+import { useScrollAffordance } from '@/hooks/useScrollAffordance';
 
 // Helper to detect Safari browser
 const isSafari = () => {
@@ -77,24 +78,6 @@ const ScrollChevron = ({ direction, onClick = () => {}, disabled = false }: Scro
   }
 };
 
-interface ScrollIndicatorProps {
-  orientation: 'horizontal' | 'vertical';
-  isAtStart: boolean;
-  isAtEnd: boolean;
-}
-
-const ScrollIndicator = ({ orientation, isAtStart, isAtEnd }: ScrollIndicatorProps) => {
-  const containerClasses = orientation === 'horizontal'
-    ? "flex justify-center mt-2 gap-1"
-    : "flex flex-col gap-1 p-1";
-
-  return (
-    <div className={containerClasses}>
-      <div className={`w-1.5 h-1.5 rounded-full ${!isAtStart ? 'bg-primary/70' : 'bg-primary/20'}`} />
-      <div className={`w-1.5 h-1.5 rounded-full ${!isAtEnd ? 'bg-primary/70' : 'bg-primary/20'}`} />
-    </div>
-  );
-};
 
 interface ComposerListProps {
   era: Era;
@@ -127,8 +110,11 @@ export function ComposerList({
 
   // Refs for scroll containers
   const mobileScrollAreaRef = useRef<HTMLDivElement>(null);
+  const mobileViewportRef = useRef<HTMLElement | null>(null);
   const desktopScrollAreaRef = useRef<HTMLDivElement>(null);
+  const desktopViewportRef = useRef<HTMLElement | null>(null);
   const composerDetailsScrollRef = useRef<HTMLDivElement>(null);
+  const detailsViewportRef = useRef<HTMLElement | null>(null);
   const announcerRef = useRef<HTMLDivElement>(null);
   const detailsContentRef = useRef<HTMLDivElement>(null);
 
@@ -138,11 +124,6 @@ export function ComposerList({
     desktop: null as HTMLElement | null,
     details: null as HTMLElement | null
   });
-
-  // Scroll states
-  const [horizontalScroll, setHorizontalScroll] = useState({ isAtStart: true, isAtEnd: false });
-  const [verticalScroll, setVerticalScroll] = useState({ isAtTop: true, isAtBottom: false });
-  const [detailsScroll, setDetailsScroll] = useState({ isAtTop: true, isAtBottom: false });
 
   // Timeout refs to avoid closure issues
   const timeoutRefs = useRef({
@@ -154,15 +135,21 @@ export function ComposerList({
   // Initialize viewport refs when scroll areas are mounted
   const initializeViewportRefs = useCallback(() => {
     if (mobileScrollAreaRef.current) {
-      viewportRefs.current.mobile = mobileScrollAreaRef.current.querySelector('[data-radix-scroll-area-viewport]');
+      const mobileViewport = mobileScrollAreaRef.current.querySelector('[data-radix-scroll-area-viewport]');
+      viewportRefs.current.mobile = mobileViewport as HTMLElement | null;
+      mobileViewportRef.current = mobileViewport as HTMLElement | null;
     }
 
     if (desktopScrollAreaRef.current) {
-      viewportRefs.current.desktop = desktopScrollAreaRef.current.querySelector('[data-radix-scroll-area-viewport]');
+      const desktopViewport = desktopScrollAreaRef.current.querySelector('[data-radix-scroll-area-viewport]');
+      viewportRefs.current.desktop = desktopViewport as HTMLElement | null;
+      desktopViewportRef.current = desktopViewport as HTMLElement | null;
     }
 
     if (composerDetailsScrollRef.current) {
-      viewportRefs.current.details = composerDetailsScrollRef.current.querySelector('[data-radix-scroll-area-viewport]');
+      const detailsViewport = composerDetailsScrollRef.current.querySelector('[data-radix-scroll-area-viewport]');
+      viewportRefs.current.details = detailsViewport as HTMLElement | null;
+      detailsViewportRef.current = detailsViewport as HTMLElement | null;
     }
 
     return viewportRefs.current;
@@ -261,6 +248,28 @@ export function ComposerList({
   useEffect(() => {
     initializeViewportRefs();
   }, [era, initializeViewportRefs]);
+
+  // Apply scroll affordance to desktop viewport
+  useScrollAffordance(desktopViewportRef, {
+    itemCount: allComposers.length,
+    noun: 'composers',
+    bgVar: 'background'
+  });
+
+  // Apply scroll affordance to mobile horizontal viewport
+  useScrollAffordance(mobileViewportRef, {
+    itemCount: allComposers.length,
+    noun: 'composers',
+    bgVar: 'background',
+    orientation: 'horizontal'
+  });
+
+  // Apply scroll affordance to composer details viewport
+  useScrollAffordance(detailsViewportRef, {
+    itemCount: 1,
+    noun: 'composer',
+    bgVar: 'background'
+  });
 
   // Reset details scroll position when selected composer changes
   useEffect(() => {
@@ -485,98 +494,6 @@ export function ComposerList({
     return () => clearTimeout(timer);
   }, [era, getMobileScrollPosition, getDesktopScrollPosition]);
 
-  // Check scroll positions to show/hide indicators
-  useEffect(() => {
-    const checkScrollPositions = () => {
-      // Check horizontal scroll
-      const mobileViewport = mobileScrollAreaRef.current?.querySelector('[data-radix-scroll-area-viewport]');
-      if (mobileViewport) {
-        const { scrollLeft, scrollWidth, clientWidth } = mobileViewport;
-        const buffer = 2;
-        setHorizontalScroll({
-          isAtStart: scrollLeft <= buffer,
-          isAtEnd: Math.abs(scrollWidth - (scrollLeft + clientWidth)) <= buffer
-        });
-      }
-
-      // Check vertical scroll
-      const desktopViewport = desktopScrollAreaRef.current?.querySelector('[data-radix-scroll-area-viewport]');
-      if (desktopViewport) {
-        const { scrollTop, scrollHeight, clientHeight } = desktopViewport;
-        const buffer = 2;
-        setVerticalScroll({
-          isAtTop: scrollTop <= buffer,
-          isAtBottom: Math.abs(scrollHeight - (scrollTop + clientHeight)) <= buffer
-        });
-      }
-
-      // Check details scroll
-      const detailsViewport = composerDetailsScrollRef.current?.querySelector('[data-radix-scroll-area-viewport]');
-      if (detailsViewport) {
-        const { scrollTop, scrollHeight, clientHeight } = detailsViewport;
-        const buffer = 2;
-        setDetailsScroll({
-          isAtTop: scrollTop <= buffer,
-          isAtBottom: Math.abs(scrollHeight - (scrollTop + clientHeight)) <= buffer
-        });
-      }
-    };
-
-    // Use requestAnimationFrame for smoother performance
-    let rafId: number | null = null;
-    const scheduleCheck = () => {
-      if (rafId !== null) cancelAnimationFrame(rafId);
-      rafId = requestAnimationFrame(checkScrollPositions);
-    };
-
-    // Initial check after brief delay to ensure content is rendered
-    const initialTimer = setTimeout(scheduleCheck, 100);
-
-    // Set up event listeners
-    const mobileViewport = mobileScrollAreaRef.current?.querySelector('[data-radix-scroll-area-viewport]');
-    const desktopViewport = desktopScrollAreaRef.current?.querySelector('[data-radix-scroll-area-viewport]');
-    const detailsViewport = composerDetailsScrollRef.current?.querySelector('[data-radix-scroll-area-viewport]');
-
-    const handleScroll = () => {
-      scheduleCheck();
-    };
-
-    if (mobileViewport) {
-      mobileViewport.addEventListener('scroll', handleScroll, { passive: true });
-    }
-
-    if (desktopViewport) {
-      desktopViewport.addEventListener('scroll', handleScroll, { passive: true });
-    }
-
-    if (detailsViewport) {
-      detailsViewport.addEventListener('scroll', handleScroll, { passive: true });
-    }
-
-    // Handle resize events
-    window.addEventListener('resize', scheduleCheck);
-
-    // Run initial check
-    checkScrollPositions();
-
-    return () => {
-      clearTimeout(initialTimer);
-      if (rafId !== null) cancelAnimationFrame(rafId);
-
-      if (mobileViewport) {
-        mobileViewport.removeEventListener('scroll', handleScroll);
-      }
-      if (desktopViewport) {
-        desktopViewport.removeEventListener('scroll', handleScroll);
-      }
-      if (detailsViewport) {
-        detailsViewport.removeEventListener('scroll', handleScroll);
-      }
-
-      window.removeEventListener('resize', scheduleCheck);
-    };
-  }, [era]);
-
   // Handle selected composer visibility on resize
   const scrollToSelectedComposerOnResize = useCallback(() => {
     if (!selectedComposer) return;
@@ -737,11 +654,6 @@ export function ComposerList({
                 </div>
                 <ScrollBar orientation="horizontal" />
               </ScrollArea>
-              <ScrollIndicator
-                orientation="horizontal"
-                isAtStart={horizontalScroll.isAtStart}
-                isAtEnd={horizontalScroll.isAtEnd}
-              />
             </div>
           </div>
           {/* Desktop vertical scroll */}
@@ -788,14 +700,7 @@ export function ComposerList({
             </div>
           </div>
 
-          {/* Vertical scroll indicators in the gap between columns */}
-          <div className="hidden md:block absolute right-[-4px] top-1/2 -translate-y-1/2 z-50">
-            <ScrollIndicator
-              orientation="vertical"
-              isAtStart={verticalScroll.isAtTop}
-              isAtEnd={verticalScroll.isAtBottom}
-            />
-          </div>
+          {/* Scroll indicators removed - using scroll affordance instead */}
         </nav>
 
         {selectedComposer && (
@@ -840,10 +745,6 @@ export function ComposerList({
 
             {/* Scrollable content area - only bio and works */}
             <div className="flex-1 min-h-0 relative overflow-hidden">
-              {/* Only show bottom shadow when needed */}
-              {!detailsScroll.isAtBottom && (
-                <div className="absolute bottom-0 left-0 right-0 h-8 z-10 pointer-events-none bg-gradient-to-t from-primary-foreground to-transparent" />
-              )}
               <ScrollArea ref={composerDetailsScrollRef} className="w-full h-full">
                 <div className="px-4 md:px-5 py-3 space-y-4" ref={detailsContentRef}>
                   <p className="text-base md:text-lg text-foreground/90">
