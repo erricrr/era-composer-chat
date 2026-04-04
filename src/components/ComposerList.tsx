@@ -264,12 +264,6 @@ export function ComposerList({
     orientation: 'horizontal'
   });
 
-  // Apply scroll affordance to composer details viewport
-  useScrollAffordance(detailsViewportRef, {
-    itemCount: 1,
-    noun: 'composer',
-    bgVar: 'background'
-  });
 
   // Reset details scroll position when selected composer changes
   useEffect(() => {
