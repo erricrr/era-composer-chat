@@ -615,7 +615,7 @@ export function ComposerList({
         <nav className="overflow-hidden h-full flex flex-col relative" aria-label="Composer navigation">
           {/* Mobile horizontal scroll */}
           <div className="md:hidden flex-shrink-0 relative">
-            <div className="relative overflow-hidden">
+            <div className="relative">
               {/* Removed the shadow divs that were here */}
               <ScrollArea ref={mobileScrollAreaRef} className="w-full h-auto scroll-area">
                 <div className="inline-flex h-full items-center relative">
@@ -661,7 +661,7 @@ export function ComposerList({
             <div className="relative overflow-hidden h-full">
               {/* Remove desktop vertical scroll shadows */}
               <ScrollArea ref={desktopScrollAreaRef} className="w-full h-full scroll-area">
-                <div className="flex flex-col h-full relative">
+                <div className="flex flex-col relative">
                   {allComposers.map((composer, idx) => (
                     <div
                       key={composer.id}
