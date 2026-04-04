@@ -71,6 +71,7 @@ interface ChatInterfaceProps {
   isComposerListOpen?: boolean;
   isActiveChatsOpen?: boolean;
   onClose?: () => void;
+  onOpenComposerMenu?: () => void;
 }
 
 export function ChatInterface({
@@ -81,6 +82,7 @@ export function ChatInterface({
   isComposerListOpen = false,
   isActiveChatsOpen = false,
   onClose,
+  onOpenComposerMenu,
 }: ChatInterfaceProps) {
   const [inputMessage, setInputMessage] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -1035,6 +1037,20 @@ export function ChatInterface({
                 </Tooltip>
               )}
             </nav>
+
+            {/* Back to composers link */}
+            {onOpenComposerMenu && (
+              <div className="mx-[100vw] px-5 pb-2">
+                <button
+                  type="button"
+                  onClick={onOpenComposerMenu}
+                  className="text-xs text-muted-foreground hover:text-foreground transition-colors no-underline bg-transparent border-none p-0 cursor-pointer"
+                  aria-label="Open composer menu"
+                >
+                  ← All composers
+                </button>
+              </div>
+            )}
           </div>
         </header>
       ) : null}

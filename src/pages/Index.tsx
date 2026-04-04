@@ -157,6 +157,15 @@ const Index = () => {
           setSelectedComposer(composer);
           setShouldScrollToComposer(true);
         }
+
+        // Start chat immediately when selecting from search
+        setIsChatting(true);
+        localStorage.setItem("isChatting", "true");
+        // Close menu if it's open
+        if (isMenuOpen) {
+          setIsMenuOpen(false);
+          localStorage.setItem("isMenuOpen", "false");
+        }
       } else if (options?.source === "restore") {
         // When restoring from localStorage, just set the composer without side effects
         setSelectedComposer(composer);
@@ -167,7 +176,7 @@ const Index = () => {
       // Save to localStorage when selecting a non-null composer
       localStorage.setItem("selectedComposer", JSON.stringify(composer));
     },
-    [selectedEra],
+    [selectedEra, isMenuOpen],
   );
 
   // Effect: when selectedEra and selectedComposer match pending scroll, trigger scroll
@@ -761,6 +770,10 @@ const Index = () => {
                       isComposerListOpen={isMenuOpen}
                       isActiveChatsOpen={isActiveChatsOpen}
                       onClose={handleCloseChat}
+                      onOpenComposerMenu={() => {
+                        setIsMenuOpen(true);
+                        localStorage.setItem("isMenuOpen", "true");
+                      }}
                     />
                   </article>
                 )}
