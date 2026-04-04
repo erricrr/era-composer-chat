@@ -956,7 +956,7 @@ export function ChatInterface({
       {(!isSplitViewOpen) ? (
         <header className="sticky top-0 left-0 right-0 -mx-[100vw] bg-primary-foreground border-b shadow-md z-40" role="banner">
           <div className="mx-[100vw]">
-            <nav className="flex items-center justify-between px-5 pt-4 pb-1 md:px-5 md:pt-5 md:pb-2" aria-label="Composer information">
+            <nav className="flex items-center justify-between px-5 pt-6 md:pt-7" aria-label="Composer information">
               <Tooltip>
                 <TooltipTrigger asChild>
                   <button
@@ -1040,7 +1040,7 @@ export function ChatInterface({
 
             {/* Back to composers link */}
             {onOpenComposerMenu && (
-              <div className="mx-[100vw] px-5 pb-2">
+              <div className="mx-[100vw] px-5 -mb-5">
                 <button
                   type="button"
                   onClick={onOpenComposerMenu}
