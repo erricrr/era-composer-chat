@@ -19,7 +19,7 @@ export function ComposerCard({ composer, onClick, isSelected, compact = false, t
       aria-label={ariaLabel}
       onKeyDown={onKeyDown}
       className={`
-        p-4 cursor-pointer select-none transition-transform duration-500 ease-in-out relative group
+        p-4 cursor-pointer select-none transition-transform duration-500 ease-in-out relative group overflow-hidden
         focus:outline-none focus-visible:ring-inset focus-visible:ring-2 focus-visible:ring-primary
         ${isSelected
           ? 'bg-primary-foreground'
@@ -44,7 +44,7 @@ export function ComposerCard({ composer, onClick, isSelected, compact = false, t
           ${isSelected && 'opacity-100 scale-y-100'}
         `}
       />
-      <div className="flex items-center gap-4 pl-1">
+      <div className="flex items-center gap-4 pl-1 overflow-hidden">
         {/* Composer Image Container - Now scales on hover */}
         <div
           className={`
@@ -67,13 +67,10 @@ export function ComposerCard({ composer, onClick, isSelected, compact = false, t
           )}
         </div>
         {/* Composer Info */}
-        <div className="flex-1 min-w-0">
-          <div className={`
-            transition-transform duration-200
-            ${isSelected ? 'scale-105' : 'group-hover:scale-105'}
-          `}>
+        <div className="flex-1 min-w-0 w-0">
+          <div>
             <h3 className={`
-              font-medium leading-tight truncate
+              font-medium leading-tight truncate max-w-full
               ${compact ? 'text-sm' : 'text-base'}
               ${isSelected ? 'text-primary' : 'group-hover:text-primary'}
             `}>

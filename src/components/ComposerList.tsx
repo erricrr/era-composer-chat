@@ -754,7 +754,7 @@ export function ComposerList({
                     <div
                       key={composer.id}
                       id={`composer-card-${composer.id}`}
-                      className="flex-shrink-0"
+                      className="w-full"
                     >
                       <ComposerCard
                         composer={composer}
