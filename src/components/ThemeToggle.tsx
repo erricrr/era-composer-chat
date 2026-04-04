@@ -3,12 +3,17 @@ import { useEffect, useState } from "react";
 
 export function ThemeToggle({ onThemeChange }: { onThemeChange?: (isDark: boolean) => void }) {
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [hasUserPreference, setHasUserPreference] = useState(false);
 
-  // Initialize theme based on user preference
+  // Initialize theme based on system preference (always default to system)
   useEffect(() => {
-    const isDark = localStorage.getItem("theme") === "dark" ||
-      (localStorage.getItem("theme") === null &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches);
+    const savedTheme = localStorage.getItem("theme");
+    const userHasPreference = savedTheme !== null;
+    setHasUserPreference(userHasPreference);
+
+    // Always default to system preference unless user explicitly set a preference
+    const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const isDark = userHasPreference ? savedTheme === "dark" : systemPrefersDark;
 
     setIsDarkMode(isDark);
 
@@ -17,12 +22,32 @@ export function ThemeToggle({ onThemeChange }: { onThemeChange?: (isDark: boolea
     } else {
       document.documentElement.classList.remove("dark");
     }
-  }, []);
+
+    // Listen for system preference changes
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const handleChange = (e: MediaQueryListEvent) => {
+      // Only update if user hasn't explicitly set a preference
+      if (localStorage.getItem("theme") === null) {
+        const newIsDark = e.matches;
+        setIsDarkMode(newIsDark);
+        if (newIsDark) {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
+        }
+        onThemeChange?.(newIsDark);
+      }
+    };
+
+    mediaQuery.addEventListener("change", handleChange);
+    return () => mediaQuery.removeEventListener("change", handleChange);
+  }, [onThemeChange]);
 
   // Toggle theme function
   const toggleTheme = () => {
     const newMode = !isDarkMode;
     setIsDarkMode(newMode);
+    setHasUserPreference(true);
     if (newMode) {
       document.documentElement.classList.add("dark");
       localStorage.setItem("theme", "dark");
