@@ -61,7 +61,8 @@ export function ComposerCard({ composer, onClick, isSelected, compact = false, t
               composerId={composer.id}
               src={composer.imageUrl}
               alt={composer.name}
-              className="" // Removed the scaling from here
+              className=""
+              fetchPriority="high"
             />
           )}
         </div>

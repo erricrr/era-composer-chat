@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { Timeline } from './Timeline';
-import { ComposerList } from './ComposerList';
-import { Composer, Era, getComposersByEra } from '@/data/composers';
+import { useState, useCallback, useEffect, useRef } from "react";
+import { Timeline } from "./Timeline";
+import { ComposerList } from "./ComposerList";
+import { Composer, Era } from "@/data/composers";
 
 interface ComposerMenuProps {
   onSelectComposer: (composer: Composer, options?: { source?: string }) => void;
@@ -22,21 +22,27 @@ export function ComposerMenu({
   selectedEra,
   onSelectEra,
   shouldScrollToComposer,
-  onScrollComplete
+  onScrollComplete,
 }: ComposerMenuProps) {
   // State to remember the last selected composer for each era
-  const [lastSelectedComposerPerEra, setLastSelectedComposerPerEra] = useState<Partial<Record<Era, Composer>>>(() => {
+  const [lastSelectedComposerPerEra, setLastSelectedComposerPerEra] = useState<
+    Partial<Record<Era, Composer>>
+  >(() => {
     try {
-      const saved = localStorage.getItem('lastSelectedComposerPerEra');
+      const saved = localStorage.getItem("lastSelectedComposerPerEra");
       return saved ? JSON.parse(saved) : {};
-    } catch (e) {
-      console.error('Error parsing lastSelectedComposerPerEra from localStorage:', e);
+    } catch {
       return {};
     }
   });
 
+  // Ref to always have the latest value
+  const lastSelectedComposerPerEraRef = useRef(lastSelectedComposerPerEra);
+  useEffect(() => {
+    lastSelectedComposerPerEraRef.current = lastSelectedComposerPerEra;
+  }, [lastSelectedComposerPerEra]);
+
   // --- SCROLL POSITION STATE ---
-  // Persist scroll positions in localStorage so they survive page refresh
   const getMobileScrollPosition = useCallback((era: Era) => {
     const item = localStorage.getItem(`composerScrollPos-mobile-${era}`);
     return item ? parseInt(item, 10) : 0;
@@ -54,49 +60,66 @@ export function ComposerMenu({
 
   // Helper function to check if a composer belongs to an era
   const composerBelongsToEra = (composer: Composer, era: Era): boolean => {
-    const composerEras = Array.isArray(composer.era) ? composer.era : [composer.era];
+    const composerEras = Array.isArray(composer.era)
+      ? composer.era
+      : [composer.era];
     return composerEras.includes(era);
   };
 
-  // Handle era changes
-  const handleEraChange = useCallback((newEra: Era) => {
-    console.log(`[ComposerMenu] Changing era to ${newEra}`);
-    onSelectEra(newEra);
+  // Handle era changes - restore the last selected composer for this era
+  const handleEraChange = useCallback(
+    (newEra: Era) => {
+      console.log(`[ComposerMenu] Changing era to ${newEra}`);
+      onSelectEra(newEra);
 
-    // Try to restore the last selected composer for this era
-    const rememberedComposer = lastSelectedComposerPerEra[newEra];
-    if (rememberedComposer && composerBelongsToEra(rememberedComposer, newEra)) {
-      console.log(`[ComposerMenu] Restoring composer ${rememberedComposer.name} for era ${newEra}`);
-      onSelectComposer(rememberedComposer, { source: 'timeline' });
-    } else {
-      // If no valid remembered composer for this era, clear the selection
-      console.log(`[ComposerMenu] No valid composer to restore for era ${newEra}, clearing selection`);
-      onSelectComposer(null, { source: 'timeline' });
-    }
-  }, [onSelectEra, lastSelectedComposerPerEra, onSelectComposer]);
+      const currentMap = lastSelectedComposerPerEraRef.current;
+      const rememberedComposer = currentMap[newEra];
 
-  // Effect to restore the last selected composer on mount and era changes
+      if (
+        rememberedComposer &&
+        composerBelongsToEra(rememberedComposer, newEra)
+      ) {
+        console.log(
+          `[ComposerMenu] Restoring composer ${rememberedComposer.name} for era ${newEra}`,
+        );
+        onSelectComposer(rememberedComposer, { source: "era-change" });
+      } else {
+        onSelectComposer(null, { source: "era-change" });
+      }
+    },
+    [onSelectEra, onSelectComposer, composerBelongsToEra],
+  );
+
+  // Persist selected composer per era to localStorage
   useEffect(() => {
-    const rememberedComposer = lastSelectedComposerPerEra[selectedEra];
-    if (rememberedComposer && !selectedComposer && composerBelongsToEra(rememberedComposer, selectedEra)) {
-      console.log(`[ComposerMenu] Initial restore of composer ${rememberedComposer.name} for era ${selectedEra}`);
-      onSelectComposer(rememberedComposer, { source: 'restore' });
-    }
-  }, [selectedEra, selectedComposer, lastSelectedComposerPerEra, onSelectComposer]);
-
-  // Update the last selected composer for the current era whenever selectedComposer changes
-  useEffect(() => {
-    if (selectedComposer && composerBelongsToEra(selectedComposer, selectedEra)) {
-      setLastSelectedComposerPerEra(prevMap => {
-        const newMap = {
-          ...prevMap,
-          [selectedEra]: selectedComposer
-        };
-        localStorage.setItem('lastSelectedComposerPerEra', JSON.stringify(newMap));
-        return newMap;
-      });
-    }
+    setLastSelectedComposerPerEra((prevMap) => {
+      const newMap = {
+        ...prevMap,
+        [selectedEra]: selectedComposer ?? undefined,
+      };
+      localStorage.setItem(
+        "lastSelectedComposerPerEra",
+        JSON.stringify(newMap),
+      );
+      return newMap;
+    });
   }, [selectedComposer, selectedEra]);
+
+  // On mount, restore the last selected composer for the current era if one exists
+  useEffect(() => {
+    const currentMap = lastSelectedComposerPerEraRef.current;
+    const rememberedComposer = currentMap[selectedEra];
+    if (
+      rememberedComposer &&
+      composerBelongsToEra(rememberedComposer, selectedEra) &&
+      !selectedComposer
+    ) {
+      console.log(
+        `[ComposerMenu] Restoring composer ${rememberedComposer.name} for era ${selectedEra} on mount`,
+      );
+      onSelectComposer(rememberedComposer, { source: "restore" });
+    }
+  }, []); // Only run on mount
 
   return (
     <div className="container mx-auto px-4 mt-3 flex flex-col h-full overflow-y-auto">
@@ -104,7 +127,6 @@ export function ComposerMenu({
         <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-3xl font-bold text-center font-serif mt-0 pb-4 mx-4 sm:mx-[30px]">
           {selectedEra} Era Composers
         </h1>
-        {/* Hidden h2 for accessibility to maintain sequential heading order */}
         <h2 className="sr-only">Composer selection menu</h2>
       </div>
 

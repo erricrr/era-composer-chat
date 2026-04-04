@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { isImageCached, preloadImage } from '@/utils/imageCache';
 
 interface PortraitImageProps {
   composerId: string;
   src: string;
   alt: string;
   className?: string;
+  fetchPriority?: 'high' | 'low' | 'auto';
 }
 
 const defaultPosition = 'object-[50%_10%]';
@@ -31,7 +33,25 @@ const scaleOverrides = {
 };
 
 
-export const PortraitImage: React.FC<PortraitImageProps> = ({ composerId, src, alt, className = '' }) => {
+export const PortraitImage: React.FC<PortraitImageProps> = ({ composerId, src, alt, className = '', fetchPriority = 'auto' }) => {
+  const [loaded, setLoaded] = useState(() => isImageCached(src));
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    if (isImageCached(src)) {
+      setLoaded(true);
+      setError(false);
+    } else {
+      preloadImage(src).then(() => {
+        setLoaded(true);
+        setError(false);
+      }).catch((err) => {
+        console.warn(`Preload failed for ${src}, will try direct load:`, err);
+        setError(false);
+      });
+    }
+  }, [src]);
+
   let positionClass = '';
   if (repositionOverrides[composerId]) {
     positionClass = repositionOverrides[composerId];
@@ -45,7 +65,18 @@ export const PortraitImage: React.FC<PortraitImageProps> = ({ composerId, src, a
     <img
       src={src}
       alt={alt}
-      className={`w-full h-full object-cover transform ${positionClass} ${scaleClass} ${className}`}
+      {...({ fetchpriority: fetchPriority } as React.ImgHTMLAttributes<HTMLImageElement>)}
+      onLoad={() => {
+        setLoaded(true);
+        setError(false);
+      }}
+      onError={() => {
+        console.error(`Failed to load image for ${composerId}: ${src}`);
+        setError(true);
+        setLoaded(true);
+      }}
+      className={`w-full h-full object-cover transform ${positionClass} ${scaleClass} ${className} transition-opacity duration-300`}
+      style={{ opacity: loaded ? 1 : 0 }}
     />
   );
 };
