@@ -755,6 +755,8 @@ export function ComposerList({
                 </div>
                 <ScrollBar orientation="vertical" />
               </ScrollArea>
+              {/* Scroll shadow for biography section */}
+              <div className="pointer-events-none absolute bottom-0 left-0 w-full h-6 bg-gradient-to-t from-background to-transparent z-10" />
             </div>
 
             {/* Fixed bottom button area */}

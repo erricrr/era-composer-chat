@@ -22,7 +22,7 @@ export const ComposerCard = memo(function ComposerCard({ composer, onClick, isSe
       aria-label={ariaLabel}
       onKeyDown={onKeyDown}
       className={`
-        p-4 cursor-pointer select-none transition-colors duration-150 relative group overflow-hidden
+        p-3 cursor-pointer select-none transition-colors duration-150 relative group overflow-hidden
         focus:outline-none focus-visible:ring-inset focus-visible:ring-2 focus-visible:ring-primary
         ${isSelected
           ? 'bg-primary-foreground'
@@ -47,7 +47,7 @@ export const ComposerCard = memo(function ComposerCard({ composer, onClick, isSe
           ${isSelected ? 'opacity-100' : 'opacity-0'}
         `}
       />
-      <div className="flex items-center gap-4 pl-1">
+      <div className="flex items-center gap-3 pl-1">
         {/* Composer Image Container */}
         <div
           className={`

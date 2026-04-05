@@ -160,7 +160,7 @@ export function useScrollAffordance<T extends HTMLElement>(
     const countLabel = document.createElement('div');
     countLabel.className = 'scroll-affordance-count';
     countLabel.textContent = `${itemCount} ${noun}`;
-    countLabel.style.cssText = 'font-size:12px;color:hsl(var(--muted-foreground));text-align:right;padding:4px 8px;flex-shrink:0;';
+    countLabel.style.cssText = 'font-size:12px;color:hsl(var(--muted-foreground));text-align:right;padding:2px 8px;flex-shrink:0;';
     wrapper.insertBefore(countLabel, container);
     // Fades container wraps the scroll container
     const fadesContainer = document.createElement('div');
