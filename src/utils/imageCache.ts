@@ -58,14 +58,22 @@ export const isImageCached = (src: string): boolean => {
 
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-export const preloadAllComposerImages = async (imageUrls: string[]): Promise<void> => {
+type PreloadOptions = {
+  batchSize?: number;
+  delayBetweenBatches?: number;
+};
+
+export const preloadAllComposerImages = async (
+  imageUrls: string[],
+  options?: PreloadOptions,
+): Promise<void> => {
   if (typeof window === "undefined") return;
 
   const uniqueUrls = [...new Set(imageUrls)];
 
-  // Load images in small batches with longer delays to avoid rate limiting
-  const batchSize = 3;
-  const delayBetweenBatches = 500; // ms - increased to avoid rate limiting
+  // Load images in small batches with delays to avoid mobile startup contention.
+  const batchSize = options?.batchSize ?? 3;
+  const delayBetweenBatches = options?.delayBetweenBatches ?? 500;
 
   for (let i = 0; i < uniqueUrls.length; i += batchSize) {
     const batch = uniqueUrls.slice(i, i + batchSize);

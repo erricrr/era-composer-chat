@@ -87,8 +87,25 @@ export default defineConfig(({ mode }) => ({
             handler: "StaleWhileRevalidate",
             options: {
               cacheName: "wikimedia-images",
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
               expiration: {
-                maxEntries: 120,
+                maxEntries: 60,
+                maxAgeSeconds: 60 * 60 * 24 * 30,
+              },
+            },
+          },
+          {
+            urlPattern: /^https:\/\/commons\.wikimedia\.org\/wiki\/Special:FilePath\/.*/i,
+            handler: "StaleWhileRevalidate",
+            options: {
+              cacheName: "wikimedia-images",
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+              expiration: {
+                maxEntries: 60,
                 maxAgeSeconds: 60 * 60 * 24 * 30,
               },
             },

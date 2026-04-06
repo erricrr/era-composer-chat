@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from "react";
+import { lazy, Suspense, useState, useCallback, useEffect, useRef } from "react";
 import {
   Composer,
   Era,
@@ -7,7 +7,6 @@ import {
   getComposersByEra,
 } from "@/data/composers";
 import { ComposerMenu } from "@/components/ComposerMenu";
-import { ChatInterface } from "@/components/ChatInterface";
 import ActiveChatsSlider from "@/components/ActiveChatsSlider";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useConversations } from "@/hooks/useConversations";
@@ -25,6 +24,11 @@ import { ComposerSearch } from "@/components/ComposerSearch";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
+
+const ChatInterface = lazy(async () => {
+  const module = await import("@/components/ChatInterface");
+  return { default: module.ChatInterface };
+});
 
 const Index = () => {
   const isMobile = useIsMobile();
@@ -79,6 +83,7 @@ const Index = () => {
 
   // Ref for the active chats button - for focus management
   const activeChatsButtonRef = useRef<HTMLButtonElement>(null);
+  const hasQueuedBackgroundImagePreload = useRef(false);
 
   // Effect to blur the active chats button if it's focused on initial page load
   useEffect(() => {
@@ -92,13 +97,51 @@ const Index = () => {
     return () => clearTimeout(timerId);
   }, []);
 
-  // Preload all composer images on mount so they're instantly available when switching eras
+  // Preload only current-era images first so critical UI assets are prioritized.
   useEffect(() => {
-    const uniqueImageUrls = [
-      ...new Set(allComposersData.map((c) => c.imageUrl)),
+    const currentEraImageUrls = [
+      ...new Set(getComposersByEra(selectedEra).map((c) => c.imageUrl)),
     ];
-    preloadAllComposerImages(uniqueImageUrls);
-  }, []);
+    void preloadAllComposerImages(currentEraImageUrls, {
+      batchSize: 2,
+      delayBetweenBatches: 300,
+    });
+  }, [selectedEra]);
+
+  // Defer preloading remaining era images until the browser is idle.
+  useEffect(() => {
+    if (hasQueuedBackgroundImagePreload.current) return;
+    hasQueuedBackgroundImagePreload.current = true;
+
+    const currentEraImageUrls = new Set(
+      getComposersByEra(selectedEra).map((c) => c.imageUrl),
+    );
+    const deferredImageUrls = [
+      ...new Set(
+        allComposersData
+          .map((c) => c.imageUrl)
+          .filter((url) => !currentEraImageUrls.has(url)),
+      ),
+    ];
+
+    const queueBackgroundPreload = () => {
+      void preloadAllComposerImages(deferredImageUrls, {
+        batchSize: 2,
+        delayBetweenBatches: 450,
+      });
+    };
+
+    if ("requestIdleCallback" in window) {
+      const idleId = window.requestIdleCallback(queueBackgroundPreload, {
+        timeout: 3000,
+      });
+
+      return () => window.cancelIdleCallback(idleId);
+    }
+
+    const timeoutId = globalThis.setTimeout(queueBackgroundPreload, 1500);
+    return () => globalThis.clearTimeout(timeoutId);
+  }, [selectedEra]);
 
   // One-time cleanup: remove stale localStorage keys from previous sessions
   useEffect(() => {
@@ -761,20 +804,22 @@ const Index = () => {
                     className="container mx-auto px-4 h-full"
                     aria-label={`Chat with ${selectedComposer.name}`}
                   >
-                    <ChatInterface
-                      key={chatClearTrigger}
-                      composer={selectedComposer}
-                      onUserTyping={() => {}}
-                      onUserSend={handleAddActiveChat}
-                      onSplitViewToggle={setIsSplitViewOpenFromChat}
-                      isComposerListOpen={isMenuOpen}
-                      isActiveChatsOpen={isActiveChatsOpen}
-                      onClose={handleCloseChat}
-                      onOpenComposerMenu={() => {
-                        setIsMenuOpen(true);
-                        localStorage.setItem("isMenuOpen", "true");
-                      }}
-                    />
+                    <Suspense fallback={<div className="h-full" aria-hidden="true" />}>
+                      <ChatInterface
+                        key={chatClearTrigger}
+                        composer={selectedComposer}
+                        onUserTyping={() => {}}
+                        onUserSend={handleAddActiveChat}
+                        onSplitViewToggle={setIsSplitViewOpenFromChat}
+                        isComposerListOpen={isMenuOpen}
+                        isActiveChatsOpen={isActiveChatsOpen}
+                        onClose={handleCloseChat}
+                        onOpenComposerMenu={() => {
+                          setIsMenuOpen(true);
+                          localStorage.setItem("isMenuOpen", "true");
+                        }}
+                      />
+                    </Suspense>
                   </article>
                 )}
               {selectedComposer &&

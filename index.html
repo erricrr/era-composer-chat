@@ -30,14 +30,11 @@
       }
     </style>
     <script>
-      // More aggressive loading check
-      window.addEventListener('load', function() {
-        // Small delay to ensure fonts are ready
-        setTimeout(() => {
-          requestAnimationFrame(() => {
-            document.documentElement.classList.add('ready');
-          });
-        }, 100);
+      // Reveal as soon as the DOM is ready to reduce blank-screen time.
+      document.addEventListener("DOMContentLoaded", function () {
+        requestAnimationFrame(() => {
+          document.documentElement.classList.add("ready");
+        });
       });
     </script>
 
