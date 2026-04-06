@@ -12,6 +12,9 @@ import { useIsTouch } from '@/hooks/useIsTouch';
 import { useGeminiChat } from '@/hooks/useGeminiChat';
 import ReactMarkdown from 'react-markdown';
 import { ChatMessage } from '@/types/gemini';
+import { toast } from 'sonner';
+import { useOnlineStatus } from '@/hooks/useOnlineStatus';
+import { useVirtualKeyboard, scrollChatTextareaIntoView } from '@/hooks/useVirtualKeyboard';
 
 // Add type definitions for Web Speech API
 interface SpeechRecognitionEvent extends Event {
@@ -89,6 +92,7 @@ export function ChatInterface({
   const chatContainerRef = useRef<HTMLDivElement>(null); // Keep ref for the container
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const isMobile = useIsMobile();
+  const isOnline = useOnlineStatus();
   const [shouldAutoScroll, setShouldAutoScroll] = useState(true);
   const prevMessagesLengthRef = useRef(0);
   const [visibleSentences, setVisibleSentences] = useState<Record<string, number>>({});
@@ -97,10 +101,6 @@ export function ChatInterface({
     return saved ? JSON.parse(saved) : false;
   });
   const [isDictating, setIsDictating] = useState(false);
-
-  // Add state to track keyboard visibility and original viewport height
-  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
-  const originalViewportHeightRef = useRef<number | null>(null);
 
   // Display state controlled entirely by this component
   const [currentMessages, setCurrentMessages] = useState<Message[]>([]);
@@ -134,6 +134,14 @@ export function ChatInterface({
   } = useGeminiChat();
 
   const isTouch = useIsTouch();
+
+  useVirtualKeyboard(isMobile, textareaRef);
+
+  const handleChatInputFocus = useCallback(() => {
+    if (isMobile) {
+      scrollChatTextareaIntoView(textareaRef.current);
+    }
+  }, [isMobile]);
 
   // Add Chrome detection helper
   const isChrome = typeof window !== 'undefined' &&
@@ -182,108 +190,6 @@ export function ChatInterface({
 
     return result;
   };
-
-  // Add effect to handle mobile keyboard visibility in Safari and Chrome
-  useEffect(() => {
-    if (!isMobile) return;
-
-    // Store initial viewport height
-    originalViewportHeightRef.current = window.innerHeight;
-
-    // Check if we're on iOS
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as Window & { MSStream?: unknown }).MSStream;
-
-    // Function to check if keyboard is likely visible
-    const checkKeyboardVisibility = () => {
-      if (!originalViewportHeightRef.current) return;
-
-      // Special case for iOS with visualViewport API
-      if (isIOS && window.visualViewport) {
-        const heightDifference = originalViewportHeightRef.current - window.visualViewport.height;
-        const isKeyboard = heightDifference > (originalViewportHeightRef.current * 0.15);
-
-        if (isKeyboard !== isKeyboardVisible) {
-          handleKeyboardVisibilityChange(isKeyboard);
-        }
-        return;
-      }
-
-      // Standard approach for other browsers
-      const heightDifference = originalViewportHeightRef.current - window.innerHeight;
-      const isKeyboard = heightDifference > (originalViewportHeightRef.current * 0.2);
-
-      if (isKeyboard !== isKeyboardVisible) {
-        handleKeyboardVisibilityChange(isKeyboard);
-      }
-    };
-
-    // Helper function to handle keyboard visibility changes
-    const handleKeyboardVisibilityChange = (isKeyboard: boolean) => {
-      setIsKeyboardVisible(isKeyboard);
-
-      // When keyboard appears, add a class to ensure headers stay fixed
-      if (isKeyboard) {
-        document.documentElement.classList.add('keyboard-visible');
-
-        // Instead of position fixed which causes issues on mobile Chrome/Safari
-        // We'll use a more reliable approach for mobile
-        const chatForm = document.querySelector('form.chat-container');
-        const chatInput = document.getElementById('chat-input');
-
-        // Make sure the form is visible
-        if (chatForm) {
-          (chatForm as HTMLElement).style.position = 'sticky';
-          (chatForm as HTMLElement).style.bottom = '0';
-          (chatForm as HTMLElement).style.zIndex = '40';
-        }
-
-        // Ensure the text area is visible
-        setTimeout(() => {
-          if (textareaRef.current) {
-            // Scroll the textarea into view with a slight delay to allow keyboard to settle
-            textareaRef.current.scrollIntoView({ block: 'center' });
-            textareaRef.current.focus();
-          }
-        }, 300);
-      } else {
-        document.documentElement.classList.remove('keyboard-visible');
-        // Restore normal scrolling behavior
-        document.body.style.height = '';
-        document.body.style.overflow = '';
-        document.body.style.position = '';
-        document.body.style.width = '';
-      }
-    };
-
-    // Add listeners for various events that might indicate keyboard visibility changes
-    window.addEventListener('resize', checkKeyboardVisibility);
-    window.addEventListener('focusin', checkKeyboardVisibility);
-    window.addEventListener('focusout', checkKeyboardVisibility);
-
-    // Additional event to catch more iOS/Safari keyboard events
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', checkKeyboardVisibility);
-      window.visualViewport.addEventListener('scroll', checkKeyboardVisibility);
-    }
-
-    return () => {
-      window.removeEventListener('resize', checkKeyboardVisibility);
-      window.removeEventListener('focusin', checkKeyboardVisibility);
-      window.removeEventListener('focusout', checkKeyboardVisibility);
-
-      if (window.visualViewport) {
-        window.visualViewport.removeEventListener('resize', checkKeyboardVisibility);
-        window.visualViewport.removeEventListener('scroll', checkKeyboardVisibility);
-      }
-
-      document.documentElement.classList.remove('keyboard-visible');
-      // Ensure we clean up all styles
-      document.body.style.height = '';
-      document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
-    };
-  }, [isMobile, isKeyboardVisible]);
 
   // Effect to handle composer changes and initialize Gemini chat with existing messages
   useEffect(() => {
@@ -472,47 +378,6 @@ export function ChatInterface({
     }
   }, [inputMessage]);
 
-  // Add mobile-specific effect to ensure the chat form scrolls into view when keyboard appears
-  useEffect(() => {
-    if (!isMobile) return;
-
-    // Helper function to ensure the chat input is visible when focused
-    const ensureChatInputVisible = () => {
-      const chatForm = document.querySelector('form.chat-container');
-      if (chatForm && textareaRef.current) {
-        // Use requestAnimationFrame to ensure this runs after layout calculations
-        requestAnimationFrame(() => {
-          // Scroll the bottom of the form into view to ensure the input is visible
-          textareaRef.current.scrollIntoView({ block: 'center', behavior: 'smooth' });
-
-          // For Chrome and Safari where the virtual keyboard might still obscure the input
-          setTimeout(() => {
-            // Additional scroll to ensure visibility after keyboard is fully shown
-            if (textareaRef.current) {
-              textareaRef.current.scrollIntoView({ block: 'center' });
-            }
-          }, 500);
-        });
-      }
-    };
-
-    // Event listeners for mobile input focus
-    const handleInputFocus = () => {
-      ensureChatInputVisible();
-    };
-
-    const textarea = textareaRef.current;
-    if (textarea) {
-      textarea.addEventListener('focus', handleInputFocus);
-    }
-
-    return () => {
-      if (textarea) {
-        textarea.removeEventListener('focus', handleInputFocus);
-      }
-    };
-  }, [isMobile]);
-
   // Auto-focus textarea when composer changes or split view toggles
   useEffect(() => {
     if (!isSplitViewOpen && textareaRef.current) {
@@ -611,37 +476,41 @@ export function ChatInterface({
     }
   };
 
-  // Add a robust cleanup function
+  /** Clears the message field after send. On touch devices, blurs to dismiss the virtual keyboard; on desktop, keeps focus for quick follow-ups. */
   const cleanupTextarea = () => {
-    // Clear React state
     setInputMessage('');
+    const el = textareaRef.current;
+    if (!el) return;
 
-    // Force cleanup of the textarea with multiple approaches for Safari compatibility
-    if (textareaRef.current) {
-      // Directly set value and reset height
-      textareaRef.current.value = '';
-      textareaRef.current.style.height = '48px';
+    el.value = '';
+    el.style.height = '48px';
+    el.style.display = 'none';
+    void el.offsetHeight;
+    el.style.display = '';
 
-      // Force Safari to update the textarea
-      textareaRef.current.style.display = 'none';
-      void textareaRef.current.offsetHeight; // Force reflow
-      textareaRef.current.style.display = '';
-
-      // Ensure focus is maintained
-      textareaRef.current.focus();
-
-      // Additional cleanup for Safari
-      requestAnimationFrame(() => {
-        if (textareaRef.current) {
-          textareaRef.current.value = '';
-          textareaRef.current.style.height = '48px';
-        }
-      });
+    const dismissVirtualKeyboard = isTouch || isMobile;
+    if (dismissVirtualKeyboard) {
+      el.blur();
+      document.documentElement.classList.remove('keyboard-visible');
+    } else {
+      el.focus();
     }
+
+    requestAnimationFrame(() => {
+      const t = textareaRef.current;
+      if (!t) return;
+      t.value = '';
+      t.style.height = '48px';
+    });
   };
 
   const handleMessageSubmit = async () => {
     if (!inputMessage.trim() || isGenerating) return;
+
+    if (!isOnline) {
+      toast.error("You are offline. Connect to the internet to get a reply from the composer.");
+      return;
+    }
 
     // Store the clean message before clearing state
     const cleanMessage = inputMessage.trim().replace(/\s*\[listening\]\s*$/g, '');
@@ -1153,18 +1022,7 @@ export function ChatInterface({
                 value={inputMessage}
                 onChange={handleTextareaChange}
                 onKeyDown={handleKeyPress}
-                onFocus={() => {
-                  // For mobile browsers, ensure elements are visible when keyboard appears
-                  if (isMobile) {
-                    // Enhanced mobile focus handler to ensure input is visible with keyboard
-                    setTimeout(() => {
-                      if (textareaRef.current) {
-                        // This improves visibility on Chrome/Safari mobile
-                        textareaRef.current.scrollIntoView({ block: 'center', behavior: 'smooth' });
-                      }
-                    }, 300);
-                  }
-                }}
+                onFocus={handleChatInputFocus}
                 placeholder={`Ask a question...`}
                 className={`w-full bg-background pl-4 pr-28 py-3 border border-input text-base text-foreground
                   outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0
