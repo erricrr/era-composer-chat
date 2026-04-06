@@ -1,0 +1,31 @@
+diff --git a/node_modules/@surma/rollup-plugin-off-main-thread/loader.ejs b/node_modules/@surma/rollup-plugin-off-main-thread/loader.ejs
+index cabb7a9..bbe18a8 100644
+--- a/node_modules/@surma/rollup-plugin-off-main-thread/loader.ejs
++++ b/node_modules/@surma/rollup-plugin-off-main-thread/loader.ejs
+@@ -30,16 +30,21 @@ if (!self.<%- amdFunctionName %>) {
+             eval(code);
+           })
+       <% } else { %>
+-        new Promise(resolve => {
++        new Promise((resolve, reject) => {
+           if ("document" in self) {
+             const script = document.createElement("script");
+             script.src = uri;
+-            script.onload = resolve;
++            script.onload = () => resolve();
++            script.onerror = () => reject(new Error(`Failed to load script: ${uri}`));
+             document.head.appendChild(script);
+           } else {
+-            nextDefineUri = uri;
+-            importScripts(uri);
+-            resolve();
++            try {
++              nextDefineUri = uri;
++              importScripts(uri);
++              resolve();
++            } catch (err) {
++              reject(err);
++            }
+           }
+         })
+       <% } %>

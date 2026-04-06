@@ -1,0 +1,15 @@
+diff --git a/node_modules/workbox-core/_private/canConstructResponseFromBodyStream.js b/node_modules/workbox-core/_private/canConstructResponseFromBodyStream.js
+index d48d436..72b39e3 100644
+--- a/node_modules/workbox-core/_private/canConstructResponseFromBodyStream.js
++++ b/node_modules/workbox-core/_private/canConstructResponseFromBodyStream.js
+@@ -28,7 +28,9 @@ function canConstructResponseFromBodyStream() {
+                 supportStatus = false;
+             }
+         }
+-        supportStatus = false;
++        else {
++            supportStatus = false;
++        }
+     }
+     return supportStatus;
+ }
