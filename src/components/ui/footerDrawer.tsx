@@ -12,6 +12,49 @@ import { Button } from "@/components/ui/button";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 
+/** Set by button.prod.min.js; auto-init uses document.writeln which breaks in SPAs — call manually after load. */
+declare global {
+  interface Window {
+    bmcBtnWidget?: (
+      text: string,
+      slug: string,
+      color: string,
+      emoji: string,
+      font: string,
+      fontColor?: string,
+      outlineColor?: string,
+      coffeeColor?: string
+    ) => string;
+  }
+}
+
+const BMC_SCRIPT_SRC = 'https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js';
+
+let bmcScriptLoadPromise: Promise<void> | null = null;
+
+/** Load without data-name="bmc-button" so the script skips document.writeln. */
+function loadBmcScriptOnce(): Promise<void> {
+  if (typeof window === 'undefined') return Promise.resolve();
+  if (window.bmcBtnWidget) return Promise.resolve();
+  if (!bmcScriptLoadPromise) {
+    bmcScriptLoadPromise = new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = BMC_SCRIPT_SRC;
+      script.async = true;
+      script.onload = () => {
+        if (window.bmcBtnWidget) resolve();
+        else reject(new Error('Buy Me a Coffee widget not available'));
+      };
+      script.onerror = () => {
+        bmcScriptLoadPromise = null;
+        reject(new Error('Failed to load Buy Me a Coffee script'));
+      };
+      document.head.appendChild(script);
+    });
+  }
+  return bmcScriptLoadPromise;
+}
+
 interface FooterDrawerProps {
   onTrigger?: () => void;
   onVisibilityChange?: (isVisible: boolean) => void;
@@ -24,6 +67,7 @@ const FooterDrawer: React.FC<FooterDrawerProps> = ({ onTrigger, onVisibilityChan
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const drawerContentRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  const bmcContainerRef = useRef<HTMLDivElement>(null);
 
   // Refs to track previous state for focus management
   const initialMount = useRef(true);
@@ -133,6 +177,43 @@ const FooterDrawer: React.FC<FooterDrawerProps> = ({ onTrigger, onVisibilityChan
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    let cancelled = false;
+    const rafId = requestAnimationFrame(() => {
+      if (cancelled) return;
+      const container = bmcContainerRef.current;
+      if (!container) return;
+      container.innerHTML = '';
+
+      loadBmcScriptOnce()
+        .then(() => {
+          if (cancelled || !bmcContainerRef.current || !window.bmcBtnWidget) return;
+          const html = window.bmcBtnWidget(
+            'Buy me a bánh mì',
+            'erricrr',
+            '#8b7ba9',
+            '🥖',
+            'Bree',
+            '#ffffff',
+            '#ffffff',
+            '#FFDD00'
+          );
+          bmcContainerRef.current.innerHTML = html;
+        })
+        .catch(() => {});
+    });
+
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(rafId);
+      if (bmcContainerRef.current) {
+        bmcContainerRef.current.innerHTML = '';
+      }
+    };
+  }, [isOpen, resetKey]);
 
   return (
     <>
@@ -249,7 +330,16 @@ const FooterDrawer: React.FC<FooterDrawerProps> = ({ onTrigger, onVisibilityChan
               </div>
             </div>
 
-            <DrawerFooter className="mt-auto border-t border-border flex-shrink-0">
+            <DrawerFooter className="mt-auto border-t border-border flex-shrink-0 gap-3">
+              <div
+                className="rounded-lg border border-border bg-muted/50 px-4 py-3 flex items-center justify-center shadow-sm"
+                data-vaul-no-drag="true"
+              >
+                <div
+                  ref={bmcContainerRef}
+                  className="flex min-h-[40px] items-center justify-center [&_.bmc-btn-container]:origin-center [&_.bmc-btn-container]:scale-[0.85]"
+                />
+              </div>
               <p className="text-xs text-muted-foreground text-center" tabIndex={0} data-vaul-no-drag="true">
                 © {new Date().getFullYear()} Era Composer Chat&mdash;An educational tool for exploring classical music
               </p>
