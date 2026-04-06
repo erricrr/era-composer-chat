@@ -2,6 +2,11 @@ import type { Config } from "tailwindcss";
 
 export default {
 	darkMode: ["class"],
+	// Avoid sticky “hover” styles on touch (tap leaves :hover true until the next tap).
+	// See https://tailwindcss.com/docs/upgrade-guide#hover-styles-on-touch-devices
+	future: {
+		hoverOnlyWhenSupported: true,
+	},
 	content: [
 		"./pages/**/*.{ts,tsx}",
 		"./components/**/*.{ts,tsx}",

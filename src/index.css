@@ -432,19 +432,21 @@ form.chat-container {
   opacity: 0.7;
 }
 
-[data-sonner-toast] [data-close-button]:hover {
-  @apply bg-transparent !important;
-  opacity: 1;
+@media (hover: hover) and (pointer: fine) {
+  [data-sonner-toast] [data-close-button]:hover {
+    @apply bg-transparent !important;
+    opacity: 1;
+  }
+
+  .dark [data-sonner-toast] [data-close-button]:hover {
+    @apply bg-transparent text-foreground !important;
+    opacity: 1;
+  }
 }
 
 .dark [data-sonner-toast] [data-close-button] {
   @apply text-foreground !important;
   opacity: 0.75;
-}
-
-.dark [data-sonner-toast] [data-close-button]:hover {
-  @apply bg-transparent text-foreground !important;
-  opacity: 1;
 }
 
 /* Ensure all icon buttons meet accessibility standards for touch targets */
