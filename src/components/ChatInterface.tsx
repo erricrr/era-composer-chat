@@ -15,6 +15,18 @@ import { ChatMessage } from '@/types/gemini';
 import { toast } from 'sonner';
 import { useOnlineStatus } from '@/hooks/useOnlineStatus';
 import { useVirtualKeyboard, scrollChatTextareaIntoView, syncKeyboardVisualInset } from '@/hooks/useVirtualKeyboard';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 // Add type definitions for Web Speech API
 interface SpeechRecognitionEvent extends Event {
@@ -116,6 +128,8 @@ export function ChatInterface({
 
   // Add state to track recognition initialization errors
   const [recognitionErrors, setRecognitionErrors] = useState<string[]>([]);
+
+  const [resetConfirmOpen, setResetConfirmOpen] = useState(false);
 
   const {
     activeConversation,
@@ -600,7 +614,7 @@ export function ChatInterface({
     e.target.style.height = `${Math.min(e.target.scrollHeight, 300)}px`;
   };
 
-  const handleResetChat = () => {
+  const performResetChat = () => {
     if (composer) {
       // Clear the current messages immediately for UI responsiveness
       setCurrentMessages([]);
@@ -1096,7 +1110,7 @@ export function ChatInterface({
                       <button
                         type="button"
                         disabled={isComposerListOpen || isComposerMenuOpen}
-                        onClick={handleResetChat}
+                        onClick={() => setResetConfirmOpen(true)}
                         className="h-8 w-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-primary hover:scale-105 active:scale-95 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                         aria-label="Reset chat"
                         style={{ zIndex: 50 }}
@@ -1114,7 +1128,7 @@ export function ChatInterface({
                   <button
                     type="button"
                     disabled={isComposerListOpen || isComposerMenuOpen}
-                    onClick={handleResetChat}
+                    onClick={() => setResetConfirmOpen(true)}
                     className="h-8 w-8 rounded-full flex items-center justify-center text-muted-foreground transition-[transform] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                     aria-label="Reset chat"
                     style={{ zIndex: 50 }}
@@ -1133,6 +1147,26 @@ export function ChatInterface({
           AI-generated chat. Not {getLastName(composer.name)}&apos;s own words.
         </p>
       </form>
+
+      <AlertDialog open={resetConfirmOpen} onOpenChange={setResetConfirmOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Reset chat?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will clear your current conversation. You can&apos;t undo this.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className={cn(buttonVariants({ variant: 'destructive' }))}
+              onClick={performResetChat}
+            >
+              Reset
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 
