@@ -14,7 +14,7 @@ import ReactMarkdown from 'react-markdown';
 import { ChatMessage } from '@/types/gemini';
 import { toast } from 'sonner';
 import { useOnlineStatus } from '@/hooks/useOnlineStatus';
-import { useVirtualKeyboard, scrollChatTextareaIntoView } from '@/hooks/useVirtualKeyboard';
+import { useVirtualKeyboard, scrollChatTextareaIntoView, syncKeyboardVisualInset } from '@/hooks/useVirtualKeyboard';
 
 // Add type definitions for Web Speech API
 interface SpeechRecognitionEvent extends Event {
@@ -135,13 +135,15 @@ export function ChatInterface({
 
   const isTouch = useIsTouch();
 
-  useVirtualKeyboard(isMobile, textareaRef);
+  useVirtualKeyboard(isMobile || isTouch, textareaRef);
 
   const handleChatInputFocus = useCallback(() => {
-    if (isMobile) {
+    if (isMobile || isTouch) {
+      syncKeyboardVisualInset();
       scrollChatTextareaIntoView(textareaRef.current);
+      window.setTimeout(() => syncKeyboardVisualInset(), 250);
     }
-  }, [isMobile]);
+  }, [isMobile, isTouch]);
 
   // Add Chrome detection helper
   const isChrome = typeof window !== 'undefined' &&
@@ -345,20 +347,6 @@ export function ChatInterface({
       .mic-pulse-animation {
         animation: micPulse 1.5s infinite;
       }
-
-      /* Mobile keyboard fixes */
-      @media (max-width: 768px) {
-        .keyboard-visible .chat-container {
-          position: relative !important;
-          z-index: 50 !important;
-        }
-
-        .keyboard-visible form.chat-container {
-          position: sticky !important;
-          bottom: 0 !important;
-          z-index: 50 !important;
-        }
-      }
     `;
     document.head.appendChild(style);
 
@@ -492,6 +480,7 @@ export function ChatInterface({
     if (dismissVirtualKeyboard) {
       el.blur();
       document.documentElement.classList.remove('keyboard-visible');
+      syncKeyboardVisualInset();
     } else {
       el.focus();
     }
@@ -1000,11 +989,8 @@ export function ChatInterface({
 
       <form
         onSubmit={handleSendMessage}
-        className="sticky bottom-0 border-t bg-background/80 backdrop-blur-sm pb-4 chat-container"
+        className="border-t bg-background/80 backdrop-blur-sm pb-4 chat-container"
         style={{
-          zIndex: 40,
-          position: 'sticky',
-          bottom: 0,
           ...(isMobile ? {
             paddingBottom: 'max(env(safe-area-inset-bottom), 0.5rem)',
             marginBottom: 0

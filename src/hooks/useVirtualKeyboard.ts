@@ -9,6 +9,17 @@ function isIOS(): boolean {
   );
 }
 
+/** Distance from the layout viewport bottom to the visual viewport bottom (keyboard / browser UI). */
+export function syncKeyboardVisualInset(): void {
+  const vv = window.visualViewport;
+  if (!vv) {
+    document.documentElement.style.setProperty("--keyboard-visual-inset", "0px");
+    return;
+  }
+  const inset = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+  document.documentElement.style.setProperty("--keyboard-visual-inset", `${inset}px`);
+}
+
 function isKeyboardLikelyOpen(baseHeight: number): boolean {
   const vv = window.visualViewport;
   if (vv) {
@@ -21,11 +32,17 @@ function isKeyboardLikelyOpen(baseHeight: number): boolean {
 
 export function scrollChatTextareaIntoView(textarea: HTMLTextAreaElement | null): void {
   if (!textarea) return;
+  syncKeyboardVisualInset();
   requestAnimationFrame(() => {
-    textarea.scrollIntoView({ block: "center", behavior: "smooth" });
+    textarea.scrollIntoView({ block: "end", inline: "nearest", behavior: "smooth" });
+    syncKeyboardVisualInset();
   });
   window.setTimeout(() => {
-    textarea.scrollIntoView({ block: "center", behavior: "smooth" });
+    textarea.scrollIntoView({ block: "end", inline: "nearest", behavior: "smooth" });
+    syncKeyboardVisualInset();
+  }, 100);
+  window.setTimeout(() => {
+    syncKeyboardVisualInset();
   }, 400);
 }
 
@@ -37,7 +54,10 @@ export function useVirtualKeyboard(
   const baseHeightRef = useRef<number | null>(null);
 
   useEffect(() => {
-    if (!enabled) return;
+    if (!enabled) {
+      document.documentElement.style.setProperty("--keyboard-visual-inset", "0px");
+      return;
+    }
 
     const updateBaseWhenKeyboardClosed = () => {
       if (!keyboardOpenRef.current) {
@@ -51,19 +71,14 @@ export function useVirtualKeyboard(
 
     baseHeightRef.current = window.innerHeight;
     updateBaseWhenKeyboardClosed();
+    syncKeyboardVisualInset();
 
     const applyKeyboardDom = (open: boolean) => {
       keyboardOpenRef.current = open;
 
       if (open) {
         document.documentElement.classList.add("keyboard-visible");
-        const chatForm = document.querySelector("form.chat-container");
-        if (chatForm) {
-          const el = chatForm as HTMLElement;
-          el.style.position = "sticky";
-          el.style.bottom = "0";
-          el.style.zIndex = "40";
-        }
+        syncKeyboardVisualInset();
         scrollChatTextareaIntoView(inputRef.current);
       } else {
         document.documentElement.classList.remove("keyboard-visible");
@@ -76,6 +91,7 @@ export function useVirtualKeyboard(
     };
 
     const check = () => {
+      syncKeyboardVisualInset();
       const base = baseHeightRef.current ?? window.innerHeight;
       const open = isKeyboardLikelyOpen(base);
       if (open === keyboardOpenRef.current) return;
@@ -100,6 +116,7 @@ export function useVirtualKeyboard(
         window.visualViewport.removeEventListener("scroll", check);
       }
       document.documentElement.classList.remove("keyboard-visible");
+      document.documentElement.style.setProperty("--keyboard-visual-inset", "0px");
       document.body.style.height = "";
       document.body.style.overflow = "";
       document.body.style.position = "";

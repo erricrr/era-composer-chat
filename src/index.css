@@ -113,6 +113,13 @@ html {
   }
 }
 
+/* Chat composer: sticky in layout on wide screens; narrow screens use fixed + visual inset in media query */
+form.chat-container {
+  position: sticky;
+  bottom: 0;
+  z-index: 40;
+}
+
 /* --- Mobile SVH Height Fix for Chrome/Safari (ensures headers stay visible) --- */
 @media (max-width: 768px) {
   html, body, #root {
@@ -121,11 +128,13 @@ html {
     max-height: 100svh !important;
   }
 
-  /* Fix for Chrome/Safari mobile keyboard positioning */
+  /*
+   * Avoid position:fixed on html when the keyboard is open — it pins the layout
+   * to the full screen and the composer stays under the software keyboard.
+   * --keyboard-visual-inset (set from visualViewport in useVirtualKeyboard) lifts the composer.
+   */
   html.keyboard-visible {
-    /* Prevent scrolling of background when keyboard is open */
     overflow: hidden;
-    position: fixed;
     width: 100%;
     height: 100% !important;
   }
@@ -158,12 +167,22 @@ html {
     background-color: hsl(var(--primary-foreground));
   }
 
-  /* Ensure input area stays visible and accessible */
-  html.keyboard-visible .chat-container form {
-    position: sticky !important;
-    bottom: 0 !important;
-    z-index: 50;
+  /*
+   * Keep the composer in the visual viewport (above the software keyboard).
+   * --keyboard-visual-inset is updated from Visual Viewport API (see useVirtualKeyboard).
+   */
+  form.chat-container {
+    position: fixed !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: var(--keyboard-visual-inset, 0px) !important;
+    z-index: 50 !important;
     background-color: hsl(var(--background) / 0.95);
+  }
+
+  /* Reserve space so messages scroll above the fixed composer */
+  main.chat-container {
+    padding-bottom: 7.5rem;
   }
 
   /* Fix for iOS Safari viewport shifts */
