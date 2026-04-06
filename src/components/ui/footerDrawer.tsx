@@ -241,10 +241,13 @@ const FooterDrawer: React.FC<FooterDrawerProps> = ({ onTrigger, onVisibilityChan
           aria-label="About Era Composer Chat"
         >
           {/* Use key to force recreation of this element */}
-          <div key={resetKey} className="flex flex-col h-[80vh] md:h-[70vh] lg:h-[52vh]">
+          <div
+            key={resetKey}
+            className="flex min-h-0 flex-col overflow-hidden h-[88vh] md:h-[82vh] lg:h-fit lg:max-h-[88vh]"
+          >
             <div
               ref={contentRef}
-              className="flex-grow overflow-y-auto"
+              className="min-h-0 flex-1 overflow-y-auto lg:flex-none lg:w-full lg:max-h-[calc(88vh-14rem)]"
               style={{ scrollBehavior: 'smooth' }}
             >
               <DrawerHeader className="pb-2">
@@ -319,7 +322,7 @@ const FooterDrawer: React.FC<FooterDrawerProps> = ({ onTrigger, onVisibilityChan
                   </div>
                 </div>
 
-                <div className="mt-4 mb-2 text-xs text-muted-foreground text-center">
+                <div className="mt-4 mb-0 text-xs text-muted-foreground text-center">
                   <p tabIndex={0} data-vaul-no-drag="true">
                     Privacy Policy: We do not collect or store personal data. Chat conversations are not permanently stored.
                   </p>
@@ -337,7 +340,7 @@ const FooterDrawer: React.FC<FooterDrawerProps> = ({ onTrigger, onVisibilityChan
               >
                 <div
                   ref={bmcContainerRef}
-                  className="flex min-h-[40px] items-center justify-center [&_.bmc-btn-container]:origin-center [&_.bmc-btn-container]:scale-[0.85]"
+                  className="flex min-h-[36px] items-center justify-center [&_.bmc-btn-container]:origin-center [&_.bmc-btn-container]:scale-[0.72]"
                 />
               </div>
               <p className="text-xs text-muted-foreground text-center" tabIndex={0} data-vaul-no-drag="true">
