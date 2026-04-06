@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, KeyboardEvent, useCallback } from 'react';
 import { Composer, Message, Conversation, getLastName } from '@/data/composers';
 import { useConversations } from '@/hooks/useConversations';
-import { RefreshCcw, ArrowUp, Music, Mic, X } from 'lucide-react';
+import { MoreVertical, ArrowUp, Music, Mic } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Badge } from "@/components/ui/badge";
 import { v4 as uuidv4 } from 'uuid';
@@ -26,6 +26,14 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { buttonVariants } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
 
 // Add type definitions for Web Speech API
@@ -130,6 +138,7 @@ export function ChatInterface({
   const [recognitionErrors, setRecognitionErrors] = useState<string[]>([]);
 
   const [resetConfirmOpen, setResetConfirmOpen] = useState(false);
+  const [chatActionsMenuOpen, setChatActionsMenuOpen] = useState(false);
 
   const {
     activeConversation,
@@ -891,23 +900,53 @@ export function ChatInterface({
                 </TooltipContent>
               </Tooltip>
 
-              {onClose && (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <button
-                      type="button"
-                      onClick={onClose}
-                      aria-label="Close chat"
-                      className="w-11 h-11 flex items-center justify-center rounded-md hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0 transition-colors"
-                    >
-                      <X className="h-5 w-5" />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent side="bottom" align="end" className="text-xs">
-                    Close chat
-                  </TooltipContent>
-                </Tooltip>
-              )}
+              <div className="shrink-0">
+                {isMobile ? (
+                  <button
+                    type="button"
+                    disabled={isComposerListOpen || isComposerMenuOpen}
+                    onClick={() => setChatActionsMenuOpen(true)}
+                    className="inline-flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0 transition-colors disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
+                    aria-label="Chat actions"
+                    aria-haspopup="dialog"
+                    aria-expanded={chatActionsMenuOpen}
+                  >
+                    <MoreVertical className="h-5 w-5" strokeWidth={2} aria-hidden />
+                  </button>
+                ) : (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button
+                        type="button"
+                        disabled={isComposerListOpen || isComposerMenuOpen}
+                        className="inline-flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        aria-label="Chat actions"
+                      >
+                        <MoreVertical className="h-5 w-5" strokeWidth={2} aria-hidden />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" side="bottom" sideOffset={8} className="min-w-[12rem]">
+                      <DropdownMenuItem
+                        className="min-h-11 cursor-pointer text-base"
+                        onSelect={() => setResetConfirmOpen(true)}
+                      >
+                        Reset conversation
+                      </DropdownMenuItem>
+                      {onClose ? (
+                        <>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem
+                            className="min-h-11 cursor-pointer text-base"
+                            onSelect={() => onClose()}
+                          >
+                            Close chat
+                          </DropdownMenuItem>
+                        </>
+                      ) : null}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                )}
+              </div>
             </nav>
 
             {/* Back to composers link */}
@@ -1012,88 +1051,91 @@ export function ChatInterface({
         }}
       >
         <div className="pt-4 px-3 sm:px-5 relative z-10">
-          <div className="relative flex gap-2 max-w-full">
-            <div key={`input-${isSplitViewOpen}`} className="flex-1 relative max-w-full">
-              <textarea
-                id="chat-input"
-                aria-label="Type your message"
-                key={`textarea-${isSplitViewOpen}`}
-                ref={textareaRef}
-                value={inputMessage}
-                onChange={handleTextareaChange}
-                onKeyDown={handleKeyPress}
-                onFocus={handleChatInputFocus}
-                placeholder={`Ask a question...`}
-                className={`w-full bg-background pl-4 pr-28 py-3 border border-input text-base text-foreground
-                  outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0
-                  ${isDictating ? 'ring-1 ring-primary' : ''}
-                  min-h-[48px] max-h-[300px] overflow-y-auto resize-none
-                  [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]
-                  touch-manipulation`}
-                style={{
-                  fontSize: '16px', // Prevent iOS zoom
-                  maxWidth: '100%',
-                  boxSizing: 'border-box',
-                  WebkitTextSizeAdjust: '100%',
-                  MozTextSizeAdjust: '100%',
-                  textSizeAdjust: '100%',
-                  position: 'relative',
-                  zIndex: 30,
-                  paddingRight: '9rem', // Ensure enough space for buttons
-                }}
-                rows={1}
-                disabled={isComposerListOpen || isComposerMenuOpen}
-              />
+          <div key={`input-${isSplitViewOpen}`} className="relative max-w-full">
+            <textarea
+              id="chat-input"
+              aria-label="Type your message"
+              key={`textarea-${isSplitViewOpen}`}
+              ref={textareaRef}
+              value={inputMessage}
+              onChange={handleTextareaChange}
+              onKeyDown={handleKeyPress}
+              onFocus={handleChatInputFocus}
+              placeholder={`Ask a question...`}
+              className={`w-full bg-background pl-4 pr-[6.75rem] py-3 border border-input text-base text-foreground
+                outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0
+                ${isDictating ? 'ring-1 ring-primary' : ''}
+                min-h-[48px] max-h-[300px] overflow-y-auto resize-none
+                [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]
+                touch-manipulation`}
+              style={{
+                fontSize: '16px', // Prevent iOS zoom
+                maxWidth: '100%',
+                boxSizing: 'border-box',
+                WebkitTextSizeAdjust: '100%',
+                MozTextSizeAdjust: '100%',
+                textSizeAdjust: '100%',
+                position: 'relative',
+                zIndex: 30,
+                paddingRight: '6.75rem', // Space for mic + send (fits inside single-line row)
+              }}
+              rows={1}
+              disabled={isComposerListOpen || isComposerMenuOpen}
+            />
 
-              {/* Control buttons container - make it stick to viewport on mobile */}
-              <div className="absolute bottom-3.5 right-0 flex items-center gap-1.5 px-1.5" style={{ zIndex: 50 }}>
-                {/* Dictation Button */}
-                <div className="z-50">
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <button
-                        type="button"
-                        disabled={isComposerListOpen || isComposerMenuOpen}
-                        onClick={handleDictation}
-                        className={`h-8 w-8 rounded-full flex items-center justify-center
-                          ${isComposerListOpen || isComposerMenuOpen ? 'opacity-50 cursor-not-allowed' : ''}
-                          ${isDictating
-                            ? 'bg-destructive text-background mic-pulse-animation'
-                            : 'text-muted-foreground hover:text-primary'
-                          } hover:scale-105 active:scale-95`}
-                        aria-label={isDictating ? "Stop dictating" : "Dictate"}
-                        style={{ zIndex: 50 }}
-                      >
-                        <Mic className="w-5 h-5" strokeWidth={2} />
-                      </button>
-                    </TooltipTrigger>
-                    <TooltipPortal>
-                      <TooltipContent
-                        side="top"
-                        align="center"
-                        className="text-xs"
-                        sideOffset={5}
-                      >
-                        {isDictating ? 'Stop dictating' : 'Dictate'}
-                      </TooltipContent>
-                    </TooltipPortal>
-                  </Tooltip>
-                </div>
+            {/* Control buttons: 36px circles centered in 44×44 tap wrappers; cluster vertically centered in field */}
+            <div
+              className="pointer-events-auto absolute right-1.5 top-1/2 z-50 flex translate-y-[calc(-50%-4px)] items-center gap-1"
+              style={{ zIndex: 50 }}
+            >
+              {/* Dictation Button */}
+              <div className="z-50 flex h-11 w-11 shrink-0 items-center justify-center">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      type="button"
+                      disabled={isComposerListOpen || isComposerMenuOpen}
+                      onClick={handleDictation}
+                      className={`inline-flex h-9 w-9 rounded-full items-center justify-center touch-manipulation
+                        ${isComposerListOpen || isComposerMenuOpen ? 'opacity-50 cursor-not-allowed' : ''}
+                        ${isDictating
+                          ? 'bg-destructive text-background mic-pulse-animation'
+                          : 'text-muted-foreground hover:text-primary'
+                        } hover:scale-105 active:scale-95`}
+                      aria-label={isDictating ? "Stop dictating" : "Dictate"}
+                      style={{ zIndex: 50 }}
+                    >
+                      <Mic className="h-[1.125rem] w-[1.125rem]" strokeWidth={2} />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipPortal>
+                    <TooltipContent
+                      side="top"
+                      align="center"
+                      className="text-xs"
+                      sideOffset={5}
+                    >
+                      {isDictating ? 'Stop dictating' : 'Dictate'}
+                    </TooltipContent>
+                  </TooltipPortal>
+                </Tooltip>
+              </div>
 
-                {/* Send Button */}
+              {/* Send Button */}
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center">
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <button
                       type="submit"
                       disabled={!inputMessage.trim() || isComposerListOpen || isComposerMenuOpen}
-                      className={`h-8 w-8 rounded-full flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-[transform] duration-200 hover:scale-105 active:scale-95 shadow-sm ${
+                      className={`inline-flex h-9 w-9 rounded-full items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-[transform] duration-200 hover:scale-105 active:scale-95 shadow-sm touch-manipulation ${
                         inputMessage.trim()
                           ? 'bg-primary text-background hover:bg-primary/90'
                           : 'text-muted-foreground hover:text-primary'
                       }`}
                       style={{ zIndex: 50 }}
                     >
-                      <ArrowUp className="w-5 h-5" strokeWidth={2} />
+                      <ArrowUp className="h-[1.125rem] w-[1.125rem]" strokeWidth={2} />
                     </button>
                   </TooltipTrigger>
                   <TooltipPortal>
@@ -1102,40 +1144,6 @@ export function ChatInterface({
                     </TooltipContent>
                   </TooltipPortal>
                 </Tooltip>
-
-                {/* Reset Button */}
-                {!isTouch ? (
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <button
-                        type="button"
-                        disabled={isComposerListOpen || isComposerMenuOpen}
-                        onClick={() => setResetConfirmOpen(true)}
-                        className="h-8 w-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-primary hover:scale-105 active:scale-95 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                        aria-label="Reset chat"
-                        style={{ zIndex: 50 }}
-                      >
-                        <RefreshCcw className="w-5 h-5" strokeWidth={2} />
-                      </button>
-                    </TooltipTrigger>
-                    <TooltipPortal>
-                      <TooltipContent side="top" align="center" className="text-xs">
-                        Reset chat
-                      </TooltipContent>
-                    </TooltipPortal>
-                  </Tooltip>
-                ) : (
-                  <button
-                    type="button"
-                    disabled={isComposerListOpen || isComposerMenuOpen}
-                    onClick={() => setResetConfirmOpen(true)}
-                    className="h-8 w-8 rounded-full flex items-center justify-center text-muted-foreground transition-[transform] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
-                    aria-label="Reset chat"
-                    style={{ zIndex: 50 }}
-                  >
-                    <RefreshCcw className="w-5 h-5" strokeWidth={2} />
-                  </button>
-                )}
               </div>
             </div>
           </div>
@@ -1148,10 +1156,47 @@ export function ChatInterface({
         </p>
       </form>
 
+      {isMobile ? (
+        <Sheet open={chatActionsMenuOpen} onOpenChange={setChatActionsMenuOpen}>
+          <SheetContent
+            side="bottom"
+            className="rounded-t-2xl p-4 pb-[max(1rem,env(safe-area-inset-bottom))] [&>button]:hidden"
+          >
+            <SheetHeader className="sr-only">
+              <SheetTitle>Chat actions</SheetTitle>
+            </SheetHeader>
+            <div className="flex flex-col gap-1">
+              <button
+                type="button"
+                className="flex min-h-11 w-full items-center rounded-md px-3 py-3 text-left text-base font-medium text-foreground hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                onClick={() => {
+                  setChatActionsMenuOpen(false);
+                  setResetConfirmOpen(true);
+                }}
+              >
+                Reset conversation
+              </button>
+              {onClose ? (
+                <button
+                  type="button"
+                  className="flex min-h-11 w-full items-center rounded-md px-3 py-3 text-left text-base font-medium text-foreground hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  onClick={() => {
+                    setChatActionsMenuOpen(false);
+                    onClose();
+                  }}
+                >
+                  Close chat
+                </button>
+              ) : null}
+            </div>
+          </SheetContent>
+        </Sheet>
+      ) : null}
+
       <AlertDialog open={resetConfirmOpen} onOpenChange={setResetConfirmOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Reset chat?</AlertDialogTitle>
+            <AlertDialogTitle>Reset conversation?</AlertDialogTitle>
             <AlertDialogDescription>
               This will clear your current conversation. You can&apos;t undo this.
             </AlertDialogDescription>

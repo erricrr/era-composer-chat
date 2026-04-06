@@ -213,17 +213,19 @@ form.chat-container {
 
   /* Fix for textarea buttons in keyboard-visible mode */
   html.keyboard-visible .chat-container textarea {
-    padding-right: 9rem !important; /* Ensure buttons have space */
+    padding-right: 6.75rem !important; /* Space for mic + send cluster */
   }
 
-  html.keyboard-visible .chat-container .absolute {
+  /* Keep control cluster vertically centered (matches ChatInterface non-keyboard layout) */
+  html.keyboard-visible .chat-container form .absolute {
     position: absolute !important;
+    top: 50% !important;
+    bottom: auto !important;
+    right: 0.375rem !important;
     z-index: 100 !important;
     pointer-events: auto !important;
     visibility: visible !important;
-    bottom: 0.875rem !important;
-    right: 0 !important;
-    transform: none !important;
+    transform: translateY(calc(-50% - 4px)) !important;
     background-color: transparent !important;
   }
 
@@ -231,7 +233,6 @@ form.chat-container {
   html.keyboard-visible .chat-container form .absolute button {
     opacity: 1 !important;
     visibility: visible !important;
-    transform: translateZ(0) !important;
     z-index: 100 !important;
     pointer-events: auto !important;
   }
