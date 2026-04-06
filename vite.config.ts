@@ -95,9 +95,10 @@ export default defineConfig(({ mode }) => ({
           },
         ],
       },
+      // Never register Workbox in dev: it caches `/` and breaks Vite (`/@vite/client`, `/src/*.tsx`, HMR).
+      // Test PWA with `npm run build && npm run preview` (or temporarily set enabled: true).
       devOptions: {
-        enabled: mode === "development",
-        // dev-dist has no built assets; custom workbox.globPatterns would match nothing without this
+        enabled: false,
         suppressWarnings: true,
       },
     }),
