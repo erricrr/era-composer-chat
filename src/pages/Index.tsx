@@ -488,10 +488,10 @@ const Index = () => {
     localStorage.setItem("selectedEra", selectedEra);
   }, [selectedEra]);
 
-  // Effect to sync isMenuOpen with localStorage
-  useEffect(() => {
-    localStorage.setItem("isMenuOpen", JSON.stringify(isMenuOpen));
-  }, [isMenuOpen]);
+  // Effect to sync isMenuOpen with localStorage - handled in toggleMenu
+  // useEffect(() => {
+  //   localStorage.setItem("isMenuOpen", JSON.stringify(isMenuOpen));
+  // }, [isMenuOpen]);
 
   // Effect to sync isChatting with localStorage
   useEffect(() => {
@@ -583,7 +583,7 @@ const Index = () => {
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5 transform transition-transform duration-500 ease-out"
+                    className="h-5 w-5 transform transition-transform duration-300 ease-out"
                     style={{
                       transform: isMenuOpen ? "rotate(90deg)" : "rotate(0deg)",
                     }}
@@ -778,9 +778,7 @@ const Index = () => {
               className={`fixed bg-background transition-all duration-300 ease-in-out ${
                 isChatClosing
                   ? "opacity-0 translate-y-4"
-                  : isMenuOpen
-                    ? "opacity-0 pointer-events-none"
-                    : "opacity-100 translate-y-0"
+                  : "opacity-100 translate-y-0"
               }`}
               style={{
                 left: 0,
