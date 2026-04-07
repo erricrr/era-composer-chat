@@ -3,6 +3,9 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
   "resolutions": {
     "@eslint/plugin-kit": "^0.3.3",
     "esbuild": "^0.25.9"
