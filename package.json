@@ -13,7 +13,8 @@
     "js-yaml": ">=4.1.1",
     "@remix-run/router": ">=1.23.2",
     "mdast-util-to-hast": ">=13.2.1",
-    "react-router": ">=6.30.2"
+    "react-router": ">=6.30.2",
+    "minimist": ">=0.2.4"
   },
   "scripts": {
     "dev": "vite",
