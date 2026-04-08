@@ -335,13 +335,17 @@ const FooterDrawer: React.FC<FooterDrawerProps> = ({ onTrigger, onVisibilityChan
 
             <DrawerFooter className="mt-auto border-t border-border flex-shrink-0 gap-3">
               <div
-                className="rounded-lg border border-border bg-muted/50 px-4 py-3 flex items-center justify-center shadow-sm"
+                className="rounded-lg border border-border bg-muted/50 px-4 py-3 flex flex-col items-center justify-center shadow-sm gap-2"
                 data-vaul-no-drag="true"
               >
+
                 <div
                   ref={bmcContainerRef}
                   className="flex min-h-[36px] items-center justify-center [&_.bmc-btn-container]:origin-center [&_.bmc-btn-container]:scale-[0.72]"
                 />
+                <p className="text-xs text-muted-foreground text-center">
+                  A small way to support what I’m building
+                </p>
               </div>
               <p className="text-xs text-muted-foreground text-center" tabIndex={0} data-vaul-no-drag="true">
                 © {new Date().getFullYear()} Era Composer Chat&mdash;An educational tool for exploring classical music
