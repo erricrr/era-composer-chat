@@ -32,13 +32,13 @@ function isKeyboardLikelyOpen(baseHeight: number): boolean {
 
 export function scrollChatTextareaIntoView(textarea: HTMLTextAreaElement | null): void {
   if (!textarea) return;
+  // Keep viewport metrics fresh, but avoid textarea.scrollIntoView on mobile:
+  // it can scroll the visual viewport/document and push the chat header off-screen.
   syncKeyboardVisualInset();
   requestAnimationFrame(() => {
-    textarea.scrollIntoView({ block: "end", inline: "nearest", behavior: "smooth" });
     syncKeyboardVisualInset();
   });
   window.setTimeout(() => {
-    textarea.scrollIntoView({ block: "end", inline: "nearest", behavior: "smooth" });
     syncKeyboardVisualInset();
   }, 100);
   window.setTimeout(() => {

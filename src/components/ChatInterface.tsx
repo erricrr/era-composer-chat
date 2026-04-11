@@ -850,7 +850,7 @@ export function ChatInterface({
 
   const chatContent = (
     <div
-      className="relative flex min-h-0 flex-col h-full bg-background overflow-visible chat-container"
+      className="chat-shell relative flex min-h-0 h-full flex-col overflow-visible bg-background"
       role="region"
       aria-label="Chat interface"
     >
@@ -986,8 +986,8 @@ export function ChatInterface({
           </div>
         </header>
       ) : null}
-      <main
-        className={`min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 relative chat-container ${
+      <div
+        className={`chat-messages min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 relative ${
           !isSplitViewOpen ? 'pt-4' : 'py-4'
         }`}
         ref={chatContainerRef}
@@ -1060,11 +1060,11 @@ export function ChatInterface({
           )}
           <div ref={messagesEndRef} className="h-0" aria-hidden="true" />
         </div>
-      </main>
+      </div>
 
       <form
         onSubmit={handleSendMessage}
-        className="border-t bg-background/80 backdrop-blur-sm pb-4 chat-container"
+        className="chat-composer border-t bg-background/80 backdrop-blur-sm pb-4"
         style={{
           ...(isMobile ? {
             paddingBottom: 'max(env(safe-area-inset-bottom), 0.5rem)',
@@ -1270,11 +1270,11 @@ export function ChatInterface({
         {!isSplitViewOpen && chatContent}
       </div>
 
-      {/* Split view: only render chatContent inside split view when open */}
-      <div
-        className={cn('fixed inset-0', splitTransitionBase, splitOverlayState)}
-      >
-        {isSplitViewOpen && (
+      {/* Split view: render overlay only while open to avoid stale fixed layers over chat on mobile. */}
+      {isSplitViewOpen ? (
+        <div
+          className={cn('fixed inset-0', splitTransitionBase, splitOverlayState)}
+        >
           <ComposerSplitView
             composer={composer}
             isOpen={isSplitViewOpen}
@@ -1283,8 +1283,8 @@ export function ChatInterface({
           >
             <div className="h-full">{chatContent}</div>
           </ComposerSplitView>
-        )}
-      </div>
+        </div>
+      ) : null}
     </div>
   );
 }
