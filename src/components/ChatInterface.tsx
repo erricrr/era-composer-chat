@@ -9,6 +9,7 @@ import { ComposerImageViewer } from './ComposerImageViewer';
 import { ComposerSplitView } from './ComposerSplitView';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipPortal } from '@/components/ui/tooltip';
 import { useIsTouch } from '@/hooks/useIsTouch';
+import { useStandaloneDisplayMode } from '@/hooks/useStandaloneDisplayMode';
 import { useGeminiChat } from '@/hooks/useGeminiChat';
 import ReactMarkdown from 'react-markdown';
 import { ChatMessage } from '@/types/gemini';
@@ -157,6 +158,7 @@ export function ChatInterface({
   } = useGeminiChat();
 
   const isTouch = useIsTouch();
+  const standaloneDisplay = useStandaloneDisplayMode();
 
   useVirtualKeyboard(isMobile || isTouch, textareaRef);
 
@@ -1216,32 +1218,42 @@ export function ChatInterface({
     </div>
   );
 
+  const splitTransitionBase = standaloneDisplay
+    ? 'transition-opacity duration-200 ease-in-out motion-reduce:!transition-none motion-reduce:duration-0'
+    : cn(
+        'ease-in-out motion-reduce:!transition-none motion-reduce:duration-0',
+        'max-md:transition-opacity max-md:duration-200',
+        'md:transition-[opacity,transform] md:duration-200',
+      );
+
+  const chatLayerState = standaloneDisplay
+    ? !isSplitViewOpen
+      ? 'opacity-100'
+      : 'opacity-0 pointer-events-none'
+    : !isSplitViewOpen
+      ? 'opacity-100 scale-100'
+      : 'opacity-0 pointer-events-none max-md:scale-100 md:scale-95';
+
+  const splitOverlayState = standaloneDisplay
+    ? isSplitViewOpen
+      ? 'opacity-100'
+      : 'opacity-0 pointer-events-none'
+    : isSplitViewOpen
+      ? 'opacity-100 scale-100'
+      : 'opacity-0 pointer-events-none max-md:scale-100 md:scale-105';
+
   return (
     <div className="relative w-full h-full">
       {/* Regular chat view: only show when split view is closed */}
       <div
-        className={cn(
-          'absolute inset-0 ease-in-out motion-reduce:!transition-none motion-reduce:duration-0',
-          'max-md:transition-opacity max-md:duration-200',
-          'md:transition-[opacity,transform] md:duration-200',
-          !isSplitViewOpen
-            ? 'opacity-100 scale-100'
-            : 'opacity-0 pointer-events-none max-md:scale-100 md:scale-95',
-        )}
+        className={cn('absolute inset-0', splitTransitionBase, chatLayerState)}
       >
         {!isSplitViewOpen && chatContent}
       </div>
 
       {/* Split view: only render chatContent inside split view when open */}
       <div
-        className={cn(
-          'fixed inset-0 ease-in-out motion-reduce:!transition-none motion-reduce:duration-0',
-          'max-md:transition-opacity max-md:duration-200',
-          'md:transition-[opacity,transform] md:duration-200',
-          isSplitViewOpen
-            ? 'opacity-100 scale-100'
-            : 'opacity-0 pointer-events-none max-md:scale-100 md:scale-105',
-        )}
+        className={cn('fixed inset-0', splitTransitionBase, splitOverlayState)}
       >
         {isSplitViewOpen && (
           <ComposerSplitView

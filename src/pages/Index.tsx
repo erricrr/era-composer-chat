@@ -24,6 +24,7 @@ import { ComposerSearch } from "@/components/ComposerSearch";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useStandaloneDisplayMode } from "@/hooks/useStandaloneDisplayMode";
 
 const ChatInterface = lazy(async () => {
   const module = await import("@/components/ChatInterface");
@@ -32,6 +33,7 @@ const ChatInterface = lazy(async () => {
 
 const Index = () => {
   const isMobile = useIsMobile();
+  const standaloneDisplay = useStandaloneDisplayMode();
   const [selectedComposer, setSelectedComposer] = useState<Composer | null>(
     null,
   );
@@ -778,7 +780,7 @@ const Index = () => {
               className={`fixed bg-background transition-[opacity,transform,right] duration-300 ease-in-out motion-reduce:!transition-none motion-reduce:duration-0 ${
                 isChatClosing
                   ? "opacity-0 translate-y-4"
-                  : "opacity-100 translate-y-0"
+                  : "opacity-100"
               }`}
               style={{
                 left: 0,
@@ -791,7 +793,8 @@ const Index = () => {
                 ...(isMobile
                   ? { bottom: "0" }
                   : { height: "calc(100dvh - 2.75rem)" }),
-                backdropFilter: "blur(8px)",
+                // Lighter blur in installed PWA: full blur + fixed descendants is a frequent source of jank on iOS standalone.
+                backdropFilter: standaloneDisplay ? "blur(4px)" : "blur(8px)",
                 boxShadow: "0 -10px 25px rgba(0,0,0,0.1)",
                 zIndex: 40,
               }}
