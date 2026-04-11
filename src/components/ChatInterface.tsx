@@ -9,7 +9,6 @@ import { ComposerImageViewer } from './ComposerImageViewer';
 import { ComposerSplitView } from './ComposerSplitView';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipPortal } from '@/components/ui/tooltip';
 import { useIsTouch } from '@/hooks/useIsTouch';
-import { useStandaloneDisplayMode } from '@/hooks/useStandaloneDisplayMode';
 import { useGeminiChat } from '@/hooks/useGeminiChat';
 import ReactMarkdown from 'react-markdown';
 import { ChatMessage } from '@/types/gemini';
@@ -98,6 +97,9 @@ interface ChatInterfaceProps {
   onOpenComposerMenu?: () => void;
 }
 
+const SPLIT_TRANSITION_MS = 220;
+type SplitTransitionPhase = 'closed' | 'opening' | 'open' | 'closing';
+
 export function ChatInterface({
   composer,
   onUserTyping,
@@ -124,10 +126,11 @@ export function ChatInterface({
   const [shouldAutoScroll, setShouldAutoScroll] = useState(true);
   const prevMessagesLengthRef = useRef(0);
   const [visibleSentences, setVisibleSentences] = useState<Record<string, number>>({});
-  const [isSplitViewOpen, setIsSplitViewOpen] = useState(() => {
+  const [splitTransitionPhase, setSplitTransitionPhase] = useState<SplitTransitionPhase>(() => {
     const saved = localStorage.getItem('splitViewOpen');
-    return saved ? JSON.parse(saved) : false;
+    return saved ? 'open' : 'closed';
   });
+  const splitTransitionTimeoutRef = useRef<number | null>(null);
   const [isDictating, setIsDictating] = useState(false);
 
   // Display state controlled entirely by this component
@@ -165,9 +168,36 @@ export function ChatInterface({
   } = useGeminiChat();
 
   const isTouch = useIsTouch();
-  const standaloneDisplay = useStandaloneDisplayMode();
+  const isSplitViewOpen = splitTransitionPhase !== 'closed';
+  const isSplitViewMounted = splitTransitionPhase !== 'closed';
 
   useVirtualKeyboard(isMobile || isTouch, textareaRef);
+
+  const clearSplitTransitionTimeout = useCallback(() => {
+    if (splitTransitionTimeoutRef.current !== null) {
+      window.clearTimeout(splitTransitionTimeoutRef.current);
+      splitTransitionTimeoutRef.current = null;
+    }
+  }, []);
+
+  const openSplitView = useCallback(() => {
+    if (splitTransitionPhase === 'open' || splitTransitionPhase === 'opening') return;
+    clearSplitTransitionTimeout();
+    setSplitTransitionPhase('opening');
+    window.requestAnimationFrame(() => {
+      setSplitTransitionPhase('open');
+    });
+  }, [clearSplitTransitionTimeout, splitTransitionPhase]);
+
+  const closeSplitView = useCallback(() => {
+    if (splitTransitionPhase === 'closed' || splitTransitionPhase === 'closing') return;
+    clearSplitTransitionTimeout();
+    setSplitTransitionPhase('closing');
+    splitTransitionTimeoutRef.current = window.setTimeout(() => {
+      setSplitTransitionPhase('closed');
+      splitTransitionTimeoutRef.current = null;
+    }, SPLIT_TRANSITION_MS);
+  }, [clearSplitTransitionTimeout, splitTransitionPhase]);
 
   const handleChatInputFocus = useCallback(() => {
     if (isMobile || isTouch) {
@@ -352,6 +382,12 @@ export function ChatInterface({
   useEffect(() => {
     localStorage.setItem('splitViewOpen', JSON.stringify(isSplitViewOpen));
   }, [isSplitViewOpen]);
+
+  useEffect(() => {
+    return () => {
+      clearSplitTransitionTimeout();
+    };
+  }, [clearSplitTransitionTimeout]);
 
   // Add effect to notify parent of split view toggle
   useEffect(() => {
@@ -870,13 +906,13 @@ export function ChatInterface({
                     className="chat-split-btn appearance-none border-none outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0 flex items-center space-x-6 cursor-pointer hover:opacity-90 transition-opacity duration-300"
                     onClick={(e) => {
                       e.stopPropagation();
-                      setIsSplitViewOpen(true);
+                      openSplitView();
                     }}
                     onKeyDown={(e) => {
                       e.stopPropagation();
                       if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
-                        setIsSplitViewOpen(true);
+                        openSplitView();
                       }
                     }}
                   >
@@ -1226,48 +1262,38 @@ export function ChatInterface({
     </div>
   );
 
-  const splitTransitionBase = standaloneDisplay
-    ? 'transition-opacity duration-200 ease-in-out motion-reduce:!transition-none motion-reduce:duration-0'
-    : cn(
-        'ease-in-out motion-reduce:!transition-none motion-reduce:duration-0',
-        'max-md:transition-opacity max-md:duration-200',
-        'md:transition-[opacity,transform] md:duration-200',
-      );
+  const splitTransitionBase =
+    'transition-[opacity,transform] ease-in-out motion-reduce:!transition-none motion-reduce:duration-0';
+  const splitTransitionStyle = { transitionDuration: `${SPLIT_TRANSITION_MS}ms` };
 
-  const chatLayerState = standaloneDisplay
-    ? !isSplitViewOpen
-      ? 'opacity-100'
-      : 'opacity-0 pointer-events-none'
-    : !isSplitViewOpen
-      ? 'opacity-100 scale-100'
-      : 'opacity-0 pointer-events-none max-md:scale-100 md:scale-95';
+  const chatLayerState = splitTransitionPhase === 'closed'
+    ? 'opacity-100 scale-100'
+    : 'opacity-0 scale-95 pointer-events-none';
 
-  const splitOverlayState = standaloneDisplay
-    ? isSplitViewOpen
-      ? 'opacity-100'
-      : 'opacity-0 pointer-events-none'
-    : isSplitViewOpen
-      ? 'opacity-100 scale-100'
-      : 'opacity-0 pointer-events-none max-md:scale-100 md:scale-105';
+  const splitOverlayState = splitTransitionPhase === 'open'
+    ? 'opacity-100 scale-100'
+    : 'opacity-0 scale-105 pointer-events-none';
 
   return (
     <div className="relative w-full h-full">
       {/* Regular chat view: only show when split view is closed */}
       <div
         className={cn('absolute inset-0', splitTransitionBase, chatLayerState)}
+        style={splitTransitionStyle}
       >
         {!isSplitViewOpen && chatContent}
       </div>
 
-      {/* Split view: render overlay only while open to avoid stale fixed layers over chat on mobile. */}
-      {isSplitViewOpen ? (
+      {/* Split view: keep mounted during enter/exit phases for consistent animation timing. */}
+      {isSplitViewMounted ? (
         <div
           className={cn('fixed inset-0', splitTransitionBase, splitOverlayState)}
+          style={splitTransitionStyle}
         >
           <ComposerSplitView
             composer={composer}
             isOpen={isSplitViewOpen}
-            onClose={() => setIsSplitViewOpen(false)}
+            onClose={closeSplitView}
             isActiveChatsOpen={isActiveChatsOpen}
           >
             <div className="h-full">{chatContent}</div>

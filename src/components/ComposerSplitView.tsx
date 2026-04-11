@@ -2,7 +2,6 @@ import React, { ReactNode, useState, useEffect } from 'react';
 import { Composer, getCopyrightAttribution, CopyrightDetails } from '@/data/composers';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { useStandaloneDisplayMode } from '@/hooks/useStandaloneDisplayMode';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -194,7 +193,7 @@ interface ComposerSplitViewProps {
 
 export function ComposerSplitView({ composer, isOpen, onClose, children, isActiveChatsOpen = false }: ComposerSplitViewProps) {
   const isMobile = useIsMobile();
-  const standaloneDisplay = useStandaloneDisplayMode();
+  const splitTransitionStyle = { transitionDuration: '220ms' };
 
   // SIMPLIFIED: Don't use localStorage at all, just a simple state
   const [imageModalOpen, setImageModalOpen] = useState(false);
@@ -455,18 +454,12 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
             minSize={30}
             maxSize={60}
             className={cn(
-              'bg-secondary/50 backdrop-blur-sm flex flex-col duration-200 ease-in-out p-0 overflow-hidden',
-              standaloneDisplay
-                ? 'transition-opacity'
-                : 'transition-[opacity,transform]',
-              standaloneDisplay
-                ? isOpen
-                  ? 'opacity-100'
-                  : 'opacity-0 pointer-events-none'
-                : isOpen
-                  ? 'opacity-100 scale-100'
-                  : 'opacity-0 scale-95 pointer-events-none',
+              'bg-secondary/50 backdrop-blur-sm flex flex-col ease-in-out p-0 overflow-hidden transition-[opacity,transform] motion-reduce:!transition-none motion-reduce:duration-0',
+              isOpen
+                ? 'opacity-100 scale-100'
+                : 'opacity-0 scale-95 pointer-events-none',
             )}
+            style={splitTransitionStyle}
             id="composer-panel-mobile"
             aria-label="Composer Panel"
           >
@@ -487,18 +480,12 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
             minSize={40}
             maxSize={70}
             className={cn(
-              'bg-background duration-200 ease-in-out',
-              standaloneDisplay
-                ? 'transition-opacity'
-                : 'transition-[opacity,transform]',
-              standaloneDisplay
-                ? isOpen
-                  ? 'opacity-100'
-                  : 'opacity-0 pointer-events-none'
-                : isOpen
-                  ? 'opacity-100 scale-100'
-                  : 'opacity-0 scale-105 pointer-events-none',
+              'bg-background ease-in-out transition-[opacity,transform] motion-reduce:!transition-none motion-reduce:duration-0',
+              isOpen
+                ? 'opacity-100 scale-100'
+                : 'opacity-0 scale-105 pointer-events-none',
             )}
+            style={splitTransitionStyle}
             id="chat-panel-mobile"
             aria-label="Chat Panel"
           >
@@ -529,16 +516,12 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
       <ResizablePanelGroup
         direction={isMobile ? "vertical" : "horizontal"}
         className={cn(
-          'h-full w-full duration-200 ease-in-out',
-          standaloneDisplay ? 'transition-opacity' : 'transition-[opacity,transform]',
-          standaloneDisplay
-            ? isOpen
-              ? 'opacity-100'
-              : 'opacity-0 pointer-events-none'
-            : isOpen
-              ? 'opacity-100 scale-100'
-              : 'opacity-0 scale-95 pointer-events-none',
+          'h-full w-full ease-in-out transition-[opacity,transform] motion-reduce:!transition-none motion-reduce:duration-0',
+          isOpen
+            ? 'opacity-100 scale-100'
+            : 'opacity-0 scale-95 pointer-events-none',
         )}
+        style={splitTransitionStyle}
       >
         {/* Composer Panel */}
         <ResizablePanel
