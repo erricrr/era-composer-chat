@@ -863,6 +863,7 @@ export function ChatInterface({
                         <ComposerImageViewer
                           composer={composer}
                           size="lg"
+                          presentationOnly
                           className="!scale-100 !w-20 !h-20 md:!w-24 md:!h-24"
                         />
                       </div>
@@ -1219,22 +1220,28 @@ export function ChatInterface({
     <div className="relative w-full h-full">
       {/* Regular chat view: only show when split view is closed */}
       <div
-        className={`absolute inset-0 transition-[opacity,transform] duration-200 ease-in-out ${
+        className={cn(
+          'absolute inset-0 ease-in-out motion-reduce:!transition-none motion-reduce:duration-0',
+          'max-md:transition-opacity max-md:duration-200',
+          'md:transition-[opacity,transform] md:duration-200',
           !isSplitViewOpen
             ? 'opacity-100 scale-100'
-            : 'opacity-0 scale-95 pointer-events-none'
-        }`}
+            : 'opacity-0 pointer-events-none max-md:scale-100 md:scale-95',
+        )}
       >
         {!isSplitViewOpen && chatContent}
       </div>
 
       {/* Split view: only render chatContent inside split view when open */}
       <div
-        className={`fixed inset-0 transition-[opacity,transform] duration-200 ease-in-out ${
+        className={cn(
+          'fixed inset-0 ease-in-out motion-reduce:!transition-none motion-reduce:duration-0',
+          'max-md:transition-opacity max-md:duration-200',
+          'md:transition-[opacity,transform] md:duration-200',
           isSplitViewOpen
             ? 'opacity-100 scale-100'
-            : 'opacity-0 scale-105 pointer-events-none'
-        }`}
+            : 'opacity-0 pointer-events-none max-md:scale-100 md:scale-105',
+        )}
       >
         {isSplitViewOpen && (
           <ComposerSplitView

@@ -775,7 +775,7 @@ const Index = () => {
           {/* Chat Interface - Only shown when user clicks "Start a Chat" button */}
           {(isChatting || isChatClosing) && (
             <div
-              className={`fixed bg-background transition-all duration-300 ease-in-out ${
+              className={`fixed bg-background transition-[opacity,transform,right] duration-300 ease-in-out motion-reduce:!transition-none motion-reduce:duration-0 ${
                 isChatClosing
                   ? "opacity-0 translate-y-4"
                   : "opacity-100 translate-y-0"

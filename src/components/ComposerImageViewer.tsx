@@ -10,6 +10,8 @@ interface ComposerImageViewerProps {
   className?: string;
   onClick?: () => void;
   allowModalOnDesktop?: boolean; // New prop to control modal behavior on desktop
+  /** Non-interactive portrait only — use inside another button (e.g. chat header) to avoid nested buttons and duplicate tap handlers. */
+  presentationOnly?: boolean;
 }
 
 export function ComposerImageViewer({
@@ -17,7 +19,8 @@ export function ComposerImageViewer({
   size = 'xl',
   className = '',
   onClick,
-  allowModalOnDesktop = false
+  allowModalOnDesktop = false,
+  presentationOnly = false,
 }: ComposerImageViewerProps) {
   // Construct a unique key for localStorage based on the composer's ID
   const localStorageKey = `imageModalOpen_${composer.id}`;
@@ -48,6 +51,7 @@ export function ComposerImageViewer({
 
   // Effect to update localStorage when state changes
   useEffect(() => {
+    if (presentationOnly) return;
     localStorage.setItem(localStorageKey, JSON.stringify(imageModalOpen));
 
     // If modal was previously open and now we've mounted, reopen it
@@ -66,7 +70,7 @@ export function ComposerImageViewer({
         justClosedRef.current = false; // Reset flag
       }, 50);
     }
-  }, [imageModalOpen, localStorageKey]);
+  }, [imageModalOpen, localStorageKey, presentationOnly]);
 
   const sizeClasses = {
     sm: 'w-20 h-20',
@@ -88,6 +92,21 @@ export function ComposerImageViewer({
     setImageModalOpen(false);
     justClosedRef.current = true;
   };
+
+  if (presentationOnly) {
+    return (
+      <div
+        aria-hidden="true"
+        className={`${sizeClasses[size]} rounded-full overflow-hidden border-2 border-primary flex-shrink-0 ${className}`}
+      >
+        <PortraitImage
+          composerId={composer.id}
+          src={composer.imageUrl}
+          alt=""
+        />
+      </div>
+    );
+  }
 
   return (
     <>
