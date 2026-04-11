@@ -409,12 +409,14 @@ export function ChatInterface({
   }, [inputMessage]);
 
   // Auto-focus textarea when composer changes or split view toggles.
-  // preventScroll avoids the browser scrolling the message list (especially after restoring scroll from split view).
+  // On touch/mobile, do not programmatically focus when returning from split view.
+  // That opens the keyboard unexpectedly even though the user did not tap the input.
   useEffect(() => {
+    if (isMobile || isTouch) return;
     if (!isSplitViewOpen && textareaRef.current) {
       textareaRef.current.focus({ preventScroll: true });
     }
-  }, [composer.id, isSplitViewOpen]);
+  }, [composer.id, isSplitViewOpen, isMobile, isTouch]);
 
   // Show loading state
   if (!activeConversationId && currentMessages.length === 0) {

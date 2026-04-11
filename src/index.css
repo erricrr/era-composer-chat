@@ -154,7 +154,6 @@ form.chat-composer {
     position: sticky !important;
     top: 0 !important;
     z-index: 99;
-    width: 100% !important;
     background-color: hsl(var(--primary-foreground));
   }
 
