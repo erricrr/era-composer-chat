@@ -502,7 +502,8 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
             id="chat-panel-mobile"
             aria-label="Chat Panel"
           >
-            <div className="h-full overflow-auto">
+            {/* min-h-0 + overflow-hidden: single scroll surface stays on ChatInterface main (not a nested overflow-auto). */}
+            <div className="flex h-full min-h-0 flex-col overflow-hidden">
               {children}
             </div>
           </ResizablePanel>
@@ -568,7 +569,7 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
           aria-label="Chat Panel"
           order={2}
         >
-          <div className="h-full overflow-auto">
+          <div className="flex h-full min-h-0 flex-col overflow-hidden">
             {children}
           </div>
         </ResizablePanel>

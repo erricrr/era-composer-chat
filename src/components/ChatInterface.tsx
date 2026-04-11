@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, KeyboardEvent, useCallback } from 'react';
+import { useState, useRef, useEffect, useLayoutEffect, KeyboardEvent, useCallback } from 'react';
 import { Composer, Message, Conversation, getLastName } from '@/data/composers';
 import { useConversations } from '@/hooks/useConversations';
 import { MoreVertical, ArrowUp, Music, Mic } from 'lucide-react';
@@ -111,6 +111,13 @@ export function ChatInterface({
   const [inputMessage, setInputMessage] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null); // Keep ref for the container
+  /** Persists message list scroll when chat content remounts between regular and split layout. */
+  const savedChatScrollTopRef = useRef(0);
+  /**
+   * When true, restore by snapping to max scroll after toggle — not raw scrollTop.
+   * Layout/remount changes scrollHeight (header padding, panel height), so the previous numeric max scroll is no longer the bottom.
+   */
+  const savedChatWasAtBottomRef = useRef(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const isMobile = useIsMobile();
   const isOnline = useOnlineStatus();
@@ -302,26 +309,36 @@ export function ChatInterface({
     prevMessagesLengthRef.current = currentMessages.length;
   }, [currentMessages, scrollToBottom, scrollComposerTop]);
 
-  // Add scroll listener to detect user scrolling
-  useEffect(() => {
+  // Message list scroll: persist position for split toggle remounts; keep near-bottom detection for auto-scroll.
+  const handleChatContainerScroll = useCallback(() => {
     const messageContainer = chatContainerRef.current;
     if (!messageContainer) return;
+    const { scrollTop, scrollHeight, clientHeight } = messageContainer;
+    savedChatScrollTopRef.current = scrollTop;
+    const gapToBottom = scrollHeight - scrollTop - clientHeight;
+    // Small epsilon: browsers may leave 0.5–1px subpixel gap at max scroll.
+    savedChatWasAtBottomRef.current = gapToBottom <= 3;
+    const isNearBottom = gapToBottom < 100;
+    setShouldAutoScroll(isNearBottom);
+  }, []);
 
-    const handleScroll = () => {
-      const { scrollTop, scrollHeight, clientHeight } = messageContainer;
-      // If user scrolls up more than a bit from bottom, disable auto-scroll
-      const isNearBottom = scrollHeight - scrollTop - clientHeight < 100;
-      if (!isNearBottom) {
-        setShouldAutoScroll(false);
+  useLayoutEffect(() => {
+    const apply = () => {
+      const el = chatContainerRef.current;
+      if (!el) return;
+      if (savedChatWasAtBottomRef.current) {
+        el.scrollTop = Math.max(0, el.scrollHeight - el.clientHeight);
       } else {
-        // Re-enable auto-scroll if scrolled back to bottom
-        setShouldAutoScroll(true);
+        el.scrollTop = savedChatScrollTopRef.current;
       }
     };
-
-    messageContainer.addEventListener('scroll', handleScroll);
-    return () => messageContainer.removeEventListener('scroll', handleScroll);
-  }, []);
+    apply();
+    // Mobile: layout may settle after flex/panel sizing; second frame matches visual scroll owner.
+    const id = window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(apply);
+    });
+    return () => window.cancelAnimationFrame(id);
+  }, [isSplitViewOpen]);
 
   // Add effect to handle composer list visibility
   useEffect(() => {
@@ -391,10 +408,11 @@ export function ChatInterface({
     }
   }, [inputMessage]);
 
-  // Auto-focus textarea when composer changes or split view toggles
+  // Auto-focus textarea when composer changes or split view toggles.
+  // preventScroll avoids the browser scrolling the message list (especially after restoring scroll from split view).
   useEffect(() => {
     if (!isSplitViewOpen && textareaRef.current) {
-      textareaRef.current.focus();
+      textareaRef.current.focus({ preventScroll: true });
     }
   }, [composer.id, isSplitViewOpen]);
 
@@ -832,12 +850,12 @@ export function ChatInterface({
 
   const chatContent = (
     <div
-      className="relative flex flex-col h-full bg-background overflow-visible chat-container"
+      className="relative flex min-h-0 flex-col h-full bg-background overflow-visible chat-container"
       role="region"
       aria-label="Chat interface"
     >
       {(!isSplitViewOpen) ? (
-        <header className="sticky top-0 left-0 right-0 -mx-[100vw] bg-primary-foreground border-b shadow-md z-40" role="banner">
+        <header className="chat-header sticky top-0 left-0 right-0 -mx-[100vw] bg-primary-foreground border-b shadow-md z-40" role="banner">
           <div className="mx-[100vw]">
             <nav className="flex items-center justify-between px-5 pt-6 md:pt-7" aria-label="Composer information">
               <Tooltip>
@@ -969,10 +987,11 @@ export function ChatInterface({
         </header>
       ) : null}
       <main
-        className={`flex-1 overflow-y-auto overscroll-contain px-5 relative chat-container ${
+        className={`min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 relative chat-container ${
           !isSplitViewOpen ? 'pt-4' : 'py-4'
         }`}
         ref={chatContainerRef}
+        onScroll={handleChatContainerScroll}
         role="log"
         aria-label="Chat messages"
         aria-live="polite"
