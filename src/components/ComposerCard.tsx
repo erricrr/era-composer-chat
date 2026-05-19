@@ -22,7 +22,7 @@ export const ComposerCard = memo(function ComposerCard({ composer, onClick, isSe
       aria-label={ariaLabel}
       onKeyDown={onKeyDown}
       className={`
-        p-3 cursor-pointer select-none transition-colors duration-150 relative group overflow-hidden
+        p-3 cursor-pointer select-none relative group overflow-hidden
         focus:outline-none focus-visible:ring-inset focus-visible:ring-2 focus-visible:ring-primary
         ${isSelected
           ? 'bg-primary-foreground'
@@ -75,7 +75,7 @@ export const ComposerCard = memo(function ComposerCard({ composer, onClick, isSe
               font-medium leading-tight truncate max-w-full
               ${compact ? 'text-sm' : 'text-base'}
               ${isSelected ? 'text-primary' : 'group-hover:text-primary'}
-              transition-all duration-150
+              transition-transform duration-150
               ${isSelected ? '' : 'group-hover:scale-[1.02]'}
             `}>
               {composer.name}
