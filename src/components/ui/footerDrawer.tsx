@@ -12,49 +12,6 @@ import { Button } from "@/components/ui/button";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 
-/** Set by button.prod.min.js; auto-init uses document.writeln which breaks in SPAs — call manually after load. */
-declare global {
-  interface Window {
-    bmcBtnWidget?: (
-      text: string,
-      slug: string,
-      color: string,
-      emoji: string,
-      font: string,
-      fontColor?: string,
-      outlineColor?: string,
-      coffeeColor?: string
-    ) => string;
-  }
-}
-
-const BMC_SCRIPT_SRC = 'https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js';
-
-let bmcScriptLoadPromise: Promise<void> | null = null;
-
-/** Load without data-name="bmc-button" so the script skips document.writeln. */
-function loadBmcScriptOnce(): Promise<void> {
-  if (typeof window === 'undefined') return Promise.resolve();
-  if (window.bmcBtnWidget) return Promise.resolve();
-  if (!bmcScriptLoadPromise) {
-    bmcScriptLoadPromise = new Promise((resolve, reject) => {
-      const script = document.createElement('script');
-      script.src = BMC_SCRIPT_SRC;
-      script.async = true;
-      script.onload = () => {
-        if (window.bmcBtnWidget) resolve();
-        else reject(new Error('Buy Me a Coffee widget not available'));
-      };
-      script.onerror = () => {
-        bmcScriptLoadPromise = null;
-        reject(new Error('Failed to load Buy Me a Coffee script'));
-      };
-      document.head.appendChild(script);
-    });
-  }
-  return bmcScriptLoadPromise;
-}
-
 interface FooterDrawerProps {
   onTrigger?: () => void;
   onVisibilityChange?: (isVisible: boolean) => void;
@@ -67,7 +24,6 @@ const FooterDrawer: React.FC<FooterDrawerProps> = ({ onTrigger, onVisibilityChan
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const drawerContentRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const bmcContainerRef = useRef<HTMLDivElement>(null);
 
   // Refs to track previous state for focus management
   const initialMount = useRef(true);
@@ -177,43 +133,6 @@ const FooterDrawer: React.FC<FooterDrawerProps> = ({ onTrigger, onVisibilityChan
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isOpen]);
-
-  useEffect(() => {
-    if (!isOpen) return;
-
-    let cancelled = false;
-    const rafId = requestAnimationFrame(() => {
-      if (cancelled) return;
-      const container = bmcContainerRef.current;
-      if (!container) return;
-      container.innerHTML = '';
-
-      loadBmcScriptOnce()
-        .then(() => {
-          if (cancelled || !bmcContainerRef.current || !window.bmcBtnWidget) return;
-          const html = window.bmcBtnWidget(
-            'Buy me a bánh mì',
-            'erricrr',
-            '#8b7ba9',
-            '🥖',
-            'Bree',
-            '#ffffff',
-            '#ffffff',
-            '#FFDD00'
-          );
-          bmcContainerRef.current.innerHTML = html;
-        })
-        .catch(() => {});
-    });
-
-    return () => {
-      cancelled = true;
-      cancelAnimationFrame(rafId);
-      if (bmcContainerRef.current) {
-        bmcContainerRef.current.innerHTML = '';
-      }
-    };
-  }, [isOpen, resetKey]);
 
   return (
     <>
@@ -339,10 +258,19 @@ const FooterDrawer: React.FC<FooterDrawerProps> = ({ onTrigger, onVisibilityChan
                 data-vaul-no-drag="true"
               >
 
-                <div
-                  ref={bmcContainerRef}
-                  className="flex min-h-[36px] items-center justify-center [&_.bmc-btn-container]:origin-center [&_.bmc-btn-container]:scale-[0.72]"
-                />
+                <Button asChild size="sm" className="min-h-[36px] w-full sm:w-auto px-4 bg-[#9f649e] text-[#f7f6f2] hover:bg-[#9f649e]/90 hover:text-[#f7f6f2] font-bold">
+                  <a
+                    href="https://buymeacoffee.com/erricrr"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    data-vaul-no-drag="true"
+                    data-vaul-drawer-ignore="true"
+                    aria-label="Buy me a bánh mì (opens in a new tab)"
+                  >
+                    🥖 Buy me a bánh mì
+                  </a>
+                </Button>
                 <p className="text-xs text-muted-foreground text-center">
                   A small way to support what I’m building
                 </p>
