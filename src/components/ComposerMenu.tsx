@@ -42,47 +42,32 @@ export function ComposerMenu({
     lastSelectedComposerPerEraRef.current = lastSelectedComposerPerEra;
   }, [lastSelectedComposerPerEra]);
 
-  // --- SCROLL POSITION STATE ---
-  const getMobileScrollPosition = useCallback((era: Era) => {
-    const item = localStorage.getItem(`composerScrollPos-mobile-${era}`);
-    return item ? parseInt(item, 10) : 0;
-  }, []);
-  const setMobileScrollPosition = useCallback((era: Era, pos: number) => {
-    localStorage.setItem(`composerScrollPos-mobile-${era}`, pos.toString());
-  }, []);
-  const getDesktopScrollPosition = useCallback((era: Era) => {
-    const item = localStorage.getItem(`composerScrollPos-desktop-${era}`);
-    return item ? parseInt(item, 10) : 0;
-  }, []);
-  const setDesktopScrollPosition = useCallback((era: Era, pos: number) => {
-    localStorage.setItem(`composerScrollPos-desktop-${era}`, pos.toString());
-  }, []);
-
   // Helper function to check if a composer belongs to an era
-  const composerBelongsToEra = (composer: Composer, era: Era): boolean => {
+  const composerBelongsToEra = useCallback((composer: Composer, era: Era): boolean => {
     const composerEras = Array.isArray(composer.era)
       ? composer.era
       : [composer.era];
     return composerEras.includes(era);
-  };
+  }, []);
 
   // Handle era changes - restore the last selected composer for this era
   const handleEraChange = useCallback(
     (newEra: Era) => {
       console.log(`[ComposerMenu] Changing era to ${newEra}`);
-      onSelectEra(newEra);
-
       const currentMap = lastSelectedComposerPerEraRef.current;
       const rememberedComposer = currentMap[newEra];
+      const composerForEra =
+        rememberedComposer && composerBelongsToEra(rememberedComposer, newEra)
+          ? rememberedComposer
+          : null;
 
-      if (
-        rememberedComposer &&
-        composerBelongsToEra(rememberedComposer, newEra)
-      ) {
+      onSelectEra(newEra);
+
+      if (composerForEra) {
         console.log(
-          `[ComposerMenu] Restoring composer ${rememberedComposer.name} for era ${newEra}`,
+          `[ComposerMenu] Restoring composer ${composerForEra.name} for era ${newEra}`,
         );
-        onSelectComposer(rememberedComposer, { source: "era-change" });
+        onSelectComposer(composerForEra, { source: "era-change" });
       } else {
         onSelectComposer(null, { source: "era-change" });
       }
@@ -122,7 +107,7 @@ export function ComposerMenu({
   }, []); // Only run on mount
 
   return (
-    <div className="container mx-auto px-4 mt-3 flex flex-col h-full overflow-y-auto">
+    <div className="container mx-auto px-4 mt-3 flex flex-col h-full overflow-hidden">
       <div className="relative">
         <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-3xl font-bold text-center font-serif mt-0 pb-4 mx-4 sm:mx-[30px]">
           {selectedEra} Era Composers
@@ -140,10 +125,6 @@ export function ComposerMenu({
           onStartChat={onStartChat}
           shouldScrollToComposer={shouldScrollToComposer}
           onScrollComplete={onScrollComplete}
-          getMobileScrollPosition={getMobileScrollPosition}
-          setMobileScrollPosition={setMobileScrollPosition}
-          getDesktopScrollPosition={getDesktopScrollPosition}
-          setDesktopScrollPosition={setDesktopScrollPosition}
         />
       </div>
     </div>

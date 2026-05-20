@@ -52,9 +52,6 @@ const Index = () => {
   const [isChatClosing, setIsChatClosing] = useState(false);
 
   const [shouldScrollToComposer, setShouldScrollToComposer] = useState(false);
-  const [pendingScrollComposerId, setPendingScrollComposerId] = useState<
-    string | null
-  >(null);
 
   const {
     startConversation,
@@ -214,8 +211,10 @@ const Index = () => {
         }
       } else if (options?.source === "restore") {
         // When restoring from localStorage, just set the composer without side effects
+        setShouldScrollToComposer(false);
         setSelectedComposer(composer);
       } else {
+        setShouldScrollToComposer(false);
         setSelectedComposer(composer);
       }
 
@@ -224,17 +223,6 @@ const Index = () => {
     },
     [selectedEra, isMenuOpen],
   );
-
-  // Effect: when selectedEra and selectedComposer match pending scroll, trigger scroll
-  useEffect(() => {
-    if (
-      pendingScrollComposerId &&
-      selectedComposer &&
-      selectedComposer.id === pendingScrollComposerId
-    ) {
-      setShouldScrollToComposer(true);
-    }
-  }, [pendingScrollComposerId, selectedComposer, selectedEra]);
 
   const handleSelectEra = useCallback(
     (newEra: Era) => {
@@ -253,7 +241,6 @@ const Index = () => {
   const handleScrollComplete = useCallback(() => {
     console.log("[Index] handleScrollComplete called, resetting scroll flag.");
     setShouldScrollToComposer(false);
-    setPendingScrollComposerId(null);
   }, []);
 
   const handleStartChat = (composer: Composer) => {
@@ -718,9 +705,7 @@ const Index = () => {
             >
               {/* Composer list rendered only when open */}
               <ComposerMenu
-                onSelectComposer={(composer) =>
-                  handleSelectComposer(composer, { source: "list" })
-                }
+                onSelectComposer={handleSelectComposer}
                 onStartChat={handleStartChat}
                 selectedComposer={selectedComposer}
                 isOpen={isMenuOpen}

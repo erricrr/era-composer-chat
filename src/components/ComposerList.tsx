@@ -1,10 +1,10 @@
 import { Composer, Era, getComposersByEra, getLastName, isComposerInPublicDomain } from '@/data/composers';
 import { ComposerCard } from './ComposerCard';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ComposerImageViewer } from './ComposerImageViewer';
-import { useState, useCallback, useEffect, useRef, useMemo } from 'react';
+import { useState, useCallback, useEffect, useRef, useMemo, useLayoutEffect } from 'react';
 import { ChevronLeft, ChevronRight, ChevronUp, ChevronDown, LucideIcon } from 'lucide-react';
 import { useScrollAffordance } from '@/hooks/useScrollAffordance';
 
@@ -87,10 +87,6 @@ interface ComposerListProps {
   isOpen?: boolean;
   shouldScrollToComposer: boolean;
   onScrollComplete: () => void;
-  getMobileScrollPosition: (era: Era) => number;
-  setMobileScrollPosition: (era: Era, pos: number) => void;
-  getDesktopScrollPosition: (era: Era) => number;
-  setDesktopScrollPosition: (era: Era, pos: number) => void;
 }
 
 export function ComposerList({
@@ -100,11 +96,7 @@ export function ComposerList({
   onStartChat,
   isOpen = false,
   shouldScrollToComposer,
-  onScrollComplete,
-  getMobileScrollPosition,
-  setMobileScrollPosition,
-  getDesktopScrollPosition,
-  setDesktopScrollPosition
+  onScrollComplete
 }: ComposerListProps) {
   const allComposers = useMemo(
     () => [...getComposersByEra(era)].sort((a, b) =>
@@ -132,8 +124,6 @@ export function ComposerList({
 
   // Timeout refs to avoid closure issues
   const timeoutRefs = useRef({
-    mobileScroll: null as NodeJS.Timeout | null,
-    desktopScroll: null as NodeJS.Timeout | null,
     scrollCheck: null as NodeJS.Timeout | null
   });
 
@@ -185,41 +175,111 @@ export function ComposerList({
     onSelectComposer(composer, { source: 'list' });
   }, [onSelectComposer]);
 
-  // Check if element is fully visible in container
-  const handlePartialVisibility = useCallback((element: HTMLElement, container: HTMLElement, isVertical: boolean): boolean => {
+  type Orientation = 'vertical' | 'horizontal';
+  type ScrollAlign = 'nearest' | 'center';
+
+  const getComposerCardId = useCallback((composerId: string, orientation: Orientation) => {
+    return orientation === 'vertical'
+      ? `composer-card-${composerId}`
+      : `mobile-composer-card-${composerId}`;
+  }, []);
+
+  const getViewportForOrientation = useCallback((orientation: Orientation) => {
+    return orientation === 'vertical'
+      ? viewportRefs.current.desktop
+      : viewportRefs.current.mobile;
+  }, []);
+
+  const getComposerCardElement = useCallback((composerId: string, orientation: Orientation) => {
+    return document.getElementById(getComposerCardId(composerId, orientation));
+  }, [getComposerCardId]);
+
+  const getScrollOffset = useCallback((element: HTMLElement, container: HTMLElement, orientation: Orientation, align: ScrollAlign): number => {
+    if (element.getClientRects().length === 0 || container.getClientRects().length === 0) {
+      return 0;
+    }
+
     const elementRect = element.getBoundingClientRect();
     const containerRect = container.getBoundingClientRect();
-    let scrollOffset = 0;
-    let needsScroll = false;
 
-    if (isVertical) {
-      if (elementRect.top < containerRect.top) {
-        scrollOffset = elementRect.top - containerRect.top;
-        needsScroll = true;
-      } else if (elementRect.bottom > containerRect.bottom) {
-        scrollOffset = elementRect.bottom - containerRect.bottom;
-        needsScroll = true;
+    if (orientation === 'vertical') {
+      if (align === 'center') {
+        const elementCenter = elementRect.top + elementRect.height / 2;
+        const containerCenter = containerRect.top + containerRect.height / 2;
+        return elementCenter - containerCenter;
       }
 
-      if (needsScroll) {
+      if (elementRect.top < containerRect.top) {
+        return elementRect.top - containerRect.top;
+      }
+
+      if (elementRect.bottom > containerRect.bottom) {
+        return elementRect.bottom - containerRect.bottom;
+      }
+
+      return 0;
+    }
+
+    if (align === 'center') {
+      const elementCenter = elementRect.left + elementRect.width / 2;
+      const containerCenter = containerRect.left + containerRect.width / 2;
+      return elementCenter - containerCenter;
+    }
+
+    if (elementRect.left < containerRect.left) {
+      return elementRect.left - containerRect.left;
+    }
+
+    if (elementRect.right > containerRect.right) {
+      return elementRect.right - containerRect.right;
+    }
+
+    return 0;
+  }, []);
+
+  const scrollCardToVisibility = useCallback((
+    composerId: string,
+    orientation: Orientation,
+    options: { behavior: ScrollBehavior; align: ScrollAlign },
+  ): boolean => {
+    const container = getViewportForOrientation(orientation);
+    const element = getComposerCardElement(composerId, orientation);
+
+    if (!container || !element) return false;
+
+    const scrollOffset = getScrollOffset(element, container, orientation, options.align);
+    if (scrollOffset === 0) return false;
+
+    // For 'auto' behavior we set scroll position directly so it lands pre-paint
+    // (immune to CSS `scroll-behavior: smooth`). For 'smooth' we let scrollBy animate.
+    if (orientation === 'vertical') {
+      if (options.behavior === 'smooth') {
         container.scrollBy({ top: scrollOffset, behavior: 'smooth' });
+      } else {
+        container.scrollTop = container.scrollTop + scrollOffset;
       }
     } else {
-      if (elementRect.left < containerRect.left) {
-        scrollOffset = elementRect.left - containerRect.left;
-        needsScroll = true;
-      } else if (elementRect.right > containerRect.right) {
-        scrollOffset = elementRect.right - containerRect.right;
-        needsScroll = true;
-      }
-
-      if (needsScroll) {
+      if (options.behavior === 'smooth') {
         container.scrollBy({ left: scrollOffset, behavior: 'smooth' });
+      } else {
+        container.scrollLeft = container.scrollLeft + scrollOffset;
       }
     }
 
-    return needsScroll;
-  }, []);
+    return true;
+  }, [getComposerCardElement, getScrollOffset, getViewportForOrientation]);
+
+  const ensureComposerVisibility = useCallback((
+    composerId: string | undefined,
+    options: { behavior: ScrollBehavior; align: ScrollAlign },
+  ) => {
+    if (!composerId) return false;
+    if (!allComposers.some((composer) => composer.id === composerId)) return false;
+
+    const scrolledDesktop = scrollCardToVisibility(composerId, 'vertical', options);
+    const scrolledMobile = scrollCardToVisibility(composerId, 'horizontal', options);
+    return scrolledDesktop || scrolledMobile;
+  }, [allComposers, scrollCardToVisibility]);
 
   // Handle composer card click
   const handleComposerCardClick = useCallback((composer: Composer, element: HTMLElement | null) => {
@@ -228,16 +288,11 @@ export function ComposerList({
       return;
     }
 
-    const viewports = viewportRefs.current;
     let scrolled = false;
-
-    if (viewports.desktop && element.closest('.md\\:flex')) {
-      scrolled = handlePartialVisibility(element, viewports.desktop, true);
-    }
-
-    if (viewports.mobile && element.closest('.md\\:hidden')) {
-      scrolled = handlePartialVisibility(element, viewports.mobile, false);
-    }
+    const orientation: Orientation = element.id.startsWith('mobile-composer-card-')
+      ? 'horizontal'
+      : 'vertical';
+    scrolled = scrollCardToVisibility(composer.id, orientation, { behavior: 'smooth', align: 'nearest' });
 
     handleComposerSelect(composer);
 
@@ -247,7 +302,7 @@ export function ComposerList({
       }
       timeoutRefs.current.scrollCheck = setTimeout(onScrollComplete, 300);
     }
-  }, [handleComposerSelect, handlePartialVisibility, onScrollComplete]);
+  }, [handleComposerSelect, onScrollComplete, scrollCardToVisibility]);
 
   // Effect to capture viewport elements
   useEffect(() => {
@@ -362,45 +417,15 @@ export function ComposerList({
     };
   }, [selectedComposer]);
 
-  // Scroll to selected composer when requested
+  // Scroll to selected composer when requested (search flow: animated, centered)
   useEffect(() => {
     if (!selectedComposer || !shouldScrollToComposer) return;
 
     const scrollToComposer = () => {
-      const viewports = viewportRefs.current;
-      let scrolled = false;
-
-      // Desktop scroll
-      const desktopElement = document.getElementById(`composer-card-${selectedComposer.id}`);
-      if (desktopElement && viewports.desktop) {
-        const containerRect = viewports.desktop.getBoundingClientRect();
-        const elementRect = desktopElement.getBoundingClientRect();
-        const elementTop = elementRect.top - containerRect.top;
-        const elementBottom = elementRect.bottom - containerRect.top;
-
-        if (elementTop < 0 || elementBottom > containerRect.height) {
-          const scrollTarget = elementTop + viewports.desktop.scrollTop - (containerRect.height - elementRect.height) / 2;
-          viewports.desktop.scrollTo({ top: scrollTarget, behavior: 'smooth' });
-          scrolled = true;
-        }
-      }
-
-      // Mobile scroll
-      const mobileElement = document.getElementById(`mobile-composer-card-${selectedComposer.id}`);
-      if (mobileElement && viewports.mobile) {
-        const containerRect = viewports.mobile.getBoundingClientRect();
-        const elementRect = mobileElement.getBoundingClientRect();
-        const elementLeft = elementRect.left - containerRect.left;
-        const elementRight = elementRect.right - containerRect.left;
-
-        if (elementLeft < 0 || elementRight > containerRect.width) {
-          viewports.mobile.scrollTo({
-            left: viewports.mobile.scrollLeft + elementLeft - (containerRect.width - elementRect.width) / 2,
-            behavior: 'smooth',
-          });
-          scrolled = true;
-        }
-      }
+      const scrolled = ensureComposerVisibility(selectedComposer.id, {
+        behavior: 'smooth',
+        align: 'center',
+      });
 
       if (scrolled) {
         if (timeoutRefs.current.scrollCheck) {
@@ -414,120 +439,25 @@ export function ComposerList({
 
     const timer = setTimeout(scrollToComposer, 100);
     return () => clearTimeout(timer);
-  }, [selectedComposer, shouldScrollToComposer, onScrollComplete, era]);
+  }, [selectedComposer, shouldScrollToComposer, onScrollComplete, era, ensureComposerVisibility]);
 
-  // Save scroll positions when scrolling
-  useEffect(() => {
-    const viewports = viewportRefs.current;
-
-    const handleMobileScroll = () => {
-      const container = viewports.mobile;
-      if (!container) return;
-
-      if (timeoutRefs.current.mobileScroll) {
-        clearTimeout(timeoutRefs.current.mobileScroll);
-      }
-
-      timeoutRefs.current.mobileScroll = setTimeout(() => {
-        setMobileScrollPosition(era, container.scrollLeft);
-      }, 150);
-    };
-
-    const handleDesktopScroll = () => {
-      const container = viewports.desktop;
-      if (!container) return;
-
-      if (timeoutRefs.current.desktopScroll) {
-        clearTimeout(timeoutRefs.current.desktopScroll);
-      }
-
-      timeoutRefs.current.desktopScroll = setTimeout(() => {
-        setDesktopScrollPosition(era, container.scrollTop);
-      }, 150);
-    };
-
-    if (viewports.mobile) {
-      viewports.mobile.addEventListener('scroll', handleMobileScroll, { passive: true });
-    }
-
-    if (viewports.desktop) {
-      viewports.desktop.addEventListener('scroll', handleDesktopScroll, { passive: true });
-    }
-
-    return () => {
-      if (viewports.mobile) {
-        viewports.mobile.removeEventListener('scroll', handleMobileScroll);
-      }
-
-      if (viewports.desktop) {
-        viewports.desktop.removeEventListener('scroll', handleDesktopScroll);
-      }
-
-      if (timeoutRefs.current.mobileScroll) {
-        clearTimeout(timeoutRefs.current.mobileScroll);
-      }
-
-      if (timeoutRefs.current.desktopScroll) {
-        clearTimeout(timeoutRefs.current.desktopScroll);
-      }
-    };
-  }, [era, setMobileScrollPosition, setDesktopScrollPosition]);
-
-  // Restore scroll positions
-  useEffect(() => {
-    const restoreScrollPositions = () => {
-      const viewports = viewportRefs.current;
-
-      if (viewports.mobile) {
-        const pos = getMobileScrollPosition(era);
-        viewports.mobile.scrollTo({ left: pos, behavior: 'instant' });
-      }
-
-      if (viewports.desktop) {
-        const pos = getDesktopScrollPosition(era);
-        viewports.desktop.scrollTo({ top: pos, behavior: 'instant' });
-      }
-    };
-
-    const timer = setTimeout(restoreScrollPositions, 50);
-    return () => clearTimeout(timer);
-  }, [era, getMobileScrollPosition, getDesktopScrollPosition]);
+  // Keep selected composer in view pre-paint for the active era.
+  // Runs synchronously after DOM mutations and before browser paint, so the
+  // user never sees an intermediate scroll position when switching eras.
+  useLayoutEffect(() => {
+    initializeViewportRefs();
+    ensureComposerVisibility(selectedComposer?.id, { behavior: 'auto', align: 'nearest' });
+  }, [era, selectedComposer?.id, ensureComposerVisibility, initializeViewportRefs]);
 
   // Handle selected composer visibility on resize
-  const scrollToSelectedComposerOnResize = useCallback(() => {
+  const keepSelectedComposerVisibleOnResize = useCallback(() => {
     if (!selectedComposer) return;
 
-    const viewports = viewportRefs.current;
-
-    const checkVisibilityAndScroll = () => {
-      // Desktop scroll check
-      const desktopEl = document.getElementById(`composer-card-${selectedComposer.id}`);
-      if (desktopEl && viewports.desktop) {
-        const viewportRect = viewports.desktop.getBoundingClientRect();
-        const cardRect = desktopEl.getBoundingClientRect();
-
-        const isVisible = cardRect.top >= viewportRect.top && cardRect.bottom <= viewportRect.bottom;
-        if (!isVisible) {
-          desktopEl.scrollIntoView({ behavior: 'auto', block: 'center' });
-        }
-      }
-
-      // Mobile scroll check
-      const mobileEl = document.getElementById(`mobile-composer-card-${selectedComposer.id}`);
-      if (mobileEl && viewports.mobile) {
-        const viewportRect = viewports.mobile.getBoundingClientRect();
-        const cardRect = mobileEl.getBoundingClientRect();
-
-        const isVisible = cardRect.left >= viewportRect.left && cardRect.right <= viewportRect.right;
-        if (!isVisible) {
-          mobileEl.scrollIntoView({ behavior: 'auto', inline: 'center' });
-        }
-      }
-    };
-
     // Delay to allow layout to settle
-    setTimeout(checkVisibilityAndScroll, 150);
-  }, [selectedComposer]);
+    setTimeout(() => {
+      ensureComposerVisibility(selectedComposer.id, { behavior: 'auto', align: 'nearest' });
+    }, 150);
+  }, [selectedComposer, ensureComposerVisibility]);
 
   // Add resize handler
   useEffect(() => {
@@ -538,7 +468,7 @@ export function ComposerList({
       if (resizeTimeout) clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(() => {
         initializeViewportRefs(); // Re-initialize viewport refs on resize
-        scrollToSelectedComposerOnResize();
+        keepSelectedComposerVisibleOnResize();
       }, 150);
     };
 
@@ -548,7 +478,7 @@ export function ComposerList({
       window.removeEventListener('resize', handleResize);
       if (resizeTimeout) clearTimeout(resizeTimeout);
     };
-  }, [scrollToSelectedComposerOnResize, initializeViewportRefs]);
+  }, [keepSelectedComposerVisibleOnResize, initializeViewportRefs]);
 
   // Use IntersectionObserver to detect when the content is visible
   useEffect(() => {
@@ -651,7 +581,6 @@ export function ComposerList({
                     </div>
                   ))}
                 </div>
-                <ScrollBar orientation="horizontal" />
               </ScrollArea>
             </div>
           </div>
@@ -694,7 +623,6 @@ export function ComposerList({
                     </div>
                   ))}
                 </div>
-                <ScrollBar orientation="vertical" className="select-none" />
               </ScrollArea>
             </div>
           </div>
@@ -758,7 +686,6 @@ export function ComposerList({
                     </ul>
                   </div>
                 </div>
-                <ScrollBar orientation="vertical" />
               </ScrollArea>
               {/* Scroll shadow for biography section */}
               <div className="pointer-events-none absolute bottom-0 left-0 w-full h-6 bg-gradient-to-t from-background to-transparent z-10" />
