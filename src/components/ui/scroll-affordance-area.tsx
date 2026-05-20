@@ -95,7 +95,7 @@ export const ScrollAffordanceArea = React.forwardRef<HTMLDivElement, ScrollAffor
             // with legacy DOM queries that hunt for the scroll viewport by selector.
             data-radix-scroll-area-viewport=""
             className={cn(
-              'h-full w-full overscroll-contain',
+              'h-full w-full overscroll-contain [overflow-anchor:auto]',
               '[scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden',
               isHorizontal
                 ? 'overflow-x-auto overflow-y-hidden'

@@ -113,8 +113,8 @@ export function useScrollAffordance({
     }
   }, [config, bgVar, showScrollbar, fadeStartRef, fadeEndRef, trackRef, thumbRef]);
 
-  // Recompute affordance state from the container's current scroll position.
-  const update = useCallback(() => {
+  // Recompute fade/thumb visuals only (safe to call on resize before scroll position is restored).
+  const updateVisuals = useCallback(() => {
     const container = containerRef.current;
     const fadeStart = fadeStartRef.current;
     const fadeEnd = fadeEndRef.current;
@@ -151,9 +151,12 @@ export function useScrollAffordance({
         thumb.style.transform = config.thumbTransform(thumbPos);
       }
     }
-
-    onScrollRef.current?.();
   }, [config, containerRef, fadeStartRef, fadeEndRef, trackRef, thumbRef, showScrollbar]);
+
+  const notifyScroll = useCallback(() => {
+    updateVisuals();
+    onScrollRef.current?.();
+  }, [updateVisuals]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -161,14 +164,26 @@ export function useScrollAffordance({
 
     const handleScroll = () => {
       if (rafIdRef.current !== null) cancelAnimationFrame(rafIdRef.current);
-      rafIdRef.current = requestAnimationFrame(update);
+      rafIdRef.current = requestAnimationFrame(() => {
+        rafIdRef.current = null;
+        notifyScroll();
+      });
+    };
+
+    const handleResize = () => {
+      if (rafIdRef.current !== null) cancelAnimationFrame(rafIdRef.current);
+      rafIdRef.current = requestAnimationFrame(() => {
+        rafIdRef.current = null;
+        updateVisuals();
+      });
     };
 
     // Initial sync (covers post-mount, content size changes, ref attach).
-    handleScroll();
+    updateVisuals();
+    onScrollRef.current?.();
     container.addEventListener('scroll', handleScroll, { passive: true });
 
-    const ro = new ResizeObserver(handleScroll);
+    const ro = new ResizeObserver(handleResize);
     ro.observe(container);
 
     return () => {
@@ -176,5 +191,5 @@ export function useScrollAffordance({
       container.removeEventListener('scroll', handleScroll);
       ro.disconnect();
     };
-  }, [containerRef, update]);
+  }, [containerRef, updateVisuals, notifyScroll]);
 }

@@ -112,10 +112,21 @@ export function ChatInterface({
   /** Persists message list scroll when chat content remounts between regular and split layout. */
   const savedChatScrollTopRef = useRef(0);
   /**
+   * Distance from the bottom in px; stable across scrollHeight changes (resize reflow).
+   * Prefer this over raw scrollTop when restoring after layout.
+   */
+  const scrollDistanceFromBottomRef = useRef(0);
+  /**
    * When true, restore by snapping to max scroll after toggle — not raw scrollTop.
    * Layout/remount changes scrollHeight (header padding, panel height), so the previous numeric max scroll is no longer the bottom.
    */
   const savedChatWasAtBottomRef = useRef(false);
+  /** Mirrors shouldAutoScroll so resize/layout can restore before spurious scroll events overwrite intent. */
+  const shouldAutoScrollRef = useRef(true);
+  /** Skips scroll handler updates while programmatically restoring position after layout changes. */
+  const isRestoringScrollRef = useRef(false);
+  const scrollRestoreRafRef = useRef(0);
+  const scrollRestoreTimeoutRef = useRef(0);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const isMobile = useIsMobile();
   const isOnline = useOnlineStatus();
@@ -256,6 +267,8 @@ export function ChatInterface({
 
     // Reset UI state
     setCurrentMessages([]);
+    shouldAutoScrollRef.current = true;
+    scrollDistanceFromBottomRef.current = 0;
     setShouldAutoScroll(true);
 
     const composerConversations = getConversationsForComposer(composer.id);
@@ -334,38 +347,91 @@ export function ChatInterface({
     prevMessagesLengthRef.current = currentMessages.length;
   }, [currentMessages, scrollToBottom, scrollComposerTop]);
 
+  const restoreChatScrollPosition = useCallback(() => {
+    const el = chatContainerRef.current;
+    if (!el) return;
+    const maxScroll = Math.max(0, el.scrollHeight - el.clientHeight);
+    const distanceFromBottom = scrollDistanceFromBottomRef.current;
+    const nextScrollTop = Math.max(0, maxScroll - distanceFromBottom);
+    el.scrollTop = nextScrollTop;
+    savedChatScrollTopRef.current = nextScrollTop;
+    savedChatWasAtBottomRef.current = distanceFromBottom <= 3;
+  }, []);
+
+  const scheduleChatScrollRestore = useCallback(() => {
+    isRestoringScrollRef.current = true;
+    const apply = () => restoreChatScrollPosition();
+
+    apply();
+    window.cancelAnimationFrame(scrollRestoreRafRef.current);
+    window.clearTimeout(scrollRestoreTimeoutRef.current);
+
+    scrollRestoreRafRef.current = window.requestAnimationFrame(() => {
+      scrollRestoreRafRef.current = window.requestAnimationFrame(() => {
+        apply();
+        scrollRestoreTimeoutRef.current = window.setTimeout(() => {
+          apply();
+          isRestoringScrollRef.current = false;
+        }, 100);
+      });
+    });
+  }, [restoreChatScrollPosition]);
+
   // Message list scroll: persist position for split toggle remounts; keep near-bottom detection for auto-scroll.
   const handleChatContainerScroll = useCallback(() => {
+    if (isRestoringScrollRef.current) return;
     const messageContainer = chatContainerRef.current;
     if (!messageContainer) return;
     const { scrollTop, scrollHeight, clientHeight } = messageContainer;
-    savedChatScrollTopRef.current = scrollTop;
     const gapToBottom = scrollHeight - scrollTop - clientHeight;
+    const prevScrollTop = savedChatScrollTopRef.current;
+
+    // Resize can reset scrollTop to 0 before layout settles; keep the prior distance-from-bottom.
+    if (
+      scrollTop < 2 &&
+      prevScrollTop > 50 &&
+      scrollHeight > clientHeight + 20
+    ) {
+      return;
+    }
+
+    scrollDistanceFromBottomRef.current = gapToBottom;
+    savedChatScrollTopRef.current = scrollTop;
     // Small epsilon: browsers may leave 0.5–1px subpixel gap at max scroll.
     savedChatWasAtBottomRef.current = gapToBottom <= 3;
     const isNearBottom = gapToBottom < 100;
+    shouldAutoScrollRef.current = isNearBottom;
     setShouldAutoScroll(isNearBottom);
   }, []);
 
   chatScrollHandlerRef.current = handleChatContainerScroll;
 
   useLayoutEffect(() => {
-    const apply = () => {
-      const el = chatContainerRef.current;
-      if (!el) return;
-      if (savedChatWasAtBottomRef.current) {
-        el.scrollTop = Math.max(0, el.scrollHeight - el.clientHeight);
-      } else {
-        el.scrollTop = savedChatScrollTopRef.current;
-      }
+    scheduleChatScrollRestore();
+    return () => {
+      window.cancelAnimationFrame(scrollRestoreRafRef.current);
+      window.clearTimeout(scrollRestoreTimeoutRef.current);
     };
-    apply();
-    // Mobile: layout may settle after flex/panel sizing; second frame matches visual scroll owner.
-    const id = window.requestAnimationFrame(() => {
-      window.requestAnimationFrame(apply);
-    });
-    return () => window.cancelAnimationFrame(id);
-  }, [isSplitViewOpen]);
+  }, [isSplitViewOpen, scheduleChatScrollRestore]);
+
+  // Window/container resize can reset scrollTop; restore using distance-from-bottom captured before layout.
+  useLayoutEffect(() => {
+    const el = chatContainerRef.current;
+    if (!el) return;
+
+    const ro = new ResizeObserver(() => scheduleChatScrollRestore());
+    ro.observe(el);
+    const content = el.querySelector('.chat-messages-content');
+    if (content) ro.observe(content);
+
+    window.addEventListener('resize', scheduleChatScrollRestore);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', scheduleChatScrollRestore);
+      window.cancelAnimationFrame(scrollRestoreRafRef.current);
+      window.clearTimeout(scrollRestoreTimeoutRef.current);
+    };
+  }, [scheduleChatScrollRestore, activeConversationId, isSplitViewOpen]);
 
   // Add effect to handle composer list visibility
   useEffect(() => {
@@ -617,6 +683,8 @@ export function ChatInterface({
     const conversationId = currentConversationIdRef.current;
 
     // Enable auto-scroll when user sends a message
+    shouldAutoScrollRef.current = true;
+    scrollDistanceFromBottomRef.current = 0;
     setShouldAutoScroll(true);
 
     try {
@@ -689,6 +757,8 @@ export function ChatInterface({
       currentConversationIdRef.current = newConversationId;
 
       // Enable auto-scroll
+      shouldAutoScrollRef.current = true;
+      scrollDistanceFromBottomRef.current = 0;
       setShouldAutoScroll(true);
 
       // Reset input field
