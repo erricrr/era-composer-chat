@@ -128,7 +128,7 @@ export function ChatInterface({
   const [visibleSentences, setVisibleSentences] = useState<Record<string, number>>({});
   const [splitTransitionPhase, setSplitTransitionPhase] = useState<SplitTransitionPhase>(() => {
     const saved = localStorage.getItem('splitViewOpen');
-    return saved ? 'open' : 'closed';
+    return saved !== null && JSON.parse(saved) ? 'open' : 'closed';
   });
   const splitTransitionTimeoutRef = useRef<number | null>(null);
   const [isDictating, setIsDictating] = useState(false);
@@ -444,15 +444,16 @@ export function ChatInterface({
     }
   }, [inputMessage]);
 
-  // Auto-focus textarea when composer changes or split view toggles.
-  // On touch/mobile, do not programmatically focus when returning from split view.
-  // That opens the keyboard unexpectedly even though the user did not tap the input.
+  // Auto-focus textarea when composer changes, split view toggles, or conversation first loads.
+  // activeConversationId is included so the effect re-runs once the loading gate clears and
+  // the textarea is actually in the DOM.
+  // On touch/mobile, do not programmatically focus — that opens the keyboard unexpectedly.
   useEffect(() => {
     if (isMobile || isTouch) return;
-    if (!isSplitViewOpen && textareaRef.current) {
+    if (textareaRef.current) {
       textareaRef.current.focus({ preventScroll: true });
     }
-  }, [composer.id, isSplitViewOpen, isMobile, isTouch]);
+  }, [composer.id, isSplitViewOpen, isMobile, isTouch, activeConversationId]);
 
   // Show loading state
   if (!activeConversationId && currentMessages.length === 0) {
@@ -1109,8 +1110,8 @@ export function ChatInterface({
               onKeyDown={handleKeyPress}
               onFocus={handleChatInputFocus}
               placeholder={`Ask a question...`}
-              className={`w-full bg-background pl-4 pr-[6.75rem] py-3 border border-input text-base text-foreground
-                outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0
+              className={`w-full bg-background pl-4 pr-[6.75rem] py-3 border border-foreground/25 text-base text-foreground
+                outline-none focus:ring-2 focus:ring-primary focus:ring-offset-0
                 ${isDictating ? 'ring-1 ring-primary' : ''}
                 min-h-[48px] max-h-[300px] overflow-y-auto resize-none
                 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]
