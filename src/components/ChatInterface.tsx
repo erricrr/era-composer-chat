@@ -989,7 +989,7 @@ export function ChatInterface({
           <div className="flex flex-col min-h-[calc(100%-2rem)] pb-2">
           {currentMessages.length === 0 ? (
             <div
-              className="flex-1 flex items-center justify-center text-muted-foreground text-base mt-36"
+              className="flex-1 flex items-center justify-center text-muted-foreground text-base"
               role="status"
               aria-label="Empty chat"
             >
