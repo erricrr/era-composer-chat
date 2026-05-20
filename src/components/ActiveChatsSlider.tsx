@@ -121,6 +121,8 @@ export default function ActiveChatsSlider({
       role="complementary"
       aria-hidden={!isOpen}
     >
+      {isOpen ? (
+        <>
       <div className="border-b border-border">
         <div className="group flex items-center justify-between w-full p-4">
           <button
@@ -205,6 +207,8 @@ export default function ActiveChatsSlider({
           Clear All
         </button>
       </div> */}
+        </>
+      ) : null}
     </aside>
   );
 }

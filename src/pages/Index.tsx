@@ -534,13 +534,13 @@ const Index = () => {
       if (existingViewport) {
         existingViewport.setAttribute(
           "content",
-          "width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover",
+          "width=device-width, initial-scale=1, viewport-fit=cover",
         );
       } else {
         const metaTag = document.createElement("meta");
         metaTag.name = "viewport";
         metaTag.content =
-          "width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover";
+          "width=device-width, initial-scale=1, viewport-fit=cover";
         document.head.appendChild(metaTag);
       }
 
