@@ -77,6 +77,7 @@ export function ChatActionsMenu({
         <SheetContent
           side="bottom"
           className="rounded-t-2xl p-4 pb-[max(1rem,env(safe-area-inset-bottom))] [&>button]:hidden"
+          onOverlayClick={() => setMobileMenuOpen(false)}
           onClick={stopPropagation ? stopPropagationIfNeeded : undefined}
           onPointerDown={stopPropagation ? stopPropagationIfNeeded : undefined}
         >
