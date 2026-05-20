@@ -287,15 +287,22 @@ export function ComposerSplitView({
             {composer.name}
           </div>
         </div>
-        <ChatActionsMenu
-          isSplitView={true}
-          onToggleView={onClose}
-          onReset={onReset ?? (() => {})}
-          onCloseChat={onCloseChat}
-          isMobile={isMobile}
-          stopPropagation={true}
-          triggerClassName="absolute right-4 rounded-full hover:bg-primary/20 group-hover:bg-primary/20 text-foreground/70 hover:text-foreground/90 z-10 isolate"
-        />
+        <div
+          data-chat-actions-menu
+          className="absolute right-4 z-10 isolate"
+          onClick={(e) => e.stopPropagation()}
+          onPointerDown={(e) => e.stopPropagation()}
+        >
+          <ChatActionsMenu
+            isSplitView={true}
+            onToggleView={onClose}
+            onReset={onReset ?? (() => {})}
+            onCloseChat={onCloseChat}
+            isMobile={isMobile}
+            stopPropagation={true}
+            triggerClassName="rounded-full hover:bg-primary/20 group-hover:bg-primary/20 text-foreground/70 hover:text-foreground/90"
+          />
+        </div>
       </div>
 
       {/* Scrollable Content Area */}

@@ -106,7 +106,12 @@ export function ComposerList({
   getDesktopScrollPosition,
   setDesktopScrollPosition
 }: ComposerListProps) {
-  const allComposers = useMemo(() => getComposersByEra(era), [era]);
+  const allComposers = useMemo(
+    () => [...getComposersByEra(era)].sort((a, b) =>
+      getLastName(a.name).localeCompare(getLastName(b.name))
+    ),
+    [era]
+  );
 
   // Refs for scroll containers
   const mobileScrollAreaRef = useRef<HTMLDivElement>(null);

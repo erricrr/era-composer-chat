@@ -1,4 +1,4 @@
-import { useState, MouseEvent, KeyboardEvent } from 'react';
+import { useState, MouseEvent, KeyboardEvent, PointerEvent } from 'react';
 import { MoreVertical } from 'lucide-react';
 import {
   DropdownMenu,
@@ -35,22 +35,27 @@ export function ChatActionsMenu({
   const viewLabel = isSplitView ? 'Full view' : 'Split view';
   const openViewLabel = `Open ${viewLabel.toLowerCase()}`;
   const baseTriggerClassName = 'inline-flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0 transition-colors disabled:opacity-50 disabled:cursor-not-allowed';
-
-  const handleTriggerClick = (e: MouseEvent<HTMLButtonElement>) => {
+  const stopPropagationIfNeeded = (e: { stopPropagation: () => void }) => {
     if (stopPropagation) {
       e.stopPropagation();
     }
+  };
+
+  const handleTriggerClick = (e: MouseEvent<HTMLButtonElement>) => {
+    stopPropagationIfNeeded(e);
     if (isMobile) {
       setMobileMenuOpen(true);
     }
   };
 
   const handleTriggerKeyDown = (e: KeyboardEvent<HTMLButtonElement>) => {
-    if (!stopPropagation) return;
-
     if (e.key === 'Enter' || e.key === ' ') {
-      e.stopPropagation();
+      stopPropagationIfNeeded(e);
     }
+  };
+
+  const handleTriggerPointerDown = (e: PointerEvent<HTMLButtonElement>) => {
+    stopPropagationIfNeeded(e);
   };
 
   return isMobile ? (
@@ -60,6 +65,7 @@ export function ChatActionsMenu({
         disabled={disabled}
         onClick={handleTriggerClick}
         onKeyDown={handleTriggerKeyDown}
+        onPointerDown={handleTriggerPointerDown}
         className={cn(baseTriggerClassName, 'touch-manipulation', triggerClassName)}
         aria-label="Chat actions"
         aria-haspopup="dialog"
@@ -71,7 +77,8 @@ export function ChatActionsMenu({
         <SheetContent
           side="bottom"
           className="rounded-t-2xl p-4 pb-[max(1rem,env(safe-area-inset-bottom))] [&>button]:hidden"
-          onClick={stopPropagation ? (e) => e.stopPropagation() : undefined}
+          onClick={stopPropagation ? stopPropagationIfNeeded : undefined}
+          onPointerDown={stopPropagation ? stopPropagationIfNeeded : undefined}
         >
           <SheetHeader className="sr-only">
             <SheetTitle>Chat actions</SheetTitle>
@@ -122,7 +129,8 @@ export function ChatActionsMenu({
           disabled={disabled}
           className={cn(baseTriggerClassName, triggerClassName)}
           aria-label="Chat actions"
-          onClick={stopPropagation ? (e) => e.stopPropagation() : undefined}
+          onClick={stopPropagation ? stopPropagationIfNeeded : undefined}
+          onPointerDown={handleTriggerPointerDown}
           onKeyDown={handleTriggerKeyDown}
         >
           <MoreVertical className="h-5 w-5" strokeWidth={2} aria-hidden />
@@ -133,7 +141,8 @@ export function ChatActionsMenu({
         side="bottom"
         sideOffset={8}
         className="min-w-[12rem]"
-        onClick={stopPropagation ? (e) => e.stopPropagation() : undefined}
+        onClick={stopPropagation ? stopPropagationIfNeeded : undefined}
+        onPointerDown={stopPropagation ? stopPropagationIfNeeded : undefined}
       >
         <DropdownMenuItem
           className="min-h-11 cursor-pointer text-base"
