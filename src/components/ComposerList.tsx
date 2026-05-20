@@ -588,45 +588,6 @@ export function ComposerList({
 
         {selectedComposer && (
           <main className="flex flex-col h-full overflow-hidden p-2 md:p-3" aria-label="Composer details">
-            {/* Fixed header containing composer details */}
-            <div className="flex-shrink-0 px-2 md:px-3 pt-1 pb-1 relative z-20 bg-primary-foreground">
-              <div className="flex items-start md:items-center space-x-2 md:space-x-4 pt-0 md:pt-0 pb-2">
-                <ComposerImageViewer
-                  composer={selectedComposer}
-                  size="xxl"
-                  allowModalOnDesktop={true}
-                  className="focus-visible:z-10 relative"
-                />
-                <div
-                  tabIndex={0}
-                  role="region"
-                  aria-label={`Composer details: ${selectedComposer.name}, ${selectedComposer.nationality}, ${selectedComposer.birthYear}-${selectedComposer.deathYear || 'present'}`}
-                  className="focus:outline-none focus-visible:ring-2 focus-visible:ring-primary flex-1 min-w-0"
-                >
-                  <h2 className="sr-only">Composer Details</h2>
-                  <h3 className="text-xl md:text-2xl font-bold font-serif break-words">
-                    {selectedComposer.name}
-                  </h3>
-                  <div className="flex flex-col lg:flex-row lg:items-center gap-1 mt-1">
-                    <span className="text-base md:text-lg text-muted-foreground">
-                      {selectedComposer.nationality}, {selectedComposer.birthYear}–{selectedComposer.deathYear || 'present'}
-                    </span>
-                    <div className="flex flex-wrap gap-1 lg:ml-2">
-                      {(Array.isArray(selectedComposer.era)
-                        ? selectedComposer.era
-                        : [selectedComposer.era]
-                      ).map((e, idx) => (
-                        <Badge key={e + idx} variant="badge" className="text-xs">
-                          {e}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Scrollable content area - only bio and works */}
             <div className="flex-1 min-h-0 relative overflow-hidden">
               <ContentScrollAffordanceArea
                 viewportRef={detailsViewportRef}
@@ -634,17 +595,55 @@ export function ComposerList({
                 bgVar="primary-foreground"
                 className="w-full h-full"
               >
-                <div className="px-4 md:px-5 py-3 space-y-4" ref={detailsContentRef}>
-                  <p className="text-base md:text-lg text-foreground/90">
-                    {selectedComposer.shortBio}
-                  </p>
-                  <div>
-                    <h4 className="font-semibold mb-2 text-lg md:text-xl">Notable Works</h4>
-                    <ul className="list-disc pl-5 mb-4 space-y-1">
-                      {selectedComposer.famousWorks.slice(0, 3).map((work, index) => (
-                        <li key={index} className="text-base md:text-lg text-foreground/80">{work}</li>
-                      ))}
-                    </ul>
+                <div ref={detailsContentRef}>
+                  <div className="px-2 md:px-3 pt-1 pb-1 bg-primary-foreground">
+                    <div className="flex items-start md:items-center space-x-2 md:space-x-4 pb-2">
+                      <ComposerImageViewer
+                        composer={selectedComposer}
+                        size="xxl"
+                        allowModalOnDesktop={true}
+                        className="focus-visible:z-10 relative"
+                      />
+                      <div
+                        tabIndex={0}
+                        role="region"
+                        aria-label={`Composer details: ${selectedComposer.name}, ${selectedComposer.nationality}, ${selectedComposer.birthYear}-${selectedComposer.deathYear || 'present'}`}
+                        className="focus:outline-none focus-visible:ring-2 focus-visible:ring-primary flex-1 min-w-0"
+                      >
+                        <h2 className="sr-only">Composer Details</h2>
+                        <h3 className="text-xl md:text-2xl font-bold font-serif break-words">
+                          {selectedComposer.name}
+                        </h3>
+                        <div className="flex flex-col lg:flex-row lg:items-center gap-1 mt-1">
+                          <span className="text-base md:text-lg text-muted-foreground">
+                            {selectedComposer.nationality}, {selectedComposer.birthYear}–{selectedComposer.deathYear || 'present'}
+                          </span>
+                          <div className="flex flex-wrap gap-1 lg:ml-2">
+                            {(Array.isArray(selectedComposer.era)
+                              ? selectedComposer.era
+                              : [selectedComposer.era]
+                            ).map((e, idx) => (
+                              <Badge key={e + idx} variant="badge" className="text-xs">
+                                {e}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="px-4 md:px-5 py-3 space-y-4">
+                    <p className="text-base md:text-lg text-foreground/90">
+                      {selectedComposer.shortBio}
+                    </p>
+                    <div>
+                      <h4 className="font-semibold mb-2 text-lg md:text-xl">Notable Works</h4>
+                      <ul className="list-disc pl-5 mb-4 space-y-1">
+                        {selectedComposer.famousWorks.slice(0, 3).map((work, index) => (
+                          <li key={index} className="text-base md:text-lg text-foreground/80">{work}</li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
                 </div>
               </ContentScrollAffordanceArea>
