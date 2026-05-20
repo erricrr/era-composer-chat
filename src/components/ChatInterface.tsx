@@ -988,6 +988,14 @@ export function ChatInterface({
                     <DropdownMenuContent align="end" side="bottom" sideOffset={8} className="min-w-[12rem]">
                       <DropdownMenuItem
                         className="min-h-11 cursor-pointer text-base"
+                        aria-label="Open split view"
+                        onSelect={() => openSplitView()}
+                      >
+                        Split view
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        className="min-h-11 cursor-pointer text-base"
                         onSelect={() => setResetConfirmOpen(true)}
                       >
                         Reset conversation
@@ -1214,6 +1222,17 @@ export function ChatInterface({
               <SheetTitle>Chat actions</SheetTitle>
             </SheetHeader>
             <div className="flex flex-col gap-1">
+              <button
+                type="button"
+                className="flex min-h-11 w-full items-center rounded-md px-3 py-3 text-left text-base font-medium text-foreground hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                aria-label="Open split view"
+                onClick={() => {
+                  setChatActionsMenuOpen(false);
+                  openSplitView();
+                }}
+              >
+                Split view
+              </button>
               <button
                 type="button"
                 className="flex min-h-11 w-full items-center rounded-md px-3 py-3 text-left text-base font-medium text-foreground hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
