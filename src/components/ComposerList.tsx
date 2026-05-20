@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { ComposerImageViewer } from './ComposerImageViewer';
 import { useState, useCallback, useEffect, useRef, useMemo, useLayoutEffect } from 'react';
 import { ChevronLeft, ChevronRight, ChevronUp, ChevronDown, LucideIcon } from 'lucide-react';
-import { useScrollAffordance } from '@/hooks/useScrollAffordance';
+import { useScrollAffordance, useScrollAreaAffordance } from '@/hooks/useScrollAffordance';
 
 // Helper to detect Safari browser
 const isSafari = () => {
@@ -105,21 +105,32 @@ export function ComposerList({
     [era]
   );
 
-  // Refs for scroll containers
+  // Refs for the always-mounted composer-list ScrollAreas (mobile + desktop).
+  // These two ScrollAreas live inside the component for its full lifetime, so
+  // the simpler "ref + querySelector inside an effect" pattern is sufficient.
   const mobileScrollAreaRef = useRef<HTMLDivElement>(null);
   const mobileViewportRef = useRef<HTMLElement | null>(null);
   const desktopScrollAreaRef = useRef<HTMLDivElement>(null);
   const desktopViewportRef = useRef<HTMLElement | null>(null);
-  const composerDetailsScrollRef = useRef<HTMLDivElement>(null);
-  const detailsViewportRef = useRef<HTMLElement | null>(null);
   const announcerRef = useRef<HTMLDivElement>(null);
   const detailsContentRef = useRef<HTMLDivElement>(null);
 
-  // Store viewport refs in refs to ensure their stability
+  // Bio details ScrollArea is conditionally mounted (only when a composer is
+  // selected) so we use the helper which handles mount/unmount discovery and
+  // re-initializes the scroll affordance accordingly.
+  const detailsAffordance = useScrollAreaAffordance({
+    bgVar: 'primary-foreground',
+    showScrollbar: false,
+  });
+  const composerDetailsScrollRef = detailsAffordance.rootRef;
+  const detailsViewportRef = detailsAffordance.viewportRef;
+
+  // Aggregated viewport refs used by scroll-position helpers below.
+  // The bio details viewport is managed by `detailsAffordance` and is read
+  // directly via `detailsViewportRef.current` (no aggregator entry needed).
   const viewportRefs = useRef({
     mobile: null as HTMLElement | null,
     desktop: null as HTMLElement | null,
-    details: null as HTMLElement | null
   });
 
   // Timeout refs to avoid closure issues
@@ -127,7 +138,7 @@ export function ComposerList({
     scrollCheck: null as NodeJS.Timeout | null
   });
 
-  // Initialize viewport refs when scroll areas are mounted
+  // Initialize viewport refs for the always-mounted composer-list ScrollAreas.
   const initializeViewportRefs = useCallback(() => {
     if (mobileScrollAreaRef.current) {
       const mobileViewport = mobileScrollAreaRef.current.querySelector('[data-radix-scroll-area-viewport]');
@@ -141,12 +152,6 @@ export function ComposerList({
       desktopViewportRef.current = desktopViewport as HTMLElement | null;
     }
 
-    if (composerDetailsScrollRef.current) {
-      const detailsViewport = composerDetailsScrollRef.current.querySelector('[data-radix-scroll-area-viewport]');
-      viewportRefs.current.details = detailsViewport as HTMLElement | null;
-      detailsViewportRef.current = detailsViewport as HTMLElement | null;
-    }
-
     return viewportRefs.current;
   }, []);
 
@@ -154,7 +159,7 @@ export function ComposerList({
   const handleComposerSelect = useCallback((composer: Composer) => {
     // Reset the details scroll position before selecting the new composer
     const resetDetailsScroll = () => {
-      const detailsViewport = viewportRefs.current.details;
+      const detailsViewport = detailsViewportRef.current;
       if (detailsViewport) {
         detailsViewport.scrollTop = 0;
       }
@@ -304,7 +309,9 @@ export function ComposerList({
     }
   }, [handleComposerSelect, onScrollComplete, scrollCardToVisibility]);
 
-  // Effect to capture viewport elements
+  // Initialize viewport refs for the always-mounted composer-list ScrollAreas
+  // when the era changes (which can reflow content). The conditionally-mounted
+  // bio details ScrollArea manages its own viewport via `detailsAffordance`.
   useEffect(() => {
     initializeViewportRefs();
   }, [era, initializeViewportRefs]);
@@ -324,7 +331,6 @@ export function ComposerList({
     orientation: 'horizontal'
   });
 
-
   // Reset details scroll position when selected composer changes
   useEffect(() => {
     if (!selectedComposer) return;
@@ -335,7 +341,7 @@ export function ComposerList({
     // Use multiple approaches for cross-browser compatibility
     const resetScroll = () => {
       // 1. Try using the viewport ref from Radix UI ScrollArea
-      const detailsViewport = viewportRefs.current.details;
+      const detailsViewport = detailsViewportRef.current;
       if (detailsViewport) {
         detailsViewport.scrollTop = 0;
         // Also try the smooth method as a backup
@@ -490,7 +496,7 @@ export function ComposerList({
 
       if (entry.isIntersecting) {
         // Content is visible, force reset scroll
-        const detailsViewport = viewportRefs.current.details;
+        const detailsViewport = detailsViewportRef.current;
         if (detailsViewport) {
           detailsViewport.scrollTop = 0;
         }
@@ -672,7 +678,7 @@ export function ComposerList({
 
             {/* Scrollable content area - only bio and works */}
             <div className="flex-1 min-h-0 relative overflow-hidden">
-              <ScrollArea ref={composerDetailsScrollRef} className="w-full h-full">
+              <ScrollArea ref={detailsAffordance.setRoot} className="w-full h-full">
                 <div className="px-4 md:px-5 py-3 space-y-4" ref={detailsContentRef}>
                   <p className="text-base md:text-lg text-foreground/90">
                     {selectedComposer.shortBio}

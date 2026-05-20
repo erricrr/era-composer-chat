@@ -5,6 +5,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useScrollAreaAffordance } from '@/hooks/useScrollAffordance';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { MusicNoteDecoration } from '@/components/MusicNoteDecoration';
@@ -206,6 +207,13 @@ export function ComposerSplitView({
   const isMobile = useIsMobile();
   const splitTransitionStyle = { transitionDuration: '220ms' };
 
+  // Scroll affordance for the composer panel (image + long bio + works).
+  // Matches the app-wide thin scrollbar; bgVar matches the panel background.
+  const bioAffordance = useScrollAreaAffordance({
+    bgVar: 'primary-foreground',
+    showScrollbar: false,
+  });
+
   // SIMPLIFIED: Don't use localStorage at all, just a simple state
   const [imageModalOpen, setImageModalOpen] = useState(false);
   // Add ref to image button for focus management
@@ -307,7 +315,7 @@ export function ComposerSplitView({
 
       {/* Scrollable Content Area */}
       <div className="flex-1 overflow-hidden">
-        <ScrollArea className="h-full">
+        <ScrollArea ref={bioAffordance.setRoot} className="h-full">
           <div className={`space-y-4 md:space-y-6 ${
             isMobile
               ? 'p-3' // Compact padding for mobile

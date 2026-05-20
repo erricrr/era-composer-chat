@@ -1,19 +1,27 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, useState } from 'react';
 
 interface ScrollAffordanceOptions {
-  itemCount: number;
+  // When provided, a small "{itemCount} {noun}" label is rendered above the
+  // scroll viewport. Omit both to use the affordance purely as a scrollbar.
+  itemCount?: number;
   noun?: string;
   bgVar?: string;
   orientation?: 'vertical' | 'horizontal';
+  // Optional dependency key. When this value changes, the affordance is torn
+  // down and re-initialized — useful when the underlying viewport element
+  // appears/disappears (e.g. a conditionally rendered ScrollArea).
+  refreshKey?: string | number | boolean | null;
+  /** When false, content still scrolls but the custom track/thumb are hidden. Default true. */
+  showScrollbar?: boolean;
 }
 
 interface ScrollAffordanceElements {
   wrapper: HTMLDivElement;
   fadeStart: HTMLDivElement;
   fadeEnd: HTMLDivElement;
-  track: HTMLDivElement;
-  thumb: HTMLDivElement;
-  countLabel: HTMLDivElement;
+  track: HTMLDivElement | null;
+  thumb: HTMLDivElement | null;
+  countLabel: HTMLDivElement | null;
 }
 
 // Scrollbar appearance (single source of truth for track + thumb colors/sizes).
@@ -96,7 +104,15 @@ export function useScrollAffordance<T extends HTMLElement>(
   const trackSizeRef = useRef<number>(0);
   const configRef = useRef<OrientationConfig | null>(null);
 
-  const { itemCount, noun = 'items', bgVar = 'background', orientation = 'vertical' } = options;
+  const {
+    itemCount,
+    noun = 'items',
+    bgVar = 'background',
+    orientation = 'vertical',
+    refreshKey = null,
+    showScrollbar = true,
+  } = options;
+  const showCountLabel = itemCount !== undefined;
 
   // Stable refs so changes to itemCount/noun don't re-trigger DOM re-parenting,
   // which would reset scrollTop on the wrapped viewport.
@@ -156,12 +172,14 @@ export function useScrollAffordance<T extends HTMLElement>(
     const scrollSize = config.scrollSize(container);
     const clientSize = config.clientSize(container);
     const { fadeStart, fadeEnd, thumb, track } = elements;
-    const trackSize = config.trackSize(track);
-    if (trackSize !== trackSizeRef.current) trackSizeRef.current = trackSize;
     if (rafIdRef.current !== null) cancelAnimationFrame(rafIdRef.current);
     rafIdRef.current = requestAnimationFrame(() => {
       updateFadeVisibility(fadeStart, fadeEnd, scrollPos, scrollSize, clientSize);
-      updateThumbPosition(thumb, trackSizeRef.current, scrollPos, scrollSize, clientSize);
+      if (track && thumb) {
+        const trackSize = config.trackSize(track);
+        if (trackSize !== trackSizeRef.current) trackSizeRef.current = trackSize;
+        updateThumbPosition(thumb, trackSizeRef.current, scrollPos, scrollSize, clientSize);
+      }
     });
   }, [containerRef, updateFadeVisibility, updateThumbPosition, config]);
 
@@ -178,19 +196,23 @@ export function useScrollAffordance<T extends HTMLElement>(
         wrapper.appendChild(container);
       }
     }
-    // Count label
-    const countLabel = document.createElement('div');
-    countLabel.className = 'scroll-affordance-count';
-    countLabel.textContent = `${itemCountRef.current} ${nounRef.current}`;
-    countLabel.style.cssText = 'font-size:12px;color:hsl(var(--muted-foreground));text-align:right;padding:2px 8px;flex-shrink:0;';
-    wrapper.insertBefore(countLabel, container);
+    // Count label (optional — only rendered when itemCount was provided)
+    let countLabel: HTMLDivElement | null = null;
+    if (showCountLabel) {
+      countLabel = document.createElement('div');
+      countLabel.className = 'scroll-affordance-count';
+      countLabel.textContent = `${itemCountRef.current} ${nounRef.current}`;
+      countLabel.style.cssText = 'font-size:12px;color:hsl(var(--muted-foreground));text-align:right;padding:2px 8px;flex-shrink:0;';
+      wrapper.insertBefore(countLabel, container);
+    }
     // Fades container wraps the scroll container
     const fadesContainer = document.createElement('div');
     fadesContainer.style.cssText = 'position:relative;flex:1;overflow:hidden;min-height:0;';
     wrapper.insertBefore(fadesContainer, container);
     fadesContainer.appendChild(container);
-    // Container styles
-    container.style.cssText = `${container.style.cssText}height:100% !important;${config.overflowStyle}${config.viewportPaddingStyle}scrollbar-width:none;`;
+    // Container styles (no gutter when the scrollbar is hidden)
+    const viewportPadding = showScrollbar ? config.viewportPaddingStyle : '';
+    container.style.cssText = `${container.style.cssText}height:100% !important;${config.overflowStyle}${viewportPadding}scrollbar-width:none;`;
     // Hide webkit scrollbar
     const styleId = `scroll-affordance-styles-${Math.random().toString(36).slice(2, 9)}`;
     if (!document.getElementById(styleId)) {
@@ -208,22 +230,26 @@ export function useScrollAffordance<T extends HTMLElement>(
     fadeEnd.style.cssText = config.fadeStyles.end;
     fadesContainer.appendChild(fadeStart);
     fadesContainer.appendChild(fadeEnd);
-    // Track and thumb
-    const track = document.createElement('div');
-    const thumb = document.createElement('div');
-    track.className = 'scroll-affordance-track';
-    thumb.className = 'scroll-affordance-thumb';
-    track.style.cssText = config.trackStyle;
-    thumb.style.cssText = config.thumbStyle;
-    track.appendChild(thumb);
-    fadesContainer.appendChild(track);
+    // Track and thumb (optional — bio sections hide these but keep scroll + fades)
+    let track: HTMLDivElement | null = null;
+    let thumb: HTMLDivElement | null = null;
+    if (showScrollbar) {
+      track = document.createElement('div');
+      thumb = document.createElement('div');
+      track.className = 'scroll-affordance-track';
+      thumb.className = 'scroll-affordance-thumb';
+      track.style.cssText = config.trackStyle;
+      thumb.style.cssText = config.thumbStyle;
+      track.appendChild(thumb);
+      fadesContainer.appendChild(track);
+    }
     return { wrapper, fadeStart, fadeEnd, track, thumb, countLabel };
-  }, [config]);
+  }, [config, showCountLabel, showScrollbar]);
 
   // Keep the count label text in sync without re-running the mount/unmount effect
   useEffect(() => {
     const elements = elementsRef.current;
-    if (!elements) return;
+    if (!elements?.countLabel) return;
     elements.countLabel.textContent = `${itemCount} ${noun}`;
   }, [itemCount, noun]);
 
@@ -279,7 +305,7 @@ export function useScrollAffordance<T extends HTMLElement>(
         elementsRef.current = null;
       }
     };
-  }, [containerRef, createElements, handleScroll]);
+  }, [containerRef, createElements, handleScroll, refreshKey]);
 
   // Return cleanup function for manual use
   return useCallback(() => {
@@ -304,4 +330,54 @@ export function useScrollAffordance<T extends HTMLElement>(
       elementsRef.current = null;
     }
   }, [containerRef]);
+}
+
+interface ScrollAreaAffordanceResult {
+  /** Callback ref to attach: `<ScrollArea ref={setRoot}>`. */
+  setRoot: (el: HTMLDivElement | null) => void;
+  /** Stable ref to the ScrollArea root element (Radix `Root`). */
+  rootRef: React.MutableRefObject<HTMLDivElement | null>;
+  /** Stable ref to the Radix viewport element discovered inside the root. */
+  viewportRef: React.MutableRefObject<HTMLElement | null>;
+}
+
+/**
+ * Convenience wrapper around `useScrollAffordance` for Radix's `ScrollArea`.
+ *
+ * Handles the boilerplate of:
+ *   - attaching a callback ref to the ScrollArea root,
+ *   - discovering the `[data-radix-scroll-area-viewport]` viewport, and
+ *   - re-initializing the affordance whenever the root mounts/unmounts
+ *     (so it works for conditionally rendered ScrollAreas).
+ *
+ * Usage:
+ *   const { setRoot, rootRef, viewportRef } = useScrollAreaAffordance({ bgVar: 'primary-foreground' });
+ *   return <ScrollArea ref={setRoot}>...</ScrollArea>;
+ */
+export function useScrollAreaAffordance(
+  options: ScrollAffordanceOptions = {},
+): ScrollAreaAffordanceResult {
+  const [root, setRoot] = useState<HTMLDivElement | null>(null);
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const viewportRef = useRef<HTMLElement | null>(null);
+
+  // Sync imperative refs from state whenever the root changes. Running this in
+  // an effect (rather than during render) keeps the refs aligned with the
+  // committed DOM, including the case where the ScrollArea unmounts.
+  useEffect(() => {
+    rootRef.current = root;
+    viewportRef.current = root
+      ? (root.querySelector('[data-radix-scroll-area-viewport]') as HTMLElement | null)
+      : null;
+  }, [root]);
+
+  // `refreshKey` triggers re-init of the underlying affordance each time the
+  // root mounts (null -> element) or unmounts (element -> null), without
+  // tearing things down when the same root re-renders with new content.
+  useScrollAffordance(viewportRef, {
+    ...options,
+    refreshKey: root ? 1 : 0,
+  });
+
+  return { setRoot, rootRef, viewportRef };
 }
