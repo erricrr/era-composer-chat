@@ -462,14 +462,6 @@ const Index = () => {
     const newIsMenuOpen = !isMenuOpen;
     setIsMenuOpen(newIsMenuOpen);
 
-    if (newIsMenuOpen) {
-      // Prevent body scrolling when menu is open
-      document.body.style.overflow = "hidden";
-    } else {
-      // Restore body scrolling when menu is closed
-      document.body.style.overflow = "";
-    }
-
     // Update localStorage for menu state
     localStorage.setItem("isMenuOpen", String(newIsMenuOpen));
   };
@@ -504,6 +496,8 @@ const Index = () => {
   // Effect to manage mounting/unmounting with slide animations
   useEffect(() => {
     if (isMenuOpen) {
+      // Keep body overflow in sync with menu state across all open/close paths.
+      document.body.style.overflow = "hidden";
       // Mount the menu first
       setIsMenuMounted(true);
       // Use setTimeout to ensure browser paints initial -translate-x-full state before animating
@@ -512,6 +506,7 @@ const Index = () => {
       }, 10);
       return () => clearTimeout(openTimer);
     } else {
+      document.body.style.overflow = "";
       // Trigger exit animation, then unmount
       setIsMenuAnimating(false);
       const closeTimer = setTimeout(() => setIsMenuMounted(false), 300);
@@ -567,6 +562,17 @@ const Index = () => {
       };
     }
   }, [isMobile]);
+
+  // Keep the chat state machine consistent: chatting requires an active composer.
+  useEffect(() => {
+    if (isChatting && !isChatClosing && !selectedComposer) {
+      setIsChatting(false);
+      localStorage.setItem("isChatting", "false");
+    }
+  }, [isChatting, isChatClosing, selectedComposer]);
+
+  const shouldShowWelcome = !isChatting && !isChatClosing;
+  const shouldShowChatOverlay = (isChatting || isChatClosing) && !!selectedComposer;
 
   return (
     <TooltipProvider>
@@ -727,7 +733,7 @@ const Index = () => {
           )}
 
           {/* Welcome/Landing Page - Shows when no chat is active */}
-          {!isChatting && !isChatClosing && (
+          {shouldShowWelcome && (
             <div
               className="container mx-auto px-4 flex flex-col items-center justify-center"
               style={{ minHeight: "calc(100dvh - 2.75rem)" }}
@@ -791,7 +797,7 @@ const Index = () => {
           )}
 
           {/* Chat Interface - Only shown when user clicks "Start a Chat" button */}
-          {(isChatting || isChatClosing) && (
+          {shouldShowChatOverlay && (
             <div
               className={`fixed bg-background transition-[opacity,transform,right] duration-300 ease-in-out motion-reduce:!transition-none motion-reduce:duration-0 ${
                 isChatClosing
@@ -815,47 +821,42 @@ const Index = () => {
                 zIndex: 40,
               }}
             >
-              {selectedComposer &&
-                isComposerInPublicDomain(selectedComposer) && (
-                  <article
-                    className="container mx-auto px-4 h-full"
-                    aria-label={`Chat with ${selectedComposer.name}`}
-                  >
-                    <Suspense fallback={<div className="h-full" aria-hidden="true" />}>
-                      <ChatInterface
-                        key={chatClearTrigger}
-                        composer={selectedComposer}
-                        onUserTyping={() => {}}
-                        onUserSend={handleAddActiveChat}
-                        onSplitViewToggle={setIsSplitViewOpenFromChat}
-                        isComposerListOpen={isMenuOpen}
-                        isActiveChatsOpen={isActiveChatsOpen}
-                        onClose={handleCloseChat}
-                        onOpenComposerMenu={() => {
-                          setIsMenuOpen(true);
-                          localStorage.setItem("isMenuOpen", "true");
-                        }}
-                      />
-                    </Suspense>
-                  </article>
-                )}
-              {selectedComposer &&
-                !isComposerInPublicDomain(selectedComposer) && (
-                  <article
-                    className="container mx-auto px-4 h-full flex items-center justify-center"
-                    aria-label="Copyright notice"
-                  >
-                    <div className="text-center p-6 bg-muted/50 rounded-lg shadow">
-                      <h2 className="text-xl font-semibold mb-2">
-                        Chat Unavailable
-                      </h2>
-                      <p className="text-muted-foreground">
-                        Chatting with {selectedComposer.name} is unavailable due
-                        to copyright restrictions.
-                      </p>
-                    </div>
-                  </article>
-                )}
+              {isComposerInPublicDomain(selectedComposer) ? (
+                <article
+                  className="container mx-auto px-4 h-full"
+                  aria-label={`Chat with ${selectedComposer.name}`}
+                >
+                  <Suspense fallback={<div className="h-full" aria-hidden="true" />}>
+                    <ChatInterface
+                      key={chatClearTrigger}
+                      composer={selectedComposer}
+                      onUserTyping={() => {}}
+                      onUserSend={handleAddActiveChat}
+                      onSplitViewToggle={setIsSplitViewOpenFromChat}
+                      isComposerListOpen={isMenuOpen}
+                      isActiveChatsOpen={isActiveChatsOpen}
+                      onClose={handleCloseChat}
+                      onOpenComposerMenu={() => {
+                        setIsMenuOpen(true);
+                        localStorage.setItem("isMenuOpen", "true");
+                      }}
+                    />
+                  </Suspense>
+                </article>
+              ) : (
+                <article
+                  className="container mx-auto px-4 h-full flex items-center justify-center"
+                  aria-label="Copyright notice"
+                >
+                  <div className="text-center p-6 bg-muted/50 rounded-lg shadow">
+                    <h2 className="text-xl font-semibold mb-2">Chat Unavailable</h2>
+                    <p className="text-muted-foreground">
+                      Chatting with {selectedComposer.name} is unavailable due to
+                      copyright restrictions.
+                    </p>
+                  </div>
+                </article>
+              )}
             </div>
           )}
         </main>
