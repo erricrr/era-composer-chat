@@ -11,6 +11,7 @@ import { MusicNoteDecoration } from '@/components/MusicNoteDecoration';
 import { ComposerImageViewer } from '@/components/ComposerImageViewer';
 import { CopyrightAttribution } from './CopyrightAttribution';
 import { PortraitImage } from './PortraitImage';
+import { ChatActionsMenu } from './ChatActionsMenu';
 
 // ContainedImageModal component
 function ContainedImageModal({
@@ -187,11 +188,21 @@ interface ComposerSplitViewProps {
   composer: Composer;
   isOpen: boolean;
   onClose: () => void;
+  onReset?: () => void;
+  onCloseChat?: () => void;
   children: ReactNode;
   isActiveChatsOpen?: boolean;
 }
 
-export function ComposerSplitView({ composer, isOpen, onClose, children, isActiveChatsOpen = false }: ComposerSplitViewProps) {
+export function ComposerSplitView({
+  composer,
+  isOpen,
+  onClose,
+  onReset,
+  onCloseChat,
+  children,
+  isActiveChatsOpen = false,
+}: ComposerSplitViewProps) {
   const isMobile = useIsMobile();
   const splitTransitionStyle = { transitionDuration: '220ms' };
 
@@ -276,18 +287,15 @@ export function ComposerSplitView({ composer, isOpen, onClose, children, isActiv
             {composer.name}
           </div>
         </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          aria-label="Close split view"
-          onClick={(e) => {
-            e.stopPropagation();
-            onClose();
-          }}
-          className="absolute right-4 rounded-full hover:bg-primary/20 group-hover:bg-primary/20 w-11 h-11 flex items-center justify-center text-foreground/70 hover:text-foreground/90 z-10 isolate"
-        >
-          <X className="h-4 w-4" />
-        </Button>
+        <ChatActionsMenu
+          isSplitView={true}
+          onToggleView={onClose}
+          onReset={onReset ?? (() => {})}
+          onCloseChat={onCloseChat}
+          isMobile={isMobile}
+          stopPropagation={true}
+          triggerClassName="absolute right-4 rounded-full hover:bg-primary/20 group-hover:bg-primary/20 text-foreground/70 hover:text-foreground/90 z-10 isolate"
+        />
       </div>
 
       {/* Scrollable Content Area */}

@@ -1,12 +1,13 @@
 import { useState, useRef, useEffect, useLayoutEffect, KeyboardEvent, useCallback } from 'react';
 import { Composer, Message, Conversation, getLastName } from '@/data/composers';
 import { useConversations } from '@/hooks/useConversations';
-import { MoreVertical, ArrowUp, Music, Mic } from 'lucide-react';
+import { ArrowUp, Music, Mic } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Badge } from "@/components/ui/badge";
 import { v4 as uuidv4 } from 'uuid';
 import { ComposerImageViewer } from './ComposerImageViewer';
 import { ComposerSplitView } from './ComposerSplitView';
+import { ChatActionsMenu } from './ChatActionsMenu';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipPortal } from '@/components/ui/tooltip';
 import { useIsTouch } from '@/hooks/useIsTouch';
 import { useGeminiChat } from '@/hooks/useGeminiChat';
@@ -26,14 +27,6 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { buttonVariants } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
 
 // Add type definitions for Web Speech API
@@ -149,7 +142,6 @@ export function ChatInterface({
   const [recognitionErrors, setRecognitionErrors] = useState<string[]>([]);
 
   const [resetConfirmOpen, setResetConfirmOpen] = useState(false);
-  const [chatActionsMenuOpen, setChatActionsMenuOpen] = useState(false);
 
   const {
     activeConversation,
@@ -961,59 +953,14 @@ export function ChatInterface({
               </Tooltip>
 
               <div className="shrink-0">
-                {isMobile ? (
-                  <button
-                    type="button"
-                    disabled={isComposerListOpen || isComposerMenuOpen}
-                    onClick={() => setChatActionsMenuOpen(true)}
-                    className="inline-flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0 transition-colors disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
-                    aria-label="Chat actions"
-                    aria-haspopup="dialog"
-                    aria-expanded={chatActionsMenuOpen}
-                  >
-                    <MoreVertical className="h-5 w-5" strokeWidth={2} aria-hidden />
-                  </button>
-                ) : (
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <button
-                        type="button"
-                        disabled={isComposerListOpen || isComposerMenuOpen}
-                        className="inline-flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                        aria-label="Chat actions"
-                      >
-                        <MoreVertical className="h-5 w-5" strokeWidth={2} aria-hidden />
-                      </button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" side="bottom" sideOffset={8} className="min-w-[12rem]">
-                      <DropdownMenuItem
-                        className="min-h-11 cursor-pointer text-base"
-                        aria-label="Open split view"
-                        onSelect={() => openSplitView()}
-                      >
-                        Split view
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem
-                        className="min-h-11 cursor-pointer text-base"
-                        onSelect={() => setResetConfirmOpen(true)}
-                      >
-                        Reset conversation
-                      </DropdownMenuItem>
-                      {onClose ? (
-                        <>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem
-                            className="min-h-11 cursor-pointer text-base"
-                            onSelect={() => onClose()}
-                          >
-                            Close chat
-                          </DropdownMenuItem>
-                        </>
-                      ) : null}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                )}
+                <ChatActionsMenu
+                  isSplitView={false}
+                  onToggleView={openSplitView}
+                  onReset={() => setResetConfirmOpen(true)}
+                  onCloseChat={onClose}
+                  isMobile={isMobile}
+                  disabled={isComposerListOpen || isComposerMenuOpen}
+                />
               </div>
             </nav>
           </div>
@@ -1212,54 +1159,6 @@ export function ChatInterface({
         </p>
       </form>
 
-      {isMobile ? (
-        <Sheet open={chatActionsMenuOpen} onOpenChange={setChatActionsMenuOpen}>
-          <SheetContent
-            side="bottom"
-            className="rounded-t-2xl p-4 pb-[max(1rem,env(safe-area-inset-bottom))] [&>button]:hidden"
-          >
-            <SheetHeader className="sr-only">
-              <SheetTitle>Chat actions</SheetTitle>
-            </SheetHeader>
-            <div className="flex flex-col gap-1">
-              <button
-                type="button"
-                className="flex min-h-11 w-full items-center rounded-md px-3 py-3 text-left text-base font-medium text-foreground hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                aria-label="Open split view"
-                onClick={() => {
-                  setChatActionsMenuOpen(false);
-                  openSplitView();
-                }}
-              >
-                Split view
-              </button>
-              <button
-                type="button"
-                className="flex min-h-11 w-full items-center rounded-md px-3 py-3 text-left text-base font-medium text-foreground hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                onClick={() => {
-                  setChatActionsMenuOpen(false);
-                  setResetConfirmOpen(true);
-                }}
-              >
-                Reset conversation
-              </button>
-              {onClose ? (
-                <button
-                  type="button"
-                  className="flex min-h-11 w-full items-center rounded-md px-3 py-3 text-left text-base font-medium text-foreground hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                  onClick={() => {
-                    setChatActionsMenuOpen(false);
-                    onClose();
-                  }}
-                >
-                  Close chat
-                </button>
-              ) : null}
-            </div>
-          </SheetContent>
-        </Sheet>
-      ) : null}
-
       <AlertDialog open={resetConfirmOpen} onOpenChange={setResetConfirmOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -1314,6 +1213,8 @@ export function ChatInterface({
             composer={composer}
             isOpen={isSplitViewOpen}
             onClose={closeSplitView}
+            onReset={() => setResetConfirmOpen(true)}
+            onCloseChat={onClose}
             isActiveChatsOpen={isActiveChatsOpen}
           >
             <div className="h-full">{chatContent}</div>
