@@ -1,7 +1,19 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Composer } from '@/data/composers';
 import { X, MessageSquareOff, AlertTriangle } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 interface ActiveChatsSliderProps {
   isOpen: boolean;
@@ -33,6 +45,7 @@ export default function ActiveChatsSlider({
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const clearAllButtonRef = useRef<HTMLButtonElement>(null);
   const skipReturnFocusRef = useRef<boolean>(false);
+  const [pendingRemoveComposer, setPendingRemoveComposer] = useState<Composer | null>(null);
 
   // Handle focus management when slider opens/closes
   useEffect(() => {
@@ -96,8 +109,8 @@ export default function ActiveChatsSlider({
     e.stopPropagation();
     e.preventDefault();
 
-    // Call the onRemoveChat handler
-    onRemoveChat(composer);
+    // Ask for confirmation before permanently deleting a chat
+    setPendingRemoveComposer(composer);
   };
 
   // Handle close click: skip focus return for pointer clicks, but restore focus for keyboard activation
@@ -196,6 +209,38 @@ export default function ActiveChatsSlider({
           })
         )}
       </div>
+      <AlertDialog
+        open={!!pendingRemoveComposer}
+        onOpenChange={(open) => {
+          if (!open) {
+            setPendingRemoveComposer(null);
+          }
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete this chat?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete your conversation with{' '}
+              <strong>{pendingRemoveComposer?.name}</strong>. You can&apos;t undo this.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className={cn(buttonVariants({ variant: 'destructive' }))}
+              onClick={() => {
+                if (pendingRemoveComposer) {
+                  onRemoveChat(pendingRemoveComposer);
+                }
+                setPendingRemoveComposer(null);
+              }}
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 {/*
       <div className="p-4 border-t border-border">
         <button
