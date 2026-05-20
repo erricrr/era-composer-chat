@@ -55,6 +55,8 @@ export default function ActiveChatsSlider({
         closeButtonRef.current?.focus();
       }, 100);
     } else {
+      // Dismiss any pending remove confirmation so it doesn't reappear on next open
+      setPendingRemoveComposer(null);
       // Return focus unless skipped (e.g., closed via click)
       if (!skipReturnFocusRef.current && returnFocusRef?.current) {
         returnFocusRef.current.focus();
