@@ -80,14 +80,6 @@ export const ComposerCard = memo(function ComposerCard({ composer, onClick, isSe
             `}>
               {composer.name}
             </h3>
-            <p className={`
-              text-muted-foreground truncate
-              ${compact ? 'text-xs' : 'text-sm'}
-              ${isSelected ? 'opacity-90' : 'group-hover:opacity-90'}
-              transition-opacity duration-150
-            `}>
-              {composer.birthYear}-{composer.deathYear || 'present'}
-            </p>
           </div>
         </div>
       </div>
