@@ -9,6 +9,7 @@ import {
   DrawerClose
 } from "./drawer";
 import { Button } from "@/components/ui/button";
+import { BuyMeABanhMi } from "@/components/BuyMeABanhMi";
 import LegalPolicyDialog from "@/components/legal/LegalPolicyDialog";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle, faEnvelope } from '@fortawesome/free-solid-svg-icons';
@@ -290,28 +291,7 @@ const FooterDrawer: React.FC<FooterDrawerProps> = ({ onTrigger, onVisibilityChan
                   </button>
                 </LegalPolicyDialog>
               </p>
-              <div
-                className="rounded-lg border border-border bg-muted/50 px-4 py-3 flex flex-col items-center justify-center shadow-sm gap-2"
-                data-vaul-no-drag="true"
-              >
-
-                <Button asChild size="sm" className="min-h-[36px] w-full sm:w-auto px-4 bg-[#9f639e] text-[#f7f6f2] hover:bg-[#9f649e]/90 hover:text-[#f7f6f2] font-bold">
-                  <a
-                    href="https://buymeacoffee.com/erricrr"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={(e) => e.stopPropagation()}
-                    data-vaul-no-drag="true"
-                    data-vaul-drawer-ignore="true"
-                    aria-label="Buy me a bánh mì (opens in a new tab)"
-                  >
-                    🥖 Buy me a bánh mì
-                  </a>
-                </Button>
-                <p className="text-xs text-muted-foreground text-center">
-                  A small way to support what I’m building
-                </p>
-              </div>
+              <BuyMeABanhMi inDrawer />
               <p className="text-xs text-muted-foreground text-center" tabIndex={0} data-vaul-no-drag="true">
                 © {new Date().getFullYear()} Era Composer Chat&mdash;An educational tool for exploring classical music
               </p>

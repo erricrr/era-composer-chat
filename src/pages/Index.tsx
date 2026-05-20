@@ -19,6 +19,7 @@ import {
   MessageSquareOff,
   X,
 } from "lucide-react";
+import { BuyMeABanhMi } from "@/components/BuyMeABanhMi";
 import FooterDrawer from "@/components/ui/footerDrawer";
 import HeaderIcon from "@/components/ui/HeaderIcon";
 import { ComposerSearch } from "@/components/ComposerSearch";
@@ -776,6 +777,9 @@ const Index = () => {
                   >
                     Terms of Use
                   </Link>
+                </div>
+                <div className="mt-6 w-full">
+                  <BuyMeABanhMi />
                 </div>
               </div>
             </div>
