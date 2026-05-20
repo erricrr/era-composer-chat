@@ -1,12 +1,11 @@
 import { Composer, Era, getComposersByEra, getLastName, isComposerInPublicDomain } from '@/data/composers';
 import { ComposerCard } from './ComposerCard';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ComposerImageViewer } from './ComposerImageViewer';
 import { useState, useCallback, useEffect, useRef, useMemo, useLayoutEffect } from 'react';
 import { ChevronLeft, ChevronRight, ChevronUp, ChevronDown, LucideIcon } from 'lucide-react';
-import { useScrollAffordance, useScrollAreaAffordance } from '@/hooks/useScrollAffordance';
+import { ScrollAffordanceArea, ContentScrollAffordanceArea } from '@/components/ui/scroll-affordance-area';
 
 // Helper to detect Safari browser
 const isSafari = () => {
@@ -105,55 +104,17 @@ export function ComposerList({
     [era]
   );
 
-  // Refs for the always-mounted composer-list ScrollAreas (mobile + desktop).
-  // These two ScrollAreas live inside the component for its full lifetime, so
-  // the simpler "ref + querySelector inside an effect" pattern is sufficient.
-  const mobileScrollAreaRef = useRef<HTMLDivElement>(null);
   const mobileViewportRef = useRef<HTMLElement | null>(null);
-  const desktopScrollAreaRef = useRef<HTMLDivElement>(null);
   const desktopViewportRef = useRef<HTMLElement | null>(null);
+  const composerDetailsScrollRef = useRef<HTMLDivElement | null>(null);
+  const detailsViewportRef = useRef<HTMLElement | null>(null);
   const announcerRef = useRef<HTMLDivElement>(null);
   const detailsContentRef = useRef<HTMLDivElement>(null);
-
-  // Bio details ScrollArea is conditionally mounted (only when a composer is
-  // selected) so we use the helper which handles mount/unmount discovery and
-  // re-initializes the scroll affordance accordingly.
-  const detailsAffordance = useScrollAreaAffordance({
-    bgVar: 'primary-foreground',
-    showScrollbar: false,
-  });
-  const composerDetailsScrollRef = detailsAffordance.rootRef;
-  const detailsViewportRef = detailsAffordance.viewportRef;
-
-  // Aggregated viewport refs used by scroll-position helpers below.
-  // The bio details viewport is managed by `detailsAffordance` and is read
-  // directly via `detailsViewportRef.current` (no aggregator entry needed).
-  const viewportRefs = useRef({
-    mobile: null as HTMLElement | null,
-    desktop: null as HTMLElement | null,
-  });
 
   // Timeout refs to avoid closure issues
   const timeoutRefs = useRef({
     scrollCheck: null as NodeJS.Timeout | null
   });
-
-  // Initialize viewport refs for the always-mounted composer-list ScrollAreas.
-  const initializeViewportRefs = useCallback(() => {
-    if (mobileScrollAreaRef.current) {
-      const mobileViewport = mobileScrollAreaRef.current.querySelector('[data-radix-scroll-area-viewport]');
-      viewportRefs.current.mobile = mobileViewport as HTMLElement | null;
-      mobileViewportRef.current = mobileViewport as HTMLElement | null;
-    }
-
-    if (desktopScrollAreaRef.current) {
-      const desktopViewport = desktopScrollAreaRef.current.querySelector('[data-radix-scroll-area-viewport]');
-      viewportRefs.current.desktop = desktopViewport as HTMLElement | null;
-      desktopViewportRef.current = desktopViewport as HTMLElement | null;
-    }
-
-    return viewportRefs.current;
-  }, []);
 
   // Handle composer selection
   const handleComposerSelect = useCallback((composer: Composer) => {
@@ -191,8 +152,8 @@ export function ComposerList({
 
   const getViewportForOrientation = useCallback((orientation: Orientation) => {
     return orientation === 'vertical'
-      ? viewportRefs.current.desktop
-      : viewportRefs.current.mobile;
+      ? desktopViewportRef.current
+      : mobileViewportRef.current;
   }, []);
 
   const getComposerCardElement = useCallback((composerId: string, orientation: Orientation) => {
@@ -308,28 +269,6 @@ export function ComposerList({
       timeoutRefs.current.scrollCheck = setTimeout(onScrollComplete, 300);
     }
   }, [handleComposerSelect, onScrollComplete, scrollCardToVisibility]);
-
-  // Initialize viewport refs for the always-mounted composer-list ScrollAreas
-  // when the era changes (which can reflow content). The conditionally-mounted
-  // bio details ScrollArea manages its own viewport via `detailsAffordance`.
-  useEffect(() => {
-    initializeViewportRefs();
-  }, [era, initializeViewportRefs]);
-
-  // Apply scroll affordance to desktop viewport
-  useScrollAffordance(desktopViewportRef, {
-    itemCount: allComposers.length,
-    noun: 'composers',
-    bgVar: 'background'
-  });
-
-  // Apply scroll affordance to mobile horizontal viewport
-  useScrollAffordance(mobileViewportRef, {
-    itemCount: allComposers.length,
-    noun: 'composers',
-    bgVar: 'background',
-    orientation: 'horizontal'
-  });
 
   // Reset details scroll position when selected composer changes
   useEffect(() => {
@@ -451,9 +390,8 @@ export function ComposerList({
   // Runs synchronously after DOM mutations and before browser paint, so the
   // user never sees an intermediate scroll position when switching eras.
   useLayoutEffect(() => {
-    initializeViewportRefs();
     ensureComposerVisibility(selectedComposer?.id, { behavior: 'auto', align: 'nearest' });
-  }, [era, selectedComposer?.id, ensureComposerVisibility, initializeViewportRefs]);
+  }, [era, selectedComposer?.id, ensureComposerVisibility]);
 
   // Handle selected composer visibility on resize
   const keepSelectedComposerVisibleOnResize = useCallback(() => {
@@ -473,7 +411,6 @@ export function ComposerList({
     const handleResize = () => {
       if (resizeTimeout) clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(() => {
-        initializeViewportRefs(); // Re-initialize viewport refs on resize
         keepSelectedComposerVisibleOnResize();
       }, 150);
     };
@@ -484,7 +421,7 @@ export function ComposerList({
       window.removeEventListener('resize', handleResize);
       if (resizeTimeout) clearTimeout(resizeTimeout);
     };
-  }, [keepSelectedComposerVisibleOnResize, initializeViewportRefs]);
+  }, [keepSelectedComposerVisibleOnResize]);
 
   // Use IntersectionObserver to detect when the content is visible
   useEffect(() => {
@@ -552,7 +489,14 @@ export function ComposerList({
           <div className="md:hidden flex-shrink-0 relative">
             <div className="relative">
               {/* Removed the shadow divs that were here */}
-              <ScrollArea ref={mobileScrollAreaRef} className="w-full h-auto scroll-area">
+              <ScrollAffordanceArea
+                viewportRef={mobileViewportRef}
+                itemCount={allComposers.length}
+                noun="composers"
+                bgVar="background"
+                orientation="horizontal"
+                className="w-full h-auto scroll-area"
+              >
                 <div className="inline-flex h-full items-center relative">
                   {allComposers.map((composer, idx) => (
                     <div
@@ -587,14 +531,20 @@ export function ComposerList({
                     </div>
                   ))}
                 </div>
-              </ScrollArea>
+              </ScrollAffordanceArea>
             </div>
           </div>
           {/* Desktop vertical scroll */}
           <div className="hidden md:flex flex-col flex-1 overflow-hidden relative py-0">
             <div className="relative overflow-hidden h-full">
               {/* Remove desktop vertical scroll shadows */}
-              <ScrollArea ref={desktopScrollAreaRef} className="w-full h-full scroll-area">
+              <ScrollAffordanceArea
+                viewportRef={desktopViewportRef}
+                itemCount={allComposers.length}
+                noun="composers"
+                bgVar="background"
+                className="w-full h-full scroll-area"
+              >
                 <div className="flex flex-col relative">
                   {allComposers.map((composer, idx) => (
                     <div
@@ -629,7 +579,7 @@ export function ComposerList({
                     </div>
                   ))}
                 </div>
-              </ScrollArea>
+              </ScrollAffordanceArea>
             </div>
           </div>
 
@@ -678,7 +628,12 @@ export function ComposerList({
 
             {/* Scrollable content area - only bio and works */}
             <div className="flex-1 min-h-0 relative overflow-hidden">
-              <ScrollArea ref={detailsAffordance.setRoot} className="w-full h-full">
+              <ContentScrollAffordanceArea
+                viewportRef={detailsViewportRef}
+                rootRef={composerDetailsScrollRef}
+                bgVar="primary-foreground"
+                className="w-full h-full"
+              >
                 <div className="px-4 md:px-5 py-3 space-y-4" ref={detailsContentRef}>
                   <p className="text-base md:text-lg text-foreground/90">
                     {selectedComposer.shortBio}
@@ -692,7 +647,7 @@ export function ComposerList({
                     </ul>
                   </div>
                 </div>
-              </ScrollArea>
+              </ContentScrollAffordanceArea>
               {/* Scroll shadow for biography section */}
               <div className="pointer-events-none absolute bottom-0 left-0 w-full h-6 bg-gradient-to-t from-background to-transparent z-10" />
             </div>

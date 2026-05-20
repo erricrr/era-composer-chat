@@ -179,7 +179,7 @@ form.chat-composer {
   }
 
   /* Reserve space so messages scroll above the fixed composer */
-  .chat-shell .chat-messages {
+  .chat-shell .chat-messages-content {
     padding-bottom: 7.5rem;
   }
 

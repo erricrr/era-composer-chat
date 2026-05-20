@@ -4,8 +4,7 @@ import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/componen
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { useScrollAreaAffordance } from '@/hooks/useScrollAffordance';
+import { ContentScrollAffordanceArea } from '@/components/ui/scroll-affordance-area';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { MusicNoteDecoration } from '@/components/MusicNoteDecoration';
@@ -119,8 +118,7 @@ function ContainedImageModal({
   return (
     // Full-screen backdrop - positioned to avoid header collision
     <div
-      className="absolute inset-x-0 top-[50px] bottom-0 z-[5] flex items-start justify-center overflow-auto"
-      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      className="absolute inset-x-0 top-[50px] bottom-0 z-[5] overflow-hidden"
       style={{
         backgroundColor: 'hsl(var(--background) / 0.8)',
         opacity: isOpen ? 1 : 0,
@@ -130,57 +128,64 @@ function ContainedImageModal({
       aria-label={`Image of ${composerName}`}
       aria-modal="true"
     >
-      {/* Content container with proper spacing */}
-      <div
-        ref={modalRef}
-        className="relative bg-background rounded-lg shadow-xl z-10 overflow-hidden mt-5 mb-6 max-w-[90%]"
-        onClick={e => e.stopPropagation()} // Prevent click from closing modal
-        style={{
-          transform: isOpen ? 'scale(1)' : 'scale(0.95)',
-          transition: 'transform 150ms ease-in-out',
-        }}
-      >
-        {/* Close button - improved for keyboard access */}
-        <Button
-          ref={closeButtonRef}
-          variant="ghost"
-          size="icon"
-          onClick={onClose}
-          className="absolute right-2 top-2 z-20 h-11 w-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-          aria-label="Close image view"
+      <ContentScrollAffordanceArea bgVar="background" className="h-full w-full">
+        <div
+          className="flex min-h-full items-start justify-center px-[5%] py-5"
+          onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
         >
-          <X className="h-4 w-4" />
-        </Button>
-
-        <div className="flex flex-col">
-          <div className="flex justify-center items-center p-2">
-            <img
-              ref={imageRef}
-              src={imageSrc}
-              alt={composerName}
-              className="w-auto max-w-full max-h-[calc(100vh-220px)] object-contain focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 z-10"
-              tabIndex={0}
-              aria-label={`Full-size image of ${composerName}`}
-            />
-          </div>
-
-          {/* Footer */}
-          <div className="py-2 px-2 text-left bg-background dark:bg-secondary">
-            <div
-              className="text-sm text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-              tabIndex={0}
+          {/* Content container with proper spacing */}
+          <div
+            ref={modalRef}
+            className="relative bg-background rounded-lg shadow-xl z-10 overflow-hidden max-w-full"
+            onClick={e => e.stopPropagation()}
+            style={{
+              transform: isOpen ? 'scale(1)' : 'scale(0.95)',
+              transition: 'transform 150ms ease-in-out',
+            }}
+          >
+            {/* Close button - improved for keyboard access */}
+            <Button
+              ref={closeButtonRef}
+              variant="ghost"
+              size="icon"
+              onClick={onClose}
+              className="absolute right-2 top-2 z-20 h-11 w-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+              aria-label="Close image view"
             >
-              {copyrightDetails ? (
-                <CopyrightAttribution
-                  copyrightDetails={copyrightDetails}
-                  firstLinkRef={firstLinkRef}
-                  secondLinkRef={secondLinkRef}
+              <X className="h-4 w-4" />
+            </Button>
+
+            <div className="flex flex-col">
+              <div className="flex justify-center items-center p-2">
+                <img
+                  ref={imageRef}
+                  src={imageSrc}
+                  alt={composerName}
+                  className="w-auto max-w-full max-h-[calc(100vh-220px)] object-contain focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 z-10"
+                  tabIndex={0}
+                  aria-label={`Full-size image of ${composerName}`}
                 />
-              ) : null}
+              </div>
+
+              {/* Footer */}
+              <div className="py-2 px-2 text-left bg-background dark:bg-secondary">
+                <div
+                  className="text-sm text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                  tabIndex={0}
+                >
+                  {copyrightDetails ? (
+                    <CopyrightAttribution
+                      copyrightDetails={copyrightDetails}
+                      firstLinkRef={firstLinkRef}
+                      secondLinkRef={secondLinkRef}
+                    />
+                  ) : null}
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </ContentScrollAffordanceArea>
     </div>
   );
 }
@@ -207,12 +212,6 @@ export function ComposerSplitView({
   const isMobile = useIsMobile();
   const splitTransitionStyle = { transitionDuration: '220ms' };
 
-  // Scroll affordance for the composer panel (image + long bio + works).
-  // Matches the app-wide thin scrollbar; bgVar matches the panel background.
-  const bioAffordance = useScrollAreaAffordance({
-    bgVar: 'primary-foreground',
-    showScrollbar: false,
-  });
 
   // SIMPLIFIED: Don't use localStorage at all, just a simple state
   const [imageModalOpen, setImageModalOpen] = useState(false);
@@ -315,7 +314,7 @@ export function ComposerSplitView({
 
       {/* Scrollable Content Area */}
       <div className="flex-1 overflow-hidden">
-        <ScrollArea ref={bioAffordance.setRoot} className="h-full">
+        <ContentScrollAffordanceArea bgVar="primary-foreground" className="h-full">
           <div className={`space-y-4 md:space-y-6 ${
             isMobile
               ? 'p-3' // Compact padding for mobile
@@ -441,7 +440,7 @@ export function ComposerSplitView({
           </div>
           {/* Scroll shadow for all screen sizes */}
           <div className="pointer-events-none absolute bottom-0 left-0 w-full h-6 bg-gradient-to-t from-background to-transparent z-10" />
-        </ScrollArea>
+        </ContentScrollAffordanceArea>
       </div>
 
       {/* Conditional rendering of the image modal */}

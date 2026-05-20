@@ -28,6 +28,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { ScrollAffordanceArea } from '@/components/ui/scroll-affordance-area';
 
 // Add type definitions for Web Speech API
 interface SpeechRecognitionEvent extends Event {
@@ -105,7 +106,9 @@ export function ChatInterface({
 }: ChatInterfaceProps) {
   const [inputMessage, setInputMessage] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const chatContainerRef = useRef<HTMLDivElement>(null); // Keep ref for the container
+  /** Ref bridge so scroll affordance can invoke the latest scroll handler. */
+  const chatScrollHandlerRef = useRef<() => void>(() => {});
+  const chatContainerRef = useRef<HTMLElement | null>(null);
   /** Persists message list scroll when chat content remounts between regular and split layout. */
   const savedChatScrollTopRef = useRef(0);
   /**
@@ -343,6 +346,8 @@ export function ChatInterface({
     const isNearBottom = gapToBottom < 100;
     setShouldAutoScroll(isNearBottom);
   }, []);
+
+  chatScrollHandlerRef.current = handleChatContainerScroll;
 
   useLayoutEffect(() => {
     const apply = () => {
@@ -967,17 +972,21 @@ export function ChatInterface({
 
         </header>
       ) : null}
-      <div
-        className={`chat-messages min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 relative ${
-          !isSplitViewOpen ? 'pt-4' : 'py-4'
-        }`}
-        ref={chatContainerRef}
-        onScroll={handleChatContainerScroll}
-        role="log"
-        aria-label="Chat messages"
-        aria-live="polite"
+      <ScrollAffordanceArea
+        viewportRef={chatContainerRef}
+        bgVar="background"
+        onScroll={() => chatScrollHandlerRef.current()}
+        className="chat-messages min-h-0 flex-1"
       >
-        <div className="flex flex-col min-h-[calc(100%-2rem)] pb-2">
+        <div
+          className={`chat-messages-content px-5 relative ${
+            !isSplitViewOpen ? 'pt-4' : 'py-4'
+          }`}
+          role="log"
+          aria-label="Chat messages"
+          aria-live="polite"
+        >
+          <div className="flex flex-col min-h-[calc(100%-2rem)] pb-2">
           {currentMessages.length === 0 ? (
             <div
               className="flex-1 flex items-center justify-center text-muted-foreground text-base"
@@ -1041,7 +1050,8 @@ export function ChatInterface({
           )}
           <div ref={messagesEndRef} className="h-0" aria-hidden="true" />
         </div>
-      </div>
+        </div>
+      </ScrollAffordanceArea>
 
       <form
         onSubmit={handleSendMessage}
