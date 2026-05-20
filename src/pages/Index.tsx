@@ -812,7 +812,7 @@ const Index = () => {
             >
               {isComposerInPublicDomain(selectedComposer) ? (
                 <article
-                  className="container mx-auto px-4 h-full"
+                  className="h-full w-full"
                   aria-label={`Chat with ${selectedComposer.name}`}
                 >
                   <Suspense fallback={<div className="h-full" aria-hidden="true" />}>

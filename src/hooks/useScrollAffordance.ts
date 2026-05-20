@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, type CSSProperties } from 'react';
 
 type Orientation = 'vertical' | 'horizontal';
 
@@ -19,9 +19,24 @@ export interface UseScrollAffordanceParams {
   onScroll?: () => void;
 }
 
-// Single source of truth for scrollbar appearance.
+// Single source of truth for scrollbar layout and appearance.
 export const SCROLLBAR_THICKNESS = 4;
+/** Space reserved beside content so text does not run under the custom thumb. */
 export const SCROLLBAR_GUTTER = 10;
+/** Inset of the track from the start/end edges along the scroll axis. */
+export const SCROLLBAR_TRACK_INSET = 4;
+
+/** Padding on scrollable content so text does not sit under the custom thumb. */
+export function scrollAffordanceContentGutterStyle(
+  showScrollbar: boolean,
+  orientation: Orientation = 'vertical',
+): CSSProperties | undefined {
+  if (!showScrollbar) return undefined;
+  if (orientation === 'horizontal') {
+    return { paddingBottom: SCROLLBAR_GUTTER };
+  }
+  return { paddingRight: SCROLLBAR_GUTTER };
+}
 const SCROLLBAR_THUMB_COLOR = 'hsl(var(--border))';
 const SCROLLBAR_TRACK_COLOR = 'hsl(var(--border) / 0.4)';
 const SCROLLBAR_RADIUS = 3;
@@ -53,7 +68,7 @@ const VERTICAL_CONFIG: OrientationConfig = {
     `position:absolute;top:0;left:0;right:0;height:32px;background:linear-gradient(to bottom,hsl(var(--${bgVar})),transparent);pointer-events:none;z-index:1;opacity:0;transition:opacity 150ms ease;`,
   fadeEndStyle: (bgVar) =>
     `position:absolute;bottom:0;left:0;right:0;height:32px;background:linear-gradient(to top,hsl(var(--${bgVar})),transparent);pointer-events:none;z-index:1;opacity:0;transition:opacity 150ms ease;`,
-  trackStyle: `position:absolute;right:4px;top:4px;bottom:4px;width:${SCROLLBAR_THICKNESS}px;background:${SCROLLBAR_TRACK_COLOR};border-radius:${SCROLLBAR_RADIUS}px;z-index:1;pointer-events:none;`,
+  trackStyle: `position:absolute;right:0;top:${SCROLLBAR_TRACK_INSET}px;bottom:${SCROLLBAR_TRACK_INSET}px;width:${SCROLLBAR_THICKNESS}px;background:${SCROLLBAR_TRACK_COLOR};border-radius:${SCROLLBAR_RADIUS}px;z-index:1;pointer-events:none;`,
   thumbStyle: `position:absolute;background:${SCROLLBAR_THUMB_COLOR};border-radius:${SCROLLBAR_RADIUS}px;min-height:${SCROLLBAR_MIN_THUMB}px;`,
 };
 
@@ -69,7 +84,7 @@ const HORIZONTAL_CONFIG: OrientationConfig = {
     `position:absolute;top:0;left:0;bottom:0;width:32px;background:linear-gradient(to right,hsl(var(--${bgVar})),transparent);pointer-events:none;z-index:1;opacity:0;transition:opacity 150ms ease;contain:paint;`,
   fadeEndStyle: (bgVar) =>
     `position:absolute;top:0;right:0;bottom:0;width:32px;background:linear-gradient(to left,hsl(var(--${bgVar})),transparent);pointer-events:none;z-index:1;opacity:0;transition:opacity 150ms ease;contain:paint;`,
-  trackStyle: `position:absolute;left:4px;right:4px;bottom:0;height:${SCROLLBAR_THICKNESS}px;background:${SCROLLBAR_TRACK_COLOR};border-radius:${SCROLLBAR_RADIUS}px;z-index:2;pointer-events:none;contain:paint;`,
+  trackStyle: `position:absolute;left:${SCROLLBAR_TRACK_INSET}px;right:${SCROLLBAR_TRACK_INSET}px;bottom:0;height:${SCROLLBAR_THICKNESS}px;background:${SCROLLBAR_TRACK_COLOR};border-radius:${SCROLLBAR_RADIUS}px;z-index:2;pointer-events:none;contain:paint;`,
   thumbStyle: `position:absolute;background:${SCROLLBAR_THUMB_COLOR};border-radius:${SCROLLBAR_RADIUS}px;min-width:${SCROLLBAR_MIN_THUMB}px;`,
 };
 

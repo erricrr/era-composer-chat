@@ -961,8 +961,7 @@ export function ChatInterface({
       aria-label="Chat interface"
     >
       {(!isSplitViewOpen) ? (
-        <header className="chat-header shrink-0 -mx-[100vw] bg-primary-foreground border-b shadow-md z-40" role="banner">
-          <div className="mx-[100vw]">
+        <header className="chat-header shrink-0 bg-primary-foreground border-b shadow-md z-40" role="banner">
             <nav className="flex items-center justify-between px-5 pt-6 pb-3 md:pt-7 md:pb-4" aria-label="Composer information">
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -1038,8 +1037,6 @@ export function ChatInterface({
                 />
               </div>
             </nav>
-          </div>
-
         </header>
       ) : null}
       <ScrollAffordanceArea

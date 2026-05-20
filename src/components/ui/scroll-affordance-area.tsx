@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { cn } from '@/lib/utils';
-import { useScrollAffordance } from '@/hooks/useScrollAffordance';
+import {
+  scrollAffordanceContentGutterStyle,
+  useScrollAffordance,
+} from '@/hooks/useScrollAffordance';
 
 export interface ScrollAffordanceAreaProps {
   className?: string;
@@ -100,10 +103,17 @@ export const ScrollAffordanceArea = React.forwardRef<HTMLDivElement, ScrollAffor
               isHorizontal
                 ? 'overflow-x-auto overflow-y-hidden'
                 : 'overflow-y-auto overflow-x-hidden',
-              showScrollbar && !isHorizontal && 'pr-2.5',
             )}
           >
-            {children}
+            <div
+              className={cn(
+                'scroll-affordance-content min-h-full min-w-full',
+                isHorizontal ? 'min-w-max' : undefined,
+              )}
+              style={scrollAffordanceContentGutterStyle(showScrollbar, orientation)}
+            >
+              {children}
+            </div>
           </div>
           <div ref={fadeStartRef} aria-hidden />
           <div ref={fadeEndRef} aria-hidden />
