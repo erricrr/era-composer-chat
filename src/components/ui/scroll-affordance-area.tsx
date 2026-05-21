@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 import {
-  scrollAffordanceContentGutterStyle,
   useScrollAffordance,
 } from '@/hooks/useScrollAffordance';
 
@@ -24,6 +23,8 @@ export interface ScrollAffordanceAreaProps {
   bgVar?: string;
   /** When false, the scroll track/thumb are hidden (fade overlays still render). */
   showScrollbar?: boolean;
+  /** When false, the end fade overlay stays hidden. Defaults to true. */
+  showEndFade?: boolean;
   /** Called on every scroll event. */
   onScroll?: () => void;
 }
@@ -45,11 +46,13 @@ export const ScrollAffordanceArea = React.forwardRef<HTMLDivElement, ScrollAffor
       orientation = 'vertical',
       bgVar = 'background',
       showScrollbar = true,
+      showEndFade = true,
       onScroll,
     },
     forwardedRef,
   ) {
     const viewportRef = React.useRef<HTMLDivElement | null>(null);
+    const contentRef = React.useRef<HTMLDivElement | null>(null);
     const fadeStartRef = React.useRef<HTMLDivElement>(null);
     const fadeEndRef = React.useRef<HTMLDivElement>(null);
     const trackRef = React.useRef<HTMLDivElement>(null);
@@ -66,6 +69,7 @@ export const ScrollAffordanceArea = React.forwardRef<HTMLDivElement, ScrollAffor
 
     useScrollAffordance({
       containerRef: viewportRef,
+      contentRef: showScrollbar ? contentRef : undefined,
       fadeStartRef,
       fadeEndRef,
       trackRef: showScrollbar ? trackRef : undefined,
@@ -73,6 +77,7 @@ export const ScrollAffordanceArea = React.forwardRef<HTMLDivElement, ScrollAffor
       orientation,
       bgVar,
       showScrollbar,
+      showEndFade,
       onScroll,
     });
 
@@ -106,11 +111,11 @@ export const ScrollAffordanceArea = React.forwardRef<HTMLDivElement, ScrollAffor
             )}
           >
             <div
+              ref={contentRef}
               className={cn(
-                'scroll-affordance-content min-h-full min-w-full',
-                isHorizontal ? 'min-w-max' : undefined,
+                'scroll-affordance-content',
+                isHorizontal ? 'min-w-max w-max' : 'min-h-full min-w-full',
               )}
-              style={scrollAffordanceContentGutterStyle(showScrollbar, orientation)}
             >
               {children}
             </div>
@@ -118,7 +123,11 @@ export const ScrollAffordanceArea = React.forwardRef<HTMLDivElement, ScrollAffor
           <div ref={fadeStartRef} aria-hidden />
           <div ref={fadeEndRef} aria-hidden />
           {showScrollbar && (
-            <div ref={trackRef} aria-hidden>
+            <div
+              ref={trackRef}
+              role="scrollbar"
+              aria-orientation={isHorizontal ? 'horizontal' : 'vertical'}
+            >
               <div ref={thumbRef} />
             </div>
           )}

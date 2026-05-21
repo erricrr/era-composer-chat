@@ -497,12 +497,12 @@ export function ComposerList({
                 orientation="horizontal"
                 className="w-full h-auto scroll-area"
               >
-                <div className="inline-flex h-full items-center relative">
+                <div className="inline-flex relative">
                   {allComposers.map((composer, idx) => (
                     <div
                       key={composer.id}
                       id={`mobile-composer-card-${composer.id}`}
-                      className="flex-shrink-0 w-56 h-full"
+                      className="flex-shrink-0 w-56"
                     >
                       <ComposerCard
                         composer={composer}

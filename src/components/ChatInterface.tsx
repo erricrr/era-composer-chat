@@ -1042,6 +1042,7 @@ export function ChatInterface({
       <ScrollAffordanceArea
         viewportRef={chatContainerRef}
         bgVar="background"
+        showEndFade={isMobile}
         onScroll={() => chatScrollHandlerRef.current()}
         className="chat-messages min-h-0 flex-1"
       >
