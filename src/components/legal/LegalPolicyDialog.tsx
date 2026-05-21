@@ -58,7 +58,7 @@ const POLICY_CONTENT: Record<
     sections: [
       {
         heading: "Educational Purpose",
-        body: "The app helps users explore music history through AI-generated conversations inspired by public-domain historical figures and materials.",
+        body: "The app helps users explore music history through AI-generated conversations inspired by public-domain historical figures and materials. Not all composers are available to chat with due to copyright, but they're included for their historical importance.",
       },
       {
         heading: "AI-Generated Responses",

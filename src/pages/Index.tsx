@@ -733,6 +733,9 @@ const Index = () => {
                   about their life, music, and legacy, or use the top search bar
                   to find a specific composer.{" "}
                 </p>
+                <p className="text-muted-foreground text-xs mb-3">
+                  Note: Not all composers are available to chat with due to copyright, but they're included for their historical importance.
+                </p>
                 <button
                   onClick={toggleMenu}
                   className="flex items-center justify-center mx-auto px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 mb-1"

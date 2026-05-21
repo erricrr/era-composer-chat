@@ -25,10 +25,8 @@ export interface UseScrollAffordanceParams {
 
 // Single source of truth for scrollbar layout and appearance.
 export const SCROLLBAR_THICKNESS = 4;
-/** Gap between content edge and the visible thumb. */
-export const SCROLLBAR_CONTENT_GAP = 2;
-/** Space reserved beside content when scrollable (thumb + gap). */
-export const SCROLLBAR_GUTTER = SCROLLBAR_THICKNESS + SCROLLBAR_CONTENT_GAP;
+/** Space reserved beside content when scrollable (matches thumb thickness). */
+export const SCROLLBAR_GUTTER = SCROLLBAR_THICKNESS;
 /** Inset of the track from the start/end edges along the scroll axis. */
 export const SCROLLBAR_TRACK_INSET = 4;
 
@@ -107,7 +105,7 @@ const HORIZONTAL_CONFIG: OrientationConfig = {
     `position:absolute;top:0;left:0;bottom:0;width:32px;background:linear-gradient(to right,hsl(var(--${bgVar})),transparent);pointer-events:none;z-index:1;opacity:0;transition:opacity 150ms ease;contain:paint;`,
   fadeEndStyle: (bgVar) =>
     `position:absolute;top:0;right:0;bottom:0;width:32px;background:linear-gradient(to left,hsl(var(--${bgVar})),transparent);pointer-events:none;z-index:1;opacity:0;transition:opacity 150ms ease;contain:paint;`,
-  trackStyle: `position:absolute;left:${SCROLLBAR_TRACK_INSET}px;right:${SCROLLBAR_TRACK_INSET}px;bottom:0;height:${SCROLLBAR_GUTTER}px;background:${HORIZONTAL_TRACK_BG};border-radius:${SCROLLBAR_RADIUS}px;z-index:2;contain:paint;opacity:0;transition:opacity 150ms ease;`,
+  trackStyle: `position:relative;flex-shrink:0;margin:0 ${SCROLLBAR_TRACK_INSET}px;height:0;background:${HORIZONTAL_TRACK_BG};border-radius:${SCROLLBAR_RADIUS}px;z-index:2;contain:paint;opacity:0;transition:opacity 150ms ease,height 150ms ease;overflow:hidden;`,
   thumbStyle: `position:absolute;left:0;top:0;background:${SCROLLBAR_THUMB_COLOR};border-radius:${SCROLLBAR_RADIUS}px;min-width:${SCROLLBAR_MIN_THUMB}px;cursor:grab;touch-action:none;`,
 };
 
@@ -178,12 +176,8 @@ function applyContentGutter(
   let paddingRight = 0;
   let paddingBottom = 0;
 
-  if (showScrollbar && scrollable) {
-    if (orientation === 'horizontal') {
-      paddingBottom = SCROLLBAR_GUTTER;
-    } else {
-      paddingRight = SCROLLBAR_GUTTER;
-    }
+  if (showScrollbar && scrollable && orientation === 'vertical') {
+    paddingRight = SCROLLBAR_GUTTER;
   }
 
   if (content.style.paddingRight !== `${paddingRight}px`) {
@@ -260,6 +254,11 @@ export function useScrollAffordance({
       if (track.style.opacity !== trackOpacity) track.style.opacity = trackOpacity;
       const pointerEvents = scrollable ? 'auto' : 'none';
       if (track.style.pointerEvents !== pointerEvents) track.style.pointerEvents = pointerEvents;
+
+      if (orientation === 'horizontal') {
+        const trackHeight = scrollable ? `${SCROLLBAR_GUTTER}px` : '0px';
+        if (track.style.height !== trackHeight) track.style.height = trackHeight;
+      }
 
       if (!scrollable) {
         thumb.style.width = config.hiddenThumbSize.width;

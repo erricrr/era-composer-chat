@@ -96,37 +96,52 @@ export const ScrollAffordanceArea = React.forwardRef<HTMLDivElement, ScrollAffor
             {itemCount} {noun}
           </div>
         )}
-        <div className="relative min-h-0 flex-1">
-          <div
-            ref={assignViewportRef}
-            // `data-radix-scroll-area-viewport` is kept for backwards compatibility
-            // with legacy DOM queries that hunt for the scroll viewport by selector.
-            data-radix-scroll-area-viewport=""
-            className={cn(
-              'h-full w-full overscroll-contain [overflow-anchor:auto]',
-              '[scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden',
-              isHorizontal
-                ? 'overflow-x-auto overflow-y-hidden'
-                : 'overflow-y-auto overflow-x-hidden',
-            )}
-          >
+        <div
+          className={cn(
+            isHorizontal ? 'flex flex-col' : 'relative min-h-0 flex-1',
+          )}
+        >
+          <div className={cn('relative', isHorizontal ? 'min-h-0' : 'h-full min-h-0')}>
             <div
-              ref={contentRef}
+              ref={assignViewportRef}
+              // `data-radix-scroll-area-viewport` is kept for backwards compatibility
+              // with legacy DOM queries that hunt for the scroll viewport by selector.
+              data-radix-scroll-area-viewport=""
               className={cn(
-                'scroll-affordance-content',
-                isHorizontal ? 'min-w-max w-max' : 'min-h-full min-w-full',
+                'w-full overscroll-contain [overflow-anchor:auto]',
+                '[scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden',
+                isHorizontal
+                  ? 'overflow-x-auto overflow-y-hidden'
+                  : 'h-full overflow-y-auto overflow-x-hidden',
               )}
             >
-              {children}
+              <div
+                ref={contentRef}
+                className={cn(
+                  'scroll-affordance-content',
+                  isHorizontal ? 'flex min-w-max w-max' : 'min-h-full min-w-full',
+                )}
+              >
+                {children}
+              </div>
             </div>
+            <div ref={fadeStartRef} aria-hidden />
+            <div ref={fadeEndRef} aria-hidden />
+            {showScrollbar && !isHorizontal && (
+              <div
+                ref={trackRef}
+                role="scrollbar"
+                aria-orientation="vertical"
+              >
+                <div ref={thumbRef} />
+              </div>
+            )}
           </div>
-          <div ref={fadeStartRef} aria-hidden />
-          <div ref={fadeEndRef} aria-hidden />
-          {showScrollbar && (
+          {showScrollbar && isHorizontal && (
             <div
               ref={trackRef}
               role="scrollbar"
-              aria-orientation={isHorizontal ? 'horizontal' : 'vertical'}
+              aria-orientation="horizontal"
             >
               <div ref={thumbRef} />
             </div>

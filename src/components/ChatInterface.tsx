@@ -127,6 +127,8 @@ export function ChatInterface({
   const isRestoringScrollRef = useRef(false);
   const scrollRestoreRafRef = useRef(0);
   const scrollRestoreTimeoutRef = useRef(0);
+  /** While true, layout/resize restore must not override new-message auto-scroll. */
+  const messageAutoScrollActiveRef = useRef(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const isMobile = useIsMobile();
   const isOnline = useOnlineStatus();
@@ -312,27 +314,86 @@ export function ChatInterface({
     initializeChat(composer, serviceChatHistory);
   }, [composer.id, initializeChat]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const runMessageAutoScroll = useCallback((apply: () => void) => {
+    messageAutoScrollActiveRef.current = true;
+    const run = () => {
+      apply();
+      const el = chatContainerRef.current;
+      if (el) {
+        const gapToBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+        scrollDistanceFromBottomRef.current = gapToBottom;
+        savedChatScrollTopRef.current = el.scrollTop;
+        savedChatWasAtBottomRef.current = gapToBottom <= 3;
+      }
+    };
+
+    run();
+    window.cancelAnimationFrame(scrollRestoreRafRef.current);
+    window.clearTimeout(scrollRestoreTimeoutRef.current);
+    scrollRestoreRafRef.current = window.requestAnimationFrame(() => {
+      scrollRestoreRafRef.current = window.requestAnimationFrame(() => {
+        run();
+        scrollRestoreTimeoutRef.current = window.setTimeout(() => {
+          run();
+          messageAutoScrollActiveRef.current = false;
+        }, 150);
+      });
+    });
+  }, []);
+
+  // Scroll the viewport so `element` sits `padding` px below the visible top edge.
+  const scrollElementBelowViewportTop = useCallback((
+    container: HTMLElement,
+    element: HTMLElement,
+    padding = 8,
+  ) => {
+    const containerRect = container.getBoundingClientRect();
+    const elementRect = element.getBoundingClientRect();
+    const targetScrollTop = container.scrollTop + (elementRect.top - containerRect.top) - padding;
+    container.scrollTop = Math.max(0, targetScrollTop);
+  }, []);
+
   // Function to scroll user messages to bottom
   const scrollToBottom = useCallback(() => {
-    if (!shouldAutoScroll) return;
-    // Scroll to the end sentinel to show latest message
-    setTimeout(() => {
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, 100);
-  }, [shouldAutoScroll]);
+    if (!shouldAutoScrollRef.current) return;
+    runMessageAutoScroll(() => {
+      const el = chatContainerRef.current;
+      if (!el) return;
+      el.scrollTop = Math.max(0, el.scrollHeight - el.clientHeight);
+      scrollDistanceFromBottomRef.current = 0;
+    });
+  }, [runMessageAutoScroll]);
 
-  // Function to scroll composer messages top into view on mobile
+  // Keep the latest user message and composer reply paired in view (user above, composer below).
   const scrollComposerTop = useCallback(() => {
-    const container = chatContainerRef.current;
-    if (!container) return;
-    setTimeout(() => {
+    runMessageAutoScroll(() => {
+      const container = chatContainerRef.current;
+      if (!container) return;
+
+      const userBubbles = container.querySelectorAll('.message-bubble[data-sender="user"]');
       const composerBubbles = container.querySelectorAll('.message-bubble[data-sender="composer"]');
-      if (composerBubbles.length > 0) {
-        const lastComposerEl = composerBubbles[composerBubbles.length - 1] as HTMLElement;
-        lastComposerEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (composerBubbles.length === 0) return;
+
+      const lastUserEl = userBubbles.length > 0
+        ? (userBubbles[userBubbles.length - 1] as HTMLElement)
+        : null;
+      const lastComposerEl = composerBubbles[composerBubbles.length - 1] as HTMLElement;
+      const anchorEl = lastUserEl ?? lastComposerEl;
+
+      scrollElementBelowViewportTop(container, anchorEl);
+
+      // If the composer reply extends below the viewport, nudge so its bottom is visible.
+      const containerRect = container.getBoundingClientRect();
+      const composerRect = lastComposerEl.getBoundingClientRect();
+      if (composerRect.bottom > containerRect.bottom - 8) {
+        const overflow = composerRect.bottom - containerRect.bottom + 8;
+        container.scrollTop = Math.min(
+          Math.max(0, container.scrollHeight - container.clientHeight),
+          container.scrollTop + overflow,
+        );
       }
-    }, 100);
-  }, []);
+    });
+  }, [runMessageAutoScroll, scrollElementBelowViewportTop]);
 
   // Scroll effect based on messages
   useEffect(() => {
@@ -359,6 +420,7 @@ export function ChatInterface({
   }, []);
 
   const scheduleChatScrollRestore = useCallback(() => {
+    if (messageAutoScrollActiveRef.current) return;
     isRestoringScrollRef.current = true;
     const apply = () => restoreChatScrollPosition();
 

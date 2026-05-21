@@ -51,7 +51,7 @@ const Terms = () => {
               <p className="text-muted-foreground">
                 The app helps users explore music history through AI-generated
                 conversations inspired by public-domain historical figures and
-                materials.
+                materials. Not all composers are available to chat with due to copyright, but they're included for their historical importance.
               </p>
             </div>
 

@@ -200,10 +200,8 @@ const FooterDrawer: React.FC<FooterDrawerProps> = ({ onTrigger, onVisibilityChan
                       tabIndex={0}
                       data-vaul-no-drag="true"
                     >
-                      This application was designed to make classical music more accessible and engaging
-                      through interactive AI conversations with historical composers. Explore music history and discover
-                      the stories behind famous works.
-                    </p>
+                      Chat with history's greatest composers about their lives, music, and legacy. Most composers are available to chat with, others are included for historical context only.
+                      </p>
                   </div>
                   <div className="space-y-1">
                     <h3
