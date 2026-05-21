@@ -724,7 +724,7 @@ const Index = () => {
               className="container mx-auto px-4 flex flex-col items-center justify-center"
               style={{ minHeight: "calc(100dvh - 2.75rem)" }}
             >
-              <div className="text-center p-4 max-w-md">
+              <div className="text-center p-4 max-w-3xl">
                 <h1 className="text-xl font-semibold mb-2">
                   Welcome to Era Composer Chat
                 </h1>
