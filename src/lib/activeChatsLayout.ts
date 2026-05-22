@@ -10,6 +10,42 @@ export const ACTIVE_CHATS_PANEL_WIDTH = "16rem";
 /** Aligns with `.slider-animate` and inset shell transitions. */
 export const ACTIVE_CHATS_PANEL_TRANSITION_MS = 300;
 
+/** Shared easing/timing for inset-shell transitions (keep in sync with panel slide). */
+const activeChatsTransitionTimingClass =
+  "duration-300 ease-in-out motion-reduce:!transition-none motion-reduce:duration-0";
+
+/** GPU hints for transform-driven shell slides (composer menu, active chats panel). */
+export const activeChatsSlideGpuClass =
+  "will-change-transform [backface-visibility:hidden] [-webkit-backface-visibility:hidden]";
+
+type ActiveChatsShellTransitionProperty = "transform" | "opacity";
+
+/**
+ * Transition classes for fixed viewport shells that honor the active-chats inset.
+ * Always animates `right`; pass extra properties (e.g. transform, opacity) as needed.
+ */
+export function getActiveChatsShellTransitionClass(
+  ...include: ActiveChatsShellTransitionProperty[]
+): string {
+  const hasTransform = include.includes("transform");
+  const hasOpacity = include.includes("opacity");
+
+  let transitionClass = "transition-[right]";
+  if (hasOpacity && hasTransform) {
+    transitionClass = "transition-[right,opacity,transform]";
+  } else if (hasTransform) {
+    transitionClass = "transition-[right,transform]";
+  } else if (hasOpacity) {
+    transitionClass = "transition-[right,opacity]";
+  }
+
+  return cn(transitionClass, activeChatsTransitionTimingClass);
+}
+
+/** Inset shells that only shift horizontally when the desktop rail opens. */
+export const activeChatsLayoutTransitionClass =
+  getActiveChatsShellTransitionClass();
+
 export type ActiveChatsLayoutOptions = {
   /** When true, content does not inset (mobile bottom sheet overlays). */
   isMobile?: boolean;
@@ -39,10 +75,6 @@ export function getActiveChatsInsetStyle(
     right: applyDesktopInset ? ACTIVE_CHATS_PANEL_WIDTH : 0,
   };
 }
-
-/** Tailwind classes for content areas that shift when the desktop rail is open. */
-export const activeChatsLayoutTransitionClass =
-  "transition-[right] duration-300 ease-in-out motion-reduce:!transition-none motion-reduce:duration-0";
 
 /** HTML attribute toggled on inset shells while the desktop rail is open. */
 export const ACTIVE_CHATS_OPEN_ATTR = "data-active-chats-open";

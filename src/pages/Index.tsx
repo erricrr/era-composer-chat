@@ -35,7 +35,10 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useStandaloneDisplayMode } from "@/hooks/useStandaloneDisplayMode";
 import {
   ACTIVE_CHATS_PANEL_TRANSITION_MS,
+  activeChatsLayoutTransitionClass,
+  activeChatsSlideGpuClass,
   getActiveChatsShellLayout,
+  getActiveChatsShellTransitionClass,
   getComposerMenuRailAdjacencyClass,
   getMainViewportShellStyle,
   OVERLAY_PANEL_PAINT_DELAY_MS,
@@ -738,7 +741,9 @@ const Index = () => {
             <aside
               {...landingInsetShell.dataAttribute}
               className={cn(
-                "fixed left-0 z-50 bg-background slider-animate",
+                "fixed left-0 z-50 bg-background",
+                getActiveChatsShellTransitionClass("transform"),
+                activeChatsSlideGpuClass,
                 getComposerMenuRailAdjacencyClass(
                   landingInsetShell.applyDesktopInset,
                 ),
@@ -763,7 +768,7 @@ const Index = () => {
             </aside>
           )}
 
-          {/* Welcome stays mounted (no pop-in on menu close); inset snaps to avoid slide flash */}
+          {/* Welcome stays mounted (no pop-in on menu close) */}
           {isLandingScene && (
             <div
               {...landingInsetShell.dataAttribute}
@@ -771,6 +776,7 @@ const Index = () => {
               inert={isMenuOpen ? true : undefined}
               className={cn(
                 "fixed left-0 z-30 overflow-auto bg-background",
+                activeChatsLayoutTransitionClass,
                 landingInsetShell.shellClass,
                 isMenuOpen && "pointer-events-none",
               )}
@@ -849,7 +855,8 @@ const Index = () => {
             <div
               {...chatActiveChatsShell.dataAttribute}
               className={cn(
-                "fixed bg-background transition-[opacity,transform,right] duration-300 ease-in-out motion-reduce:!transition-none motion-reduce:duration-0",
+                "fixed bg-background",
+                getActiveChatsShellTransitionClass("opacity", "transform"),
                 chatActiveChatsShell.shellClass,
                 isChatClosing ? "opacity-0 translate-y-4" : "opacity-100",
               )}
