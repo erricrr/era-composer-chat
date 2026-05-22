@@ -1,21 +1,37 @@
-import { useState, useRef, useEffect, useLayoutEffect, KeyboardEvent, useCallback } from 'react';
-import { Composer, Message, Conversation, getLastName } from '@/data/composers';
-import { useConversations } from '@/hooks/useConversations';
-import { ArrowUp, Music, Mic } from 'lucide-react';
-import { useIsMobile } from '@/hooks/use-mobile';
+import {
+  useState,
+  useRef,
+  useEffect,
+  useLayoutEffect,
+  KeyboardEvent,
+  useCallback,
+} from "react";
+import { Composer, Message, Conversation, getLastName } from "@/data/composers";
+import { useConversations } from "@/hooks/useConversations";
+import { ArrowUp, Music, Mic } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { Badge } from "@/components/ui/badge";
-import { v4 as uuidv4 } from 'uuid';
-import { ComposerImageViewer } from './ComposerImageViewer';
-import { ComposerSplitView } from './ComposerSplitView';
-import { ChatActionsMenu } from './ChatActionsMenu';
-import { Tooltip, TooltipContent, TooltipTrigger, TooltipPortal } from '@/components/ui/tooltip';
-import { useIsTouch } from '@/hooks/useIsTouch';
-import { useGeminiChat } from '@/hooks/useGeminiChat';
-import ReactMarkdown from 'react-markdown';
-import { ChatMessage } from '@/types/gemini';
-import { toast } from 'sonner';
-import { useOnlineStatus } from '@/hooks/useOnlineStatus';
-import { useVirtualKeyboard, scrollChatTextareaIntoView, syncKeyboardVisualInset } from '@/hooks/useVirtualKeyboard';
+import { v4 as uuidv4 } from "uuid";
+import { ComposerImageViewer } from "./ComposerImageViewer";
+import { ComposerSplitView } from "./ComposerSplitView";
+import { ChatActionsMenu } from "./ChatActionsMenu";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  TooltipPortal,
+} from "@/components/ui/tooltip";
+import { useIsTouch } from "@/hooks/useIsTouch";
+import { useGeminiChat } from "@/hooks/useGeminiChat";
+import ReactMarkdown from "react-markdown";
+import { ChatMessage } from "@/types/gemini";
+import { toast } from "sonner";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
+import {
+  useVirtualKeyboard,
+  scrollChatTextareaIntoView,
+  syncKeyboardVisualInset,
+} from "@/hooks/useVirtualKeyboard";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -25,10 +41,10 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { buttonVariants } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import { ScrollAffordanceArea } from '@/components/ui/scroll-affordance-area';
+} from "@/components/ui/alert-dialog";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { ScrollAffordanceArea } from "@/components/ui/scroll-affordance-area";
 
 // Add type definitions for Web Speech API
 interface SpeechRecognitionEvent extends Event {
@@ -92,7 +108,7 @@ interface ChatInterfaceProps {
 }
 
 const SPLIT_TRANSITION_MS = 220;
-type SplitTransitionPhase = 'closed' | 'opening' | 'open' | 'closing';
+type SplitTransitionPhase = "closed" | "opening" | "open" | "closing";
 
 export function ChatInterface({
   composer,
@@ -104,7 +120,7 @@ export function ChatInterface({
   onClose,
   onOpenComposerMenu,
 }: ChatInterfaceProps) {
-  const [inputMessage, setInputMessage] = useState('');
+  const [inputMessage, setInputMessage] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   /** Ref bridge so scroll affordance can invoke the latest scroll handler. */
   const chatScrollHandlerRef = useRef<() => void>(() => {});
@@ -134,11 +150,14 @@ export function ChatInterface({
   const isOnline = useOnlineStatus();
   const [shouldAutoScroll, setShouldAutoScroll] = useState(true);
   const prevMessagesLengthRef = useRef(0);
-  const [visibleSentences, setVisibleSentences] = useState<Record<string, number>>({});
-  const [splitTransitionPhase, setSplitTransitionPhase] = useState<SplitTransitionPhase>(() => {
-    const saved = localStorage.getItem('splitViewOpen');
-    return saved !== null && JSON.parse(saved) ? 'open' : 'closed';
-  });
+  const [visibleSentences, setVisibleSentences] = useState<
+    Record<string, number>
+  >({});
+  const [splitTransitionPhase, setSplitTransitionPhase] =
+    useState<SplitTransitionPhase>(() => {
+      const saved = localStorage.getItem("splitViewOpen");
+      return saved !== null && JSON.parse(saved) ? "open" : "closed";
+    });
   const splitTransitionTimeoutRef = useRef<number | null>(null);
   const [isDictating, setIsDictating] = useState(false);
 
@@ -165,19 +184,19 @@ export function ChatInterface({
     startConversation,
     addMessage,
     getConversationsForComposer,
-    setActiveConversationId
+    setActiveConversationId,
   } = useConversations();
 
   const {
     isGenerating,
     error: geminiError,
     initializeChat,
-    generateResponse
+    generateResponse,
   } = useGeminiChat();
 
   const isTouch = useIsTouch();
-  const isSplitViewOpen = splitTransitionPhase !== 'closed';
-  const isSplitViewMounted = splitTransitionPhase !== 'closed';
+  const isSplitViewOpen = splitTransitionPhase !== "closed";
+  const isSplitViewMounted = splitTransitionPhase !== "closed";
 
   useVirtualKeyboard(isMobile || isTouch, textareaRef);
 
@@ -189,20 +208,22 @@ export function ChatInterface({
   }, []);
 
   const openSplitView = useCallback(() => {
-    if (splitTransitionPhase === 'open' || splitTransitionPhase === 'opening') return;
+    if (splitTransitionPhase === "open" || splitTransitionPhase === "opening")
+      return;
     clearSplitTransitionTimeout();
-    setSplitTransitionPhase('opening');
+    setSplitTransitionPhase("opening");
     window.requestAnimationFrame(() => {
-      setSplitTransitionPhase('open');
+      setSplitTransitionPhase("open");
     });
   }, [clearSplitTransitionTimeout, splitTransitionPhase]);
 
   const closeSplitView = useCallback(() => {
-    if (splitTransitionPhase === 'closed' || splitTransitionPhase === 'closing') return;
+    if (splitTransitionPhase === "closed" || splitTransitionPhase === "closing")
+      return;
     clearSplitTransitionTimeout();
-    setSplitTransitionPhase('closing');
+    setSplitTransitionPhase("closing");
     splitTransitionTimeoutRef.current = window.setTimeout(() => {
-      setSplitTransitionPhase('closed');
+      setSplitTransitionPhase("closed");
       splitTransitionTimeoutRef.current = null;
     }, SPLIT_TRANSITION_MS);
   }, [clearSplitTransitionTimeout, splitTransitionPhase]);
@@ -216,9 +237,10 @@ export function ChatInterface({
   }, [isMobile, isTouch]);
 
   // Add Chrome detection helper
-  const isChrome = typeof window !== 'undefined' &&
+  const isChrome =
+    typeof window !== "undefined" &&
     (navigator.userAgent.indexOf("Chrome") !== -1 ||
-     navigator.userAgent.indexOf("Chromium") !== -1);
+      navigator.userAgent.indexOf("Chromium") !== -1);
 
   // Format era display text
   const getEraDisplayText = (era: string): string => {
@@ -226,29 +248,33 @@ export function ChatInterface({
   };
 
   // Function to directly access localStorage to ensure we have the latest data
-  const getConversationFromStorage = (conversationId: string): Conversation | null => {
+  const getConversationFromStorage = (
+    conversationId: string,
+  ): Conversation | null => {
     try {
-      const rawData = localStorage.getItem('composer-conversations');
+      const rawData = localStorage.getItem("composer-conversations");
       if (!rawData) return null;
 
       const conversations = JSON.parse(rawData) as Conversation[];
-      return conversations.find(c => c.id === conversationId) || null;
+      return conversations.find((c) => c.id === conversationId) || null;
     } catch (e) {
-      console.error('Error accessing localStorage:', e);
+      console.error("Error accessing localStorage:", e);
       return null;
     }
   };
 
   // Function to count sentences in text
   const countSentences = (text: string): number => {
-    const sentences = text.split(/[.!?]+\s*/g).filter(sentence => sentence.trim().length > 0);
+    const sentences = text
+      .split(/[.!?]+\s*/g)
+      .filter((sentence) => sentence.trim().length > 0);
     return sentences.length;
   };
 
   // Function to get text up to n sentences
   const getTextUpToNSentences = (text: string, n: number): string => {
     const sentences = text.split(/([.!?]+\s*)/).filter(Boolean);
-    let result = '';
+    let result = "";
     let count = 0;
 
     for (let i = 0; i < sentences.length; i++) {
@@ -279,7 +305,8 @@ export function ChatInterface({
     if (composerConversations.length > 0) {
       // Use the most recent conversation
       const mostRecentConversation = composerConversations.reduce(
-        (latest, current) => current.lastUpdated > latest.lastUpdated ? current : latest
+        (latest, current) =>
+          current.lastUpdated > latest.lastUpdated ? current : latest,
       );
 
       // Set active conversation ID
@@ -305,12 +332,10 @@ export function ChatInterface({
     setCurrentMessages(loadedMessages);
 
     // Seed Gemini service with existing chat history to prevent duplicate greeting
-    const serviceChatHistory = (
-      loadedMessages.map(msg => ({
-        role: msg.sender === 'user' ? 'user' : 'model',
-        text: msg.text,
-      }))
-    ) as ChatMessage[];
+    const serviceChatHistory = loadedMessages.map((msg) => ({
+      role: msg.sender === "user" ? "user" : "model",
+      text: msg.text,
+    })) as ChatMessage[];
     initializeChat(composer, serviceChatHistory);
   }, [composer.id, initializeChat]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -342,16 +367,16 @@ export function ChatInterface({
   }, []);
 
   // Scroll the viewport so `element` sits `padding` px below the visible top edge.
-  const scrollElementBelowViewportTop = useCallback((
-    container: HTMLElement,
-    element: HTMLElement,
-    padding = 8,
-  ) => {
-    const containerRect = container.getBoundingClientRect();
-    const elementRect = element.getBoundingClientRect();
-    const targetScrollTop = container.scrollTop + (elementRect.top - containerRect.top) - padding;
-    container.scrollTop = Math.max(0, targetScrollTop);
-  }, []);
+  const scrollElementBelowViewportTop = useCallback(
+    (container: HTMLElement, element: HTMLElement, padding = 8) => {
+      const containerRect = container.getBoundingClientRect();
+      const elementRect = element.getBoundingClientRect();
+      const targetScrollTop =
+        container.scrollTop + (elementRect.top - containerRect.top) - padding;
+      container.scrollTop = Math.max(0, targetScrollTop);
+    },
+    [],
+  );
 
   // Function to scroll user messages to bottom
   const scrollToBottom = useCallback(() => {
@@ -370,14 +395,21 @@ export function ChatInterface({
       const container = chatContainerRef.current;
       if (!container) return;
 
-      const userBubbles = container.querySelectorAll('.message-bubble[data-sender="user"]');
-      const composerBubbles = container.querySelectorAll('.message-bubble[data-sender="composer"]');
+      const userBubbles = container.querySelectorAll(
+        '.message-bubble[data-sender="user"]',
+      );
+      const composerBubbles = container.querySelectorAll(
+        '.message-bubble[data-sender="composer"]',
+      );
       if (composerBubbles.length === 0) return;
 
-      const lastUserEl = userBubbles.length > 0
-        ? (userBubbles[userBubbles.length - 1] as HTMLElement)
-        : null;
-      const lastComposerEl = composerBubbles[composerBubbles.length - 1] as HTMLElement;
+      const lastUserEl =
+        userBubbles.length > 0
+          ? (userBubbles[userBubbles.length - 1] as HTMLElement)
+          : null;
+      const lastComposerEl = composerBubbles[
+        composerBubbles.length - 1
+      ] as HTMLElement;
       const anchorEl = lastUserEl ?? lastComposerEl;
 
       scrollElementBelowViewportTop(container, anchorEl);
@@ -399,7 +431,7 @@ export function ChatInterface({
   useEffect(() => {
     if (currentMessages.length > prevMessagesLengthRef.current) {
       const lastMessage = currentMessages[currentMessages.length - 1];
-      if (lastMessage.sender === 'composer') {
+      if (lastMessage.sender === "composer") {
         scrollComposerTop();
       } else {
         scrollToBottom();
@@ -483,13 +515,13 @@ export function ChatInterface({
 
     const ro = new ResizeObserver(() => scheduleChatScrollRestore());
     ro.observe(el);
-    const content = el.querySelector('.chat-messages-content');
+    const content = el.querySelector(".chat-messages-content");
     if (content) ro.observe(content);
 
-    window.addEventListener('resize', scheduleChatScrollRestore);
+    window.addEventListener("resize", scheduleChatScrollRestore);
     return () => {
       ro.disconnect();
-      window.removeEventListener('resize', scheduleChatScrollRestore);
+      window.removeEventListener("resize", scheduleChatScrollRestore);
       window.cancelAnimationFrame(scrollRestoreRafRef.current);
       window.clearTimeout(scrollRestoreTimeoutRef.current);
     };
@@ -499,13 +531,13 @@ export function ChatInterface({
   useEffect(() => {
     if (isComposerListOpen) {
       // Scroll to top when composer list opens
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   }, [isComposerListOpen]);
 
   // Effect to persist split view state
   useEffect(() => {
-    localStorage.setItem('splitViewOpen', JSON.stringify(isSplitViewOpen));
+    localStorage.setItem("splitViewOpen", JSON.stringify(isSplitViewOpen));
   }, [isSplitViewOpen]);
 
   useEffect(() => {
@@ -525,7 +557,7 @@ export function ChatInterface({
       // Delay to allow DOM to update and the textarea to re-render
       setTimeout(() => {
         if (textareaRef.current) {
-          textareaRef.current.style.height = '48px';
+          textareaRef.current.style.height = "48px";
         }
       }, 0);
     }
@@ -534,7 +566,7 @@ export function ChatInterface({
   // Add global CSS for mic pulse animation
   useEffect(() => {
     // Add global CSS for mic pulse animation
-    const style = document.createElement('style');
+    const style = document.createElement("style");
     style.textContent = `
       @keyframes micPulse {
         0% {
@@ -561,10 +593,10 @@ export function ChatInterface({
   // Add effect to handle edge cases with input clearing
   useEffect(() => {
     // If the input should be empty but contains only dictation markers, clear it
-    if (inputMessage === '[listening]' || inputMessage.trim() === '') {
+    if (inputMessage === "[listening]" || inputMessage.trim() === "") {
       if (textareaRef.current) {
-        textareaRef.current.value = '';
-        textareaRef.current.style.height = '48px';
+        textareaRef.current.value = "";
+        textareaRef.current.style.height = "48px";
       }
     }
   }, [inputMessage]);
@@ -582,7 +614,11 @@ export function ChatInterface({
 
   // Show loading state
   if (!activeConversationId && currentMessages.length === 0) {
-    return <div className="flex items-center justify-center h-full">Loading conversation...</div>;
+    return (
+      <div className="flex items-center justify-center h-full">
+        Loading conversation...
+      </div>
+    );
   }
 
   // Function to safely initialize and clean up speech recognition
@@ -597,14 +633,17 @@ export function ChatInterface({
         recognitionRef.current.onstart = null;
         recognitionRef.current = null;
       } catch (e) {
-        console.error('Error cleaning up previous recognition instance:', e);
+        console.error("Error cleaning up previous recognition instance:", e);
       }
     }
 
     // Check for browser compatibility
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
-      alert("Speech recognition is not supported in your browser. Please try Chrome, Edge, or Safari.");
+      alert(
+        "Speech recognition is not supported in your browser. Please try Chrome, Edge, or Safari.",
+      );
       return null;
     }
 
@@ -614,10 +653,12 @@ export function ChatInterface({
       // Detect browser for optimal settings
       const isEdge = navigator.userAgent.indexOf("Edg") !== -1;
       const isFirefox = navigator.userAgent.indexOf("Firefox") !== -1;
-      const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+      const isSafari = /^((?!chrome|android).)*safari/i.test(
+        navigator.userAgent,
+      );
 
       // Configure recognition settings based on browser
-      recognition.lang = navigator.language || 'en-US';
+      recognition.lang = navigator.language || "en-US";
       recognition.continuous = !isSafari; // Safari works better with continuous: false
       recognition.interimResults = true;
       recognition.maxAlternatives = 1;
@@ -630,13 +671,15 @@ export function ChatInterface({
 
       // For Edge, use specific settings
       if (isEdge) {
-        recognition.lang = 'en-US'; // Edge works best with en-US
+        recognition.lang = "en-US"; // Edge works best with en-US
       }
 
       return recognition;
     } catch (e) {
-      console.error('Error initializing speech recognition:', e);
-      alert("There was an error initializing speech recognition. Please try again or use a different browser.");
+      console.error("Error initializing speech recognition:", e);
+      alert(
+        "There was an error initializing speech recognition. Please try again or use a different browser.",
+      );
       return null;
     }
   };
@@ -647,46 +690,54 @@ export function ChatInterface({
       // First try the permissions API
       if (navigator.permissions && navigator.permissions.query) {
         try {
-          const result = await navigator.permissions.query({ name: 'microphone' as PermissionName });
+          const result = await navigator.permissions.query({
+            name: "microphone" as PermissionName,
+          });
 
-          if (result.state === 'granted') return true;
-          if (result.state === 'denied') {
-            alert("Microphone access is blocked. Please allow microphone access in your browser settings.");
+          if (result.state === "granted") return true;
+          if (result.state === "denied") {
+            alert(
+              "Microphone access is blocked. Please allow microphone access in your browser settings.",
+            );
             return false;
           }
         } catch (e) {
-          console.log('Permissions API not fully supported, falling back to getUserMedia');
+          console.log(
+            "Permissions API not fully supported, falling back to getUserMedia",
+          );
         }
       }
 
       // Fallback to getUserMedia
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       // Stop all tracks immediately - we just needed the permission
-      stream.getTracks().forEach(track => track.stop());
+      stream.getTracks().forEach((track) => track.stop());
       return true;
     } catch (e) {
-      console.error('Error checking microphone permission:', e);
-      alert("Unable to access microphone. Please ensure microphone permissions are granted and your microphone is working.");
+      console.error("Error checking microphone permission:", e);
+      alert(
+        "Unable to access microphone. Please ensure microphone permissions are granted and your microphone is working.",
+      );
       return false;
     }
   };
 
   /** Clears the message field after send. On touch devices, blurs to dismiss the virtual keyboard; on desktop, keeps focus for quick follow-ups. */
   const cleanupTextarea = () => {
-    setInputMessage('');
+    setInputMessage("");
     const el = textareaRef.current;
     if (!el) return;
 
-    el.value = '';
-    el.style.height = '48px';
-    el.style.display = 'none';
+    el.value = "";
+    el.style.height = "48px";
+    el.style.display = "none";
     void el.offsetHeight;
-    el.style.display = '';
+    el.style.display = "";
 
     const dismissVirtualKeyboard = isTouch || isMobile;
     if (dismissVirtualKeyboard) {
       el.blur();
-      document.documentElement.classList.remove('keyboard-visible');
+      document.documentElement.classList.remove("keyboard-visible");
       syncKeyboardVisualInset();
     } else {
       el.focus();
@@ -695,8 +746,8 @@ export function ChatInterface({
     requestAnimationFrame(() => {
       const t = textareaRef.current;
       if (!t) return;
-      t.value = '';
-      t.style.height = '48px';
+      t.value = "";
+      t.style.height = "48px";
     });
   };
 
@@ -704,12 +755,16 @@ export function ChatInterface({
     if (!inputMessage.trim() || isGenerating) return;
 
     if (!isOnline) {
-      toast.error("You are offline. Connect to the internet to get a reply from the composer.");
+      toast.error(
+        "You are offline. Connect to the internet to get a reply from the composer.",
+      );
       return;
     }
 
     // Store the clean message before clearing state
-    const cleanMessage = inputMessage.trim().replace(/\s*\[listening\]\s*$/g, '');
+    const cleanMessage = inputMessage
+      .trim()
+      .replace(/\s*\[listening\]\s*$/g, "");
 
     // Stop dictation if active
     if (isDictating && recognitionRef.current) {
@@ -718,7 +773,7 @@ export function ChatInterface({
         setIsDictating(false);
         recognitionRef.current = null;
       } catch (e) {
-        console.error('Error stopping dictation:', e);
+        console.error("Error stopping dictation:", e);
       }
     }
 
@@ -737,8 +792,8 @@ export function ChatInterface({
     const userMessage: Message = {
       id: uuidv4(),
       text: cleanMessage,
-      sender: 'user',
-      timestamp: Date.now()
+      sender: "user",
+      timestamp: Date.now(),
     };
 
     // Get the conversation ID (from ref to avoid stale state)
@@ -751,16 +806,22 @@ export function ChatInterface({
 
     try {
       // Update UI immediately with user message
-      setCurrentMessages(messages => [...messages, userMessage]);
+      setCurrentMessages((messages) => [...messages, userMessage]);
 
       if (!conversationId) {
-        console.log("[ChatInterface] No conversation ID available, starting new conversation");
+        console.log(
+          "[ChatInterface] No conversation ID available, starting new conversation",
+        );
         const newConversationId = startConversation(composer);
         currentConversationIdRef.current = newConversationId;
       }
 
       // Persist user message
-      addMessage(conversationId || currentConversationIdRef.current!, userMessage.text, 'user');
+      addMessage(
+        conversationId || currentConversationIdRef.current!,
+        userMessage.text,
+        "user",
+      );
 
       // Generate AI response
       const responseText = await generateResponse(cleanMessage);
@@ -768,21 +829,24 @@ export function ChatInterface({
       const composerMessage: Message = {
         id: uuidv4(),
         text: responseText,
-        sender: 'composer',
-        timestamp: Date.now()
+        sender: "composer",
+        timestamp: Date.now(),
       };
 
       // Update UI with composer's response
-      setCurrentMessages(messages => [...messages, composerMessage]);
+      setCurrentMessages((messages) => [...messages, composerMessage]);
 
       // Persist composer message
-      addMessage(conversationId || currentConversationIdRef.current!, responseText, 'composer');
+      addMessage(
+        conversationId || currentConversationIdRef.current!,
+        responseText,
+        "composer",
+      );
 
       // Final cleanup to ensure textarea is clear
       cleanupTextarea();
-
     } catch (error) {
-      console.error('Error in message submission:', error);
+      console.error("Error in message submission:", error);
     }
   };
 
@@ -792,7 +856,7 @@ export function ChatInterface({
   };
 
   const handleKeyPress = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (!isMobile && e.key === 'Enter' && !e.shiftKey) {
+    if (!isMobile && e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleMessageSubmit();
     }
@@ -805,7 +869,7 @@ export function ChatInterface({
     onUserTyping(true);
 
     // Adjust height
-    e.target.style.height = '48px';
+    e.target.style.height = "48px";
     e.target.style.height = `${Math.min(e.target.scrollHeight, 300)}px`;
   };
 
@@ -824,11 +888,11 @@ export function ChatInterface({
       setShouldAutoScroll(true);
 
       // Reset input field
-      setInputMessage('');
+      setInputMessage("");
       // Clear inline height on reset
       setTimeout(() => {
         if (textareaRef.current) {
-          textareaRef.current.style.height = '';
+          textareaRef.current.style.height = "";
         }
       }, 0);
     }
@@ -844,7 +908,7 @@ export function ChatInterface({
         recognitionRef.current = null;
         return;
       } catch (e) {
-        console.error('Error stopping dictation:', e);
+        console.error("Error stopping dictation:", e);
       }
     }
 
@@ -862,7 +926,7 @@ export function ChatInterface({
     // Store reference and base input
     recognitionRef.current = recognition;
     const baseInput = inputMessage;
-    let lastTranscript = '';
+    let lastTranscript = "";
     let retryCount = 0;
     const MAX_RETRIES = 3;
 
@@ -875,8 +939,8 @@ export function ChatInterface({
     };
 
     recognition.onresult = (event) => {
-      let finalTranscript = '';
-      let interimTranscript = '';
+      let finalTranscript = "";
+      let interimTranscript = "";
 
       for (let i = 0; i < event.results.length; i++) {
         const result = event.results[i];
@@ -893,14 +957,14 @@ export function ChatInterface({
         lastTranscript = finalTranscript;
         setInputMessage(
           baseInput
-            ? `${baseInput} ${finalTranscript}${interimTranscript ? ' ' + interimTranscript + ' [listening]' : ''}`
-            : `${finalTranscript}${interimTranscript ? ' ' + interimTranscript + ' [listening]' : ''}`
+            ? `${baseInput} ${finalTranscript}${interimTranscript ? " " + interimTranscript + " [listening]" : ""}`
+            : `${finalTranscript}${interimTranscript ? " " + interimTranscript + " [listening]" : ""}`,
         );
 
         // Ensure textarea stays focused and properly sized
         if (textareaRef.current) {
           textareaRef.current.focus();
-          textareaRef.current.style.height = '48px';
+          textareaRef.current.style.height = "48px";
           textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 300)}px`;
         }
       }
@@ -908,7 +972,7 @@ export function ChatInterface({
 
     recognition.onend = () => {
       // Remove [listening] marker
-      setInputMessage(prev => prev.replace(/\s*\[listening\]\s*$/g, ''));
+      setInputMessage((prev) => prev.replace(/\s*\[listening\]\s*$/g, ""));
 
       // Handle retry logic
       if (isDictating && recognitionRef.current && retryCount < MAX_RETRIES) {
@@ -919,7 +983,7 @@ export function ChatInterface({
           }, 100);
           return;
         } catch (e) {
-          console.error('Failed to restart recognition:', e);
+          console.error("Failed to restart recognition:", e);
         }
       }
 
@@ -931,18 +995,18 @@ export function ChatInterface({
       if (textareaRef.current) {
         // Force Safari to update the textarea display
         const temp = textareaRef.current.style.display;
-        textareaRef.current.style.display = 'none';
+        textareaRef.current.style.display = "none";
         void textareaRef.current.offsetHeight; // Force reflow
         textareaRef.current.style.display = temp;
       }
     };
 
     recognition.onerror = (event) => {
-      console.error('Speech recognition error:', event.error);
+      console.error("Speech recognition error:", event.error);
 
       // Handle specific error cases
       switch (event.error) {
-        case 'network':
+        case "network":
           // Attempt restart for network errors
           if (retryCount < MAX_RETRIES) {
             retryCount++;
@@ -951,38 +1015,44 @@ export function ChatInterface({
                 recognition.start();
                 return;
               } catch (e) {
-                console.error('Failed to restart after network error:', e);
+                console.error("Failed to restart after network error:", e);
               }
             }, 1000);
           }
           break;
-        case 'not-allowed':
-        case 'service-not-allowed':
-          alert("Microphone access is required for dictation. Please allow microphone access and try again.");
+        case "not-allowed":
+        case "service-not-allowed":
+          alert(
+            "Microphone access is required for dictation. Please allow microphone access and try again.",
+          );
           setIsDictating(false);
           recognitionRef.current = null;
           break;
-        case 'no-speech':
+        case "no-speech":
           // Just retry for no speech detected
           if (isDictating && recognitionRef.current) {
             try {
               recognition.start();
               return;
             } catch (e) {
-              console.error('Failed to restart after no-speech:', e);
+              console.error("Failed to restart after no-speech:", e);
             }
           }
           break;
         default:
           // For other errors, try to restart if still dictating
-          if (isDictating && recognitionRef.current && retryCount < MAX_RETRIES) {
+          if (
+            isDictating &&
+            recognitionRef.current &&
+            retryCount < MAX_RETRIES
+          ) {
             retryCount++;
             setTimeout(() => {
               try {
                 recognition.start();
                 return;
               } catch (e) {
-                console.error('Failed to restart after error:', e);
+                console.error("Failed to restart after error:", e);
               }
             }, 1000);
           }
@@ -993,7 +1063,7 @@ export function ChatInterface({
     try {
       recognition.start();
     } catch (e) {
-      console.error('Failed to start speech recognition:', e);
+      console.error("Failed to start speech recognition:", e);
 
       // Special case for Safari which might need a moment
       if (isSafari) {
@@ -1001,8 +1071,13 @@ export function ChatInterface({
           try {
             recognition.start();
           } catch (delayedError) {
-            console.error('Failed to start speech recognition even after delay:', delayedError);
-            alert("There was an error starting speech recognition. Please try again or use a different browser.");
+            console.error(
+              "Failed to start speech recognition even after delay:",
+              delayedError,
+            );
+            alert(
+              "There was an error starting speech recognition. Please try again or use a different browser.",
+            );
             setIsDictating(false);
             recognitionRef.current = null;
           }
@@ -1010,7 +1085,9 @@ export function ChatInterface({
         return;
       }
 
-      alert("There was an error starting speech recognition. Please try again or use a different browser.");
+      alert(
+        "There was an error starting speech recognition. Please try again or use a different browser.",
+      );
       setIsDictating(false);
       recognitionRef.current = null;
     }
@@ -1022,83 +1099,106 @@ export function ChatInterface({
       role="region"
       aria-label="Chat interface"
     >
-      {(!isSplitViewOpen) ? (
-        <header className="chat-header shrink-0 bg-primary-foreground border-b shadow-md z-40" role="banner">
-            <nav className="flex items-center justify-between px-5 pt-6 pb-3 md:pt-7 md:pb-4" aria-label="Composer information">
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    type="button"
-                    aria-label={`View more information about ${composer.name}`}
-                    aria-expanded={isSplitViewOpen}
-                    aria-haspopup="dialog"
-                    className="chat-split-btn appearance-none border-none outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0 flex items-center space-x-6 cursor-pointer hover:opacity-90 transition-opacity duration-300"
-                    onClick={(e) => {
-                      e.stopPropagation();
+      {!isSplitViewOpen ? (
+        <header
+          className="chat-header shrink-0 bg-primary-foreground border-b shadow-md z-40"
+          role="banner"
+        >
+          <nav
+            className="flex items-center justify-between px-5 pt-6 pb-3 md:pt-7 md:pb-4"
+            aria-label="Composer information"
+          >
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  type="button"
+                  aria-label={`View more information about ${composer.name}`}
+                  aria-expanded={isSplitViewOpen}
+                  aria-haspopup="dialog"
+                  className="chat-split-btn appearance-none border-none outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0 flex items-center space-x-6 cursor-pointer hover:opacity-90 transition-opacity duration-300"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    openSplitView();
+                  }}
+                  onKeyDown={(e) => {
+                    e.stopPropagation();
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
                       openSplitView();
-                    }}
-                    onKeyDown={(e) => {
-                      e.stopPropagation();
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        openSplitView();
-                      }
-                    }}
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="flex-shrink-0" aria-hidden="true">
-                        <ComposerImageViewer
-                          composer={composer}
-                          size="lg"
-                          presentationOnly
-                          className="!scale-100 !w-20 !h-20 md:!w-24 md:!h-24"
-                        />
-                      </div>
-                      <div className="flex flex-col justify-center text-left">
-                        <h1 className="font-serif font-bold text-lg md:text-xl hover:text-primary">{composer.name}</h1>
-                        <div className={`flex ${
-                          Array.isArray(composer.era) && composer.era.length === 2
-                            ? 'flex-col sm:flex-row sm:items-center'
-                            : 'flex-col sm:flex-row sm:items-center'
-                        } gap-1.5 mt-0.5`}>
-                          <span className="text-base md:text-lg text-muted-foreground hover:text-primary whitespace-nowrap">
-                            <span className="sr-only">Nationality and years: </span>
-                            {composer.nationality}, {composer.birthYear}-{composer.deathYear || 'present'}
+                    }
+                  }}
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="flex-shrink-0" aria-hidden="true">
+                      <ComposerImageViewer
+                        composer={composer}
+                        size="lg"
+                        presentationOnly
+                        className="!scale-100 !w-20 !h-20 md:!w-24 md:!h-24"
+                      />
+                    </div>
+                    <div className="flex flex-col justify-center text-left">
+                      <h1 className="font-serif font-bold text-lg md:text-xl hover:text-primary">
+                        {composer.name}
+                      </h1>
+                      <div
+                        className={`flex ${
+                          Array.isArray(composer.era) &&
+                          composer.era.length === 2
+                            ? "flex-col sm:flex-row sm:items-center"
+                            : "flex-col sm:flex-row sm:items-center"
+                        } gap-1.5 mt-0.5`}
+                      >
+                        <span className="text-base md:text-lg text-muted-foreground hover:text-primary whitespace-nowrap">
+                          <span className="sr-only">
+                            Nationality and years:{" "}
                           </span>
-                          <div
-                            className="flex flex-wrap gap-1 -translate-y-[1px]"
-                            role="list"
-                            aria-label="Musical eras"
-                          >
-                            {Array.isArray(composer.era)
-                              ? composer.era.map((era, idx) => (
-                                  <div key={era + idx} role="listitem">
-                                    <Badge variant="badge">{era}</Badge>
-                                  </div>
-                                ))
-                              : <div role="listitem"><Badge variant="badge">{composer.era}</Badge></div>}
-                          </div>
+                          {composer.nationality}, {composer.birthYear}-
+                          {composer.deathYear || "present"}
+                        </span>
+                        <div
+                          className="flex flex-wrap gap-1 -translate-y-[1px]"
+                          role="list"
+                          aria-label="Musical eras"
+                        >
+                          {Array.isArray(composer.era) ? (
+                            composer.era.map((era, idx) => (
+                              <div key={era + idx} role="listitem">
+                                <Badge variant="badge">{era}</Badge>
+                              </div>
+                            ))
+                          ) : (
+                            <div role="listitem">
+                              <Badge variant="badge">{composer.era}</Badge>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent side="bottom" align="start" alignOffset={-20} className="text-xs">
-                  More about {getLastName(composer.name)}
-                </TooltipContent>
-              </Tooltip>
+                  </div>
+                </button>
+              </TooltipTrigger>
+              <TooltipContent
+                side="bottom"
+                align="start"
+                alignOffset={-20}
+                className="text-xs"
+              >
+                More about {getLastName(composer.name)}
+              </TooltipContent>
+            </Tooltip>
 
-              <div className="shrink-0">
-                <ChatActionsMenu
-                  isSplitView={false}
-                  onToggleView={openSplitView}
-                  onReset={() => setResetConfirmOpen(true)}
-                  onCloseChat={onClose}
-                  isMobile={isMobile}
-                  disabled={isComposerListOpen || isComposerMenuOpen}
-                />
-              </div>
-            </nav>
+            <div className="shrink-0">
+              <ChatActionsMenu
+                isSplitView={false}
+                onToggleView={openSplitView}
+                onReset={() => setResetConfirmOpen(true)}
+                onCloseChat={onClose}
+                isMobile={isMobile}
+                disabled={isComposerListOpen || isComposerMenuOpen}
+              />
+            </div>
+          </nav>
         </header>
       ) : null}
       <ScrollAffordanceArea
@@ -1110,76 +1210,90 @@ export function ChatInterface({
       >
         <div
           className={`chat-messages-content px-5 relative ${
-            !isSplitViewOpen ? 'pt-4' : 'py-4'
+            !isSplitViewOpen ? "pt-4" : "py-4"
           }`}
           role="log"
           aria-label="Chat messages"
           aria-live="polite"
         >
           <div className="flex flex-col min-h-[calc(100%-2rem)] pb-2">
-          {currentMessages.length === 0 ? (
-            <div
-              className="flex-1 flex items-center justify-center text-muted-foreground text-base"
-              role="status"
-              aria-label="Empty chat"
-            >
-              <p>Start a conversation with {getLastName(composer.name)}. Ask them about their music.</p>
-            </div>
-          ) : (
-            <div className="space-y-2 w-full max-w-full">
-              {currentMessages.map((message: Message) => (
-                <article
-                  key={message.id}
-                  className={`message-bubble flex ${
-                    message.sender === 'user' ? 'justify-end' : 'justify-start'
-                  }`}
-                  data-sender={message.sender}
-                  role="article"
-                  aria-label={`${message.sender === 'user' ? 'Your message' : `${composer.name}'s response`}`}
-                >
-                  <div
-                    className={message.sender === 'user'
-                      ? 'max-w-[75%] rounded-2xl px-4 py-2 bg-primary text-background ml-auto mr-1 shadow-sm'
-                      : 'max-w-[85%] rounded-2xl px-4 py-2 text-foreground bg-background -ml-4'
-                    }
+            {currentMessages.length === 0 ? (
+              <div
+                className="flex-1 flex items-center justify-center text-muted-foreground text-base"
+                role="status"
+                aria-label="Empty chat"
+              >
+                <p>
+                  Start a conversation with {getLastName(composer.name)}. Ask
+                  them about their music.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-2 w-full max-w-full">
+                {currentMessages.map((message: Message) => (
+                  <article
+                    key={message.id}
+                    className={`message-bubble flex ${
+                      message.sender === "user"
+                        ? "justify-end"
+                        : "justify-start"
+                    }`}
+                    data-sender={message.sender}
+                    role="article"
+                    aria-label={`${message.sender === "user" ? "Your message" : `${composer.name}'s response`}`}
                   >
-                    <ReactMarkdown
-                      components={{
-                        em: ({ node, ...props }) => <em className="italic" {...props} />,
-                        p: ({ children }) => <p style={{ whiteSpace: 'pre-line' }}>{children}</p>
-                      }}
+                    <div
+                      className={
+                        message.sender === "user"
+                          ? "max-w-[75%] rounded-2xl px-4 py-2 bg-primary text-background ml-auto mr-1 shadow-sm"
+                          : "max-w-[85%] rounded-2xl px-4 py-2 text-foreground bg-background -ml-4"
+                      }
                     >
-                      {message.text}
-                    </ReactMarkdown>
-                  </div>
-                </article>
-              ))}
-              {isGenerating && (
-                <article
-                  className="message-bubble flex justify-start"
-                  role="status"
-                  aria-label="Composing response"
-                >
-                  <div className="max-w-[85%] rounded-2xl px-4 py-2 text-foreground bg-background">
-                    <span className="animate-pulse">Composing response...</span>
-                  </div>
-                </article>
-              )}
-              {geminiError && (
-                <article
-                  className="message-bubble flex justify-start"
-                  role="alert"
-                  aria-label="Error message"
-                >
-                  <div className="max-w-[85%] rounded-2xl px-4 py-2 text-destructive bg-destructive/10">
-                    {geminiError}
-                  </div>
-                </article>
-              )}
-            </div>
-          )}
-          <div ref={messagesEndRef} className="h-0" aria-hidden="true" />
-        </div>
+                      <ReactMarkdown
+                        components={{
+                          em: ({ node, ...props }) => (
+                            <em className="italic" {...props} />
+                          ),
+                          p: ({ children }) => (
+                            <p className="whitespace-pre-line mb-3 last:mb-0">
+                              {children}
+                            </p>
+                          ),
+                        }}
+                      >
+                        {message.text}
+                      </ReactMarkdown>
+                    </div>
+                  </article>
+                ))}
+                {isGenerating && (
+                  <article
+                    className="message-bubble flex justify-start"
+                    role="status"
+                    aria-label="Composing response"
+                  >
+                    <div className="max-w-[85%] rounded-2xl px-4 py-2 text-foreground bg-background">
+                      <span className="animate-pulse">
+                        Composing response...
+                      </span>
+                    </div>
+                  </article>
+                )}
+                {geminiError && (
+                  <article
+                    className="message-bubble flex justify-start"
+                    role="alert"
+                    aria-label="Error message"
+                  >
+                    <div className="max-w-[85%] rounded-2xl px-4 py-2 text-destructive bg-destructive/10">
+                      {geminiError}
+                    </div>
+                  </article>
+                )}
+              </div>
+            )}
+            <div ref={messagesEndRef} className="h-0" aria-hidden="true" />
+          </div>
         </div>
       </ScrollAffordanceArea>
 
@@ -1187,10 +1301,12 @@ export function ChatInterface({
         onSubmit={handleSendMessage}
         className="chat-composer border-t bg-background/80 backdrop-blur-sm pb-4"
         style={{
-          ...(isMobile ? {
-            paddingBottom: 'max(env(safe-area-inset-bottom), 0.5rem)',
-            marginBottom: 0
-          } : {})
+          ...(isMobile
+            ? {
+                paddingBottom: "max(env(safe-area-inset-bottom), 0.5rem)",
+                marginBottom: 0,
+              }
+            : {}),
         }}
       >
         <div className="pt-4 px-3 sm:px-5 relative z-10">
@@ -1207,20 +1323,20 @@ export function ChatInterface({
               placeholder={`Ask a question...`}
               className={`w-full bg-background pl-4 pr-[6.75rem] py-3 border border-foreground/25 text-base text-foreground
                 outline-none focus:ring-2 focus:ring-primary focus:ring-offset-0
-                ${isDictating ? 'ring-1 ring-primary' : ''}
+                ${isDictating ? "ring-1 ring-primary" : ""}
                 min-h-[48px] max-h-[300px] overflow-y-auto resize-none
                 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]
                 touch-manipulation`}
               style={{
-                fontSize: '16px', // Prevent iOS zoom
-                maxWidth: '100%',
-                boxSizing: 'border-box',
-                WebkitTextSizeAdjust: '100%',
-                MozTextSizeAdjust: '100%',
-                textSizeAdjust: '100%',
-                position: 'relative',
+                fontSize: "16px", // Prevent iOS zoom
+                maxWidth: "100%",
+                boxSizing: "border-box",
+                WebkitTextSizeAdjust: "100%",
+                MozTextSizeAdjust: "100%",
+                textSizeAdjust: "100%",
+                position: "relative",
                 zIndex: 30,
-                paddingRight: '6.75rem', // Space for mic + send (fits inside single-line row)
+                paddingRight: "6.75rem", // Space for mic + send (fits inside single-line row)
               }}
               rows={1}
               disabled={isComposerListOpen || isComposerMenuOpen}
@@ -1240,15 +1356,19 @@ export function ChatInterface({
                       disabled={isComposerListOpen || isComposerMenuOpen}
                       onClick={handleDictation}
                       className={`inline-flex h-9 w-9 rounded-full items-center justify-center touch-manipulation
-                        ${isComposerListOpen || isComposerMenuOpen ? 'opacity-50 cursor-not-allowed' : ''}
-                        ${isDictating
-                          ? 'bg-destructive text-background mic-pulse-animation'
-                          : 'text-muted-foreground hover:text-primary'
+                        ${isComposerListOpen || isComposerMenuOpen ? "opacity-50 cursor-not-allowed" : ""}
+                        ${
+                          isDictating
+                            ? "bg-destructive text-background mic-pulse-animation"
+                            : "text-muted-foreground hover:text-primary"
                         } hover:scale-105 active:scale-95`}
                       aria-label={isDictating ? "Stop dictating" : "Dictate"}
                       style={{ zIndex: 50 }}
                     >
-                      <Mic className="h-[1.125rem] w-[1.125rem]" strokeWidth={2} />
+                      <Mic
+                        className="h-[1.125rem] w-[1.125rem]"
+                        strokeWidth={2}
+                      />
                     </button>
                   </TooltipTrigger>
                   <TooltipPortal>
@@ -1258,7 +1378,7 @@ export function ChatInterface({
                       className="text-xs"
                       sideOffset={5}
                     >
-                      {isDictating ? 'Stop dictating' : 'Dictate'}
+                      {isDictating ? "Stop dictating" : "Dictate"}
                     </TooltipContent>
                   </TooltipPortal>
                 </Tooltip>
@@ -1270,19 +1390,30 @@ export function ChatInterface({
                   <TooltipTrigger asChild>
                     <button
                       type="submit"
-                      disabled={!inputMessage.trim() || isComposerListOpen || isComposerMenuOpen}
+                      disabled={
+                        !inputMessage.trim() ||
+                        isComposerListOpen ||
+                        isComposerMenuOpen
+                      }
                       className={`inline-flex h-9 w-9 rounded-full items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-[transform] duration-200 hover:scale-105 active:scale-95 shadow-sm touch-manipulation ${
                         inputMessage.trim()
-                          ? 'bg-primary text-background hover:bg-primary/90'
-                          : 'text-muted-foreground hover:text-primary'
+                          ? "bg-primary text-background hover:bg-primary/90"
+                          : "text-muted-foreground hover:text-primary"
                       }`}
                       style={{ zIndex: 50 }}
                     >
-                      <ArrowUp className="h-[1.125rem] w-[1.125rem]" strokeWidth={2} />
+                      <ArrowUp
+                        className="h-[1.125rem] w-[1.125rem]"
+                        strokeWidth={2}
+                      />
                     </button>
                   </TooltipTrigger>
                   <TooltipPortal>
-                    <TooltipContent side="top" align="center" className="text-xs">
+                    <TooltipContent
+                      side="top"
+                      align="center"
+                      className="text-xs"
+                    >
                       Send
                     </TooltipContent>
                   </TooltipPortal>
@@ -1304,13 +1435,14 @@ export function ChatInterface({
           <AlertDialogHeader>
             <AlertDialogTitle>Reset conversation?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will clear your current conversation. You can&apos;t undo this.
+              This will clear your current conversation. You can&apos;t undo
+              this.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
-              className={cn(buttonVariants({ variant: 'destructive' }))}
+              className={cn(buttonVariants({ variant: "destructive" }))}
               onClick={performResetChat}
             >
               Reset
@@ -1322,22 +1454,26 @@ export function ChatInterface({
   );
 
   const splitTransitionBase =
-    'transition-[opacity,transform] ease-in-out motion-reduce:!transition-none motion-reduce:duration-0';
-  const splitTransitionStyle = { transitionDuration: `${SPLIT_TRANSITION_MS}ms` };
+    "transition-[opacity,transform] ease-in-out motion-reduce:!transition-none motion-reduce:duration-0";
+  const splitTransitionStyle = {
+    transitionDuration: `${SPLIT_TRANSITION_MS}ms`,
+  };
 
-  const chatLayerState = splitTransitionPhase === 'closed'
-    ? 'opacity-100 scale-100'
-    : 'opacity-0 scale-95 pointer-events-none';
+  const chatLayerState =
+    splitTransitionPhase === "closed"
+      ? "opacity-100 scale-100"
+      : "opacity-0 scale-95 pointer-events-none";
 
-  const splitOverlayState = splitTransitionPhase === 'open'
-    ? 'opacity-100 scale-100'
-    : 'opacity-0 scale-105 pointer-events-none';
+  const splitOverlayState =
+    splitTransitionPhase === "open"
+      ? "opacity-100 scale-100"
+      : "opacity-0 scale-105 pointer-events-none";
 
   return (
     <div className="relative w-full h-full">
       {/* Regular chat view: only show when split view is closed */}
       <div
-        className={cn('absolute inset-0', splitTransitionBase, chatLayerState)}
+        className={cn("absolute inset-0", splitTransitionBase, chatLayerState)}
         style={splitTransitionStyle}
       >
         {!isSplitViewOpen && chatContent}
@@ -1346,7 +1482,11 @@ export function ChatInterface({
       {/* Split view: keep mounted during enter/exit phases for consistent animation timing. */}
       {isSplitViewMounted ? (
         <div
-          className={cn('fixed inset-0', splitTransitionBase, splitOverlayState)}
+          className={cn(
+            "fixed inset-0",
+            splitTransitionBase,
+            splitOverlayState,
+          )}
           style={splitTransitionStyle}
         >
           <ComposerSplitView
