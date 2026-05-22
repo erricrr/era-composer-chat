@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { buttonVariants } from '@/components/ui/button';
 import { useActiveChatsPanelTransition } from '@/hooks/useActiveChatsPanelTransition';
+import { MAX_ACTIVE_CHATS } from '@/lib/activeChats';
 import {
   activeChatsMobileBackdropClass,
   getActiveChatsPanelClassName,
@@ -30,9 +31,6 @@ interface ActiveChatsSliderProps {
   onRemoveChat: (composer: Composer) => void;
   returnFocusRef?: React.RefObject<HTMLButtonElement>;
 }
-
-// Maximum number of active chats allowed
-const MAX_ACTIVE_CHATS = 5;
 
 export default function ActiveChatsSlider({
   isOpen,

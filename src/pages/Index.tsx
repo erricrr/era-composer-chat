@@ -20,19 +20,19 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { useConversations } from "@/hooks/useConversations";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { preloadAllComposerImages } from "@/utils/imageCache";
-import {
-  MessageSquare,
-  AlertTriangle,
-  MessageSquareOff,
-  X,
-} from "lucide-react";
+import { MessageSquare, X } from "lucide-react";
 import { BuyMeABanhMi } from "@/components/BuyMeABanhMi";
 import FooterDrawer from "@/components/ui/footerDrawer";
 import HeaderIcon from "@/components/ui/HeaderIcon";
 import { ComposerSearch } from "@/components/ComposerSearch";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { toast } from "sonner";
 import { useCloseActiveChatsOnResize } from "@/hooks/useCloseActiveChatsOnResize";
+import { computeActiveChatListUpdate } from "@/lib/activeChats";
+import {
+  notifyActiveChatsAtCapacityStartingNew,
+  notifyActiveChatsLimitReached,
+  notifyActiveChatsRemoved,
+} from "@/lib/activeChatsNotifications";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useStandaloneDisplayMode } from "@/hooks/useStandaloneDisplayMode";
 import {
@@ -96,9 +96,6 @@ const Index = () => {
   const [aboutTooltipOpen, setAboutTooltipOpen] = useState(false);
   // State to track if the FooterDrawer is actually visible
   const [footerDrawerVisible, setFooterDrawerVisible] = useState(false);
-
-  // Maximum number of active chats allowed
-  const MAX_ACTIVE_CHATS = 5;
 
   // Ref for the active chats button - for focus management
   const activeChatsButtonRef = useRef<HTMLButtonElement>(null);
@@ -263,8 +260,18 @@ const Index = () => {
     setShouldScrollToComposer(false);
   }, []);
 
-  const handleStartChat = (composer: Composer) => {
-    if (composer) {
+  const handleStartChat = useCallback(
+    (composer: Composer) => {
+      if (!composer) return;
+
+      const startUpdate = computeActiveChatListUpdate(
+        activeChatIds,
+        composer.id,
+      );
+      if (startUpdate.evictedDueToOverflow) {
+        notifyActiveChatsAtCapacityStartingNew();
+      }
+
       const composerConversations = getConversationsForComposer(composer.id);
 
       if (composerConversations.length === 0) {
@@ -278,76 +285,46 @@ const Index = () => {
       // Then close the menu - chat is already mounted behind it
       setIsMenuOpen(false);
       localStorage.setItem("isMenuOpen", "false");
-    }
-  };
+    },
+    [activeChatIds, getConversationsForComposer, startConversation],
+  );
 
   // Add or move a composer to front of active chats, limit to 5
   const handleAddActiveChat = useCallback(
     (composer: Composer) => {
       setActiveChatIds((prev) => {
-        // Check if the composer is already in the active chats
-        const isAlreadyActive = prev.includes(composer.id);
+        const update = computeActiveChatListUpdate(prev, composer.id);
 
-        // Remove if already in the list
-        const ids = prev.filter((id) => id !== composer.id);
-
-        // Add to the front of the list
-        ids.unshift(composer.id);
-
-        // Only show warning when we reach the maximum chat limit with a new composer
-        if (ids.length === MAX_ACTIVE_CHATS && !isAlreadyActive) {
-          toast.warning(`Active Chat Limit Reached: ${MAX_ACTIVE_CHATS}`, {
-            description: `You've reached the maximum of ${MAX_ACTIVE_CHATS} active chats. Adding more will start to remove conversations at the bottom of the list.`,
-            duration: 5000,
-            icon: (
-              <AlertTriangle className="h-5 w-5 dark:text-amber-500 text-amber-600" />
-            ),
-            closeButton: true,
-          });
+        if (update.reachedCapacity) {
+          notifyActiveChatsLimitReached();
         }
 
-        // If we're exceeding the limit, get the composer ID that's being removed
-        let removedComposerId: string | null = null;
-        if (ids.length > MAX_ACTIVE_CHATS) {
-          removedComposerId = ids[MAX_ACTIVE_CHATS]; // Get the ID that will be removed
-          ids.length = MAX_ACTIVE_CHATS; // Limit the array to MAX_ACTIVE_CHATS
-        }
-
-        // If a composer was removed from the active list, clear its conversations
-        if (removedComposerId) {
+        if (update.removedComposerId) {
           try {
-            // Find the composer that was removed
             const removedComposer = allComposersData.find(
-              (c) => c.id === removedComposerId,
+              (c) => c.id === update.removedComposerId,
             );
             if (removedComposer) {
               console.log(
                 `[Index] Clearing conversations for kicked composer: ${removedComposer.name}`,
               );
 
-              // Get all conversations for the removed composer
               const removedComposerConversations =
-                getConversationsForComposer(removedComposerId);
+                getConversationsForComposer(update.removedComposerId);
 
-              // Delete each conversation
-              if (removedComposerConversations.length > 0) {
-                for (const conv of removedComposerConversations) {
-                  console.log(
-                    `[Index] Deleting conversation: ${conv.id} for kicked composer ${removedComposerId}`,
-                  );
-                  deleteConversation(conv.id);
-                }
+              for (const conv of removedComposerConversations) {
+                console.log(
+                  `[Index] Deleting conversation: ${conv.id} for kicked composer ${update.removedComposerId}`,
+                );
+                deleteConversation(conv.id);
+              }
 
-                // Show a notification that the composer was removed
-                toast(`Removed from Active Chats: ${removedComposer.name}`, {
-                  description:
-                    "This conversation has been cleared as it exceeded the 5 chat limit.",
-                  duration: 4000,
-                  icon: (
-                    <MessageSquareOff className="text-destructive h-5 w-5" />
-                  ),
-                  closeButton: true,
-                });
+              // 6th-chat warning is shown on Start a Chat; avoid a duplicate toast on first send
+              if (
+                !update.evictedDueToOverflow &&
+                removedComposerConversations.length > 0
+              ) {
+                notifyActiveChatsRemoved(removedComposer.name);
               }
             }
           } catch (error) {
@@ -358,7 +335,7 @@ const Index = () => {
           }
         }
 
-        return ids;
+        return update.nextIds;
       });
     },
     [setActiveChatIds, getConversationsForComposer, deleteConversation],
