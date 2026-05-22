@@ -32,8 +32,8 @@ export function ChatActionsMenu({
   stopPropagation = false,
 }: ChatActionsMenuProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const viewLabel = isSplitView ? 'Full view' : 'Split view';
-  const openViewLabel = `Open ${viewLabel.toLowerCase()}`;
+  const viewLabel = isSplitView ? 'Hide bio' : 'Show bio';
+  const viewActionLabel = isSplitView ? 'Hide composer biography' : 'Show composer biography';
   const baseTriggerClassName = 'inline-flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0 transition-colors disabled:opacity-50 disabled:cursor-not-allowed';
   const stopPropagationIfNeeded = (e: { stopPropagation: () => void }) => {
     if (stopPropagation) {
@@ -88,7 +88,7 @@ export function ChatActionsMenu({
             <button
               type="button"
               className="flex min-h-11 w-full items-center rounded-md px-3 py-3 text-left text-base font-medium text-foreground hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-              aria-label={openViewLabel}
+              aria-label={viewActionLabel}
               onClick={() => {
                 setMobileMenuOpen(false);
                 onToggleView();
@@ -147,7 +147,7 @@ export function ChatActionsMenu({
       >
         <DropdownMenuItem
           className="min-h-11 cursor-pointer text-base"
-          aria-label={openViewLabel}
+          aria-label={viewActionLabel}
           onSelect={onToggleView}
         >
           {viewLabel}

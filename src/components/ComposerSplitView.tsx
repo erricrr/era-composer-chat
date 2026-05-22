@@ -270,7 +270,7 @@ export function ComposerSplitView({
         className="relative flex items-center justify-center border-b py-7 bg-primary-foreground backdrop-blur-sm shadow-md z-[20] flex-shrink-0 group w-full cursor-pointer focus-ring-inset focus:rounded-none ComposerSplitView-header"
         tabIndex={0}
         role="button"
-        aria-label="Close split view"
+        aria-label="Hide composer biography"
         onClick={(e) => {
           e.stopPropagation();
           onClose();
