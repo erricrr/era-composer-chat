@@ -276,6 +276,19 @@ form.chat-composer {
         @apply outline-none ring-0;
     }
 
+    /*
+     * Roving-focus menu/list items: highlight via data-[highlighted], not rings.
+     * Radix moves DOM focus on pointer hover; global *:focus-visible would
+     * incorrectly ring items when browser heuristics treat programmatic focus
+     * as keyboard focus.
+     */
+    [role="menu"] [role="menuitem"]:focus-visible,
+    [role="menu"] [role="menuitemcheckbox"]:focus-visible,
+    [role="menu"] [role="menuitemradio"]:focus-visible,
+    [role="listbox"] [role="option"]:focus-visible {
+        @apply ring-0 ring-offset-0;
+    }
+
     /* Ensure fixed header stays in place */
     .fixed-header {
         @apply fixed top-1 left-0 right-0 bg-background z-70 pb-1;

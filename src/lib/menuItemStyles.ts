@@ -1,11 +1,12 @@
 /**
  * Shared focus/highlight styles for Radix roving-focus menus.
- * Use data-[highlighted] for the active row (pointer + keyboard);
- * use focus-visible for keyboard-only rings.
+ * Use data-[highlighted] for the active row (pointer + keyboard).
+ * Roving-focus items intentionally omit focus rings — the highlight
+ * background is the visible focus indicator (WCAG 2.4.7 for menus).
  */
 
 export const radixMenuItemHighlightClassName =
-  "outline-none transition-colors data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0 data-[disabled]:pointer-events-none data-[disabled]:opacity-50";
+  "outline-none ring-0 transition-colors data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground focus:ring-0 focus-visible:ring-0 data-[disabled]:pointer-events-none data-[disabled]:opacity-50";
 
 /** Standard menu item (dropdown, context, menubar). */
 export const radixMenuItemClassName = [
@@ -19,18 +20,18 @@ export const radixMenuCheckboxRadioItemClassName = [
   radixMenuItemHighlightClassName,
 ].join(" ");
 
-/** Submenu trigger (dropdown/context/menubar sub). */
+/** Submenu trigger inside an open menu (roving focus). */
 export const radixMenuSubTriggerClassName =
-  "flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[highlighted]:bg-accent data-[state=open]:bg-accent focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0";
+  "flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none ring-0 data-[highlighted]:bg-accent data-[state=open]:bg-accent focus:ring-0 focus-visible:ring-0";
 
-/** Menubar top-level trigger. */
+/** Menubar top-level trigger (standalone tab stop — keeps keyboard ring). */
 export const radixMenubarTriggerClassName =
   "flex cursor-default select-none items-center rounded-sm px-3 py-1.5 text-sm font-medium outline-none data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0";
 
-/** Chat actions ⋮ trigger (44×44 touch target). */
+/** Chat actions ⋮ trigger (44×44 touch target, circular hover). */
 export const chatActionsTriggerClassName =
-  "inline-flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0 transition-colors disabled:opacity-50 disabled:cursor-not-allowed";
+  "inline-flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-foreground/70 hover:text-foreground/90 hover:bg-primary/20 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0 transition-colors disabled:opacity-50 disabled:cursor-not-allowed";
 
 /** Native button rows in the mobile chat actions sheet. */
 export const chatActionsSheetItemClassName =
-  "flex min-h-11 w-full items-center rounded-md px-3 py-3 text-left text-base font-medium text-foreground hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary";
+  "flex min-h-11 w-full items-center rounded-md px-3 py-3 text-left text-base font-medium text-foreground hover:bg-accent focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:bg-accent focus-visible:ring-2 focus-visible:ring-primary";

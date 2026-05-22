@@ -125,7 +125,7 @@ export function ComposerSplitView({
             onCloseChat={onCloseChat}
             isMobile={isMobile}
             stopPropagation={true}
-            triggerClassName="rounded-full hover:bg-primary/20 group-hover:bg-primary/20 text-foreground/70 hover:text-foreground/90"
+            triggerClassName="group-hover:bg-primary/20"
           />
         </div>
       </div>

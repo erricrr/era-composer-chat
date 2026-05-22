@@ -21,6 +21,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { useInputModality } from "@/hooks/useInputModality";
 import {
   chatActionsSheetItemClassName,
   chatActionsTriggerClassName,
@@ -45,6 +46,15 @@ type MenuAction = {
   separatorBefore?: boolean;
 };
 
+function blurIfPointer(
+  modalityRef: ReturnType<typeof useInputModality>,
+  element: HTMLElement | null | undefined,
+) {
+  if (modalityRef.current === "pointer") {
+    element?.blur();
+  }
+}
+
 export function ChatActionsMenu({
   isSplitView,
   onToggleView,
@@ -56,7 +66,8 @@ export function ChatActionsMenu({
   stopPropagation = false,
 }: ChatActionsMenuProps) {
   const [open, setOpen] = useState(false);
-  const closedViaPointerRef = useRef(false);
+  const inputModalityRef = useInputModality();
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   useLayoutEffect(() => {
     setOpen(false);
@@ -69,6 +80,13 @@ export function ChatActionsMenu({
 
   const sp = (e: { stopPropagation: () => void }) => {
     if (stopPropagation) e.stopPropagation();
+  };
+
+  const handleOpenChange = (nextOpen: boolean) => {
+    setOpen(nextOpen);
+    requestAnimationFrame(() => {
+      blurIfPointer(inputModalityRef, triggerRef.current);
+    });
   };
 
   const actions: MenuAction[] = [
@@ -87,6 +105,7 @@ export function ChatActionsMenu({
 
   const triggerButton = (
     <button
+      ref={triggerRef}
       type="button"
       disabled={disabled}
       onClick={(e: MouseEvent<HTMLButtonElement>) => {
@@ -114,7 +133,7 @@ export function ChatActionsMenu({
     return (
       <>
         {triggerButton}
-        <Sheet open={open} onOpenChange={setOpen}>
+        <Sheet open={open} onOpenChange={handleOpenChange}>
           <SheetContent
             side="bottom"
             className="rounded-t-2xl p-4 pb-[max(1rem,env(safe-area-inset-bottom))] [&>button]:hidden"
@@ -132,9 +151,10 @@ export function ChatActionsMenu({
                   type="button"
                   className={chatActionsSheetItemClassName}
                   aria-label={ariaLabel}
-                  onClick={() => {
+                  onClick={(e) => {
                     setOpen(false);
                     onSelect();
+                    blurIfPointer(inputModalityRef, e.currentTarget);
                   }}
                 >
                   {label}
@@ -148,7 +168,7 @@ export function ChatActionsMenu({
   }
 
   return (
-    <DropdownMenu open={open} onOpenChange={setOpen}>
+    <DropdownMenu open={open} onOpenChange={handleOpenChange}>
       <DropdownMenuTrigger asChild>{triggerButton}</DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"
@@ -157,16 +177,9 @@ export function ChatActionsMenu({
         className="min-w-[12rem]"
         onClick={stopPropagation ? sp : undefined}
         onPointerDown={stopPropagation ? sp : undefined}
-        onPointerDownCapture={() => {
-          closedViaPointerRef.current = true;
-        }}
-        onInteractOutside={() => {
-          closedViaPointerRef.current = true;
-        }}
         onCloseAutoFocus={(e) => {
-          if (closedViaPointerRef.current) {
+          if (inputModalityRef.current === "pointer") {
             e.preventDefault();
-            closedViaPointerRef.current = false;
           }
         }}
       >
