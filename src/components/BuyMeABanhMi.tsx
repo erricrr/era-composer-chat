@@ -19,7 +19,7 @@ export function BuyMeABanhMi({ inDrawer = false }: BuyMeABanhMiProps) {
       <Button
         asChild
         size="sm"
-        className="min-h-[36px] w-full sm:w-auto px-4 bg-[#9f639e] text-[#f7f6f2] hover:bg-[#9f649e]/90 hover:text-[#f7f6f2] font-bold"
+        className="min-h-[36px] w-full sm:w-auto px-4 bg-[#805080] text-[#f7f6f2] hover:bg-[#735073] hover:text-[#f7f6f2] font-bold"
       >
         <a
           href="https://buymeacoffee.com/erricrr"
