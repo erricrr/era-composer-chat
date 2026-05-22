@@ -3,9 +3,7 @@ import {
   useLayoutEffect,
   useRef,
   useState,
-  KeyboardEvent,
   MouseEvent,
-  PointerEvent,
 } from "react";
 import { MoreVertical } from "lucide-react";
 import {
@@ -36,7 +34,6 @@ interface ChatActionsMenuProps {
   isMobile: boolean;
   disabled?: boolean;
   triggerClassName?: string;
-  stopPropagation?: boolean;
 }
 
 type MenuAction = {
@@ -63,7 +60,6 @@ export function ChatActionsMenu({
   isMobile,
   disabled = false,
   triggerClassName,
-  stopPropagation = false,
 }: ChatActionsMenuProps) {
   const [open, setOpen] = useState(false);
   const inputModalityRef = useInputModality();
@@ -78,15 +74,17 @@ export function ChatActionsMenu({
     ? "Hide composer biography"
     : "Show composer biography";
 
-  const sp = (e: { stopPropagation: () => void }) => {
-    if (stopPropagation) e.stopPropagation();
-  };
-
   const handleOpenChange = (nextOpen: boolean) => {
+    if (disabled && nextOpen) return;
     setOpen(nextOpen);
     requestAnimationFrame(() => {
       blurIfPointer(inputModalityRef, triggerRef.current);
     });
+  };
+
+  const handleTriggerClick = (e: MouseEvent<HTMLButtonElement>) => {
+    if (disabled) return;
+    if (isMobile) setOpen(true);
   };
 
   const actions: MenuAction[] = [
@@ -107,15 +105,8 @@ export function ChatActionsMenu({
     <button
       ref={triggerRef}
       type="button"
-      disabled={disabled}
-      onClick={(e: MouseEvent<HTMLButtonElement>) => {
-        sp(e);
-        if (isMobile) setOpen(true);
-      }}
-      onKeyDown={(e: KeyboardEvent<HTMLButtonElement>) => {
-        if (e.key === "Enter" || e.key === " ") sp(e);
-      }}
-      onPointerDown={(e: PointerEvent<HTMLButtonElement>) => sp(e)}
+      aria-disabled={disabled}
+      onClick={handleTriggerClick}
       className={cn(
         chatActionsTriggerClassName,
         isMobile && "touch-manipulation",
@@ -138,8 +129,6 @@ export function ChatActionsMenu({
             side="bottom"
             className="rounded-t-2xl p-4 pb-[max(1rem,env(safe-area-inset-bottom))] [&>button]:hidden"
             onOverlayClick={() => setOpen(false)}
-            onClick={stopPropagation ? sp : undefined}
-            onPointerDown={stopPropagation ? sp : undefined}
           >
             <SheetHeader className="sr-only">
               <SheetTitle>Chat actions</SheetTitle>
@@ -175,8 +164,6 @@ export function ChatActionsMenu({
         side="bottom"
         sideOffset={8}
         className="min-w-[12rem]"
-        onClick={stopPropagation ? sp : undefined}
-        onPointerDown={stopPropagation ? sp : undefined}
         onCloseAutoFocus={(e) => {
           if (inputModalityRef.current === "pointer") {
             e.preventDefault();

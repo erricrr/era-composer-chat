@@ -25,6 +25,7 @@ interface ComposerSplitViewProps {
   onClose: () => void;
   onReset?: () => void;
   onCloseChat?: () => void;
+  chatActionsDisabled?: boolean;
   children: ReactNode;
   isActiveChatsOpen?: boolean;
 }
@@ -35,6 +36,7 @@ export function ComposerSplitView({
   onClose,
   onReset,
   onCloseChat,
+  chatActionsDisabled = false,
   children,
   isActiveChatsOpen = false,
 }: ComposerSplitViewProps) {
@@ -45,9 +47,6 @@ export function ComposerSplitView({
   const [imageModalOpen, setImageModalOpen] = useState(false);
   // Add ref to image button for focus management
   const imageButtonRef = React.useRef<HTMLButtonElement>(null);
-  // Ref for header composer name focus management
-  const nameButtonRef = React.useRef<HTMLDivElement>(null);
-
   // IMPORTANT: This effect ensures the image modal is ALWAYS closed when the split view closes
   useEffect(() => {
     if (!isOpen) {
@@ -78,58 +77,28 @@ export function ComposerSplitView({
 
   const composerContent = (
     // Add relative positioning context for the modal
-    <div className="relative h-full flex flex-col pt-2">
+    <div className="relative h-full flex flex-col">
       {/* Background Music Notes */}
       <div className="absolute inset-0 overflow-hidden -z-10">
         <MusicNoteDecoration />
       </div>
 
-      {/* Fixed Header - Now outside ScrollArea */}
-      <div
-        className="relative flex items-center justify-center border-b py-7 bg-primary-foreground backdrop-blur-sm shadow-md z-[20] flex-shrink-0 group w-full cursor-pointer focus-ring-inset focus:rounded-none ComposerSplitView-header"
-        tabIndex={0}
-        role="button"
-        aria-label="Hide composer biography"
-        onClick={(e) => {
-          e.stopPropagation();
-          onClose();
-        }}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            onClose();
-          }
-        }}
-      >
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div
-            ref={nameButtonRef}
-            onClick={(e) => {
-              e.stopPropagation();
-              onClose();
-            }}
-            className="cursor-pointer font-bold font-serif text-lg md:text-xl truncate max-w-[calc(100%-6.5rem)] px-4"
-          >
-            {composer.name}
-          </div>
-        </div>
-        <div
-          data-chat-actions-menu
-          className="absolute right-4 z-10 isolate"
-          onClick={(e) => e.stopPropagation()}
-          onPointerDown={(e) => e.stopPropagation()}
-        >
-          <ChatActionsMenu
-            isSplitView={true}
-            onToggleView={onClose}
-            onReset={onReset ?? (() => {})}
-            onCloseChat={onCloseChat}
-            isMobile={isMobile}
-            stopPropagation={true}
-            triggerClassName="group-hover:bg-primary/20"
-          />
-        </div>
-      </div>
+      {/* Fixed Header — title only; chat actions menu is the sole control */}
+      <header className="relative flex h-20 shrink-0 items-center overflow-visible border-b bg-primary-foreground backdrop-blur-sm shadow-md z-[20] px-3 md:px-4 pt-4 pb-2.5 ComposerSplitView-header">
+        <div className="w-11 shrink-0" aria-hidden="true" />
+        <h2 className="min-w-0 flex-1 truncate px-2 text-center font-bold font-serif text-xl lg:text-2xl leading-tight text-foreground">
+          {composer.name}
+        </h2>
+        <ChatActionsMenu
+          isSplitView={true}
+          onToggleView={onClose}
+          onReset={onReset ?? (() => {})}
+          onCloseChat={onCloseChat}
+          isMobile={isMobile}
+          disabled={chatActionsDisabled}
+          triggerClassName="shrink-0"
+        />
+      </header>
 
       {/* Scrollable Content Area */}
       <div className="flex-1 overflow-hidden">

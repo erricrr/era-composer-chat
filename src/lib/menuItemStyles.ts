@@ -30,7 +30,7 @@ export const radixMenubarTriggerClassName =
 
 /** Chat actions ⋮ trigger (44×44 touch target, circular hover). */
 export const chatActionsTriggerClassName =
-  "inline-flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-foreground/70 hover:text-foreground/90 hover:bg-primary/20 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0 transition-colors disabled:opacity-50 disabled:cursor-not-allowed";
+  "inline-flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-foreground/70 hover:text-foreground/90 hover:bg-primary/20 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0 transition-colors aria-disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:hover:bg-transparent aria-disabled:hover:text-foreground/70";
 
 /** Native button rows in the mobile chat actions sheet. */
 export const chatActionsSheetItemClassName =

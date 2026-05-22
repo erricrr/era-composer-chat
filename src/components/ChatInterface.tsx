@@ -169,8 +169,7 @@ export function ChatInterface({
   // Reference to track current conversation ID to prevent stale state issues
   const currentConversationIdRef = useRef<string | null>(null);
 
-  // State to track if the composer menu is open
-  const [isComposerMenuOpen, setIsComposerMenuOpen] = useState(false);
+  const chatComposerChromeDisabled = isComposerListOpen;
 
   // Reference for speech recognition
   const recognitionRef = useRef<SpeechRecognition | null>(null);
@@ -1145,7 +1144,7 @@ export function ChatInterface({
                 onReset={() => setResetConfirmOpen(true)}
                 onCloseChat={onClose}
                 isMobile={isMobile}
-                disabled={isComposerListOpen || isComposerMenuOpen}
+                disabled={chatComposerChromeDisabled}
               />
             </div>
           </nav>
@@ -1291,7 +1290,7 @@ export function ChatInterface({
                 paddingRight: "6.75rem", // Space for mic + send (fits inside single-line row)
               }}
               rows={1}
-              disabled={isComposerListOpen || isComposerMenuOpen}
+              disabled={chatComposerChromeDisabled}
             />
 
             {/* Control buttons: 36px circles centered in 44×44 tap wrappers; cluster vertically centered in field */}
@@ -1305,10 +1304,10 @@ export function ChatInterface({
                   <TooltipTrigger asChild>
                     <button
                       type="button"
-                      disabled={isComposerListOpen || isComposerMenuOpen}
+                      disabled={chatComposerChromeDisabled}
                       onClick={handleDictation}
                       className={`inline-flex h-9 w-9 rounded-full items-center justify-center touch-manipulation
-                        ${isComposerListOpen || isComposerMenuOpen ? "opacity-50 cursor-not-allowed" : ""}
+                        ${chatComposerChromeDisabled ? "opacity-50 cursor-not-allowed" : ""}
                         ${
                           isDictating
                             ? "bg-destructive text-background mic-pulse-animation"
@@ -1343,9 +1342,7 @@ export function ChatInterface({
                     <button
                       type="submit"
                       disabled={
-                        !inputMessage.trim() ||
-                        isComposerListOpen ||
-                        isComposerMenuOpen
+                        !inputMessage.trim() || chatComposerChromeDisabled
                       }
                       className={`inline-flex h-9 w-9 rounded-full items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-[transform] duration-200 hover:scale-105 active:scale-95 shadow-sm touch-manipulation ${
                         inputMessage.trim()
@@ -1418,12 +1415,16 @@ export function ChatInterface({
   const chatLayerState =
     splitTransitionPhase === "closed"
       ? "opacity-100 scale-100"
-      : "opacity-0 scale-95 pointer-events-none";
+      : splitTransitionPhase === "closing"
+        ? "opacity-0 scale-95"
+        : "opacity-0 scale-95 pointer-events-none";
 
   const splitOverlayState =
     splitTransitionPhase === "open"
       ? "opacity-100 scale-100"
-      : "opacity-0 scale-105 pointer-events-none";
+      : splitTransitionPhase === "opening"
+        ? "opacity-0 scale-105"
+        : "opacity-0 scale-105 pointer-events-none";
 
   return (
     <div className="relative w-full h-full">
@@ -1451,6 +1452,7 @@ export function ChatInterface({
             onClose={closeSplitView}
             onReset={() => setResetConfirmOpen(true)}
             onCloseChat={onClose}
+            chatActionsDisabled={chatComposerChromeDisabled}
             isActiveChatsOpen={isActiveChatsOpen}
           >
             <div className="h-full">{chatContent}</div>
