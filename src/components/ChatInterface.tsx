@@ -197,6 +197,9 @@ export function ChatInterface({
   const isTouch = useIsTouch();
   const isSplitViewOpen = splitTransitionPhase !== "closed";
   const isSplitViewMounted = splitTransitionPhase !== "closed";
+  const fullViewReadableWidthClass = !isSplitViewOpen
+    ? "lg:max-w-5xl lg:mx-auto lg:w-full"
+    : "";
 
   useVirtualKeyboard(isMobile || isTouch, textareaRef);
 
@@ -1105,7 +1108,10 @@ export function ChatInterface({
           role="banner"
         >
           <nav
-            className="flex items-center justify-between px-5 pt-6 pb-3 md:pt-7 md:pb-4"
+            className={cn(
+              "flex items-center justify-between px-5 pt-6 pb-3 md:pt-7 md:pb-4",
+              fullViewReadableWidthClass,
+            )}
             aria-label="Composer information"
           >
             <Tooltip>
@@ -1209,9 +1215,11 @@ export function ChatInterface({
         className="chat-messages min-h-0 flex-1"
       >
         <div
-          className={`chat-messages-content px-5 relative ${
-            !isSplitViewOpen ? "pt-4" : "py-4"
-          }`}
+          className={cn(
+            "chat-messages-content px-5 relative",
+            !isSplitViewOpen ? "pt-4" : "py-4",
+            fullViewReadableWidthClass,
+          )}
           role="log"
           aria-label="Chat messages"
           aria-live="polite"
@@ -1309,7 +1317,7 @@ export function ChatInterface({
             : {}),
         }}
       >
-        <div className="pt-4 px-3 sm:px-5 relative z-10">
+        <div className={cn("pt-4 px-3 sm:px-5 relative z-10", fullViewReadableWidthClass)}>
           <div key={`input-${isSplitViewOpen}`} className="relative max-w-full">
             <textarea
               id="chat-input"
@@ -1424,7 +1432,11 @@ export function ChatInterface({
         </div>
         <p
           tabIndex={0}
-          className="text-xs text-muted-foreground text-center mx-11 py-1 focus:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-1 rounded-none"
+          className={cn(
+            "text-xs text-muted-foreground text-center py-1 focus:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-1 rounded-none",
+            fullViewReadableWidthClass,
+            "px-3 sm:px-5",
+          )}
         >
           AI-generated chat. Not {getLastName(composer.name)}&apos;s own words.
         </p>
