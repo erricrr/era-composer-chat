@@ -1,21 +1,29 @@
-import React, { ReactNode, useState, useEffect } from 'react';
-import { Composer, getCopyrightAttribution, CopyrightDetails } from '@/data/composers';
-import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
-import { useIsMobile } from '@/hooks/use-mobile';
+import React, { ReactNode, useState, useEffect } from "react";
+import {
+  Composer,
+  getCopyrightAttribution,
+  CopyrightDetails,
+} from "@/data/composers";
+import {
+  ResizablePanelGroup,
+  ResizablePanel,
+  ResizableHandle,
+} from "@/components/ui/resizable";
+import { useIsMobile } from "@/hooks/use-mobile";
 import {
   activeChatsLayoutTransitionClass,
   getActiveChatsShellLayout,
-} from '@/lib/activeChatsLayout';
-import { cn } from '@/lib/utils';
-import { Badge } from '@/components/ui/badge';
-import { ContentScrollAffordanceArea } from '@/components/ui/scroll-affordance-area';
-import { X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { MusicNoteDecoration } from '@/components/MusicNoteDecoration';
-import { ComposerImageViewer } from '@/components/ComposerImageViewer';
-import { CopyrightAttribution } from './CopyrightAttribution';
-import { PortraitImage } from './PortraitImage';
-import { ChatActionsMenu } from './ChatActionsMenu';
+} from "@/lib/activeChatsLayout";
+import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
+import { ContentScrollAffordanceArea } from "@/components/ui/scroll-affordance-area";
+import { X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { MusicNoteDecoration } from "@/components/MusicNoteDecoration";
+import { ComposerImageViewer } from "@/components/ComposerImageViewer";
+import { CopyrightAttribution } from "./CopyrightAttribution";
+import { PortraitImage } from "./PortraitImage";
+import { ChatActionsMenu } from "./ChatActionsMenu";
 
 // ContainedImageModal component
 function ContainedImageModal({
@@ -24,7 +32,7 @@ function ContainedImageModal({
   imageSrc,
   composerName,
   composerId,
-  returnFocusRef
+  returnFocusRef,
 }: {
   isOpen: boolean;
   onClose: () => void;
@@ -70,26 +78,30 @@ function ContainedImageModal({
       if (!isOpen) return;
 
       // Close modal on escape
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         e.preventDefault();
         onClose();
         return;
       }
 
       // Trap focus inside modal
-      if (e.key === 'Tab') {
+      if (e.key === "Tab") {
         // Get all focusable elements in modal
-        const focusableElements = modalRef.current?.querySelectorAll(
-          'button, [href], input, select, textarea, img[tabindex="0"], [tabindex]:not([tabindex="-1"])'
-        ) || [];
+        const focusableElements =
+          modalRef.current?.querySelectorAll(
+            'button, [href], input, select, textarea, img[tabindex="0"], [tabindex]:not([tabindex="-1"])',
+          ) || [];
 
         // Convert NodeList to Array and filter out elements with display:none
         const focusable = Array.from(focusableElements).filter(
-          el => window.getComputedStyle(el as HTMLElement).display !== 'none'
+          (el) => window.getComputedStyle(el as HTMLElement).display !== "none",
         ) as HTMLElement[];
 
         // Add the image to the tab order if it's not already included
-        if (imageRef.current && !Array.from(focusable).includes(imageRef.current)) {
+        if (
+          imageRef.current &&
+          !Array.from(focusable).includes(imageRef.current)
+        ) {
           // If image isn't in the tab sequence, make it so
           imageRef.current.tabIndex = 0;
         }
@@ -103,15 +115,18 @@ function ContainedImageModal({
           focusable[focusable.length - 1].focus();
         }
         // If tab on last element, move to first element
-        else if (!e.shiftKey && document.activeElement === focusable[focusable.length - 1]) {
+        else if (
+          !e.shiftKey &&
+          document.activeElement === focusable[focusable.length - 1]
+        ) {
           e.preventDefault();
           focusable[0].focus();
         }
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
 
   // Get copyright details
@@ -124,9 +139,9 @@ function ContainedImageModal({
     <div
       className="absolute inset-x-0 top-[50px] bottom-0 z-[5] overflow-hidden"
       style={{
-        backgroundColor: 'hsl(var(--background) / 0.8)',
+        backgroundColor: "hsl(var(--background) / 0.8)",
         opacity: isOpen ? 1 : 0,
-        transition: 'opacity 150ms ease-in-out',
+        transition: "opacity 150ms ease-in-out",
       }}
       role="dialog"
       aria-label={`Image of ${composerName}`}
@@ -135,16 +150,18 @@ function ContainedImageModal({
       <ContentScrollAffordanceArea bgVar="background" className="h-full w-full">
         <div
           className="flex min-h-full items-start justify-center px-[5%] py-5"
-          onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) onClose();
+          }}
         >
           {/* Content container with proper spacing */}
           <div
             ref={modalRef}
             className="relative bg-background rounded-lg shadow-xl z-10 overflow-hidden max-w-full"
-            onClick={e => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
             style={{
-              transform: isOpen ? 'scale(1)' : 'scale(0.95)',
-              transition: 'transform 150ms ease-in-out',
+              transform: isOpen ? "scale(1)" : "scale(0.95)",
+              transition: "transform 150ms ease-in-out",
             }}
           >
             {/* Close button - improved for keyboard access */}
@@ -214,8 +231,7 @@ export function ComposerSplitView({
   isActiveChatsOpen = false,
 }: ComposerSplitViewProps) {
   const isMobile = useIsMobile();
-  const splitTransitionStyle = { transitionDuration: '220ms' };
-
+  const splitTransitionStyle = { transitionDuration: "220ms" };
 
   // SIMPLIFIED: Don't use localStorage at all, just a simple state
   const [imageModalOpen, setImageModalOpen] = useState(false);
@@ -234,15 +250,15 @@ export function ComposerSplitView({
   // Add keyboard listener for Escape to close split view
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         onClose();
       }
     };
     if (isOpen) {
-      window.addEventListener('keydown', handleKeyDown);
+      window.addEventListener("keydown", handleKeyDown);
     }
     return () => {
-      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener("keydown", handleKeyDown);
     };
   }, [isOpen, onClose]);
 
@@ -280,7 +296,7 @@ export function ComposerSplitView({
           onClose();
         }}
         onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
+          if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
             onClose();
           }
@@ -318,25 +334,32 @@ export function ComposerSplitView({
 
       {/* Scrollable Content Area */}
       <div className="flex-1 overflow-hidden">
-        <ContentScrollAffordanceArea bgVar="primary-foreground" className="h-full">
-          <div className={`space-y-4 md:space-y-6 ${
-            isMobile
-              ? 'p-3' // Compact padding for mobile
-              : isActiveChatsOpen
-                ? 'p-3 md:p-4'
-                : 'p-4 md:p-6'
-          }`}>
-            <div className={`flex flex-col items-center text-center ${isMobile ? 'space-y-2' : 'space-y-3'}`}>
+        <ContentScrollAffordanceArea
+          bgVar="primary-foreground"
+          className="h-full"
+        >
+          <div
+            className={`space-y-4 md:space-y-6 ${
+              isMobile
+                ? "p-3" // Compact padding for mobile
+                : isActiveChatsOpen
+                  ? "p-3 md:p-4"
+                  : "p-4 md:p-6"
+            }`}
+          >
+            <div
+              className={`flex flex-col items-center text-center ${isMobile ? "space-y-2" : "space-y-3"}`}
+            >
               <button
                 ref={imageButtonRef}
                 type="button"
                 onClick={handleOpenImageModal}
                 className={`transform transition-transform duration-200 hover:scale-105 appearance-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:z-10 relative cursor-pointer rounded-full overflow-hidden border-2 border-primary flex-shrink-0 ${
                   isMobile
-                    ? 'w-32 h-32'
+                    ? "w-32 h-32"
                     : isActiveChatsOpen
-                      ? 'w-20 h-20 md:w-32 md:h-32 lg:w-40 lg:h-40 xl:w-48 xl:h-48'
-                      : 'w-32 h-32 md:w-48 md:h-48 lg:w-56 lg:h-56 xl:w-64 xl:h-64'
+                      ? "w-20 h-20 md:w-32 md:h-32 lg:w-40 lg:h-40 xl:w-48 xl:h-48"
+                      : "w-32 h-32 md:w-48 md:h-48 lg:w-56 lg:h-56 xl:w-64 xl:h-64"
                 }`}
                 aria-label={`View full image of ${composer.name}`}
               >
@@ -352,14 +375,17 @@ export function ComposerSplitView({
                 tabIndex={0}
                 className="focus-ring-inset focus:rounded-none flex flex-col md:flex-col items-center gap-2 mt-2 text-center"
               >
-                <span className={`text-muted-foreground ${
-                  isMobile
-                    ? 'text-base'
-                    : isActiveChatsOpen
-                      ? 'text-sm'
-                      : 'text-base'
-                }`}>
-                  {composer.nationality}, {composer.birthYear}-{composer.deathYear || 'present'}
+                <span
+                  className={`text-muted-foreground ${
+                    isMobile
+                      ? "text-base"
+                      : isActiveChatsOpen
+                        ? "text-sm"
+                        : "text-base"
+                  }`}
+                >
+                  {composer.nationality}, {composer.birthYear}-
+                  {composer.deathYear || "present"}
                 </span>
                 <div className="flex flex-wrap justify-center gap-1">
                   {Array.isArray(composer.era) ? (
@@ -369,10 +395,10 @@ export function ComposerSplitView({
                         variant="badge"
                         className={
                           isMobile
-                            ? 'text-sm px-2 py-0.5'
+                            ? "text-sm px-2 py-0.5"
                             : isActiveChatsOpen
-                              ? 'text-[10px] px-1.5 py-0.5'
-                              : ''
+                              ? "text-[10px] px-1.5 py-0.5"
+                              : ""
                         }
                       >
                         {era}
@@ -383,10 +409,10 @@ export function ComposerSplitView({
                       variant="badge"
                       className={
                         isMobile
-                          ? 'text-sm px-2 py-0.5'
+                          ? "text-sm px-2 py-0.5"
                           : isActiveChatsOpen
-                            ? 'text-[10px] px-1.5 py-0.5'
-                            : ''
+                            ? "text-[10px] px-1.5 py-0.5"
+                            : ""
                       }
                     >
                       {composer.era}
@@ -401,25 +427,29 @@ export function ComposerSplitView({
               className="focus-ring-inset focus:rounded-none space-y-4 md:space-y-6 max-w-prose mx-auto"
             >
               <div>
-                <p className={`text-foreground/90 ${
-                  isMobile
-                    ? 'text-base'
-                    : isActiveChatsOpen
-                      ? 'text-sm md:text-base'
-                      : 'text-base'
-                }`}>
+                <p
+                  className={`text-foreground/90 bio-text ${
+                    isMobile
+                      ? "text-base"
+                      : isActiveChatsOpen
+                        ? "text-sm md:text-base"
+                        : "text-base"
+                  }`}
+                >
                   {composer.longBio}
                 </p>
               </div>
 
               <div>
-                <h3 className={`font-semibold mb-2 ${
-                  isMobile
-                    ? 'text-lg'
-                    : isActiveChatsOpen
-                      ? 'text-base'
-                      : 'text-lg'
-                }`}>
+                <h3
+                  className={`font-semibold mb-2 ${
+                    isMobile
+                      ? "text-lg"
+                      : isActiveChatsOpen
+                        ? "text-base"
+                        : "text-lg"
+                  }`}
+                >
                   Notable Works
                 </h3>
                 <ul className="list-disc pl-5 mb-5 space-y-1">
@@ -428,11 +458,12 @@ export function ComposerSplitView({
                       key={index}
                       className={`text-foreground/80 ${
                         isMobile
-                          ? 'text-base'
+                          ? "text-base"
                           : isActiveChatsOpen
-                            ? 'text-sm md:text-base'
-                            : 'text-base'
-                      }`}>
+                            ? "text-sm md:text-base"
+                            : "text-base"
+                      }`}
+                    >
                       {work}
                     </li>
                   ))}
@@ -468,7 +499,7 @@ export function ComposerSplitView({
       <div
         {...activeChatsShell.dataAttribute}
         className={cn(
-          'fixed inset-0 z-40',
+          "fixed inset-0 z-40",
           activeChatsLayoutTransitionClass,
           activeChatsShell.shellClass,
         )}
@@ -484,10 +515,10 @@ export function ComposerSplitView({
             minSize={30}
             maxSize={60}
             className={cn(
-              'bg-secondary/50 backdrop-blur-sm flex flex-col ease-in-out p-0 overflow-hidden transition-[opacity,transform] motion-reduce:!transition-none motion-reduce:duration-0',
+              "bg-secondary/50 backdrop-blur-sm flex flex-col ease-in-out p-0 overflow-hidden transition-[opacity,transform] motion-reduce:!transition-none motion-reduce:duration-0",
               isOpen
-                ? 'opacity-100 scale-100'
-                : 'opacity-0 scale-95 pointer-events-none',
+                ? "opacity-100 scale-100"
+                : "opacity-0 scale-95 pointer-events-none",
             )}
             style={splitTransitionStyle}
             id="composer-panel-mobile"
@@ -499,7 +530,7 @@ export function ComposerSplitView({
           <ResizableHandle
             withHandle
             className={`transition-opacity duration-200 ease-in-out ${
-              isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+              isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
             }`}
             aria-controls="composer-panel-mobile chat-panel-mobile"
           />
@@ -510,10 +541,10 @@ export function ComposerSplitView({
             minSize={40}
             maxSize={70}
             className={cn(
-              'bg-background ease-in-out transition-[opacity,transform] motion-reduce:!transition-none motion-reduce:duration-0',
+              "bg-background ease-in-out transition-[opacity,transform] motion-reduce:!transition-none motion-reduce:duration-0",
               isOpen
-                ? 'opacity-100 scale-100'
-                : 'opacity-0 scale-105 pointer-events-none',
+                ? "opacity-100 scale-100"
+                : "opacity-0 scale-105 pointer-events-none",
             )}
             style={splitTransitionStyle}
             id="chat-panel-mobile"
@@ -533,7 +564,7 @@ export function ComposerSplitView({
     <div
       {...activeChatsShell.dataAttribute}
       className={cn(
-        'fixed inset-0 z-40',
+        "fixed inset-0 z-40",
         activeChatsLayoutTransitionClass,
         activeChatsShell.shellClass,
       )}
@@ -541,17 +572,16 @@ export function ComposerSplitView({
     >
       <div
         className={`absolute inset-0 bg-background/80 backdrop-blur-sm transition-opacity duration-200 ease-in-out ${
-          isOpen ? 'opacity-100' : 'opacity-0'
+          isOpen ? "opacity-100" : "opacity-0"
         }`}
-      >
-      </div>
+      ></div>
       <ResizablePanelGroup
         direction={isMobile ? "vertical" : "horizontal"}
         className={cn(
-          'h-full w-full ease-in-out transition-[opacity,transform] motion-reduce:!transition-none motion-reduce:duration-0',
+          "h-full w-full ease-in-out transition-[opacity,transform] motion-reduce:!transition-none motion-reduce:duration-0",
           isOpen
-            ? 'opacity-100 scale-100'
-            : 'opacity-0 scale-95 pointer-events-none',
+            ? "opacity-100 scale-100"
+            : "opacity-0 scale-95 pointer-events-none",
         )}
         style={splitTransitionStyle}
       >
@@ -570,8 +600,12 @@ export function ComposerSplitView({
 
         <ResizableHandle
           withHandle
-          className={`transition-opacity duration-500 ${isOpen ? 'opacity-100' : 'opacity-0'}`}
-          aria-controls={isMobile ? "composer-panel-mobile chat-panel-mobile" : "composer-panel-desktop chat-panel-desktop"}
+          className={`transition-opacity duration-500 ${isOpen ? "opacity-100" : "opacity-0"}`}
+          aria-controls={
+            isMobile
+              ? "composer-panel-mobile chat-panel-mobile"
+              : "composer-panel-desktop chat-panel-desktop"
+          }
         />
 
         {/* Chat Panel */}

@@ -13,379 +13,390 @@
 
 /* Prevent iOS text size adjustment on orientation change */
 html {
-  -webkit-text-size-adjust: 100%;
-  text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
 }
 
 @layer base {
-  :root {
-    --app-header-height: 2.75rem;
-    /* Light Mode - Elegant Classical */
-    --background: 42 30% 96%;
-    --foreground: 300 20% 20%;
-    --card: 42 30% 98%;
-    --card-foreground: 300 20% 20%;
-    --popover: 42 30% 98%;
-    --popover-foreground: 300 20% 20%;
-    --primary: 340 35% 35%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 42 20% 90%;
-    --secondary-foreground: 300 20% 25%;
-    --muted: 300 10% 85%;
-    --muted-foreground: 300 15% 40%;
-    --accent: 40 50% 55%;
-    --accent-foreground: 300 20% 20%;
-    --destructive: 0 50% 45%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 42 20% 85%;
-    --input: 42 20% 90%;
-    --ring: 340 35% 35%;
-    --radius: 0.5rem;
+    :root {
+        --app-header-height: 2.75rem;
+        /* Light Mode - Elegant Classical */
+        --background: 42 30% 96%;
+        --foreground: 300 20% 20%;
+        --card: 42 30% 98%;
+        --card-foreground: 300 20% 20%;
+        --popover: 42 30% 98%;
+        --popover-foreground: 300 20% 20%;
+        --primary: 340 35% 35%;
+        --primary-foreground: 0 0% 98%;
+        --secondary: 42 20% 90%;
+        --secondary-foreground: 300 20% 25%;
+        --muted: 300 10% 85%;
+        --muted-foreground: 300 15% 40%;
+        --accent: 40 50% 55%;
+        --accent-foreground: 300 20% 20%;
+        --destructive: 0 50% 45%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 42 20% 85%;
+        --input: 42 20% 90%;
+        --ring: 340 35% 35%;
+        --radius: 0.5rem;
 
-    /* Sidebar (Light) */
-    --sidebar-background: 42 30% 95%;
-    --sidebar-foreground: 300 20% 20%;
-    --sidebar-primary: 340 35% 35%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 40 50% 55%;
-    --sidebar-accent-foreground: 300 20% 20%;
-    --sidebar-border: 42 20% 85%;
-    --sidebar-ring: 340 35% 35%;
-  }
-  .dark {
-    /* Dark mode theme: Desaturated Royal Purple & Gold */
-    --background: 275 15% 12%;
-    --foreground: 45 25% 90%;
-    --card: 275 15% 15%;
-    --card-foreground: 45 25% 90%;
-    --popover: 275 15% 15%;
-    --popover-foreground: 45 25% 90%;
-    --primary: 45 30% 65%;
-    --primary-foreground: 275 20% 15%;
-    --secondary: 275 10% 20%;
-    --secondary-foreground: 45 25% 80%;
-    --muted: 275 10% 20%;
-    --muted-foreground: 45 20% 75%; /* updated for better contrast */
-    --accent: 45 35% 60%;
-    --accent-foreground: 275 20% 15%;
-    --destructive: 0 40% 60%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 275 15% 22%;
-    --input: 275 15% 22%;
-    --ring: 45 30% 65%;
-
-    /* Sidebar (Dark) */
-    --sidebar-background: 275 15% 15%;
-    --sidebar-foreground: 45 25% 90%;
-    --sidebar-primary: 45 30% 65%;
-    --sidebar-primary-foreground: 275 20% 15%;
-    --sidebar-accent: 45 35% 60%;
-    --sidebar-accent-foreground: 275 20% 15%;
-    --sidebar-border: 275 15% 25%;
-    --sidebar-ring: 45 30% 65%;
-  }
-
-  html, body {
-    @apply min-h-screen font-sans antialiased bg-background text-foreground;
-    overflow-x: hidden;
-    touch-action: manipulation;
-    /* Prevent unwanted scrolling */
-    overscroll-behavior: none;
-    /* Prevent Firefox zoom on focus */
-    -moz-text-size-adjust: none;
-    text-size-adjust: none;
-
-    @media screen and (max-width: 768px) {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-      background-color: hsl(var(--background));
-      /* Prevent iOS double-tap zoom */
-      touch-action: pan-y pinch-zoom;
+        /* Sidebar (Light) */
+        --sidebar-background: 42 30% 95%;
+        --sidebar-foreground: 300 20% 20%;
+        --sidebar-primary: 340 35% 35%;
+        --sidebar-primary-foreground: 0 0% 98%;
+        --sidebar-accent: 40 50% 55%;
+        --sidebar-accent-foreground: 300 20% 20%;
+        --sidebar-border: 42 20% 85%;
+        --sidebar-ring: 340 35% 35%;
     }
-  }
+    .dark {
+        /* Dark mode theme: Desaturated Royal Purple & Gold */
+        --background: 275 15% 12%;
+        --foreground: 45 25% 90%;
+        --card: 275 15% 15%;
+        --card-foreground: 45 25% 90%;
+        --popover: 275 15% 15%;
+        --popover-foreground: 45 25% 90%;
+        --primary: 45 30% 65%;
+        --primary-foreground: 275 20% 15%;
+        --secondary: 275 10% 20%;
+        --secondary-foreground: 45 25% 80%;
+        --muted: 275 10% 20%;
+        --muted-foreground: 45 20% 75%; /* updated for better contrast */
+        --accent: 45 35% 60%;
+        --accent-foreground: 275 20% 15%;
+        --destructive: 0 40% 60%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 275 15% 22%;
+        --input: 275 15% 22%;
+        --ring: 45 30% 65%;
 
-  #root {
-    @apply min-h-screen overflow-hidden;
-    position: relative;
-    width: 100%;
-    height: 100%;
-  }
+        /* Sidebar (Dark) */
+        --sidebar-background: 275 15% 15%;
+        --sidebar-foreground: 45 25% 90%;
+        --sidebar-primary: 45 30% 65%;
+        --sidebar-primary-foreground: 275 20% 15%;
+        --sidebar-accent: 45 35% 60%;
+        --sidebar-accent-foreground: 275 20% 15%;
+        --sidebar-border: 275 15% 25%;
+        --sidebar-ring: 45 30% 65%;
+    }
+
+    html,
+    body {
+        @apply min-h-screen font-sans antialiased bg-background text-foreground;
+        overflow-x: hidden;
+        touch-action: manipulation;
+        /* Prevent unwanted scrolling */
+        overscroll-behavior: none;
+        /* Prevent Firefox zoom on focus */
+        -moz-text-size-adjust: none;
+        text-size-adjust: none;
+
+        @media screen and (max-width: 768px) {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+            background-color: hsl(var(--background));
+            /* Prevent iOS double-tap zoom */
+            touch-action: pan-y pinch-zoom;
+        }
+    }
+
+    #root {
+        @apply min-h-screen overflow-hidden;
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
 }
 
 /* Chat composer: sticky in layout on wide screens; narrow screens use fixed + visual inset in media query */
 form.chat-composer {
-  position: sticky;
-  bottom: 0;
-  z-index: 40;
+    position: sticky;
+    bottom: 0;
+    z-index: 40;
 }
 
 /* --- Mobile SVH Height Fix for Chrome/Safari (ensures headers stay visible) --- */
 @media (max-width: 768px) {
-  html, body, #root {
-    height: 100svh !important;
-    min-height: 100svh !important;
-    max-height: 100svh !important;
-  }
+    html,
+    body,
+    #root {
+        height: 100svh !important;
+        min-height: 100svh !important;
+        max-height: 100svh !important;
+    }
 
-  /*
+    /*
    * Avoid position:fixed on html when the keyboard is open — it pins the layout
    * to the full screen and the composer stays under the software keyboard.
    * --keyboard-visual-inset (set from visualViewport in useVirtualKeyboard) lifts the composer.
    */
-  html.keyboard-visible {
-    overflow: hidden;
-    width: 100%;
-    height: 100% !important;
-  }
+    html.keyboard-visible {
+        overflow: hidden;
+        width: 100%;
+        height: 100% !important;
+    }
 
-  /* Force the fixed-header to maintain its position */
-  html.keyboard-visible .fixed-header {
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    transform: none !important;
-    z-index: 100;
-    width: 100% !important;
-  }
+    /* Force the fixed-header to maintain its position */
+    html.keyboard-visible .fixed-header {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        transform: none !important;
+        z-index: 100;
+        width: 100% !important;
+    }
 
-  /* Keep chat header visible without broad/global selectors */
-  html.keyboard-visible .chat-shell .chat-header {
-    position: sticky !important;
-    top: 0 !important;
-    z-index: 99;
-    background-color: hsl(var(--primary-foreground));
-  }
+    /* Keep chat header visible without broad/global selectors */
+    html.keyboard-visible .chat-shell .chat-header {
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 99;
+        background-color: hsl(var(--primary-foreground));
+    }
 
-  /* Ensure the split view header stays visible when keyboard appears */
-  html.keyboard-visible .ComposerSplitView-header {
-    position: sticky !important;
-    top: 0 !important;
-    z-index: 50;
-    background-color: hsl(var(--primary-foreground));
-  }
+    /* Ensure the split view header stays visible when keyboard appears */
+    html.keyboard-visible .ComposerSplitView-header {
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 50;
+        background-color: hsl(var(--primary-foreground));
+    }
 
-  /*
+    /*
    * Keep the composer in the visual viewport (above the software keyboard).
    * --keyboard-visual-inset is updated from Visual Viewport API (see useVirtualKeyboard).
    */
-  form.chat-composer {
-    position: fixed !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: var(--keyboard-visual-inset, 0px) !important;
-    z-index: 50 !important;
-    background-color: hsl(var(--background) / 0.95);
-  }
+    form.chat-composer {
+        position: fixed !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: var(--keyboard-visual-inset, 0px) !important;
+        z-index: 50 !important;
+        background-color: hsl(var(--background) / 0.95);
+    }
 
-  /* Reserve space so messages scroll above the fixed composer */
-  .chat-shell .chat-messages-content {
-    padding-bottom: 7.5rem;
-  }
+    /* Reserve space so messages scroll above the fixed composer */
+    .chat-shell .chat-messages-content {
+        padding-bottom: 7.5rem;
+    }
 
-  /* Keep message surface stable when keyboard toggles. */
-  html.keyboard-visible .chat-shell .chat-messages {
-    min-height: 0 !important;
-  }
+    /* Keep message surface stable when keyboard toggles. */
+    html.keyboard-visible .chat-shell .chat-messages {
+        min-height: 0 !important;
+    }
 
-  /* Fix for split view in mobile Safari/Chrome */
-  html.keyboard-visible .ResizablePanelGroup {
-    position: fixed !important;
-    top: var(--app-header-height) !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    height: auto !important;
-    z-index: 40;
-  }
+    /* Fix for split view in mobile Safari/Chrome */
+    html.keyboard-visible .ResizablePanelGroup {
+        position: fixed !important;
+        top: var(--app-header-height) !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        height: auto !important;
+        z-index: 40;
+    }
 
-  /* Ensure composer info remains visible in split view when keyboard is open */
-  html.keyboard-visible #composer-panel-mobile,
-  html.keyboard-visible #chat-panel-mobile {
-    overflow: auto !important;
-    height: auto !important;
-    max-height: 100% !important;
-  }
+    /* Ensure composer info remains visible in split view when keyboard is open */
+    html.keyboard-visible #composer-panel-mobile,
+    html.keyboard-visible #chat-panel-mobile {
+        overflow: auto !important;
+        height: auto !important;
+        max-height: 100% !important;
+    }
 
-  /* Fix for textarea buttons in keyboard-visible mode */
-  html.keyboard-visible .chat-shell textarea {
-    padding-right: 6.75rem !important; /* Space for mic + send cluster */
-  }
+    /* Fix for textarea buttons in keyboard-visible mode */
+    html.keyboard-visible .chat-shell textarea {
+        padding-right: 6.75rem !important; /* Space for mic + send cluster */
+    }
 
-  /* Keep control cluster vertically centered (matches ChatInterface non-keyboard layout) */
-  html.keyboard-visible .chat-shell .chat-composer .absolute {
-    position: absolute !important;
-    top: 50% !important;
-    bottom: auto !important;
-    right: 0.375rem !important;
-    z-index: 100 !important;
-    pointer-events: auto !important;
-    visibility: visible !important;
-    transform: translateY(calc(-50% - 4px)) !important;
-    background-color: transparent !important;
-  }
+    /* Keep control cluster vertically centered (matches ChatInterface non-keyboard layout) */
+    html.keyboard-visible .chat-shell .chat-composer .absolute {
+        position: absolute !important;
+        top: 50% !important;
+        bottom: auto !important;
+        right: 0.375rem !important;
+        z-index: 100 !important;
+        pointer-events: auto !important;
+        visibility: visible !important;
+        transform: translateY(calc(-50% - 4px)) !important;
+        background-color: transparent !important;
+    }
 
-  /* Ensure buttons remain visible and correctly positioned */
-  html.keyboard-visible .chat-shell .chat-composer .absolute button {
-    opacity: 1 !important;
-    visibility: visible !important;
-    z-index: 100 !important;
-    pointer-events: auto !important;
-  }
+    /* Ensure buttons remain visible and correctly positioned */
+    html.keyboard-visible .chat-shell .chat-composer .absolute button {
+        opacity: 1 !important;
+        visibility: visible !important;
+        z-index: 100 !important;
+        pointer-events: auto !important;
+    }
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
+    * {
+        @apply border-border;
+    }
 
-  /* Disable color-related transitions for theme changes - ensures instant theme switching */
-  /* Explicitly exclude color properties from transitions globally */
-  *,
-  *::before,
-  *::after {
-    transition-property: transform, opacity, filter, box-shadow, scale, width, height, max-width, max-height, min-width, min-height, top, left, right, bottom, margin, padding, border-width, border-radius, outline-width;
-  }
+    /* Disable color-related transitions for theme changes - ensures instant theme switching */
+    /* Explicitly exclude color properties from transitions globally */
+    *,
+    *::before,
+    *::after {
+        transition-property:
+            transform, opacity, filter, box-shadow, scale, width, height,
+            max-width, max-height, min-width, min-height, top, left, right,
+            bottom, margin, padding, border-width, border-radius, outline-width;
+    }
 
-  body {
-    @apply bg-background text-foreground font-sans;
-  }
+    body {
+        @apply bg-background text-foreground font-sans;
+    }
 
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-serif;
-  }
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        @apply font-serif;
+    }
 
-  /* Always show focus rings when navigating via keyboard - use theme colors, never browser default */
-  *:focus-visible {
-    @apply ring-2 ring-primary ring-offset-2 ring-offset-background outline-none;
-  }
+    /* Always show focus rings when navigating via keyboard - use theme colors, never browser default */
+    *:focus-visible {
+        @apply ring-2 ring-primary ring-offset-2 ring-offset-background outline-none;
+    }
 
-  /* Remove default focus styles when element is focused by mouse/pointer */
-  *:focus:not(:focus-visible) {
-    @apply outline-none ring-0;
-  }
+    /* Remove default focus styles when element is focused by mouse/pointer */
+    *:focus:not(:focus-visible) {
+        @apply outline-none ring-0;
+    }
 
-  /* Ensure fixed header stays in place */
-  .fixed-header {
-    @apply fixed top-1 left-0 right-0 bg-background z-70 pb-1;
-    transform: translateZ(0);
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-    width: 100%;
-    overflow: visible;
-    padding-right: env(safe-area-inset-right);
-    padding-left: env(safe-area-inset-left);
-  }
+    /* Ensure fixed header stays in place */
+    .fixed-header {
+        @apply fixed top-1 left-0 right-0 bg-background z-70 pb-1;
+        transform: translateZ(0);
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        width: 100%;
+        overflow: visible;
+        padding-right: env(safe-area-inset-right);
+        padding-left: env(safe-area-inset-left);
+    }
 
-  /* Ensure header content is properly contained */
-  .fixed-header .container {
-    @apply relative;
-    width: 100%;
-    max-width: 100%;
-    padding-right: max(1rem, env(safe-area-inset-right));
-    padding-left: max(1rem, env(safe-area-inset-left));
-  }
+    /* Ensure header content is properly contained */
+    .fixed-header .container {
+        @apply relative;
+        width: 100%;
+        max-width: 100%;
+        padding-right: max(1rem, env(safe-area-inset-right));
+        padding-left: max(1rem, env(safe-area-inset-left));
+    }
 
-  /* Ensure header icons are always visible */
-  .fixed-header button,
-  .fixed-header .header-icon {
-    @apply relative z-[60];
-    position: relative;
-  }
+    /* Ensure header icons are always visible */
+    .fixed-header button,
+    .fixed-header .header-icon {
+        @apply relative z-[60];
+        position: relative;
+    }
 
-  /* Prevent content from causing overflow */
-  .chat-container {
-    @apply overflow-hidden;
-    overscroll-behavior: contain;
-  }
+    /* Prevent content from causing overflow */
+    .chat-container {
+        @apply overflow-hidden;
+        overscroll-behavior: contain;
+    }
 }
 
 @layer components {
-  .composer-card {
-    @apply relative flex flex-col items-center p-4 bg-card rounded-lg shadow-md hover:shadow-lg border border-border;
-  }
+    .composer-card {
+        @apply relative flex flex-col items-center p-4 bg-card rounded-lg shadow-md hover:shadow-lg border border-border;
+    }
 
-  .composer-image {
-    @apply w-24 h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 rounded-full object-cover border-2 border-primary shadow-md mb-3;
-  }
+    .composer-image {
+        @apply w-24 h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 rounded-full object-cover border-2 border-primary shadow-md mb-3;
+    }
 
-  .era-tab {
-    @apply px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-medium;
-  }
+    .era-tab {
+        @apply px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-medium;
+    }
 
-  .era-tab.active {
-    @apply bg-primary text-primary-foreground;
-  }
+    .era-tab.active {
+        @apply bg-primary text-primary-foreground;
+    }
 
-  .era-tab:not(.active) {
-    @apply bg-secondary text-secondary-foreground hover:bg-secondary/80;
-  }
+    .era-tab:not(.active) {
+        @apply bg-secondary text-secondary-foreground hover:bg-secondary/80;
+    }
 
-  .music-paper-bg {
-    @apply bg-parchment bg-music-staff;
-  }
+    .music-paper-bg {
+        @apply bg-parchment bg-music-staff;
+    }
 
-  .chat-message-user {
-    @apply bg-primary/10 text-foreground p-2 md:p-3 rounded-lg rounded-tr-none max-w-[90%] md:max-w-[80%] ml-auto my-1 text-sm md:text-base;
-  }
+    .chat-message-user {
+        @apply bg-primary/10 text-foreground p-2 md:p-3 rounded-lg rounded-tr-none max-w-[90%] md:max-w-[80%] ml-auto my-1 text-sm md:text-base;
+    }
 
-  .chat-message-composer {
-    @apply bg-primary/20 text-foreground p-2 md:p-3 rounded-lg rounded-tl-none max-w-[90%] md:max-w-[80%] mr-auto my-1 text-sm md:text-base;
-  }
+    .chat-message-composer {
+        @apply bg-primary/20 text-foreground p-2 md:p-3 rounded-lg rounded-tl-none max-w-[90%] md:max-w-[80%] mr-auto my-1 text-sm md:text-base;
+    }
 
-  html.ready .fixed-header {
-    transform: translateY(0);
-    transition: transform 0.3s ease-out;
-  }
+    html.ready .fixed-header {
+        transform: translateY(0);
+        transition: transform 0.3s ease-out;
+    }
 
-  /* Main content */
-  main.content-main {
-    @apply relative;
-    transform: translateY(20px);
-  }
+    /* Main content */
+    main.content-main {
+        @apply relative;
+        transform: translateY(20px);
+    }
 
-  html.ready main.content-main {
-    transform: translateY(0);
-    transition: transform 0.3s ease-out;
-  }
+    html.ready main.content-main {
+        transform: translateY(0);
+        transition: transform 0.3s ease-out;
+    }
 
-  /* Ensure other transitions are smooth */
-  .animate-fade-in {
-    opacity: 0;
-  }
+    /* Ensure other transitions are smooth */
+    .animate-fade-in {
+        opacity: 0;
+    }
 
-  html.ready .animate-fade-in {
-    opacity: 1;
-    transition: opacity 0.3s ease-out;
-  }
+    html.ready .animate-fade-in {
+        opacity: 1;
+        transition: opacity 0.3s ease-out;
+    }
 
-  .content-below-header {
-    @apply mt-8 md:mt-10;
-  }
+    .content-below-header {
+        @apply mt-8 md:mt-10;
+    }
 
-  /* Focus ring variations */
-  .focus-ring-inset {
-    @apply outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset focus-visible:ring-offset-0 focus-visible:rounded-md;
-  }
+    /* Focus ring variations */
+    .focus-ring-inset {
+        @apply outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset focus-visible:ring-offset-0 focus-visible:rounded-md;
+    }
 
-  /* Ensure better visibility for focus rings on images */
-  img:focus-visible,
-  button:has(> img):focus-visible {
-    @apply z-10 relative;
-  }
+    /* Ensure better visibility for focus rings on images */
+    img:focus-visible,
+    button:has(> img):focus-visible {
+        @apply z-10 relative;
+    }
 
-  /* ComposerSearch overrides - remove default focus styles */
-  .composer-search-input:focus,
-  .composer-search-mobile-button:focus,
-  .composer-search-clear-button:focus {
-    outline: none !important;
-    box-shadow: none !important;
-  }
+    /* ComposerSearch overrides - remove default focus styles */
+    .composer-search-input:focus,
+    .composer-search-mobile-button:focus,
+    .composer-search-clear-button:focus {
+        outline: none !important;
+        box-shadow: none !important;
+    }
 
-  /* Search result focus styling */
-  [role="option"][aria-selected="true"] {
-    @apply ring-2 ring-primary ring-inset outline-none !important;
-  }
+    /* Search result focus styling */
+    [role="option"][aria-selected="true"] {
+        @apply ring-2 ring-primary ring-inset outline-none !important;
+    }
 }
 
 /*
@@ -393,174 +404,192 @@ form.chat-composer {
  * Mobile uses a bottom sheet overlay — content does not shift or truncate.
  */
 @media (min-width: 768px) {
-[data-active-chats-open] {
-  min-width: 0;
-  max-width: 100%;
-  overflow-x: hidden;
-}
+    [data-active-chats-open] {
+        min-width: 0;
+        max-width: 100%;
+        overflow-x: hidden;
+    }
 
-[data-active-chats-open] .composer-list-grid {
-  grid-template-columns: minmax(0, 9rem) minmax(0, 1fr);
-}
+    [data-active-chats-open] .composer-list-grid {
+        grid-template-columns: minmax(0, 9rem) minmax(0, 1fr);
+    }
 
-@media (min-width: 1024px) {
-  [data-active-chats-open] .composer-list-grid {
-    grid-template-columns: minmax(0, 10rem) minmax(0, 1fr);
-  }
-}
+    @media (min-width: 1024px) {
+        [data-active-chats-open] .composer-list-grid {
+            grid-template-columns: minmax(0, 10rem) minmax(0, 1fr);
+        }
+    }
 
-[data-active-chats-open] :is(h1, h2, h3, h4) {
-  min-width: 0;
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  word-break: normal;
-  overflow-wrap: normal;
-}
+    [data-active-chats-open] :is(h1, h2, h3, h4) {
+        min-width: 0;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        word-break: normal;
+        overflow-wrap: normal;
+    }
 
-[data-active-chats-open] .break-words {
-  word-break: normal;
-  overflow-wrap: normal;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+    [data-active-chats-open] .break-words {
+        word-break: normal;
+        overflow-wrap: normal;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 
-[data-active-chats-open] :is(p, li, span):not(.sr-only) {
-  min-width: 0;
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 6;
-  word-break: normal;
-  overflow-wrap: break-word;
-}
+    [data-active-chats-open] :is(p, li, span):not(.sr-only) {
+        min-width: 0;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 6;
+        word-break: normal;
+        overflow-wrap: break-word;
+    }
 
-[data-active-chats-open] .chat-messages-content :is(p, li, span),
-[data-active-chats-open] .chat-messages-content .whitespace-pre-line,
-[data-active-chats-open] .chat-composer :is(textarea, input, p, span) {
-  display: block;
-  -webkit-line-clamp: unset;
-  -webkit-box-orient: unset;
-  overflow: visible;
-  text-overflow: unset;
-  white-space: pre-line;
-  word-break: break-word;
-}
+    /*
+     * Unset line-clamp for bio paragraphs. Specificity (0,2,1) matches the rule
+     * above exactly, so this later rule wins via source order.
+     * Selector: [attr](0,1,0) + p(0,0,1) + .bio-text(0,1,0) = (0,2,1).
+     */
+    [data-active-chats-open] p.bio-text {
+        display: block;
+        -webkit-line-clamp: unset;
+        -webkit-box-orient: unset;
+        overflow: visible;
+        text-overflow: unset;
+        overflow-wrap: break-word;
+    }
 
-[data-active-chats-open] .chat-composer textarea {
-  white-space: pre-wrap;
-}
+    [data-active-chats-open] .chat-messages-content :is(p, li, span),
+    [data-active-chats-open] .chat-messages-content .whitespace-pre-line,
+    [data-active-chats-open] .chat-composer :is(textarea, input, p, span) {
+        display: block;
+        -webkit-line-clamp: unset;
+        -webkit-box-orient: unset;
+        overflow: visible;
+        text-overflow: unset;
+        white-space: pre-line;
+        word-break: break-word;
+    }
 
-[data-active-chats-open] button:not(.a11y-touch-target) {
-  min-width: 0;
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
+    [data-active-chats-open] .chat-composer textarea {
+        white-space: pre-wrap;
+    }
 
-[data-active-chats-open] .flex > :not(.shrink-0):not([class*="shrink-0"]) {
-  min-width: 0;
-}
+    [data-active-chats-open] button:not(.a11y-touch-target) {
+        min-width: 0;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
 
-[data-active-chats-open] .grid > * {
-  min-width: 0;
-}
+    [data-active-chats-open] .flex > :not(.shrink-0):not([class*="shrink-0"]) {
+        min-width: 0;
+    }
+
+    [data-active-chats-open] .grid > * {
+        min-width: 0;
+    }
 }
 
 /* Optimized slider animation utility - GPU accelerated for smooth 60fps */
 .slider-animate {
-  will-change: transform;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Add animations */
 @keyframes expandVertical {
-  from { height: 0; }
-  to { height: 100%; }
+    from {
+        height: 0;
+    }
+    to {
+        height: 100%;
+    }
 }
 
 @keyframes lineAnimation {
-  from {
-    transform: scaleY(0);
-    opacity: 0;
-  }
-  to {
-    transform: scaleY(1);
-    opacity: 1;
-  }
+    from {
+        transform: scaleY(0);
+        opacity: 0;
+    }
+    to {
+        transform: scaleY(1);
+        opacity: 1;
+    }
 }
 
 /* Toast customizations */
 [data-sonner-toast] {
-  @apply pr-12 !important; /* Add padding on the right side for the close button */
+    @apply pr-12 !important; /* Add padding on the right side for the close button */
 }
 
 /* Active chats toasts: sit below the header, aligned with the message icon */
 [data-sonner-toaster][data-x-position="right"][data-y-position="top"] {
-  top: calc(2.75rem + 0.5rem);
-  right: 0.75rem;
+    top: calc(2.75rem + 0.5rem);
+    right: 0.75rem;
 }
 
 [data-sonner-toast] [data-close-button] {
-  @apply bg-transparent border-none absolute right-3 top-3 !important;
-  opacity: 0.7;
+    @apply bg-transparent border-none absolute right-3 top-3 !important;
+    opacity: 0.7;
 }
 
 @media (hover: hover) and (pointer: fine) {
-  [data-sonner-toast] [data-close-button]:hover {
-    @apply bg-transparent !important;
-    opacity: 1;
-  }
+    [data-sonner-toast] [data-close-button]:hover {
+        @apply bg-transparent !important;
+        opacity: 1;
+    }
 
-  .dark [data-sonner-toast] [data-close-button]:hover {
-    @apply bg-transparent text-foreground !important;
-    opacity: 1;
-  }
+    .dark [data-sonner-toast] [data-close-button]:hover {
+        @apply bg-transparent text-foreground !important;
+        opacity: 1;
+    }
 }
 
 .dark [data-sonner-toast] [data-close-button] {
-  @apply text-foreground !important;
-  opacity: 0.75;
+    @apply text-foreground !important;
+    opacity: 0.75;
 }
 
 /* Ensure all icon buttons meet accessibility standards for touch targets */
 .a11y-touch-target {
-  min-width: 44px;
-  min-height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Footer drawer text selection fix */
 [data-vaul-drawer-content] {
-  user-select: text !important;
-  -webkit-user-select: text !important;
-  -moz-user-select: text !important;
-  -ms-user-select: text !important;
-  touch-action: pan-y !important;
+    user-select: text !important;
+    -webkit-user-select: text !important;
+    -moz-user-select: text !important;
+    -ms-user-select: text !important;
+    touch-action: pan-y !important;
 }
 
 [data-vaul-drawer-content] p,
 [data-vaul-drawer-content] h3,
 [data-vaul-drawer-content] span {
-  user-select: text !important;
-  -webkit-user-select: text !important;
-  -moz-user-select: text !important;
-  -ms-user-select: text !important;
+    user-select: text !important;
+    -webkit-user-select: text !important;
+    -moz-user-select: text !important;
+    -ms-user-select: text !important;
 }
 
 /* Add special attribute to prevent drag events on text elements */
 [data-vaul-no-drag="true"] {
-  user-select: text !important;
-  -webkit-user-select: text !important;
-  -moz-user-select: text !important;
-  -ms-user-select: text !important;
+    user-select: text !important;
+    -webkit-user-select: text !important;
+    -moz-user-select: text !important;
+    -ms-user-select: text !important;
 }

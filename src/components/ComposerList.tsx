@@ -1,24 +1,54 @@
-import { Composer, Era, getComposersByEra, getLastName, isComposerInPublicDomain } from '@/data/composers';
-import { ComposerCard } from './ComposerCard';
-import { Button } from '@/components/ui/button';
-import { ComposerShortBioHeader } from './ComposerShortBioHeader';
-import { useState, useCallback, useEffect, useRef, useMemo, useLayoutEffect } from 'react';
-import { ChevronLeft, ChevronRight, ChevronUp, ChevronDown, LucideIcon } from 'lucide-react';
-import { ScrollAffordanceArea, ContentScrollAffordanceArea } from '@/components/ui/scroll-affordance-area';
+import {
+  Composer,
+  Era,
+  getComposersByEra,
+  getLastName,
+  isComposerInPublicDomain,
+} from "@/data/composers";
+import { ComposerCard } from "./ComposerCard";
+import { Button } from "@/components/ui/button";
+import { ComposerShortBioHeader } from "./ComposerShortBioHeader";
+import {
+  useState,
+  useCallback,
+  useEffect,
+  useRef,
+  useMemo,
+  useLayoutEffect,
+} from "react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronUp,
+  ChevronDown,
+  LucideIcon,
+} from "lucide-react";
+import {
+  ScrollAffordanceArea,
+  ContentScrollAffordanceArea,
+} from "@/components/ui/scroll-affordance-area";
 
 // Helper to detect Safari browser
 const isSafari = () => {
   const ua = navigator.userAgent.toLowerCase();
-  return ua.indexOf('safari') !== -1 && ua.indexOf('chrome') === -1 && ua.indexOf('android') === -1;
+  return (
+    ua.indexOf("safari") !== -1 &&
+    ua.indexOf("chrome") === -1 &&
+    ua.indexOf("android") === -1
+  );
 };
 
 interface ScrollChevronProps {
-  direction: 'left' | 'right' | 'up' | 'down';
+  direction: "left" | "right" | "up" | "down";
   onClick?: () => void;
   disabled?: boolean;
 }
 
-const ScrollChevron = ({ direction, onClick = () => {}, disabled = false }: ScrollChevronProps) => {
+const ScrollChevron = ({
+  direction,
+  onClick = () => {},
+  disabled = false,
+}: ScrollChevronProps) => {
   const ChevronIconMap = {
     left: ChevronLeft,
     right: ChevronRight,
@@ -26,17 +56,25 @@ const ScrollChevron = ({ direction, onClick = () => {}, disabled = false }: Scro
     down: ChevronDown,
   };
 
-  const disabledClasses = disabled ? 'pointer-events-none cursor-default' : '';
-  const innerBgClass = disabled ? 'bg-background' : 'bg-primary/35 hover:bg-primary/65';
+  const disabledClasses = disabled ? "pointer-events-none cursor-default" : "";
+  const innerBgClass = disabled
+    ? "bg-background"
+    : "bg-primary/35 hover:bg-primary/65";
 
   const Icon = ChevronIconMap[direction];
-  const isHorizontal = direction === 'left' || direction === 'right';
+  const isHorizontal = direction === "left" || direction === "right";
 
   const roundedClass = isHorizontal
-    ? (direction === 'left' ? 'rounded-l-md' : 'rounded-r-md')
-    : (direction === 'up' ? 'rounded-t-md' : 'rounded-b-md');
+    ? direction === "left"
+      ? "rounded-l-md"
+      : "rounded-r-md"
+    : direction === "up"
+      ? "rounded-t-md"
+      : "rounded-b-md";
 
-  const dimensionAndMarginClass = isHorizontal ? 'w-2.5 h-10 mb-2' : 'w-10 h-2.5';
+  const dimensionAndMarginClass = isHorizontal
+    ? "w-2.5 h-10 mb-2"
+    : "w-10 h-2.5";
 
   const commonInnerDivClasses = `
     ${innerBgClass}
@@ -76,7 +114,6 @@ const ScrollChevron = ({ direction, onClick = () => {}, disabled = false }: Scro
   }
 };
 
-
 interface ComposerListProps {
   era: Era;
   onSelectComposer: (composer: Composer, options?: { source?: string }) => void;
@@ -94,13 +131,14 @@ export function ComposerList({
   onStartChat,
   isOpen = false,
   shouldScrollToComposer,
-  onScrollComplete
+  onScrollComplete,
 }: ComposerListProps) {
   const allComposers = useMemo(
-    () => [...getComposersByEra(era)].sort((a, b) =>
-      getLastName(a.name).localeCompare(getLastName(b.name))
-    ),
-    [era]
+    () =>
+      [...getComposersByEra(era)].sort((a, b) =>
+        getLastName(a.name).localeCompare(getLastName(b.name)),
+      ),
+    [era],
   );
 
   const mobileViewportRef = useRef<HTMLElement | null>(null);
@@ -112,162 +150,214 @@ export function ComposerList({
 
   // Timeout refs to avoid closure issues
   const timeoutRefs = useRef({
-    scrollCheck: null as NodeJS.Timeout | null
+    scrollCheck: null as NodeJS.Timeout | null,
   });
 
   // Handle composer selection
-  const handleComposerSelect = useCallback((composer: Composer) => {
-    // Reset the details scroll position before selecting the new composer
-    const resetDetailsScroll = () => {
-      const detailsViewport = detailsViewportRef.current;
-      if (detailsViewport) {
-        detailsViewport.scrollTop = 0;
-      }
-
-      const scrollAreaElement = composerDetailsScrollRef.current;
-      if (scrollAreaElement) {
-        const viewport = scrollAreaElement.querySelector('[data-radix-scroll-area-viewport]');
-        if (viewport && viewport instanceof HTMLElement) {
-          viewport.scrollTop = 0;
+  const handleComposerSelect = useCallback(
+    (composer: Composer) => {
+      // Reset the details scroll position before selecting the new composer
+      const resetDetailsScroll = () => {
+        const detailsViewport = detailsViewportRef.current;
+        if (detailsViewport) {
+          detailsViewport.scrollTop = 0;
         }
-      }
-    };
 
-    // Reset scroll first
-    resetDetailsScroll();
+        const scrollAreaElement = composerDetailsScrollRef.current;
+        if (scrollAreaElement) {
+          const viewport = scrollAreaElement.querySelector(
+            "[data-radix-scroll-area-viewport]",
+          );
+          if (viewport && viewport instanceof HTMLElement) {
+            viewport.scrollTop = 0;
+          }
+        }
+      };
 
-    // Then select the composer
-    onSelectComposer(composer, { source: 'list' });
-  }, [onSelectComposer]);
+      // Reset scroll first
+      resetDetailsScroll();
 
-  type Orientation = 'vertical' | 'horizontal';
-  type ScrollAlign = 'nearest' | 'center';
+      // Then select the composer
+      onSelectComposer(composer, { source: "list" });
+    },
+    [onSelectComposer],
+  );
 
-  const getComposerCardId = useCallback((composerId: string, orientation: Orientation) => {
-    return orientation === 'vertical'
-      ? `composer-card-${composerId}`
-      : `mobile-composer-card-${composerId}`;
-  }, []);
+  type Orientation = "vertical" | "horizontal";
+  type ScrollAlign = "nearest" | "center";
+
+  const getComposerCardId = useCallback(
+    (composerId: string, orientation: Orientation) => {
+      return orientation === "vertical"
+        ? `composer-card-${composerId}`
+        : `mobile-composer-card-${composerId}`;
+    },
+    [],
+  );
 
   const getViewportForOrientation = useCallback((orientation: Orientation) => {
-    return orientation === 'vertical'
+    return orientation === "vertical"
       ? desktopViewportRef.current
       : mobileViewportRef.current;
   }, []);
 
-  const getComposerCardElement = useCallback((composerId: string, orientation: Orientation) => {
-    return document.getElementById(getComposerCardId(composerId, orientation));
-  }, [getComposerCardId]);
+  const getComposerCardElement = useCallback(
+    (composerId: string, orientation: Orientation) => {
+      return document.getElementById(
+        getComposerCardId(composerId, orientation),
+      );
+    },
+    [getComposerCardId],
+  );
 
-  const getScrollOffset = useCallback((element: HTMLElement, container: HTMLElement, orientation: Orientation, align: ScrollAlign): number => {
-    if (element.getClientRects().length === 0 || container.getClientRects().length === 0) {
-      return 0;
-    }
+  const getScrollOffset = useCallback(
+    (
+      element: HTMLElement,
+      container: HTMLElement,
+      orientation: Orientation,
+      align: ScrollAlign,
+    ): number => {
+      if (
+        element.getClientRects().length === 0 ||
+        container.getClientRects().length === 0
+      ) {
+        return 0;
+      }
 
-    const elementRect = element.getBoundingClientRect();
-    const containerRect = container.getBoundingClientRect();
+      const elementRect = element.getBoundingClientRect();
+      const containerRect = container.getBoundingClientRect();
 
-    if (orientation === 'vertical') {
-      if (align === 'center') {
-        const elementCenter = elementRect.top + elementRect.height / 2;
-        const containerCenter = containerRect.top + containerRect.height / 2;
+      if (orientation === "vertical") {
+        if (align === "center") {
+          const elementCenter = elementRect.top + elementRect.height / 2;
+          const containerCenter = containerRect.top + containerRect.height / 2;
+          return elementCenter - containerCenter;
+        }
+
+        if (elementRect.top < containerRect.top) {
+          return elementRect.top - containerRect.top;
+        }
+
+        if (elementRect.bottom > containerRect.bottom) {
+          return elementRect.bottom - containerRect.bottom;
+        }
+
+        return 0;
+      }
+
+      if (align === "center") {
+        const elementCenter = elementRect.left + elementRect.width / 2;
+        const containerCenter = containerRect.left + containerRect.width / 2;
         return elementCenter - containerCenter;
       }
 
-      if (elementRect.top < containerRect.top) {
-        return elementRect.top - containerRect.top;
+      if (elementRect.left < containerRect.left) {
+        return elementRect.left - containerRect.left;
       }
 
-      if (elementRect.bottom > containerRect.bottom) {
-        return elementRect.bottom - containerRect.bottom;
+      if (elementRect.right > containerRect.right) {
+        return elementRect.right - containerRect.right;
       }
 
       return 0;
-    }
+    },
+    [],
+  );
 
-    if (align === 'center') {
-      const elementCenter = elementRect.left + elementRect.width / 2;
-      const containerCenter = containerRect.left + containerRect.width / 2;
-      return elementCenter - containerCenter;
-    }
+  const scrollCardToVisibility = useCallback(
+    (
+      composerId: string,
+      orientation: Orientation,
+      options: { behavior: ScrollBehavior; align: ScrollAlign },
+    ): boolean => {
+      const container = getViewportForOrientation(orientation);
+      const element = getComposerCardElement(composerId, orientation);
 
-    if (elementRect.left < containerRect.left) {
-      return elementRect.left - containerRect.left;
-    }
+      if (!container || !element) return false;
 
-    if (elementRect.right > containerRect.right) {
-      return elementRect.right - containerRect.right;
-    }
+      const scrollOffset = getScrollOffset(
+        element,
+        container,
+        orientation,
+        options.align,
+      );
+      if (scrollOffset === 0) return false;
 
-    return 0;
-  }, []);
-
-  const scrollCardToVisibility = useCallback((
-    composerId: string,
-    orientation: Orientation,
-    options: { behavior: ScrollBehavior; align: ScrollAlign },
-  ): boolean => {
-    const container = getViewportForOrientation(orientation);
-    const element = getComposerCardElement(composerId, orientation);
-
-    if (!container || !element) return false;
-
-    const scrollOffset = getScrollOffset(element, container, orientation, options.align);
-    if (scrollOffset === 0) return false;
-
-    // For 'auto' behavior we set scroll position directly so it lands pre-paint
-    // (immune to CSS `scroll-behavior: smooth`). For 'smooth' we let scrollBy animate.
-    if (orientation === 'vertical') {
-      if (options.behavior === 'smooth') {
-        container.scrollBy({ top: scrollOffset, behavior: 'smooth' });
+      // For 'auto' behavior we set scroll position directly so it lands pre-paint
+      // (immune to CSS `scroll-behavior: smooth`). For 'smooth' we let scrollBy animate.
+      if (orientation === "vertical") {
+        if (options.behavior === "smooth") {
+          container.scrollBy({ top: scrollOffset, behavior: "smooth" });
+        } else {
+          container.scrollTop = container.scrollTop + scrollOffset;
+        }
       } else {
-        container.scrollTop = container.scrollTop + scrollOffset;
+        if (options.behavior === "smooth") {
+          container.scrollBy({ left: scrollOffset, behavior: "smooth" });
+        } else {
+          container.scrollLeft = container.scrollLeft + scrollOffset;
+        }
       }
-    } else {
-      if (options.behavior === 'smooth') {
-        container.scrollBy({ left: scrollOffset, behavior: 'smooth' });
-      } else {
-        container.scrollLeft = container.scrollLeft + scrollOffset;
-      }
-    }
 
-    return true;
-  }, [getComposerCardElement, getScrollOffset, getViewportForOrientation]);
+      return true;
+    },
+    [getComposerCardElement, getScrollOffset, getViewportForOrientation],
+  );
 
-  const ensureComposerVisibility = useCallback((
-    composerId: string | undefined,
-    options: { behavior: ScrollBehavior; align: ScrollAlign },
-  ) => {
-    if (!composerId) return false;
-    if (!allComposers.some((composer) => composer.id === composerId)) return false;
+  const ensureComposerVisibility = useCallback(
+    (
+      composerId: string | undefined,
+      options: { behavior: ScrollBehavior; align: ScrollAlign },
+    ) => {
+      if (!composerId) return false;
+      if (!allComposers.some((composer) => composer.id === composerId))
+        return false;
 
-    const scrolledDesktop = scrollCardToVisibility(composerId, 'vertical', options);
-    const scrolledMobile = scrollCardToVisibility(composerId, 'horizontal', options);
-    return scrolledDesktop || scrolledMobile;
-  }, [allComposers, scrollCardToVisibility]);
+      const scrolledDesktop = scrollCardToVisibility(
+        composerId,
+        "vertical",
+        options,
+      );
+      const scrolledMobile = scrollCardToVisibility(
+        composerId,
+        "horizontal",
+        options,
+      );
+      return scrolledDesktop || scrolledMobile;
+    },
+    [allComposers, scrollCardToVisibility],
+  );
 
   // Handle composer card click
-  const handleComposerCardClick = useCallback((composer: Composer, element: HTMLElement | null) => {
-    if (!element) {
-      handleComposerSelect(composer);
-      return;
-    }
-
-    let scrolled = false;
-    const orientation: Orientation = element.id.startsWith('mobile-composer-card-')
-      ? 'horizontal'
-      : 'vertical';
-    scrolled = scrollCardToVisibility(composer.id, orientation, { behavior: 'smooth', align: 'nearest' });
-
-    handleComposerSelect(composer);
-
-    if (scrolled) {
-      if (timeoutRefs.current.scrollCheck) {
-        clearTimeout(timeoutRefs.current.scrollCheck);
+  const handleComposerCardClick = useCallback(
+    (composer: Composer, element: HTMLElement | null) => {
+      if (!element) {
+        handleComposerSelect(composer);
+        return;
       }
-      timeoutRefs.current.scrollCheck = setTimeout(onScrollComplete, 300);
-    }
-  }, [handleComposerSelect, onScrollComplete, scrollCardToVisibility]);
+
+      let scrolled = false;
+      const orientation: Orientation = element.id.startsWith(
+        "mobile-composer-card-",
+      )
+        ? "horizontal"
+        : "vertical";
+      scrolled = scrollCardToVisibility(composer.id, orientation, {
+        behavior: "smooth",
+        align: "nearest",
+      });
+
+      handleComposerSelect(composer);
+
+      if (scrolled) {
+        if (timeoutRefs.current.scrollCheck) {
+          clearTimeout(timeoutRefs.current.scrollCheck);
+        }
+        timeoutRefs.current.scrollCheck = setTimeout(onScrollComplete, 300);
+      }
+    },
+    [handleComposerSelect, onScrollComplete, scrollCardToVisibility],
+  );
 
   // Reset details scroll position when selected composer changes
   useEffect(() => {
@@ -284,7 +374,7 @@ export function ComposerList({
         detailsViewport.scrollTop = 0;
         // Also try the smooth method as a backup
         try {
-          detailsViewport.scrollTo({ top: 0, behavior: 'instant' });
+          detailsViewport.scrollTo({ top: 0, behavior: "instant" });
         } catch (e) {
           // Some browsers might not support this
         }
@@ -295,16 +385,16 @@ export function ComposerList({
       if (scrollAreaElement) {
         // Try to find the viewport through different selectors for better compatibility
         const viewports = [
-          scrollAreaElement.querySelector('[data-radix-scroll-area-viewport]'),
-          scrollAreaElement.querySelector('.scroll-area-viewport'),
-          scrollAreaElement.querySelector('[role="presentation"]')
+          scrollAreaElement.querySelector("[data-radix-scroll-area-viewport]"),
+          scrollAreaElement.querySelector(".scroll-area-viewport"),
+          scrollAreaElement.querySelector('[role="presentation"]'),
         ];
 
-        viewports.forEach(viewport => {
+        viewports.forEach((viewport) => {
           if (viewport && viewport instanceof HTMLElement) {
             viewport.scrollTop = 0;
             try {
-              viewport.scrollTo({ top: 0, behavior: 'instant' });
+              viewport.scrollTo({ top: 0, behavior: "instant" });
             } catch (e) {
               // Some browsers might not support this
             }
@@ -315,21 +405,26 @@ export function ComposerList({
       // Safari-specific fix: force a reflow by toggling a class
       if (isSafariBrowser && scrollAreaElement) {
         // More aggressive fix for Safari
-        scrollAreaElement.style.display = 'none';
+        scrollAreaElement.style.display = "none";
         // Force a reflow
         void scrollAreaElement.offsetHeight;
-        scrollAreaElement.style.display = '';
+        scrollAreaElement.style.display = "";
 
         // Also try a class toggle approach
-        scrollAreaElement.classList.add('force-reflow');
-        setTimeout(() => scrollAreaElement.classList.remove('force-reflow'), 10);
+        scrollAreaElement.classList.add("force-reflow");
+        setTimeout(
+          () => scrollAreaElement.classList.remove("force-reflow"),
+          10,
+        );
       }
 
       // 3. Use a setTimeout as a last resort to ensure the scroll is reset
       // after the component has fully rendered
       setTimeout(() => {
         // Try again with the viewport ref
-        const delayedViewport = composerDetailsScrollRef.current?.querySelector('[data-radix-scroll-area-viewport]');
+        const delayedViewport = composerDetailsScrollRef.current?.querySelector(
+          "[data-radix-scroll-area-viewport]",
+        );
         if (delayedViewport && delayedViewport instanceof HTMLElement) {
           delayedViewport.scrollTop = 0;
         }
@@ -350,7 +445,7 @@ export function ComposerList({
     // For Safari, run an additional reset after layout calculations with longer delays
     const safariTimers: NodeJS.Timeout[] = [];
     if (isSafariBrowser) {
-      [300, 500, 800].forEach(delay => {
+      [300, 500, 800].forEach((delay) => {
         safariTimers.push(setTimeout(resetScroll, delay));
       });
     }
@@ -367,8 +462,8 @@ export function ComposerList({
 
     const scrollToComposer = () => {
       const scrolled = ensureComposerVisibility(selectedComposer.id, {
-        behavior: 'smooth',
-        align: 'center',
+        behavior: "smooth",
+        align: "center",
       });
 
       if (scrolled) {
@@ -383,13 +478,22 @@ export function ComposerList({
 
     const timer = setTimeout(scrollToComposer, 100);
     return () => clearTimeout(timer);
-  }, [selectedComposer, shouldScrollToComposer, onScrollComplete, era, ensureComposerVisibility]);
+  }, [
+    selectedComposer,
+    shouldScrollToComposer,
+    onScrollComplete,
+    era,
+    ensureComposerVisibility,
+  ]);
 
   // Keep selected composer in view pre-paint for the active era.
   // Runs synchronously after DOM mutations and before browser paint, so the
   // user never sees an intermediate scroll position when switching eras.
   useLayoutEffect(() => {
-    ensureComposerVisibility(selectedComposer?.id, { behavior: 'auto', align: 'nearest' });
+    ensureComposerVisibility(selectedComposer?.id, {
+      behavior: "auto",
+      align: "nearest",
+    });
   }, [era, selectedComposer?.id, ensureComposerVisibility]);
 
   // Handle selected composer visibility on resize
@@ -398,7 +502,10 @@ export function ComposerList({
 
     // Delay to allow layout to settle
     setTimeout(() => {
-      ensureComposerVisibility(selectedComposer.id, { behavior: 'auto', align: 'nearest' });
+      ensureComposerVisibility(selectedComposer.id, {
+        behavior: "auto",
+        align: "nearest",
+      });
     }, 150);
   }, [selectedComposer, ensureComposerVisibility]);
 
@@ -414,10 +521,10 @@ export function ComposerList({
       }, 150);
     };
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
       if (resizeTimeout) clearTimeout(resizeTimeout);
     };
   }, [keepSelectedComposerVisibleOnResize]);
@@ -440,7 +547,9 @@ export function ComposerList({
         // Also try direct query
         const scrollAreaElement = composerDetailsScrollRef.current;
         if (scrollAreaElement) {
-          const viewport = scrollAreaElement.querySelector('[data-radix-scroll-area-viewport]');
+          const viewport = scrollAreaElement.querySelector(
+            "[data-radix-scroll-area-viewport]",
+          );
           if (viewport && viewport instanceof HTMLElement) {
             viewport.scrollTop = 0;
           }
@@ -450,7 +559,7 @@ export function ComposerList({
 
     const observer = new IntersectionObserver(resetScrollOnVisible, {
       root: null,
-      threshold: 0.1 // Trigger when at least 10% is visible
+      threshold: 0.1, // Trigger when at least 10% is visible
     });
 
     observer.observe(detailsContentRef.current);
@@ -463,27 +572,32 @@ export function ComposerList({
   // Clean up timeouts on unmount
   useEffect(() => {
     return () => {
-      Object.values(timeoutRefs.current).forEach(timeout => {
+      Object.values(timeoutRefs.current).forEach((timeout) => {
         if (timeout) clearTimeout(timeout);
       });
     };
   }, []);
 
   return (
-    <div className="relative mt-5 w-full min-w-0 max-w-full rounded-lg bg-primary-foreground"
-         style={{
-           height: "60svh",
-           maxHeight: "calc(100svh - 180px - env(safe-area-inset-bottom, 0px))",
-           minHeight: "400px" // Ensure minimum height to prevent collapse on very small viewports
-         }}>
+    <div
+      className="relative mt-5 w-full min-w-0 max-w-full rounded-lg bg-primary-foreground"
+      style={{
+        height: "60svh",
+        maxHeight: "calc(100svh - 180px - env(safe-area-inset-bottom, 0px))",
+        minHeight: "400px", // Ensure minimum height to prevent collapse on very small viewports
+      }}
+    >
       <div
         ref={announcerRef}
         className="sr-only"
         aria-live="polite"
         aria-atomic="true"
       ></div>
-     <div className="composer-list-grid grid h-full min-w-0 grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr]">
-        <nav className="overflow-hidden h-full flex flex-col relative" aria-label="Composer navigation">
+      <div className="composer-list-grid grid h-full min-w-0 grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr]">
+        <nav
+          className="overflow-hidden h-full flex flex-col relative"
+          aria-label="Composer navigation"
+        >
           {/* Mobile horizontal scroll */}
           <div className="md:hidden flex-shrink-0 relative">
             <div className="relative">
@@ -506,24 +620,48 @@ export function ComposerList({
                       <ComposerCard
                         composer={composer}
                         onClick={(e: React.MouseEvent<HTMLElement>) => {
-                          const card = (e.currentTarget as HTMLElement).closest('[id^="mobile-composer-card-"]');
-                          handleComposerCardClick(composer, card as HTMLElement);
+                          const card = (e.currentTarget as HTMLElement).closest(
+                            '[id^="mobile-composer-card-"]',
+                          );
+                          handleComposerCardClick(
+                            composer,
+                            card as HTMLElement,
+                          );
                         }}
                         isSelected={selectedComposer?.id === composer.id}
                         tabIndex={0}
                         role="button"
                         ariaLabel={`Select composer ${composer.name}`}
                         onKeyDown={(e) => {
-                          if (e.key === 'Enter' || e.key === ' ') {
+                          if (e.key === "Enter" || e.key === " ") {
                             e.preventDefault();
-                            const card = (e.currentTarget as HTMLElement).closest('[id^="mobile-composer-card-"]');
-                            handleComposerCardClick(composer, card as HTMLElement);
-                          } else if (e.key === 'ArrowRight') {
-                            const next = document.getElementById(`mobile-composer-card-${allComposers[idx + 1]?.id}`);
-                            if (next) (next.querySelector('[tabindex="0"]') as HTMLElement | null)?.focus();
-                          } else if (e.key === 'ArrowLeft') {
-                            const prev = document.getElementById(`mobile-composer-card-${allComposers[idx - 1]?.id}`);
-                            if (prev) (prev.querySelector('[tabindex="0"]') as HTMLElement | null)?.focus();
+                            const card = (
+                              e.currentTarget as HTMLElement
+                            ).closest('[id^="mobile-composer-card-"]');
+                            handleComposerCardClick(
+                              composer,
+                              card as HTMLElement,
+                            );
+                          } else if (e.key === "ArrowRight") {
+                            const next = document.getElementById(
+                              `mobile-composer-card-${allComposers[idx + 1]?.id}`,
+                            );
+                            if (next)
+                              (
+                                next.querySelector(
+                                  '[tabindex="0"]',
+                                ) as HTMLElement | null
+                              )?.focus();
+                          } else if (e.key === "ArrowLeft") {
+                            const prev = document.getElementById(
+                              `mobile-composer-card-${allComposers[idx - 1]?.id}`,
+                            );
+                            if (prev)
+                              (
+                                prev.querySelector(
+                                  '[tabindex="0"]',
+                                ) as HTMLElement | null
+                              )?.focus();
                           }
                         }}
                       />
@@ -554,24 +692,48 @@ export function ComposerList({
                       <ComposerCard
                         composer={composer}
                         onClick={(e: React.MouseEvent<HTMLElement>) => {
-                          const card = (e.currentTarget as HTMLElement).closest('[id^="composer-card-"]');
-                          handleComposerCardClick(composer, card as HTMLElement);
+                          const card = (e.currentTarget as HTMLElement).closest(
+                            '[id^="composer-card-"]',
+                          );
+                          handleComposerCardClick(
+                            composer,
+                            card as HTMLElement,
+                          );
                         }}
                         isSelected={selectedComposer?.id === composer.id}
                         tabIndex={0}
                         role="button"
                         ariaLabel={`Select composer ${composer.name}`}
                         onKeyDown={(e) => {
-                          if (e.key === 'Enter' || e.key === ' ') {
+                          if (e.key === "Enter" || e.key === " ") {
                             e.preventDefault();
-                            const card = (e.currentTarget as HTMLElement).closest('[id^="composer-card-"]');
-                            handleComposerCardClick(composer, card as HTMLElement);
-                          } else if (e.key === 'ArrowDown') {
-                            const next = document.getElementById(`composer-card-${allComposers[idx + 1]?.id}`);
-                            if (next) (next.querySelector('[tabindex="0"]') as HTMLElement | null)?.focus();
-                          } else if (e.key === 'ArrowUp') {
-                            const prev = document.getElementById(`composer-card-${allComposers[idx - 1]?.id}`);
-                            if (prev) (prev.querySelector('[tabindex="0"]') as HTMLElement | null)?.focus();
+                            const card = (
+                              e.currentTarget as HTMLElement
+                            ).closest('[id^="composer-card-"]');
+                            handleComposerCardClick(
+                              composer,
+                              card as HTMLElement,
+                            );
+                          } else if (e.key === "ArrowDown") {
+                            const next = document.getElementById(
+                              `composer-card-${allComposers[idx + 1]?.id}`,
+                            );
+                            if (next)
+                              (
+                                next.querySelector(
+                                  '[tabindex="0"]',
+                                ) as HTMLElement | null
+                              )?.focus();
+                          } else if (e.key === "ArrowUp") {
+                            const prev = document.getElementById(
+                              `composer-card-${allComposers[idx - 1]?.id}`,
+                            );
+                            if (prev)
+                              (
+                                prev.querySelector(
+                                  '[tabindex="0"]',
+                                ) as HTMLElement | null
+                              )?.focus();
                           }
                         }}
                       />
@@ -586,7 +748,10 @@ export function ComposerList({
         </nav>
 
         {selectedComposer && (
-          <main className="flex flex-col h-full overflow-hidden p-2 md:p-3" aria-label="Composer details">
+          <main
+            className="flex flex-col h-full overflow-hidden p-2 md:p-3"
+            aria-label="Composer details"
+          >
             <div className="flex-1 min-h-0 relative overflow-hidden">
               <ContentScrollAffordanceArea
                 viewportRef={detailsViewportRef}
@@ -595,17 +760,29 @@ export function ComposerList({
                 className="w-full h-full"
               >
                 <div ref={detailsContentRef}>
-                  <ComposerShortBioHeader composer={selectedComposer} variant="sidebar" />
+                  <ComposerShortBioHeader
+                    composer={selectedComposer}
+                    variant="sidebar"
+                  />
                   <div className="px-4 md:px-5 py-3 space-y-4">
-                    <p className="text-base md:text-lg text-foreground/90">
+                    <p className="text-base md:text-lg text-foreground/90 bio-text">
                       {selectedComposer.shortBio}
                     </p>
                     <div>
-                      <h4 className="font-semibold mb-2 text-lg md:text-xl">Notable Works</h4>
+                      <h4 className="font-semibold mb-2 text-lg md:text-xl">
+                        Notable Works
+                      </h4>
                       <ul className="list-disc pl-5 mb-4 space-y-1">
-                        {selectedComposer.famousWorks.slice(0, 3).map((work, index) => (
-                          <li key={index} className="text-base md:text-lg text-foreground/80">{work}</li>
-                        ))}
+                        {selectedComposer.famousWorks
+                          .slice(0, 3)
+                          .map((work, index) => (
+                            <li
+                              key={index}
+                              className="text-base md:text-lg text-foreground/80"
+                            >
+                              {work}
+                            </li>
+                          ))}
                       </ul>
                     </div>
                   </div>
@@ -619,30 +796,43 @@ export function ComposerList({
             <div
               className="flex-shrink-0 px-2 md:px-3 py-2 md:py-3 sticky bottom-0 left-0 right-0 bg-primary-foreground border-t"
               style={{
-                paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom, 0px))",
+                paddingBottom:
+                  "calc(0.75rem + env(safe-area-inset-bottom, 0px))",
                 minHeight: "60px",
-                zIndex: 30
+                zIndex: 30,
               }}
             >
               <Button
                 onClick={() => {
-                  if (selectedComposer && isComposerInPublicDomain(selectedComposer)) {
+                  if (
+                    selectedComposer &&
+                    isComposerInPublicDomain(selectedComposer)
+                  ) {
                     onStartChat(selectedComposer);
                   }
                 }}
-                disabled={!selectedComposer || !isComposerInPublicDomain(selectedComposer)}
+                disabled={
+                  !selectedComposer ||
+                  !isComposerInPublicDomain(selectedComposer)
+                }
                 className={`
                   w-full h-10 md:h-full text-sm md:text-base transition-transform duration-300
-                  ${selectedComposer && isComposerInPublicDomain(selectedComposer)
-                    ? 'bg-primary text-primary-foreground hover:bg-primary/90 hover:scale-[1.02]'
-                    : 'bg-muted text-muted-foreground opacity-70 cursor-not-allowed'
+                  ${
+                    selectedComposer &&
+                    isComposerInPublicDomain(selectedComposer)
+                      ? "bg-primary text-primary-foreground hover:bg-primary/90 hover:scale-[1.02]"
+                      : "bg-muted text-muted-foreground opacity-70 cursor-not-allowed"
                   }
                 `}
-                title={selectedComposer && isComposerInPublicDomain(selectedComposer) ? `Chat with ${getLastName(selectedComposer.name)}` : 'Chat unavailable due to rights restrictions'}
+                title={
+                  selectedComposer && isComposerInPublicDomain(selectedComposer)
+                    ? `Chat with ${getLastName(selectedComposer.name)}`
+                    : "Chat unavailable due to rights restrictions"
+                }
               >
                 {selectedComposer && isComposerInPublicDomain(selectedComposer)
                   ? `Start a Chat with ${getLastName(selectedComposer.name)}`
-                  : 'Chat unavailable due to rights restrictions'}
+                  : "Chat unavailable due to rights restrictions"}
               </Button>
             </div>
           </main>
@@ -650,7 +840,8 @@ export function ComposerList({
 
         {!selectedComposer && (
           <div className="md:flex items-center justify-center h-full text-muted-foreground p-4 text-center">
-            Select a composer from the list to see their details and chat availability.
+            Select a composer from the list to see their details and chat
+            availability.
           </div>
         )}
       </div>
