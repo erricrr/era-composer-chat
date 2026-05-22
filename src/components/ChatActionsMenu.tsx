@@ -1,14 +1,31 @@
-import { useState, MouseEvent, KeyboardEvent, PointerEvent } from 'react';
-import { MoreVertical } from 'lucide-react';
+import {
+  Fragment,
+  useLayoutEffect,
+  useRef,
+  useState,
+  KeyboardEvent,
+  MouseEvent,
+  PointerEvent,
+} from "react";
+import { MoreVertical } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { cn } from '@/lib/utils';
+} from "@/components/ui/dropdown-menu";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import {
+  chatActionsSheetItemClassName,
+  chatActionsTriggerClassName,
+} from "@/lib/menuItemStyles";
+import { cn } from "@/lib/utils";
 
 interface ChatActionsMenuProps {
   isSplitView: boolean;
@@ -21,6 +38,13 @@ interface ChatActionsMenuProps {
   stopPropagation?: boolean;
 }
 
+type MenuAction = {
+  label: string;
+  ariaLabel?: string;
+  onSelect: () => void;
+  separatorBefore?: boolean;
+};
+
 export function ChatActionsMenu({
   isSplitView,
   onToggleView,
@@ -31,145 +55,133 @@ export function ChatActionsMenu({
   triggerClassName,
   stopPropagation = false,
 }: ChatActionsMenuProps) {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const viewLabel = isSplitView ? 'Hide bio' : 'Show bio';
-  const viewActionLabel = isSplitView ? 'Hide composer biography' : 'Show composer biography';
-  const baseTriggerClassName = 'inline-flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0 transition-colors disabled:opacity-50 disabled:cursor-not-allowed';
-  const stopPropagationIfNeeded = (e: { stopPropagation: () => void }) => {
-    if (stopPropagation) {
-      e.stopPropagation();
-    }
+  const [open, setOpen] = useState(false);
+  const closedViaPointerRef = useRef(false);
+
+  useLayoutEffect(() => {
+    setOpen(false);
+  }, [isMobile]);
+
+  const viewLabel = isSplitView ? "Hide bio" : "Show bio";
+  const viewActionLabel = isSplitView
+    ? "Hide composer biography"
+    : "Show composer biography";
+
+  const sp = (e: { stopPropagation: () => void }) => {
+    if (stopPropagation) e.stopPropagation();
   };
 
-  const handleTriggerClick = (e: MouseEvent<HTMLButtonElement>) => {
-    stopPropagationIfNeeded(e);
-    if (isMobile) {
-      setMobileMenuOpen(true);
-    }
-  };
+  const actions: MenuAction[] = [
+    { label: viewLabel, ariaLabel: viewActionLabel, onSelect: onToggleView },
+    { label: "Reset conversation", onSelect: onReset, separatorBefore: true },
+    ...(onCloseChat
+      ? [
+          {
+            label: "Close chat",
+            onSelect: onCloseChat,
+            separatorBefore: true,
+          } satisfies MenuAction,
+        ]
+      : []),
+  ];
 
-  const handleTriggerKeyDown = (e: KeyboardEvent<HTMLButtonElement>) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      stopPropagationIfNeeded(e);
-    }
-  };
+  const triggerButton = (
+    <button
+      type="button"
+      disabled={disabled}
+      onClick={(e: MouseEvent<HTMLButtonElement>) => {
+        sp(e);
+        if (isMobile) setOpen(true);
+      }}
+      onKeyDown={(e: KeyboardEvent<HTMLButtonElement>) => {
+        if (e.key === "Enter" || e.key === " ") sp(e);
+      }}
+      onPointerDown={(e: PointerEvent<HTMLButtonElement>) => sp(e)}
+      className={cn(
+        chatActionsTriggerClassName,
+        isMobile && "touch-manipulation",
+        triggerClassName,
+      )}
+      aria-label="Chat actions"
+      aria-haspopup={isMobile ? "dialog" : "menu"}
+      aria-expanded={open}
+    >
+      <MoreVertical className="h-5 w-5" strokeWidth={2} aria-hidden />
+    </button>
+  );
 
-  const handleTriggerPointerDown = (e: PointerEvent<HTMLButtonElement>) => {
-    stopPropagationIfNeeded(e);
-  };
+  if (isMobile) {
+    return (
+      <>
+        {triggerButton}
+        <Sheet open={open} onOpenChange={setOpen}>
+          <SheetContent
+            side="bottom"
+            className="rounded-t-2xl p-4 pb-[max(1rem,env(safe-area-inset-bottom))] [&>button]:hidden"
+            onOverlayClick={() => setOpen(false)}
+            onClick={stopPropagation ? sp : undefined}
+            onPointerDown={stopPropagation ? sp : undefined}
+          >
+            <SheetHeader className="sr-only">
+              <SheetTitle>Chat actions</SheetTitle>
+            </SheetHeader>
+            <div className="flex flex-col gap-1">
+              {actions.map(({ label, ariaLabel, onSelect }) => (
+                <button
+                  key={label}
+                  type="button"
+                  className={chatActionsSheetItemClassName}
+                  aria-label={ariaLabel}
+                  onClick={() => {
+                    setOpen(false);
+                    onSelect();
+                  }}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          </SheetContent>
+        </Sheet>
+      </>
+    );
+  }
 
-  return isMobile ? (
-    <>
-      <button
-        type="button"
-        disabled={disabled}
-        onClick={handleTriggerClick}
-        onKeyDown={handleTriggerKeyDown}
-        onPointerDown={handleTriggerPointerDown}
-        className={cn(baseTriggerClassName, 'touch-manipulation', triggerClassName)}
-        aria-label="Chat actions"
-        aria-haspopup="dialog"
-        aria-expanded={mobileMenuOpen}
-      >
-        <MoreVertical className="h-5 w-5" strokeWidth={2} aria-hidden />
-      </button>
-      <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-        <SheetContent
-          side="bottom"
-          className="rounded-t-2xl p-4 pb-[max(1rem,env(safe-area-inset-bottom))] [&>button]:hidden"
-          onOverlayClick={() => setMobileMenuOpen(false)}
-          onClick={stopPropagation ? stopPropagationIfNeeded : undefined}
-          onPointerDown={stopPropagation ? stopPropagationIfNeeded : undefined}
-        >
-          <SheetHeader className="sr-only">
-            <SheetTitle>Chat actions</SheetTitle>
-          </SheetHeader>
-          <div className="flex flex-col gap-1">
-            <button
-              type="button"
-              className="flex min-h-11 w-full items-center rounded-md px-3 py-3 text-left text-base font-medium text-foreground hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-              aria-label={viewActionLabel}
-              onClick={() => {
-                setMobileMenuOpen(false);
-                onToggleView();
-              }}
-            >
-              {viewLabel}
-            </button>
-            <button
-              type="button"
-              className="flex min-h-11 w-full items-center rounded-md px-3 py-3 text-left text-base font-medium text-foreground hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-              onClick={() => {
-                setMobileMenuOpen(false);
-                onReset();
-              }}
-            >
-              Reset conversation
-            </button>
-            {onCloseChat ? (
-              <button
-                type="button"
-                className="flex min-h-11 w-full items-center rounded-md px-3 py-3 text-left text-base font-medium text-foreground hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  onCloseChat();
-                }}
-              >
-                Close chat
-              </button>
-            ) : null}
-          </div>
-        </SheetContent>
-      </Sheet>
-    </>
-  ) : (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <button
-          type="button"
-          disabled={disabled}
-          className={cn(baseTriggerClassName, triggerClassName)}
-          aria-label="Chat actions"
-          onClick={stopPropagation ? stopPropagationIfNeeded : undefined}
-          onPointerDown={handleTriggerPointerDown}
-          onKeyDown={handleTriggerKeyDown}
-        >
-          <MoreVertical className="h-5 w-5" strokeWidth={2} aria-hidden />
-        </button>
-      </DropdownMenuTrigger>
+  return (
+    <DropdownMenu open={open} onOpenChange={setOpen}>
+      <DropdownMenuTrigger asChild>{triggerButton}</DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"
         side="bottom"
         sideOffset={8}
         className="min-w-[12rem]"
-        onClick={stopPropagation ? stopPropagationIfNeeded : undefined}
-        onPointerDown={stopPropagation ? stopPropagationIfNeeded : undefined}
+        onClick={stopPropagation ? sp : undefined}
+        onPointerDown={stopPropagation ? sp : undefined}
+        onPointerDownCapture={() => {
+          closedViaPointerRef.current = true;
+        }}
+        onInteractOutside={() => {
+          closedViaPointerRef.current = true;
+        }}
+        onCloseAutoFocus={(e) => {
+          if (closedViaPointerRef.current) {
+            e.preventDefault();
+            closedViaPointerRef.current = false;
+          }
+        }}
       >
-        <DropdownMenuItem
-          className="min-h-11 cursor-pointer text-base"
-          aria-label={viewActionLabel}
-          onSelect={onToggleView}
-        >
-          {viewLabel}
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem
-          className="min-h-11 cursor-pointer text-base"
-          onSelect={onReset}
-        >
-          Reset conversation
-        </DropdownMenuItem>
-        {onCloseChat ? (
-          <>
-            <DropdownMenuSeparator />
+        {actions.map(({ label, ariaLabel, onSelect, separatorBefore }) => (
+          <Fragment key={label}>
+            {separatorBefore && <DropdownMenuSeparator />}
             <DropdownMenuItem
               className="min-h-11 cursor-pointer text-base"
-              onSelect={onCloseChat}
+              aria-label={ariaLabel}
+              onSelect={onSelect}
             >
-              Close chat
+              {label}
             </DropdownMenuItem>
-          </>
-        ) : null}
+          </Fragment>
+        ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );
