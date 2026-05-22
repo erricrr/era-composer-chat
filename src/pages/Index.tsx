@@ -37,7 +37,8 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useStandaloneDisplayMode } from "@/hooks/useStandaloneDisplayMode";
 import {
   activeChatsLayoutTransitionClass,
-  getActiveChatsInsetStyle,
+  getActiveChatsShellLayout,
+  getComposerMenuRailAdjacencyClass,
 } from "@/lib/activeChatsLayout";
 import { cn } from "@/lib/utils";
 
@@ -577,9 +578,23 @@ const Index = () => {
     }
   }, [isChatting, isChatClosing, selectedComposer]);
 
-  const shouldShowWelcome = !isChatting && !isChatClosing;
+  /** Hidden while composer menu is mounted so it never stacks under the menu or active chats rail. */
+  const shouldShowWelcome =
+    !isChatting && !isChatClosing && !isMenuMounted;
   const shouldShowChatOverlay =
     (isChatting || isChatClosing) && !!selectedComposer;
+
+  const menuActiveChatsShell = getActiveChatsShellLayout(isActiveChatsOpen, {
+    isMobile,
+  });
+  const welcomeActiveChatsShell = getActiveChatsShellLayout(isActiveChatsOpen, {
+    isMobile,
+  });
+  const chatActiveChatsShell = getActiveChatsShellLayout(isActiveChatsOpen, {
+    isMobile,
+    suppressForSplitView: true,
+    isSplitViewOpen: isSplitViewOpenFromChat,
+  });
 
   return (
     <TooltipProvider>
@@ -710,14 +725,18 @@ const Index = () => {
           {/* Composer Selection Menu - Only render when open to remove from tab order when closed */}
           {isMenuMounted && (
             <aside
+              {...menuActiveChatsShell.dataAttribute}
               className={cn(
-                "fixed left-0 z-50 bg-background border-r border-border shadow-lg slider-animate",
-                activeChatsLayoutTransitionClass,
+                "fixed left-0 z-50 bg-background slider-animate",
+                getComposerMenuRailAdjacencyClass(
+                  menuActiveChatsShell.applyDesktopInset,
+                ),
+                menuActiveChatsShell.shellClass,
                 isMenuAnimating ? "translate-x-0" : "-translate-x-full",
               )}
               style={{
                 top: "2.75rem",
-                ...getActiveChatsInsetStyle(isActiveChatsOpen),
+                ...menuActiveChatsShell.insetStyle,
                 ...(isMobile
                   ? { bottom: "0" }
                   : { height: "calc(100dvh - 2.75rem)" }),
@@ -742,14 +761,16 @@ const Index = () => {
           {/* Welcome/Landing Page - Shows when no chat is active */}
           {shouldShowWelcome && (
             <div
+              {...welcomeActiveChatsShell.dataAttribute}
               className={cn(
-                "fixed left-0 overflow-auto",
+                "fixed left-0 z-30 overflow-auto bg-background",
                 activeChatsLayoutTransitionClass,
+                welcomeActiveChatsShell.shellClass,
               )}
               style={{
                 top: "2.75rem",
                 bottom: 0,
-                ...getActiveChatsInsetStyle(isActiveChatsOpen),
+                ...welcomeActiveChatsShell.insetStyle,
               }}
             >
               <div className="container mx-auto flex min-h-full flex-col items-center justify-center px-4">
@@ -823,15 +844,15 @@ const Index = () => {
           {/* Chat Interface - Only shown when user clicks "Start a Chat" button */}
           {shouldShowChatOverlay && (
             <div
-              className={`fixed bg-background transition-[opacity,transform,right] duration-300 ease-in-out motion-reduce:!transition-none motion-reduce:duration-0 ${
-                isChatClosing ? "opacity-0 translate-y-4" : "opacity-100"
-              }`}
+              {...chatActiveChatsShell.dataAttribute}
+              className={cn(
+                "fixed bg-background transition-[opacity,transform,right] duration-300 ease-in-out motion-reduce:!transition-none motion-reduce:duration-0",
+                chatActiveChatsShell.shellClass,
+                isChatClosing ? "opacity-0 translate-y-4" : "opacity-100",
+              )}
               style={{
                 left: 0,
-                ...getActiveChatsInsetStyle(isActiveChatsOpen, {
-                  suppressForSplitView: true,
-                  isSplitViewOpen: isSplitViewOpenFromChat,
-                }),
+                ...chatActiveChatsShell.insetStyle,
                 top: "2.75rem",
                 ...(isMobile
                   ? { bottom: "0" }

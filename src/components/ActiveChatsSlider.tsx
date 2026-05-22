@@ -13,7 +13,11 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { buttonVariants } from '@/components/ui/button';
-import { ACTIVE_CHATS_PANEL_WIDTH } from '@/lib/activeChatsLayout';
+import { useActiveChatsPanelTransition } from '@/hooks/useActiveChatsPanelTransition';
+import {
+  activeChatsMobileBackdropClass,
+  getActiveChatsPanelClassName,
+} from '@/lib/activeChatsLayout';
 import { cn } from '@/lib/utils';
 
 interface ActiveChatsSliderProps {
@@ -40,11 +44,11 @@ export default function ActiveChatsSlider({
   onRemoveChat,
   returnFocusRef
 }: ActiveChatsSliderProps) {
+  const { isVisible, isBackdropMounted } = useActiveChatsPanelTransition(isOpen);
+
   // Refs for focus management
   const sliderRef = useRef<HTMLDivElement>(null);
-  const headerButtonRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
-  const clearAllButtonRef = useRef<HTMLButtonElement>(null);
   const skipReturnFocusRef = useRef<boolean>(false);
   const [pendingRemoveComposer, setPendingRemoveComposer] = useState<Composer | null>(null);
 
@@ -55,17 +59,16 @@ export default function ActiveChatsSlider({
       setTimeout(() => {
         closeButtonRef.current?.focus();
       }, 100);
-    } else {
+    } else if (!isVisible) {
       // Dismiss any pending remove confirmation so it doesn't reappear on next open
       setPendingRemoveComposer(null);
-      // Return focus unless skipped (e.g., closed via click)
+      // Return focus after exit animation unless skipped (e.g., pointer close)
       if (!skipReturnFocusRef.current && returnFocusRef?.current) {
         returnFocusRef.current.focus();
       }
-      // Reset skip flag after handling
       skipReturnFocusRef.current = false;
     }
-  }, [isOpen, returnFocusRef]);
+  }, [isOpen, isVisible, returnFocusRef]);
 
   // Handle keyboard navigation and focus trapping
   useEffect(() => {
@@ -108,38 +111,47 @@ export default function ActiveChatsSlider({
 
   // Handle removing a single chat
   const handleRemoveChat = (composer: Composer, e: React.MouseEvent<HTMLButtonElement>) => {
-    // Prevent the event from propagating to parent elements
     e.stopPropagation();
     e.preventDefault();
-
-    // Ask for confirmation before permanently deleting a chat
     setPendingRemoveComposer(composer);
   };
 
-  // Handle close click: skip focus return for pointer clicks, but restore focus for keyboard activation
   const handleCloseClick = (e: React.MouseEvent<HTMLElement>) => {
-    // event.detail > 0 indicates a pointer click; keyboard activations have detail 0
     skipReturnFocusRef.current = e.detail > 0;
     onClose();
   };
 
-  // Handle clear all click separately to skip returning focus (prevents tooltip)
-  const handleClearAllClick = () => {
+  /** Mobile backdrop only (md:hidden); does not close while remove dialog is open. */
+  const handleMobileBackdropClose = () => {
+    if (pendingRemoveComposer) return;
     skipReturnFocusRef.current = true;
-    onClearAll();
+    onClose();
   };
 
   return (
-    <aside
-      ref={sliderRef}
-      className={`fixed top-10 bottom-0 right-0 z-60 bg-primary-foreground border-l border-t border-border shadow-lg slider-animate flex flex-col ${isOpen ? 'translate-x-0 pointer-events-auto' : 'translate-x-full pointer-events-none'}`}
-      style={{ width: ACTIVE_CHATS_PANEL_WIDTH }}
-      aria-label="Active Chats"
-      role="complementary"
-      aria-hidden={!isOpen}
-    >
-      {isOpen ? (
-        <>
+    <>
+      {isBackdropMounted ? (
+        <button
+          type="button"
+          tabIndex={-1}
+          aria-label="Close active chats"
+          className={cn(
+            activeChatsMobileBackdropClass,
+            isVisible
+              ? "pointer-events-auto opacity-100"
+              : "pointer-events-none opacity-0",
+          )}
+          onClick={handleMobileBackdropClose}
+        />
+      ) : null}
+      <aside
+        ref={sliderRef}
+        className={getActiveChatsPanelClassName(isVisible)}
+        aria-label="Active Chats"
+        role="complementary"
+        aria-hidden={!isOpen}
+        inert={!isOpen ? true : undefined}
+      >
       <div className="border-b border-border">
         <div className="group flex items-center justify-between w-full p-4">
           <button
@@ -152,7 +164,7 @@ export default function ActiveChatsSlider({
             <X className="w-4 h-4" />
           </button>
           <div
-            tabIndex={0}
+            tabIndex={isOpen ? 0 : -1}
             className="order-0 text-base font-semibold focus-ring-inset focus:rounded-none"
           >
             Active Chats
@@ -160,16 +172,15 @@ export default function ActiveChatsSlider({
         </div>
       </div>
 
-      {/* Chat limit indicator */}
       <div
-        tabIndex={0}
+        tabIndex={isOpen ? 0 : -1}
         className="px-4 py-2 bg-muted/50 text-xs border-b border-border flex items-center justify-between focus-ring-inset focus:rounded-none"
       >
-        <div className="flex items-center gap-1">
-          <AlertTriangle className="h-3 w-3 dark:text-amber-500 text-amber-700" />
-          <span className="text-muted-foreground">Limit: {activeChatIds.length}/{MAX_ACTIVE_CHATS} chats</span>
+        <div className="flex items-center gap-1 min-w-0">
+          <AlertTriangle className="h-3 w-3 shrink-0 dark:text-amber-500 text-amber-700" />
+          <span className="truncate text-muted-foreground">Limit: {activeChatIds.length}/{MAX_ACTIVE_CHATS} chats</span>
         </div>
-        <span className="text-muted-foreground/70 text-[10px]">
+        <span className="shrink-0 text-muted-foreground/70 text-[10px]">
           {MAX_ACTIVE_CHATS - activeChatIds.length} remaining
         </span>
       </div>
@@ -184,12 +195,14 @@ export default function ActiveChatsSlider({
             return (
               <div key={id} className="flex items-center justify-between">
                 <button
+                  type="button"
                   onClick={() => onSelectComposer(composer)}
-                  className="flex-1 text-left p-2 rounded hover:bg-muted focus-ring-inset"
+                  className="min-w-0 flex-1 rounded p-2 text-left hover:bg-muted focus-ring-inset"
                   aria-label={`Open chat with ${composer.name}`}
+                  tabIndex={isOpen ? 0 : -1}
                 >
-                  <div className="text-sm font-medium">{composer.name}</div>
-                  <div className="text-xs text-muted-foreground">
+                  <div className="truncate text-sm font-medium">{composer.name}</div>
+                  <div className="truncate text-xs text-muted-foreground">
                     {Array.isArray(composer.era) ? composer.era.join(', ') : composer.era}
                   </div>
                 </button>
@@ -198,8 +211,9 @@ export default function ActiveChatsSlider({
                     <button
                       type="button"
                       onClick={(e) => handleRemoveChat(composer, e)}
-                      className="w-11 h-11 flex items-center justify-center rounded-full hover:bg-muted focus-ring-inset"
+                      className="w-11 h-11 flex items-center justify-center rounded-full hover:bg-muted focus-ring-inset shrink-0"
                       aria-label={`Remove chat with ${composer.name}`}
+                      tabIndex={isOpen ? 0 : -1}
                     >
                       <MessageSquareOff className="w-4 h-4 text-destructive" />
                     </button>
@@ -245,19 +259,7 @@ export default function ActiveChatsSlider({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-{/*
-      <div className="p-4 border-t border-border">
-        <button
-          ref={clearAllButtonRef}
-          onClick={handleClearAllClick}
-          className="w-full p-2 text-sm text-destructive hover:bg-destructive/10 rounded focus-ring-inset"
-          aria-label="Clear all active chats"
-        >
-          Clear All
-        </button>
-      </div> */}
-        </>
-      ) : null}
     </aside>
+    </>
   );
 }

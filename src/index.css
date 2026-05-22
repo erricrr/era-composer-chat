@@ -388,6 +388,90 @@ form.chat-composer {
   }
 }
 
+/*
+ * Desktop right-rail only (md+): inset shells set data-active-chats-open.
+ * Mobile uses a bottom sheet overlay — content does not shift or truncate.
+ */
+@media (min-width: 768px) {
+[data-active-chats-open] {
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+[data-active-chats-open] .composer-list-grid {
+  grid-template-columns: minmax(0, 9rem) minmax(0, 1fr);
+}
+
+@media (min-width: 1024px) {
+  [data-active-chats-open] .composer-list-grid {
+    grid-template-columns: minmax(0, 10rem) minmax(0, 1fr);
+  }
+}
+
+[data-active-chats-open] :is(h1, h2, h3, h4) {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-break: normal;
+  overflow-wrap: normal;
+}
+
+[data-active-chats-open] .break-words {
+  word-break: normal;
+  overflow-wrap: normal;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+[data-active-chats-open] :is(p, li, span):not(.sr-only) {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 6;
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+
+[data-active-chats-open] .chat-messages-content :is(p, li, span),
+[data-active-chats-open] .chat-messages-content .whitespace-pre-line,
+[data-active-chats-open] .chat-composer :is(textarea, input, p, span) {
+  display: block;
+  -webkit-line-clamp: unset;
+  -webkit-box-orient: unset;
+  overflow: visible;
+  text-overflow: unset;
+  white-space: pre-line;
+  word-break: break-word;
+}
+
+[data-active-chats-open] .chat-composer textarea {
+  white-space: pre-wrap;
+}
+
+[data-active-chats-open] button:not(.a11y-touch-target) {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+[data-active-chats-open] .flex > :not(.shrink-0):not([class*="shrink-0"]) {
+  min-width: 0;
+}
+
+[data-active-chats-open] .grid > * {
+  min-width: 0;
+}
+}
+
 /* Optimized slider animation utility - GPU accelerated for smooth 60fps */
 .slider-animate {
   will-change: transform;

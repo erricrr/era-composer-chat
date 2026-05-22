@@ -4,7 +4,7 @@ import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/componen
 import { useIsMobile } from '@/hooks/use-mobile';
 import {
   activeChatsLayoutTransitionClass,
-  getActiveChatsInsetStyle,
+  getActiveChatsShellLayout,
 } from '@/lib/activeChatsLayout';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
@@ -459,11 +459,20 @@ export function ComposerSplitView({
     </div>
   );
 
+  const activeChatsShell = getActiveChatsShellLayout(isActiveChatsOpen, {
+    isMobile,
+  });
+
   if (isMobile) {
     return (
       <div
-        className={cn('fixed inset-0 z-40', activeChatsLayoutTransitionClass)}
-        style={getActiveChatsInsetStyle(isActiveChatsOpen)}
+        {...activeChatsShell.dataAttribute}
+        className={cn(
+          'fixed inset-0 z-40',
+          activeChatsLayoutTransitionClass,
+          activeChatsShell.shellClass,
+        )}
+        style={activeChatsShell.insetStyle}
       >
         <ResizablePanelGroup
           direction="vertical"
@@ -522,8 +531,13 @@ export function ComposerSplitView({
 
   return (
     <div
-      className={cn('fixed inset-0 z-40', activeChatsLayoutTransitionClass)}
-      style={getActiveChatsInsetStyle(isActiveChatsOpen)}
+      {...activeChatsShell.dataAttribute}
+      className={cn(
+        'fixed inset-0 z-40',
+        activeChatsLayoutTransitionClass,
+        activeChatsShell.shellClass,
+      )}
+      style={activeChatsShell.insetStyle}
     >
       <div
         className={`absolute inset-0 bg-background/80 backdrop-blur-sm transition-opacity duration-200 ease-in-out ${

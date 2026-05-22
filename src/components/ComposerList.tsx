@@ -470,7 +470,7 @@ export function ComposerList({
   }, []);
 
   return (
-    <div className="w-full mt-5 relative bg-primary-foreground rounded-lg"
+    <div className="relative mt-5 w-full min-w-0 max-w-full rounded-lg bg-primary-foreground"
          style={{
            height: "60svh",
            maxHeight: "calc(100svh - 180px - env(safe-area-inset-bottom, 0px))",
@@ -482,7 +482,7 @@ export function ComposerList({
         aria-live="polite"
         aria-atomic="true"
       ></div>
-     <div className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr] h-full">
+     <div className="composer-list-grid grid h-full min-w-0 grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[320px_1fr]">
         <nav className="overflow-hidden h-full flex flex-col relative" aria-label="Composer navigation">
           {/* Mobile horizontal scroll */}
           <div className="md:hidden flex-shrink-0 relative">

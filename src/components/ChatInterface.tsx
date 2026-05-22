@@ -43,6 +43,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { buttonVariants } from "@/components/ui/button";
+import { getActiveChatsShellLayout } from "@/lib/activeChatsLayout";
 import { cn } from "@/lib/utils";
 import { ScrollAffordanceArea } from "@/components/ui/scroll-affordance-area";
 
@@ -1096,9 +1097,17 @@ export function ChatInterface({
     }
   };
 
+  const chatActiveChatsShell = getActiveChatsShellLayout(isActiveChatsOpen, {
+    isMobile,
+  });
+
   const chatContent = (
     <div
-      className="chat-shell relative flex min-h-0 h-full flex-col overflow-visible bg-background"
+      {...chatActiveChatsShell.dataAttribute}
+      className={cn(
+        "chat-shell relative flex min-h-0 h-full flex-col overflow-visible bg-background",
+        chatActiveChatsShell.shellClass,
+      )}
       role="region"
       aria-label="Chat interface"
     >
