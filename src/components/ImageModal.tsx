@@ -1,14 +1,17 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import { getCopyrightAttribution, CopyrightDetails } from '@/data/composers'; // Assuming this path is correct
+import { X } from 'lucide-react';
+import { getCopyrightAttribution, CopyrightDetails } from '@/data/composers';
+import { Button } from '@/components/ui/button';
 import { CopyrightAttribution } from './CopyrightAttribution';
 
-// --- Constants ---
 const ANIMATION_DURATION_MS = 150;
 const MODAL_TITLE_ID = 'image-modal-title';
 const MODAL_DESCRIPTION_ID = 'image-modal-description';
+const CLOSE_BUTTON_SELECTOR = '[data-image-modal-close]';
 
-// --- Types ---
+type ImageModalVariant = 'fullscreen' | 'panel';
+
 interface ImageModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -21,6 +24,8 @@ interface ImageModalProps {
   caption?: string;
   sourceUrl?: string;
   returnFocusRef?: React.RefObject<HTMLButtonElement>;
+  /** Fullscreen portal (default) or contained within a split-view panel. */
+  variant?: ImageModalVariant;
 }
 
 interface ModalHeaderProps {
@@ -34,6 +39,7 @@ interface ModalHeaderProps {
 interface ModalImageProps {
   imageSrc: string;
   altText: string;
+  maxHeightClass?: string;
 }
 
 interface ModalFooterProps {
@@ -41,9 +47,8 @@ interface ModalFooterProps {
   copyrightDetails: CopyrightDetails | null;
   sourceUrl?: string;
   composerName: string;
+  compact?: boolean;
 }
-
-// --- Sub-Components ---
 
 const ModalHeader: React.FC<ModalHeaderProps> = ({
   composerName,
@@ -57,15 +62,6 @@ const ModalHeader: React.FC<ModalHeaderProps> = ({
     return `${birthYear}${deathYear ? `-${deathYear}` : '-present'}`;
   }, [birthYear, deathYear]);
 
-  const closeButtonRef = useRef<HTMLButtonElement>(null);
-
-  // Focus the close button once the component mounts
-  useEffect(() => {
-    setTimeout(() => {
-      closeButtonRef.current?.focus();
-    }, 50);
-  }, []);
-
   return (
     <div
       className="flex justify-between items-center p-3 border-b rounded-t-lg"
@@ -73,7 +69,7 @@ const ModalHeader: React.FC<ModalHeaderProps> = ({
     >
       <div>
         <h2
-          id={MODAL_TITLE_ID} // For aria-labelledby
+          id={MODAL_TITLE_ID}
           className="text-lg font-medium"
           style={{ color: 'hsl(var(--foreground))' }}
         >
@@ -90,7 +86,7 @@ const ModalHeader: React.FC<ModalHeaderProps> = ({
       </div>
 
       <button
-        ref={closeButtonRef}
+        data-image-modal-close
         onClick={(e) => {
           e.stopPropagation();
           onClose();
@@ -98,7 +94,6 @@ const ModalHeader: React.FC<ModalHeaderProps> = ({
         className="w-11 h-11 flex items-center justify-center rounded-full hover:bg-muted-foreground/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
         aria-label="Close modal"
       >
-        {/* Close Icon SVG */}
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-4 w-4"
@@ -118,7 +113,11 @@ const ModalHeader: React.FC<ModalHeaderProps> = ({
   );
 };
 
-const ModalImage: React.FC<ModalImageProps> = ({ imageSrc, altText }) => (
+const ModalImage: React.FC<ModalImageProps> = ({
+  imageSrc,
+  altText,
+  maxHeightClass = 'max-h-[65vh]',
+}) => (
   <div
     className="flex items-center justify-center p-2 w-full h-full"
     style={{ backgroundColor: 'hsl(var(--background))' }}
@@ -127,10 +126,10 @@ const ModalImage: React.FC<ModalImageProps> = ({ imageSrc, altText }) => (
       <img
         src={imageSrc}
         alt={altText}
-        className="max-h-[65vh] max-w-full w-auto h-auto object-contain focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+        className={`${maxHeightClass} max-w-full w-auto h-auto object-contain focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2`}
         style={{
           margin: '0 auto',
-          display: 'block'
+          display: 'block',
         }}
       />
     </div>
@@ -142,11 +141,12 @@ const ModalFooter: React.FC<ModalFooterProps> = ({
   copyrightDetails,
   sourceUrl,
   composerName,
+  compact = false,
 }) => (
   <div
-    id={MODAL_DESCRIPTION_ID} // For aria-describedby
-    className="p-3 border-t"
-    style={{ borderColor: 'hsl(var(--border))' }}
+    id={MODAL_DESCRIPTION_ID}
+    className={compact ? 'py-2 px-2 text-left bg-background dark:bg-secondary' : 'p-3 border-t'}
+    style={compact ? undefined : { borderColor: 'hsl(var(--border))' }}
   >
     {caption && (
       <p
@@ -156,14 +156,10 @@ const ModalFooter: React.FC<ModalFooterProps> = ({
         {caption}
       </p>
     )}
-    <div className="flex items-center justify-between text-xs">
-      <span
-        style={{ color: 'hsl(var(--muted-foreground))' }}
-      >
+    <div className={`flex items-center justify-between ${compact ? 'text-sm text-muted-foreground' : 'text-xs'}`}>
+      <span style={compact ? undefined : { color: 'hsl(var(--muted-foreground))' }}>
         {copyrightDetails ? (
-          <CopyrightAttribution
-            copyrightDetails={copyrightDetails}
-          />
+          <CopyrightAttribution copyrightDetails={copyrightDetails} />
         ) : null}
       </span>
       {sourceUrl && (
@@ -182,7 +178,126 @@ const ModalFooter: React.FC<ModalFooterProps> = ({
   </div>
 );
 
-// --- Main Component ---
+function useImageModalBehavior({
+  isOpen,
+  onClose,
+  modalRef,
+  returnFocusRef,
+  composerId,
+  lockBodyScroll,
+  trackSession,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  modalRef: React.RefObject<HTMLDivElement>;
+  returnFocusRef?: React.RefObject<HTMLButtonElement>;
+  composerId: string;
+  lockBodyScroll: boolean;
+  trackSession: boolean;
+}) {
+  const [isMounted, setIsMounted] = useState(false);
+  const previousActiveElementRef = useRef<Element | null>(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      previousActiveElementRef.current = document.activeElement;
+
+      if (trackSession) {
+        window.sessionStorage.setItem(`modal_${composerId}`, 'open');
+      }
+
+      setTimeout(() => {
+        const closeButton = modalRef.current?.querySelector(
+          CLOSE_BUTTON_SELECTOR,
+        ) as HTMLButtonElement | null;
+        closeButton?.focus();
+      }, 50);
+    } else if (!isOpen && isMounted) {
+      if (trackSession) {
+        window.sessionStorage.removeItem(`modal_${composerId}`);
+      }
+
+      if (returnFocusRef?.current) {
+        setTimeout(() => {
+          returnFocusRef.current?.focus();
+        }, ANIMATION_DURATION_MS + 50);
+      } else if (previousActiveElementRef.current instanceof HTMLElement) {
+        setTimeout(() => {
+          (previousActiveElementRef.current as HTMLElement).focus();
+        }, ANIMATION_DURATION_MS + 50);
+      }
+    }
+  }, [isOpen, isMounted, returnFocusRef, composerId, modalRef, trackSession]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onClose();
+        return;
+      }
+
+      if (e.key === 'Tab' && modalRef.current) {
+        const focusableElements = modalRef.current.querySelectorAll(
+          'button, [href], input, select, textarea, img[tabindex="0"], [tabindex]:not([tabindex="-1"])',
+        );
+
+        if (focusableElements.length === 0) return;
+
+        const focusables = Array.from(focusableElements).filter(
+          (el) => window.getComputedStyle(el as HTMLElement).display !== 'none',
+        ) as HTMLElement[];
+
+        if (focusables.length === 0) return;
+
+        const firstElement = focusables[0];
+        const lastElement = focusables[focusables.length - 1];
+
+        if (e.shiftKey && document.activeElement === firstElement) {
+          e.preventDefault();
+          lastElement.focus();
+        } else if (!e.shiftKey && document.activeElement === lastElement) {
+          e.preventDefault();
+          firstElement.focus();
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose, modalRef]);
+
+  useEffect(() => {
+    let timeoutId: ReturnType<typeof setTimeout>;
+
+    if (isOpen) {
+      setIsMounted(true);
+      if (lockBodyScroll) {
+        document.body.style.overflow = 'hidden';
+        sessionStorage.setItem('modalOpen', 'true');
+      }
+    } else {
+      timeoutId = setTimeout(() => {
+        setIsMounted(false);
+        if (lockBodyScroll) {
+          document.body.style.overflow = '';
+          sessionStorage.removeItem('modalOpen');
+        }
+      }, ANIMATION_DURATION_MS);
+    }
+
+    return () => {
+      clearTimeout(timeoutId);
+      if (lockBodyScroll && document.body.style.overflow === 'hidden') {
+        document.body.style.overflow = '';
+      }
+    };
+  }, [isOpen, lockBodyScroll]);
+
+  return isMounted;
+}
 
 export function ImageModal({
   isOpen,
@@ -196,181 +311,146 @@ export function ImageModal({
   caption,
   sourceUrl,
   returnFocusRef,
+  variant = 'fullscreen',
 }: ImageModalProps) {
-  const [isMounted, setIsMounted] = useState(false);
-  const copyrightDetails = useMemo(() => getCopyrightAttribution(composerId), [composerId]);
-
-  // Refs for focus trapping
   const modalRef = useRef<HTMLDivElement>(null);
-  const previousActiveElementRef = useRef<Element | null>(null);
-  // Additional ref for the close button to ensure proper focus
-  const headerCloseButtonRef = useRef<HTMLButtonElement | null>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
+  const copyrightDetails = useMemo(
+    () => getCopyrightAttribution(composerId),
+    [composerId],
+  );
+  const isPanel = variant === 'panel';
+  const isMounted = useImageModalBehavior({
+    isOpen,
+    onClose,
+    modalRef,
+    returnFocusRef,
+    composerId,
+    lockBodyScroll: !isPanel,
+    trackSession: !isPanel,
+  });
 
-  // Handle focus management - improved for better cycling
-  useEffect(() => {
-    if (isOpen) {
-      // Store the previously focused element
-      previousActiveElementRef.current = document.activeElement;
-
-      // Set a flag to indicate this modal is open - helps with managing multiple modals
-      window.sessionStorage.setItem(`modal_${composerId}`, 'open');
-
-      // Focus the close button after a short delay to ensure the DOM is ready
-      setTimeout(() => {
-        // If we can find the header's close button ref, focus it
-        if (modalRef.current) {
-          const closeButton = modalRef.current.querySelector('button[aria-label="Close modal"]') as HTMLButtonElement | null;
-          if (closeButton) {
-            closeButton.focus();
-          }
-        }
-      }, 50);
-    } else if (!isOpen && isMounted) {
-      // Remove the flag
-      window.sessionStorage.removeItem(`modal_${composerId}`);
-
-      // Return focus when modal closes - use a longer delay to ensure proper focus return
-      if (returnFocusRef?.current) {
-        setTimeout(() => {
-          returnFocusRef.current?.focus();
-        }, ANIMATION_DURATION_MS + 50);
-      } else if (previousActiveElementRef.current instanceof HTMLElement) {
-        // If no specific return focus element is provided, focus the previously active element
-        setTimeout(() => {
-          (previousActiveElementRef.current as HTMLElement).focus();
-        }, ANIMATION_DURATION_MS + 50);
-      }
-    }
-  }, [isOpen, isMounted, returnFocusRef, composerId]);
-
-  // Handle keyboard events for accessibility - improved focus trapping
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Close on Escape
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        onClose();
-        return;
-      }
-
-      // Trap focus inside the modal
-      if (e.key === 'Tab' && modalRef.current) {
-        // Get all focusable elements in modal
-        const focusableElements = modalRef.current.querySelectorAll(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        );
-
-        if (focusableElements.length === 0) return;
-
-        const focusables = Array.from(focusableElements) as HTMLElement[];
-        const firstElement = focusables[0];
-        const lastElement = focusables[focusables.length - 1];
-
-        // Shift+Tab on first element goes to last element
-        if (e.shiftKey && document.activeElement === firstElement) {
-          e.preventDefault();
-          lastElement.focus();
-        }
-        // Tab on last element goes to first element
-        else if (!e.shiftKey && document.activeElement === lastElement) {
-          e.preventDefault();
-          firstElement.focus();
-        }
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose]);
-
-  // Prevent scrolling of background content when modal is open
-  useEffect(() => {
-    let timeoutId: ReturnType<typeof setTimeout>;
-    if (isOpen) {
-      setIsMounted(true);
-      document.body.style.overflow = 'hidden';
-      // Store modal state
-      sessionStorage.setItem('modalOpen', 'true');
-    } else {
-      timeoutId = setTimeout(() => {
-        setIsMounted(false);
-        document.body.style.overflow = '';
-        // Clear modal state
-        sessionStorage.removeItem('modalOpen');
-      }, ANIMATION_DURATION_MS);
-    }
-
-    return () => {
-      clearTimeout(timeoutId);
-      if (document.body.style.overflow === 'hidden') {
-        document.body.style.overflow = '';
-      }
-    };
-  }, [isOpen]);
-
-  // Render nothing if the modal is closed and the unmount animation is finished
-  if (!isMounted && !isOpen) { // Check both to handle the delay
-      return null;
+  if (!isMounted && !isOpen) {
+    return null;
   }
 
-  // Use createPortal to render the modal into document.body
-  // This avoids CSS stacking context issues
-  return createPortal(
+  const backdropStyle = {
+    backgroundColor: 'hsl(var(--background) / 0.8)',
+    opacity: isOpen ? 1 : 0,
+    transition: `opacity ${ANIMATION_DURATION_MS}ms ease-in-out`,
+  };
+
+  const contentStyle = {
+    transform: isOpen ? 'scale(1)' : 'scale(0.95)',
+    opacity: isOpen ? 1 : 0,
+    transition: `transform ${ANIMATION_DURATION_MS}ms ease-in-out, opacity ${ANIMATION_DURATION_MS}ms ease-in-out`,
+  };
+
+  const panelModal = (
     <div
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={MODAL_TITLE_ID}
-        aria-describedby={MODAL_DESCRIPTION_ID}
-        className="fixed inset-0 z-50 flex items-center justify-center p-4"
-        style={{
-            backgroundColor: 'hsl(var(--background) / 0.8)',
-            opacity: isOpen ? 1 : 0,
-            transition: `opacity ${ANIMATION_DURATION_MS}ms ease-in-out`,
-        }}
-        onClick={onClose}
+      className="absolute inset-x-0 top-[50px] bottom-0 z-[5] overflow-hidden"
+      style={backdropStyle}
+      role="dialog"
+      aria-label={`Image of ${composerName}`}
+      aria-modal="true"
+      onClick={onClose}
     >
-        {/* Modal content */}
+      <div className="flex h-full items-start justify-center overflow-y-auto px-[5%] py-5">
         <div
-            ref={modalRef}
-            onClick={(e) => e.stopPropagation()} // Prevent clicks from reaching the backdrop
-            className="bg-card rounded-lg overflow-hidden min-w-[300px] shadow-2xl flex flex-col"
-            style={{
-                transform: isOpen ? 'scale(1)' : 'scale(0.95)',
-                opacity: isOpen ? 1 : 0,
-                transition: `transform ${ANIMATION_DURATION_MS}ms ease-in-out, opacity ${ANIMATION_DURATION_MS}ms ease-in-out`,
-                maxWidth: '95vw',
-                width: 'auto',
-                // Responsive modal height for mobile: avoid header overlap
-                maxHeight: typeof window !== 'undefined' && window.innerWidth <= 768
-                  ? 'calc(100svh - 80px)'
-                  : '85vh',
-                marginTop: typeof window !== 'undefined' && window.innerWidth <= 768
-                  ? 80
-                  : undefined,
-                border: '1px solid',
-                borderColor: 'hsl(var(--border))',
-            }}
+          ref={modalRef}
+          className="relative z-10 max-w-full overflow-hidden rounded-lg bg-background shadow-xl"
+          style={contentStyle}
+          onClick={(e) => e.stopPropagation()}
         >
-            <ModalHeader
-                composerName={composerName}
-                nationality={nationality}
-                birthYear={birthYear}
-                deathYear={deathYear}
-                onClose={onClose}
-            />
-            <div className="flex-grow overflow-auto relative">
-                <ModalImage imageSrc={imageSrc} altText={`Portrait of ${composerName}`} />
+          <Button
+            data-image-modal-close
+            variant="ghost"
+            size="icon"
+            onClick={onClose}
+            className="absolute right-2 top-2 z-20 h-11 w-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+            aria-label="Close image view"
+          >
+            <X className="h-4 w-4" />
+          </Button>
+
+          <div className="flex flex-col">
+            <div className="flex items-center justify-center p-2">
+              <img
+                ref={imageRef}
+                src={imageSrc}
+                alt={composerName}
+                tabIndex={0}
+                aria-label={`Full-size image of ${composerName}`}
+                className="z-10 max-h-[calc(100vh-220px)] w-auto max-w-full object-contain focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+              />
             </div>
             <ModalFooter
-                caption={caption}
-                copyrightDetails={copyrightDetails}
-                sourceUrl={sourceUrl}
-                composerName={composerName}
+              copyrightDetails={copyrightDetails}
+              composerName={composerName}
+              compact
             />
+          </div>
         </div>
-    </div>,
-    document.body
+      </div>
+    </div>
   );
+
+  const fullscreenModal = (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={MODAL_TITLE_ID}
+      aria-describedby={MODAL_DESCRIPTION_ID}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={backdropStyle}
+      onClick={onClose}
+    >
+      <div
+        ref={modalRef}
+        onClick={(e) => e.stopPropagation()}
+        className="flex min-w-[300px] flex-col overflow-hidden rounded-lg bg-card shadow-2xl"
+        style={{
+          ...contentStyle,
+          maxWidth: '95vw',
+          width: 'auto',
+          maxHeight:
+            typeof window !== 'undefined' && window.innerWidth <= 768
+              ? 'calc(100svh - 80px)'
+              : '85vh',
+          marginTop:
+            typeof window !== 'undefined' && window.innerWidth <= 768
+              ? 80
+              : undefined,
+          border: '1px solid',
+          borderColor: 'hsl(var(--border))',
+        }}
+      >
+        <ModalHeader
+          composerName={composerName}
+          nationality={nationality}
+          birthYear={birthYear}
+          deathYear={deathYear}
+          onClose={onClose}
+        />
+        <div className="relative flex-grow overflow-auto">
+          <ModalImage
+            imageSrc={imageSrc}
+            altText={`Portrait of ${composerName}`}
+          />
+        </div>
+        <ModalFooter
+          caption={caption}
+          copyrightDetails={copyrightDetails}
+          sourceUrl={sourceUrl}
+          composerName={composerName}
+        />
+      </div>
+    </div>
+  );
+
+  if (isPanel) {
+    return panelModal;
+  }
+
+  return createPortal(fullscreenModal, document.body);
 }

@@ -1,9 +1,5 @@
 import React, { ReactNode, useState, useEffect } from "react";
-import {
-  Composer,
-  getCopyrightAttribution,
-  CopyrightDetails,
-} from "@/data/composers";
+import { Composer } from "@/data/composers";
 import {
   ResizablePanelGroup,
   ResizablePanel,
@@ -17,199 +13,10 @@ import {
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { ContentScrollAffordanceArea } from "@/components/ui/scroll-affordance-area";
-import { X } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { MusicNoteDecoration } from "@/components/MusicNoteDecoration";
-import { ComposerImageViewer } from "@/components/ComposerImageViewer";
-import { CopyrightAttribution } from "./CopyrightAttribution";
+import { ImageModal } from "@/components/ImageModal";
 import { PortraitImage } from "./PortraitImage";
 import { ChatActionsMenu } from "./ChatActionsMenu";
-
-// ContainedImageModal component
-function ContainedImageModal({
-  isOpen,
-  onClose,
-  imageSrc,
-  composerName,
-  composerId,
-  returnFocusRef,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-  imageSrc: string;
-  composerName: string;
-  composerId: string;
-  returnFocusRef: React.RefObject<HTMLButtonElement>;
-}) {
-  const [isAnimating, setIsAnimating] = useState(false);
-  const modalRef = React.useRef<HTMLDivElement>(null);
-  const closeButtonRef = React.useRef<HTMLButtonElement>(null);
-  const firstLinkRef = React.useRef<HTMLAnchorElement>(null);
-  const secondLinkRef = React.useRef<HTMLAnchorElement>(null);
-  const imageRef = React.useRef<HTMLImageElement>(null);
-
-  // Focus management
-  React.useEffect(() => {
-    if (isOpen) {
-      setIsAnimating(true);
-      // Focus the close button when the modal opens
-      setTimeout(() => {
-        closeButtonRef.current?.focus();
-      }, 50);
-    } else {
-      const timer = setTimeout(() => {
-        setIsAnimating(false);
-      }, 150);
-
-      // Return focus to the originating button when modal closes
-      if (returnFocusRef.current) {
-        setTimeout(() => {
-          returnFocusRef.current?.focus();
-        }, 50);
-      }
-
-      return () => clearTimeout(timer);
-    }
-  }, [isOpen, returnFocusRef]);
-
-  // Handle keyboard navigation
-  React.useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (!isOpen) return;
-
-      // Close modal on escape
-      if (e.key === "Escape") {
-        e.preventDefault();
-        onClose();
-        return;
-      }
-
-      // Trap focus inside modal
-      if (e.key === "Tab") {
-        // Get all focusable elements in modal
-        const focusableElements =
-          modalRef.current?.querySelectorAll(
-            'button, [href], input, select, textarea, img[tabindex="0"], [tabindex]:not([tabindex="-1"])',
-          ) || [];
-
-        // Convert NodeList to Array and filter out elements with display:none
-        const focusable = Array.from(focusableElements).filter(
-          (el) => window.getComputedStyle(el as HTMLElement).display !== "none",
-        ) as HTMLElement[];
-
-        // Add the image to the tab order if it's not already included
-        if (
-          imageRef.current &&
-          !Array.from(focusable).includes(imageRef.current)
-        ) {
-          // If image isn't in the tab sequence, make it so
-          imageRef.current.tabIndex = 0;
-        }
-
-        // If no focusable elements, do nothing
-        if (focusable.length === 0) return;
-
-        // If shift+tab on first element, move to last element
-        if (e.shiftKey && document.activeElement === focusable[0]) {
-          e.preventDefault();
-          focusable[focusable.length - 1].focus();
-        }
-        // If tab on last element, move to first element
-        else if (
-          !e.shiftKey &&
-          document.activeElement === focusable[focusable.length - 1]
-        ) {
-          e.preventDefault();
-          focusable[0].focus();
-        }
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, onClose]);
-
-  // Get copyright details
-  const copyrightDetails = getCopyrightAttribution(composerId);
-
-  if (!isOpen && !isAnimating) return null;
-
-  return (
-    // Full-screen backdrop - positioned to avoid header collision
-    <div
-      className="absolute inset-x-0 top-[50px] bottom-0 z-[5] overflow-hidden"
-      style={{
-        backgroundColor: "hsl(var(--background) / 0.8)",
-        opacity: isOpen ? 1 : 0,
-        transition: "opacity 150ms ease-in-out",
-      }}
-      role="dialog"
-      aria-label={`Image of ${composerName}`}
-      aria-modal="true"
-    >
-      <ContentScrollAffordanceArea bgVar="background" className="h-full w-full">
-        <div
-          className="flex min-h-full items-start justify-center px-[5%] py-5"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) onClose();
-          }}
-        >
-          {/* Content container with proper spacing */}
-          <div
-            ref={modalRef}
-            className="relative bg-background rounded-lg shadow-xl z-10 overflow-hidden max-w-full"
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              transform: isOpen ? "scale(1)" : "scale(0.95)",
-              transition: "transform 150ms ease-in-out",
-            }}
-          >
-            {/* Close button - improved for keyboard access */}
-            <Button
-              ref={closeButtonRef}
-              variant="ghost"
-              size="icon"
-              onClick={onClose}
-              className="absolute right-2 top-2 z-20 h-11 w-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-              aria-label="Close image view"
-            >
-              <X className="h-4 w-4" />
-            </Button>
-
-            <div className="flex flex-col">
-              <div className="flex justify-center items-center p-2">
-                <img
-                  ref={imageRef}
-                  src={imageSrc}
-                  alt={composerName}
-                  className="w-auto max-w-full max-h-[calc(100vh-220px)] object-contain focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 z-10"
-                  tabIndex={0}
-                  aria-label={`Full-size image of ${composerName}`}
-                />
-              </div>
-
-              {/* Footer */}
-              <div className="py-2 px-2 text-left bg-background dark:bg-secondary">
-                <div
-                  className="text-sm text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-                  tabIndex={0}
-                >
-                  {copyrightDetails ? (
-                    <CopyrightAttribution
-                      copyrightDetails={copyrightDetails}
-                      firstLinkRef={firstLinkRef}
-                      secondLinkRef={secondLinkRef}
-                    />
-                  ) : null}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </ContentScrollAffordanceArea>
-    </div>
-  );
-}
 
 interface ComposerSplitViewProps {
   composer: Composer;
@@ -247,10 +54,10 @@ export function ComposerSplitView({
     }
   }, [isOpen]);
 
-  // Add keyboard listener for Escape to close split view
+  // Close split view on Escape; ImageModal handles Escape while the image is open
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
+      if (e.key === "Escape" && !imageModalOpen) {
         onClose();
       }
     };
@@ -260,22 +67,13 @@ export function ComposerSplitView({
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, imageModalOpen]);
 
   // Clean early return - don't render anything when closed
   if (!isOpen) return null;
 
-  const handleCloseImageModal = () => {
-    setImageModalOpen(false);
-    // Ensure focus returns to the image button
-    setTimeout(() => {
-      imageButtonRef.current?.focus();
-    }, 50);
-  };
-
-  const handleOpenImageModal = () => {
-    setImageModalOpen(true);
-  };
+  const handleCloseImageModal = () => setImageModalOpen(false);
+  const handleOpenImageModal = () => setImageModalOpen(true);
 
   const composerContent = (
     // Add relative positioning context for the modal
@@ -476,17 +274,15 @@ export function ComposerSplitView({
         </ContentScrollAffordanceArea>
       </div>
 
-      {/* Conditional rendering of the image modal */}
-      {imageModalOpen && (
-        <ContainedImageModal
-          isOpen={true}
-          onClose={handleCloseImageModal}
-          imageSrc={composer.imageUrl}
-          composerName={composer.name}
-          composerId={composer.id}
-          returnFocusRef={imageButtonRef}
-        />
-      )}
+      <ImageModal
+        variant="panel"
+        isOpen={imageModalOpen}
+        onClose={handleCloseImageModal}
+        imageSrc={composer.imageUrl}
+        composerName={composer.name}
+        composerId={composer.id}
+        returnFocusRef={imageButtonRef}
+      />
     </div>
   );
 
