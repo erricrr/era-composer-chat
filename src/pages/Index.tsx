@@ -26,7 +26,6 @@ import FooterDrawer from "@/components/ui/footerDrawer";
 import HeaderIcon from "@/components/ui/HeaderIcon";
 import { ComposerSearch } from "@/components/ComposerSearch";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { useCloseActiveChatsOnResize } from "@/hooks/useCloseActiveChatsOnResize";
 import { computeActiveChatListUpdate } from "@/lib/activeChats";
 import {
   notifyActiveChatsAtCapacityStartingNew,
@@ -88,7 +87,6 @@ const Index = () => {
   const handleCloseActiveChats = useCallback(() => {
     setIsActiveChatsOpen(false);
   }, []);
-  useCloseActiveChatsOnResize(isActiveChatsOpen, handleCloseActiveChats);
   // Track split view open state to adjust layout
   const [isSplitViewOpenFromChat, setIsSplitViewOpenFromChat] = useState(false);
 
@@ -309,8 +307,9 @@ const Index = () => {
                 `[Index] Clearing conversations for kicked composer: ${removedComposer.name}`,
               );
 
-              const removedComposerConversations =
-                getConversationsForComposer(update.removedComposerId);
+              const removedComposerConversations = getConversationsForComposer(
+                update.removedComposerId,
+              );
 
               for (const conv of removedComposerConversations) {
                 console.log(
@@ -556,8 +555,7 @@ const Index = () => {
   }, [isChatting, isChatClosing, selectedComposer]);
 
   /** Hidden while composer menu is mounted so it never stacks under the menu or active chats rail. */
-  const shouldShowWelcome =
-    !isChatting && !isChatClosing && !isMenuMounted;
+  const shouldShowWelcome = !isChatting && !isChatClosing && !isMenuMounted;
   const shouldShowChatOverlay =
     (isChatting || isChatClosing) && !!selectedComposer;
 
@@ -752,67 +750,67 @@ const Index = () => {
             >
               <div className="container mx-auto flex min-h-full flex-col items-center justify-center px-4">
                 <div className="max-w-3xl p-4 text-center">
-                <h1 className="text-xl font-semibold mb-2">
-                  Welcome to Era Composer Chat
-                </h1>
-                <p className="text-muted-foreground mb-3">
-                  Select a composer from the menu to start chatting with them
-                  about their life, music, and legacy, or use the top search bar
-                  to find a specific composer.{" "}
-                </p>
-                <p className="text-muted-foreground text-xs mb-3">
-                  Note: Not all composers are available to chat with due to
-                  copyright, but they're included for their historical
-                  importance.
-                </p>
-                <button
-                  onClick={toggleMenu}
-                  className="flex items-center justify-center mx-auto px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 mb-1"
-                  aria-label="Open composer menu"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5 mr-2"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    aria-hidden="true"
+                  <h1 className="text-xl font-semibold mb-2">
+                    Welcome to Era Composer Chat
+                  </h1>
+                  <p className="text-muted-foreground mb-3">
+                    Select a composer from the menu to start chatting with them
+                    about their life, music, and legacy, or use the top search
+                    bar to find a specific composer.{" "}
+                  </p>
+                  <p className="text-muted-foreground text-xs mb-3">
+                    Note: Not all composers are available to chat with due to
+                    copyright, but they're included for their historical
+                    importance.
+                  </p>
+                  <button
+                    onClick={toggleMenu}
+                    className="flex items-center justify-center mx-auto px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 mb-1"
+                    aria-label="Open composer menu"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 6h16M4 12h16M4 18h16"
-                    />
-                  </svg>
-                  Open Composer Menu
-                </button>
-                <p className="text-muted-foreground my-3">
-                  <strong>
-                    For a richer experience, listen to classical music while you
-                    chat
-                  </strong>
-                  &mdash;search 'classical music essentials' on your favorite
-                  streaming service.
-                </p>
-                <div className="mt-4 border-t border-border pt-3 text-xs text-muted-foreground">
-                  <Link
-                    to="/privacy"
-                    className="text-primary hover:underline focus:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:rounded-sm"
-                  >
-                    Privacy Policy
-                  </Link>
-                  <span> · </span>
-                  <Link
-                    to="/terms"
-                    className="text-primary hover:underline focus:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:rounded-sm"
-                  >
-                    Terms of Use
-                  </Link>
-                </div>
-                <div className="mt-6 w-full">
-                  <BuyMeABanhMi />
-                </div>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5 mr-2"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M4 6h16M4 12h16M4 18h16"
+                      />
+                    </svg>
+                    Open Composer Menu
+                  </button>
+                  <p className="text-muted-foreground my-3">
+                    <strong>
+                      For a richer experience, listen to classical music while
+                      you chat
+                    </strong>
+                    &mdash;search 'classical music essentials' on your favorite
+                    streaming service.
+                  </p>
+                  <div className="mt-4 border-t border-border pt-3 text-xs text-muted-foreground">
+                    <Link
+                      to="/privacy"
+                      className="text-primary hover:underline focus:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:rounded-sm"
+                    >
+                      Privacy Policy
+                    </Link>
+                    <span> · </span>
+                    <Link
+                      to="/terms"
+                      className="text-primary hover:underline focus:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:rounded-sm"
+                    >
+                      Terms of Use
+                    </Link>
+                  </div>
+                  <div className="mt-6 w-full">
+                    <BuyMeABanhMi />
+                  </div>
                 </div>
               </div>
             </div>

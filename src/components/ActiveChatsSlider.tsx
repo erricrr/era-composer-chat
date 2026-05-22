@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Composer } from "@/data/composers";
 import { X, MessageSquareOff, AlertTriangle } from "lucide-react";
 import {
@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { buttonVariants } from "@/components/ui/button";
 import { useActiveChatsPanelTransition } from "@/hooks/useActiveChatsPanelTransition";
+import { useCloseActiveChatsOnResize } from "@/hooks/useCloseActiveChatsOnResize";
 import { MAX_ACTIVE_CHATS } from "@/lib/activeChats";
 import {
   activeChatsMobileBackdropClass,
@@ -46,8 +47,17 @@ export default function ActiveChatsSlider({
   onRemoveChat,
   returnFocusRef,
 }: ActiveChatsSliderProps) {
-  const { isVisible, isBackdropMounted, isTransitioning } =
+  const { isVisible, isBackdropMounted, isTransitioning, forceClose } =
     useActiveChatsPanelTransition(isOpen);
+
+  // On resize, collapse the panel instantly then notify the parent.
+  // forceClose() + onClose() are batched by React 18 into one render, so the
+  // effect sees isOpen=false with the skip flag already set — no slide fires.
+  const handleResizeClose = useCallback(() => {
+    forceClose();
+    onClose();
+  }, [forceClose, onClose]);
+  useCloseActiveChatsOnResize(isOpen, handleResizeClose);
 
   // Refs for focus management
   const sliderRef = useRef<HTMLDivElement>(null);

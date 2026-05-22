@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ACTIVE_CHATS_PANEL_TRANSITION_MS } from "@/lib/activeChatsLayout";
 
 /**
@@ -19,11 +19,16 @@ const PAINT_DELAY_MS = 10;
  *   true  — during the open or close animation window only
  *   false — when the panel is stably open or stably closed
  *
- * Disabling the transition while the panel is stably closed prevents
- * breakpoint-driven transform changes on viewport resize from ever
- * animating the panel into view.
+ * Disabling the transition while stably closed prevents breakpoint-driven
+ * transform changes on viewport resize from ever animating the panel into view.
  *
- * Both open and close share the same symmetric two-phase sequence:
+ * `forceClose()` collapses the panel instantly with no animation.  It sets
+ * an internal `skipNextCloseAnimationRef` flag that the effect reads when
+ * `isOpen` next becomes false, so the animated close path is skipped exactly
+ * once.  The flag is always reset in the effect's open branch, scoping it to
+ * a single close cycle and preventing any cross-cycle leakage.
+ *
+ * Animated open/close share the same symmetric two-phase sequence:
  *   Phase 1 (PAINT_DELAY_MS)   — enable transition class, hold current position
  *   Phase 2 (TRANSITION_MS)    — flip isVisible → CSS transition fires
  *   Phase 3 (+20 ms buffer)    — disable transition class once settled
@@ -33,8 +38,28 @@ export function useActiveChatsPanelTransition(isOpen: boolean) {
   const [isBackdropMounted, setIsBackdropMounted] = useState(isOpen);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
+  // Set by forceClose(); read by the effect when isOpen catches up to false.
+  // Scoped to one close cycle — always reset in the effect's open branch.
+  const skipNextCloseAnimationRef = useRef(false);
+
+  /**
+   * Instantly collapses the panel with no slide animation.
+   * Call this before (or alongside) calling the parent's onClose() for
+   * resize-triggered closes: the panel's CSS layout has already shifted at
+   * the breakpoint boundary, so any further animation looks incorrect.
+   */
+  const forceClose = useCallback(() => {
+    skipNextCloseAnimationRef.current = true;
+    setIsVisible(false);
+    setIsBackdropMounted(false);
+    setIsTransitioning(false);
+  }, []);
+
   useEffect(() => {
     if (isOpen) {
+      // Reset the flag so regular user-initiated closes always animate.
+      skipNextCloseAnimationRef.current = false;
+
       setIsBackdropMounted(true);
 
       // Phase 1: enable the transition class while position is still at the
@@ -57,6 +82,18 @@ export function useActiveChatsPanelTransition(isOpen: boolean) {
         clearTimeout(visibleTimer);
         clearTimeout(doneTimer);
       };
+    }
+
+    // ── Close path ────────────────────────────────────────────────────────────
+
+    if (skipNextCloseAnimationRef.current) {
+      // forceClose() already applied the visual state instantly.
+      // Clear the flag and return — no timers, no transition.
+      skipNextCloseAnimationRef.current = false;
+      setIsVisible(false);
+      setIsBackdropMounted(false);
+      setIsTransitioning(false);
+      return;
     }
 
     // Phase 1: enable the transition class while position is still at the
@@ -88,5 +125,5 @@ export function useActiveChatsPanelTransition(isOpen: boolean) {
     };
   }, [isOpen]);
 
-  return { isVisible, isBackdropMounted, isTransitioning };
+  return { isVisible, isBackdropMounted, isTransitioning, forceClose };
 }
