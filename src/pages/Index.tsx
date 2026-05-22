@@ -32,8 +32,14 @@ import HeaderIcon from "@/components/ui/HeaderIcon";
 import { ComposerSearch } from "@/components/ComposerSearch";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { toast } from "sonner";
+import { useCloseActiveChatsOnResize } from "@/hooks/useCloseActiveChatsOnResize";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useStandaloneDisplayMode } from "@/hooks/useStandaloneDisplayMode";
+import {
+  activeChatsLayoutTransitionClass,
+  getActiveChatsInsetStyle,
+} from "@/lib/activeChatsLayout";
+import { cn } from "@/lib/utils";
 
 const ChatInterface = lazy(async () => {
   const module = await import("@/components/ChatInterface");
@@ -78,6 +84,10 @@ const Index = () => {
     [],
   );
   const [isActiveChatsOpen, setIsActiveChatsOpen] = useState(false);
+  const handleCloseActiveChats = useCallback(() => {
+    setIsActiveChatsOpen(false);
+  }, []);
+  useCloseActiveChatsOnResize(isActiveChatsOpen, handleCloseActiveChats);
   // Track split view open state to adjust layout
   const [isSplitViewOpenFromChat, setIsSplitViewOpenFromChat] = useState(false);
 
@@ -700,12 +710,14 @@ const Index = () => {
           {/* Composer Selection Menu - Only render when open to remove from tab order when closed */}
           {isMenuMounted && (
             <aside
-              className={`fixed inset-y-0 left-0 z-50 bg-background border-r border-border shadow-lg slider-animate ${
-                isMenuAnimating ? "translate-x-0" : "-translate-x-full"
-              }`}
+              className={cn(
+                "fixed left-0 z-50 bg-background border-r border-border shadow-lg slider-animate",
+                activeChatsLayoutTransitionClass,
+                isMenuAnimating ? "translate-x-0" : "-translate-x-full",
+              )}
               style={{
-                width: "100%",
                 top: "2.75rem",
+                ...getActiveChatsInsetStyle(isActiveChatsOpen),
                 ...(isMobile
                   ? { bottom: "0" }
                   : { height: "calc(100dvh - 2.75rem)" }),
@@ -730,10 +742,18 @@ const Index = () => {
           {/* Welcome/Landing Page - Shows when no chat is active */}
           {shouldShowWelcome && (
             <div
-              className="container mx-auto px-4 flex flex-col items-center justify-center"
-              style={{ minHeight: "calc(100dvh - 2.75rem)" }}
+              className={cn(
+                "fixed left-0 overflow-auto",
+                activeChatsLayoutTransitionClass,
+              )}
+              style={{
+                top: "2.75rem",
+                bottom: 0,
+                ...getActiveChatsInsetStyle(isActiveChatsOpen),
+              }}
             >
-              <div className="text-center p-4 max-w-3xl">
+              <div className="container mx-auto flex min-h-full flex-col items-center justify-center px-4">
+                <div className="max-w-3xl p-4 text-center">
                 <h1 className="text-xl font-semibold mb-2">
                   Welcome to Era Composer Chat
                 </h1>
@@ -795,6 +815,7 @@ const Index = () => {
                 <div className="mt-6 w-full">
                   <BuyMeABanhMi />
                 </div>
+                </div>
               </div>
             </div>
           )}
@@ -807,11 +828,10 @@ const Index = () => {
               }`}
               style={{
                 left: 0,
-                right: isSplitViewOpenFromChat
-                  ? "0"
-                  : isActiveChatsOpen
-                    ? "16rem"
-                    : "0",
+                ...getActiveChatsInsetStyle(isActiveChatsOpen, {
+                  suppressForSplitView: true,
+                  isSplitViewOpen: isSplitViewOpenFromChat,
+                }),
                 top: "2.75rem",
                 ...(isMobile
                   ? { bottom: "0" }
@@ -873,7 +893,7 @@ const Index = () => {
           composers={allComposersData}
           onSelectComposer={handleActiveChatClick}
           onClearAll={handleClearActiveChats}
-          onClose={() => setIsActiveChatsOpen(false)}
+          onClose={handleCloseActiveChats}
           onRemoveChat={handleRemoveActiveChat}
           returnFocusRef={activeChatsButtonRef}
         />

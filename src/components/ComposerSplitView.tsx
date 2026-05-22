@@ -2,6 +2,10 @@ import React, { ReactNode, useState, useEffect } from 'react';
 import { Composer, getCopyrightAttribution, CopyrightDetails } from '@/data/composers';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import { useIsMobile } from '@/hooks/use-mobile';
+import {
+  activeChatsLayoutTransitionClass,
+  getActiveChatsInsetStyle,
+} from '@/lib/activeChatsLayout';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { ContentScrollAffordanceArea } from '@/components/ui/scroll-affordance-area';
@@ -458,11 +462,8 @@ export function ComposerSplitView({
   if (isMobile) {
     return (
       <div
-        className="fixed inset-0 z-40"
-        style={{
-          right: isActiveChatsOpen ? '16rem' : 0,
-          transition: 'right 200ms ease-in-out'
-        }}
+        className={cn('fixed inset-0 z-40', activeChatsLayoutTransitionClass)}
+        style={getActiveChatsInsetStyle(isActiveChatsOpen)}
       >
         <ResizablePanelGroup
           direction="vertical"
@@ -521,11 +522,8 @@ export function ComposerSplitView({
 
   return (
     <div
-      className="fixed inset-0 z-40"
-      style={{
-        right: isActiveChatsOpen ? '16rem' : 0,
-        transition: 'right 200ms ease-in-out'
-      }}
+      className={cn('fixed inset-0 z-40', activeChatsLayoutTransitionClass)}
+      style={getActiveChatsInsetStyle(isActiveChatsOpen)}
     >
       <div
         className={`absolute inset-0 bg-background/80 backdrop-blur-sm transition-opacity duration-200 ease-in-out ${

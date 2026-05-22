@@ -13,6 +13,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { buttonVariants } from '@/components/ui/button';
+import { ACTIVE_CHATS_PANEL_WIDTH } from '@/lib/activeChatsLayout';
 import { cn } from '@/lib/utils';
 
 interface ActiveChatsSliderProps {
@@ -131,7 +132,8 @@ export default function ActiveChatsSlider({
   return (
     <aside
       ref={sliderRef}
-      className={`fixed top-10 bottom-0 right-0 w-64 z-60 bg-primary-foreground border-l border-t border-border shadow-lg slider-animate flex flex-col ${isOpen ? 'translate-x-0 pointer-events-auto' : 'translate-x-full pointer-events-none'}`}
+      className={`fixed top-10 bottom-0 right-0 z-60 bg-primary-foreground border-l border-t border-border shadow-lg slider-animate flex flex-col ${isOpen ? 'translate-x-0 pointer-events-auto' : 'translate-x-full pointer-events-none'}`}
+      style={{ width: ACTIVE_CHATS_PANEL_WIDTH }}
       aria-label="Active Chats"
       role="complementary"
       aria-hidden={!isOpen}
