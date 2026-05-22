@@ -255,12 +255,6 @@ form.chat-composer {
     @apply font-serif;
   }
 
-  /* Remove click-focus border for split-view opener, preserve keyboard focus-visible */
-  .chat-split-btn:focus:not(:focus-visible) {
-    outline: none !important;
-    box-shadow: none !important;
-  }
-
   /* Always show focus rings when navigating via keyboard - use theme colors, never browser default */
   *:focus-visible {
     @apply ring-2 ring-primary ring-offset-2 ring-offset-background outline-none;

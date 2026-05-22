@@ -10,9 +10,9 @@ import { Composer, Message, Conversation, getLastName } from "@/data/composers";
 import { useConversations } from "@/hooks/useConversations";
 import { ArrowUp, Music, Mic } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Badge } from "@/components/ui/badge";
 import { v4 as uuidv4 } from "uuid";
 import { ComposerImageViewer } from "./ComposerImageViewer";
+import { ComposerShortBioHeader } from "./ComposerShortBioHeader";
 import { ComposerSplitView } from "./ComposerSplitView";
 import { ChatActionsMenu } from "./ChatActionsMenu";
 import {
@@ -1114,85 +1114,19 @@ export function ChatInterface({
             )}
             aria-label="Composer information"
           >
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  type="button"
-                  aria-label={`View more information about ${composer.name}`}
-                  aria-expanded={isSplitViewOpen}
-                  aria-haspopup="dialog"
-                  className="chat-split-btn appearance-none border-none outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0 flex items-center space-x-6 cursor-pointer hover:opacity-90 transition-opacity duration-300"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    openSplitView();
-                  }}
-                  onKeyDown={(e) => {
-                    e.stopPropagation();
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      openSplitView();
-                    }
-                  }}
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="flex-shrink-0" aria-hidden="true">
-                      <ComposerImageViewer
-                        composer={composer}
-                        size="lg"
-                        presentationOnly
-                        className="!scale-100 !w-20 !h-20 md:!w-24 md:!h-24"
-                      />
-                    </div>
-                    <div className="flex flex-col justify-center text-left">
-                      <h1 className="font-serif font-bold text-lg md:text-xl hover:text-primary">
-                        {composer.name}
-                      </h1>
-                      <div
-                        className={`flex ${
-                          Array.isArray(composer.era) &&
-                          composer.era.length === 2
-                            ? "flex-col sm:flex-row sm:items-center"
-                            : "flex-col sm:flex-row sm:items-center"
-                        } gap-1.5 mt-0.5`}
-                      >
-                        <span className="text-base md:text-lg text-muted-foreground hover:text-primary whitespace-nowrap">
-                          <span className="sr-only">
-                            Nationality and years:{" "}
-                          </span>
-                          {composer.nationality}, {composer.birthYear}-
-                          {composer.deathYear || "present"}
-                        </span>
-                        <div
-                          className="flex flex-wrap gap-1 -translate-y-[1px]"
-                          role="list"
-                          aria-label="Musical eras"
-                        >
-                          {Array.isArray(composer.era) ? (
-                            composer.era.map((era, idx) => (
-                              <div key={era + idx} role="listitem">
-                                <Badge variant="badge">{era}</Badge>
-                              </div>
-                            ))
-                          ) : (
-                            <div role="listitem">
-                              <Badge variant="badge">{composer.era}</Badge>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </button>
-              </TooltipTrigger>
-              <TooltipContent
-                side="bottom"
-                align="start"
-                alignOffset={-20}
-                className="text-xs"
-              >
-                More about {getLastName(composer.name)}
-              </TooltipContent>
-            </Tooltip>
+            <div className="flex items-start md:items-center space-x-2 md:space-x-4 min-w-0 flex-1">
+              <ComposerImageViewer
+                composer={composer}
+                size="md"
+                allowModalOnDesktop
+                className="focus-visible:z-10 relative shrink-0"
+              />
+              <ComposerShortBioHeader
+                composer={composer}
+                variant="chat"
+                textOnly
+              />
+            </div>
 
             <div className="shrink-0">
               <ChatActionsMenu

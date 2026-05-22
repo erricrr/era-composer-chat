@@ -12,6 +12,8 @@ interface ComposerImageViewerProps {
   allowModalOnDesktop?: boolean; // New prop to control modal behavior on desktop
   /** Non-interactive portrait only — use inside another button (e.g. chat header) to avoid nested buttons and duplicate tap handlers. */
   presentationOnly?: boolean;
+  /** Prevent click/key events from bubbling to parent handlers (e.g. split-view opener beside image). */
+  stopPropagation?: boolean;
 }
 
 export function ComposerImageViewer({
@@ -21,6 +23,7 @@ export function ComposerImageViewer({
   onClick,
   allowModalOnDesktop = false,
   presentationOnly = false,
+  stopPropagation = false,
 }: ComposerImageViewerProps) {
   // Construct a unique key for localStorage based on the composer's ID
   const localStorageKey = `imageModalOpen_${composer.id}`;
@@ -80,7 +83,10 @@ export function ComposerImageViewer({
     xxl: 'w-24 h-24 md:w-32 md:h-32 lg:w-36 lg:h-36'
   };
 
-  const handleClick = () => {
+  const handleClick = (e?: React.MouseEvent<HTMLButtonElement>) => {
+    if (stopPropagation) {
+      e?.stopPropagation();
+    }
     if (isMobile || allowModalOnDesktop) {
       setImageModalOpen(true);
     } else if (onClick) {
@@ -120,6 +126,9 @@ export function ComposerImageViewer({
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
+            if (stopPropagation) {
+              e.stopPropagation();
+            }
             handleClick();
           }
         }}

@@ -1,8 +1,7 @@
 import { Composer, Era, getComposersByEra, getLastName, isComposerInPublicDomain } from '@/data/composers';
 import { ComposerCard } from './ComposerCard';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { ComposerImageViewer } from './ComposerImageViewer';
+import { ComposerShortBioHeader } from './ComposerShortBioHeader';
 import { useState, useCallback, useEffect, useRef, useMemo, useLayoutEffect } from 'react';
 import { ChevronLeft, ChevronRight, ChevronUp, ChevronDown, LucideIcon } from 'lucide-react';
 import { ScrollAffordanceArea, ContentScrollAffordanceArea } from '@/components/ui/scroll-affordance-area';
@@ -596,42 +595,7 @@ export function ComposerList({
                 className="w-full h-full"
               >
                 <div ref={detailsContentRef}>
-                  <div className="px-2 md:px-3 pt-1 pb-1 bg-primary-foreground">
-                    <div className="flex items-start md:items-center space-x-2 md:space-x-4 pb-2">
-                      <ComposerImageViewer
-                        composer={selectedComposer}
-                        size="xxl"
-                        allowModalOnDesktop={true}
-                        className="focus-visible:z-10 relative"
-                      />
-                      <div
-                        tabIndex={0}
-                        role="region"
-                        aria-label={`Composer details: ${selectedComposer.name}, ${selectedComposer.nationality}, ${selectedComposer.birthYear}-${selectedComposer.deathYear || 'present'}`}
-                        className="focus:outline-none focus-visible:ring-2 focus-visible:ring-primary flex-1 min-w-0"
-                      >
-                        <h2 className="sr-only">Composer Details</h2>
-                        <h3 className="text-xl md:text-2xl font-bold font-serif break-words">
-                          {selectedComposer.name}
-                        </h3>
-                        <div className="flex flex-col lg:flex-row lg:items-center gap-1 mt-1">
-                          <span className="text-base md:text-lg text-muted-foreground">
-                            {selectedComposer.nationality}, {selectedComposer.birthYear}–{selectedComposer.deathYear || 'present'}
-                          </span>
-                          <div className="flex flex-wrap gap-1 lg:ml-2">
-                            {(Array.isArray(selectedComposer.era)
-                              ? selectedComposer.era
-                              : [selectedComposer.era]
-                            ).map((e, idx) => (
-                              <Badge key={e + idx} variant="badge" className="text-xs">
-                                {e}
-                              </Badge>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <ComposerShortBioHeader composer={selectedComposer} variant="sidebar" />
                   <div className="px-4 md:px-5 py-3 space-y-4">
                     <p className="text-base md:text-lg text-foreground/90">
                       {selectedComposer.shortBio}
