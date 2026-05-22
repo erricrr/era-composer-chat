@@ -26,10 +26,9 @@ import FooterDrawer from "@/components/ui/footerDrawer";
 import HeaderIcon from "@/components/ui/HeaderIcon";
 import { ComposerSearch } from "@/components/ComposerSearch";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { computeActiveChatListUpdate } from "@/lib/activeChats";
+import { computeActiveChatListUpdate, MAX_ACTIVE_CHATS } from "@/lib/activeChats";
 import {
   notifyActiveChatsAtCapacityStartingNew,
-  notifyActiveChatsLimitReached,
   notifyActiveChatsRemoved,
 } from "@/lib/activeChatsNotifications";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -97,6 +96,7 @@ const Index = () => {
 
   // Ref for the active chats button - for focus management
   const activeChatsButtonRef = useRef<HTMLButtonElement>(null);
+  const hasShownAtCapacityStartingNewRef = useRef(false);
   const hasQueuedBackgroundImagePreload = useRef(false);
 
   // Effect to blur the active chats button if it's focused on initial page load
@@ -110,6 +110,13 @@ const Index = () => {
 
     return () => clearTimeout(timerId);
   }, []);
+
+  // Re-show "Active chats full" once per at-capacity stretch (not on every Start a Chat).
+  useEffect(() => {
+    if (activeChatIds.length < MAX_ACTIVE_CHATS) {
+      hasShownAtCapacityStartingNewRef.current = false;
+    }
+  }, [activeChatIds.length]);
 
   // Preload only current-era images first so critical UI assets are prioritized.
   useEffect(() => {
@@ -266,7 +273,11 @@ const Index = () => {
         activeChatIds,
         composer.id,
       );
-      if (startUpdate.evictedDueToOverflow) {
+      if (
+        startUpdate.evictedDueToOverflow &&
+        !hasShownAtCapacityStartingNewRef.current
+      ) {
+        hasShownAtCapacityStartingNewRef.current = true;
         notifyActiveChatsAtCapacityStartingNew();
       }
 
@@ -292,10 +303,6 @@ const Index = () => {
     (composer: Composer) => {
       setActiveChatIds((prev) => {
         const update = computeActiveChatListUpdate(prev, composer.id);
-
-        if (update.reachedCapacity) {
-          notifyActiveChatsLimitReached();
-        }
 
         if (update.removedComposerId) {
           try {
@@ -628,7 +635,13 @@ const Index = () => {
               />
 
               {/* Active Chats Tab Icon */}
-              <HeaderIcon tooltip="Active Chats">
+              <HeaderIcon
+                tooltip={
+                  activeChatIds.length > 0
+                    ? `Active Chats · ${activeChatIds.length}/${MAX_ACTIVE_CHATS}`
+                    : "Active Chats"
+                }
+              >
                 <button
                   ref={activeChatsButtonRef}
                   type="button"
@@ -636,13 +649,35 @@ const Index = () => {
                     e.stopPropagation();
                     setIsActiveChatsOpen((prev) => !prev);
                   }}
-                  aria-label="Active Chats"
+                  aria-label={
+                    activeChatIds.length > 0
+                      ? `Active Chats, ${activeChatIds.length} of ${MAX_ACTIVE_CHATS}`
+                      : "Active Chats"
+                  }
                   aria-expanded={isActiveChatsOpen}
                   className="w-11 h-11 flex items-center justify-center rounded-md hover:bg-muted relative z-[60] focus-ring-inset"
                 >
-                  <MessageSquare
-                    className={`h-5 w-5 transform transition-transform ${isActiveChatsOpen ? "rotate-180" : ""}`}
-                  />
+                  <span className="relative inline-flex">
+                    <MessageSquare
+                      className={cn(
+                        "h-5 w-5 transform transition-transform",
+                        isActiveChatsOpen && "rotate-180",
+                      )}
+                    />
+                    {activeChatIds.length > 0 && (
+                      <span
+                        aria-hidden
+                        className={cn(
+                          "pointer-events-none absolute -bottom-1 -right-1.5 min-w-[11px] text-center text-[9px] font-semibold tabular-nums leading-none transition-colors",
+                          activeChatIds.length >= MAX_ACTIVE_CHATS
+                            ? "text-amber-700 dark:text-amber-500"
+                            : "text-muted-foreground/90",
+                        )}
+                      >
+                        {activeChatIds.length}
+                      </span>
+                    )}
+                  </span>
                 </button>
               </HeaderIcon>
 

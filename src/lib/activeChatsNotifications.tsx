@@ -1,12 +1,10 @@
 import type { ReactNode } from "react";
-import { AlertTriangle, MessageSquare, MessageSquareOff, X } from "lucide-react";
+import { MessageSquare, MessageSquareOff, X } from "lucide-react";
 import { toast } from "sonner";
 import { MAX_ACTIVE_CHATS } from "@/lib/activeChats";
 import { cn } from "@/lib/utils";
 
-const TOAST_DURATION_MS = 5000;
 const EVICTION_TOAST_DURATION_MS = 6000;
-
 /** Near the header Active Chats (message) icon. */
 const ACTIVE_CHATS_TOAST_POSITION = "top-right" as const;
 
@@ -69,7 +67,11 @@ function showActiveChatsToast(
   title: string,
   description: string,
   icon: ReactNode,
-  options: { duration: number; variant?: ActiveChatsToastVariant },
+  options: {
+    duration: number;
+    variant?: ActiveChatsToastVariant;
+    id?: string;
+  },
 ): void {
   toast.custom(
     (toastId) => (
@@ -85,19 +87,12 @@ function showActiveChatsToast(
       duration: options.duration,
       position: ACTIVE_CHATS_TOAST_POSITION,
       unstyled: true,
+      id: options.id,
     },
   );
 }
 
-/** Shown when a new composer fills the 5th active chat slot (4 → 5) on first message. */
-export function notifyActiveChatsLimitReached(): void {
-  showActiveChatsToast(
-    `Active chat limit: ${MAX_ACTIVE_CHATS}`,
-    `You have ${MAX_ACTIVE_CHATS} active chats. Use Active Chats in the header (message icon) to manage your list. Starting another chat will remove the oldest active chat.`,
-    <AlertTriangle className="h-5 w-5 dark:text-amber-500 text-amber-600" />,
-    { duration: TOAST_DURATION_MS, variant: "warning" },
-  );
-}
+const ACTIVE_CHATS_AT_CAPACITY_TOAST_ID = "active-chats-at-capacity";
 
 /**
  * Shown when the user taps Start a Chat while the list already has 5 active chats
@@ -108,7 +103,7 @@ export function notifyActiveChatsAtCapacityStartingNew(): void {
     "Active chats full",
     `You already have ${MAX_ACTIVE_CHATS} active chats. Open Active Chats using the message icon in the header to review or remove conversations. When you send your first message in this chat, the oldest active chat will be removed.`,
     <MessageSquare className="h-5 w-5" />,
-    { duration: EVICTION_TOAST_DURATION_MS, variant: "warning" },
+    { duration: EVICTION_TOAST_DURATION_MS, variant: "warning", id: ACTIVE_CHATS_AT_CAPACITY_TOAST_ID },
   );
 }
 

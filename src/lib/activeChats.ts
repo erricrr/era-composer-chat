@@ -7,8 +7,6 @@ export type ActiveChatListUpdate = {
   isAlreadyActive: boolean;
   /** List was full (5) before this add. */
   wasAtCapacity: boolean;
-  /** New composer brought the list to exactly the limit (4 → 5). */
-  reachedCapacity: boolean;
   /** New 6th composer caused eviction from a full list (5 → 6, trimmed). */
   evictedDueToOverflow: boolean;
 };
@@ -40,7 +38,6 @@ export function computeActiveChatListUpdate(
     removedComposerId,
     isAlreadyActive,
     wasAtCapacity,
-    reachedCapacity: ids.length === MAX_ACTIVE_CHATS && !isAlreadyActive,
     evictedDueToOverflow,
   };
 }

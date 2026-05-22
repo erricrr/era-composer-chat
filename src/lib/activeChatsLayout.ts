@@ -130,3 +130,11 @@ export function getActiveChatsPanelClassName(
 /** Same full-viewport coverage as DrawerOverlay (info drawer) — above header z-70. */
 export const activeChatsMobileBackdropClass =
   "fixed inset-0 z-[100] bg-secondary/60 transition-opacity duration-300 ease-in-out motion-reduce:!transition-none motion-reduce:duration-0 md:hidden";
+
+/**
+ * Mobile-only stacking for the remove-chat confirmation while the bottom sheet is open.
+ * Keeps default centered layout; raises z-index above the sheet (z-150).
+ */
+export const activeChatsRemoveDialogContentClassName = "max-md:z-[200]";
+
+export const activeChatsRemoveDialogOverlayClassName = "max-md:z-[200]";

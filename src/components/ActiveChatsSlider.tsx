@@ -22,6 +22,8 @@ import { useCloseActiveChatsOnResize } from "@/hooks/useCloseActiveChatsOnResize
 import { MAX_ACTIVE_CHATS } from "@/lib/activeChats";
 import {
   activeChatsMobileBackdropClass,
+  activeChatsRemoveDialogContentClassName,
+  activeChatsRemoveDialogOverlayClassName,
   getActiveChatsPanelClassName,
 } from "@/lib/activeChatsLayout";
 import { cn } from "@/lib/utils";
@@ -255,40 +257,43 @@ export default function ActiveChatsSlider({
             })
           )}
         </div>
-        <AlertDialog
-          open={!!pendingRemoveComposer}
-          onOpenChange={(open) => {
-            if (!open) {
-              setPendingRemoveComposer(null);
-            }
-          }}
-        >
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Delete this chat?</AlertDialogTitle>
-              <AlertDialogDescription>
-                This will permanently delete your conversation with{" "}
-                <strong>{pendingRemoveComposer?.name}</strong>. You can&apos;t
-                undo this.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction
-                className={cn(buttonVariants({ variant: "destructive" }))}
-                onClick={() => {
-                  if (pendingRemoveComposer) {
-                    onRemoveChat(pendingRemoveComposer);
-                  }
-                  setPendingRemoveComposer(null);
-                }}
-              >
-                Delete
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
       </aside>
+      <AlertDialog
+        open={!!pendingRemoveComposer}
+        onOpenChange={(open) => {
+          if (!open) {
+            setPendingRemoveComposer(null);
+          }
+        }}
+      >
+        <AlertDialogContent
+          className={activeChatsRemoveDialogContentClassName}
+          overlayClassName={activeChatsRemoveDialogOverlayClassName}
+        >
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete this chat?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete your conversation with{" "}
+              <strong>{pendingRemoveComposer?.name}</strong>. You can&apos;t
+              undo this.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className={cn(buttonVariants({ variant: "destructive" }))}
+              onClick={() => {
+                if (pendingRemoveComposer) {
+                  onRemoveChat(pendingRemoveComposer);
+                }
+                setPendingRemoveComposer(null);
+              }}
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }
