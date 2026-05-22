@@ -329,9 +329,7 @@ export function ComposerSplitView({
                 onClick={handleOpenImageModal}
                 className={`transform transition-transform duration-200 hover:scale-105 appearance-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:z-10 relative cursor-pointer rounded-full overflow-hidden border-2 border-primary flex-shrink-0 ${
                   isMobile
-                    ? isActiveChatsOpen
-                      ? 'w-32 h-32'
-                      : 'w-48 h-48'
+                    ? 'w-32 h-32'
                     : isActiveChatsOpen
                       ? 'w-20 h-20 md:w-32 md:h-32 lg:w-40 lg:h-40 xl:w-48 xl:h-48'
                       : 'w-32 h-32 md:w-48 md:h-48 lg:w-56 lg:h-56 xl:w-64 xl:h-64'
@@ -472,7 +470,7 @@ export function ComposerSplitView({
         >
           {/* Composer Panel */}
           <ResizablePanel
-            defaultSize={40}
+            defaultSize={50}
             minSize={30}
             maxSize={60}
             className={cn(
@@ -498,7 +496,7 @@ export function ComposerSplitView({
 
           {/* Chat Panel */}
           <ResizablePanel
-            defaultSize={60}
+            defaultSize={50}
             minSize={40}
             maxSize={70}
             className={cn(
