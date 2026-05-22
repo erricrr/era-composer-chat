@@ -34,9 +34,11 @@ import {
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useStandaloneDisplayMode } from "@/hooks/useStandaloneDisplayMode";
 import {
-  activeChatsLayoutTransitionClass,
+  ACTIVE_CHATS_PANEL_TRANSITION_MS,
   getActiveChatsShellLayout,
   getComposerMenuRailAdjacencyClass,
+  getMainViewportShellStyle,
+  OVERLAY_PANEL_PAINT_DELAY_MS,
 } from "@/lib/activeChatsLayout";
 import { cn } from "@/lib/utils";
 
@@ -486,22 +488,21 @@ const Index = () => {
   // Effect to manage mounting/unmounting with slide animations
   useEffect(() => {
     if (isMenuOpen) {
-      // Keep body overflow in sync with menu state across all open/close paths.
       document.body.style.overflow = "hidden";
-      // Mount the menu first
       setIsMenuMounted(true);
-      // Use setTimeout to ensure browser paints initial -translate-x-full state before animating
-      const openTimer = setTimeout(() => {
+      const openTimer = window.setTimeout(() => {
         setIsMenuAnimating(true);
-      }, 10);
+      }, OVERLAY_PANEL_PAINT_DELAY_MS);
       return () => clearTimeout(openTimer);
-    } else {
-      document.body.style.overflow = "";
-      // Trigger exit animation, then unmount
-      setIsMenuAnimating(false);
-      const closeTimer = setTimeout(() => setIsMenuMounted(false), 300);
-      return () => clearTimeout(closeTimer);
     }
+
+    document.body.style.overflow = "";
+    setIsMenuAnimating(false);
+    const closeTimer = window.setTimeout(
+      () => setIsMenuMounted(false),
+      ACTIVE_CHATS_PANEL_TRANSITION_MS,
+    );
+    return () => clearTimeout(closeTimer);
   }, [isMenuOpen]);
 
   // Add effect to handle iOS Safari viewport issues
@@ -561,17 +562,17 @@ const Index = () => {
     }
   }, [isChatting, isChatClosing, selectedComposer]);
 
-  /** Hidden while composer menu is mounted so it never stacks under the menu or active chats rail. */
-  const shouldShowWelcome = !isChatting && !isChatClosing && !isMenuMounted;
+  const isLandingScene = !isChatting && !isChatClosing;
   const shouldShowChatOverlay =
     (isChatting || isChatClosing) && !!selectedComposer;
 
-  const menuActiveChatsShell = getActiveChatsShellLayout(isActiveChatsOpen, {
+  const landingInsetShell = getActiveChatsShellLayout(isActiveChatsOpen, {
     isMobile,
   });
-  const welcomeActiveChatsShell = getActiveChatsShellLayout(isActiveChatsOpen, {
+  const landingViewportStyle = getMainViewportShellStyle(
+    landingInsetShell,
     isMobile,
-  });
+  );
   const chatActiveChatsShell = getActiveChatsShellLayout(isActiveChatsOpen, {
     isMobile,
     suppressForSplitView: true,
@@ -735,22 +736,16 @@ const Index = () => {
           {/* Composer Selection Menu - Only render when open to remove from tab order when closed */}
           {isMenuMounted && (
             <aside
-              {...menuActiveChatsShell.dataAttribute}
+              {...landingInsetShell.dataAttribute}
               className={cn(
                 "fixed left-0 z-50 bg-background slider-animate",
                 getComposerMenuRailAdjacencyClass(
-                  menuActiveChatsShell.applyDesktopInset,
+                  landingInsetShell.applyDesktopInset,
                 ),
-                menuActiveChatsShell.shellClass,
+                landingInsetShell.shellClass,
                 isMenuAnimating ? "translate-x-0" : "-translate-x-full",
               )}
-              style={{
-                top: "2.75rem",
-                ...menuActiveChatsShell.insetStyle,
-                ...(isMobile
-                  ? { bottom: "0" }
-                  : { height: "calc(100dvh - 2.75rem)" }),
-              }}
+              style={landingViewportStyle}
               role="complementary"
               aria-label="Composer selection menu"
             >
@@ -768,20 +763,18 @@ const Index = () => {
             </aside>
           )}
 
-          {/* Welcome/Landing Page - Shows when no chat is active */}
-          {shouldShowWelcome && (
+          {/* Welcome stays mounted (no pop-in on menu close); inset snaps to avoid slide flash */}
+          {isLandingScene && (
             <div
-              {...welcomeActiveChatsShell.dataAttribute}
+              {...landingInsetShell.dataAttribute}
+              aria-hidden={isMenuOpen}
+              inert={isMenuOpen ? true : undefined}
               className={cn(
                 "fixed left-0 z-30 overflow-auto bg-background",
-                activeChatsLayoutTransitionClass,
-                welcomeActiveChatsShell.shellClass,
+                landingInsetShell.shellClass,
+                isMenuOpen && "pointer-events-none",
               )}
-              style={{
-                top: "2.75rem",
-                bottom: 0,
-                ...welcomeActiveChatsShell.insetStyle,
-              }}
+              style={landingViewportStyle}
             >
               <div className="container mx-auto flex min-h-full flex-col items-center justify-center px-4">
                 <div className="max-w-3xl p-4 text-center">

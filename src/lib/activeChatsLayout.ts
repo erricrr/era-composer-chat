@@ -64,6 +64,26 @@ export type ActiveChatsShellLayout = {
   shellClass: string | false;
 };
 
+/** Fixed header height — main shells (menu, welcome, chat) start below this. */
+export const MAIN_VIEWPORT_TOP = "2.75rem";
+
+/** Fixed shell filling the viewport below the header, honoring active-chats inset. */
+export function getMainViewportShellStyle(
+  shell: Pick<ActiveChatsShellLayout, "insetStyle">,
+  isMobile: boolean,
+): CSSProperties {
+  return {
+    top: MAIN_VIEWPORT_TOP,
+    ...shell.insetStyle,
+    ...(isMobile
+      ? { bottom: 0 }
+      : { height: `calc(100dvh - ${MAIN_VIEWPORT_TOP})` }),
+  };
+}
+
+/** Sub-frame delay before a slide transform fires (matches useActiveChatsPanelTransition). */
+export const OVERLAY_PANEL_PAINT_DELAY_MS = 10;
+
 /** Single entry point for inset shells (menu, welcome, chat overlay, split view). */
 export function getActiveChatsShellLayout(
   isActiveChatsOpen: boolean,

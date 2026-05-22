@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ACTIVE_CHATS_PANEL_TRANSITION_MS } from "@/lib/activeChatsLayout";
+import {
+  ACTIVE_CHATS_PANEL_TRANSITION_MS,
+  OVERLAY_PANEL_PAINT_DELAY_MS,
+} from "@/lib/activeChatsLayout";
 
 /**
  * Sub-frame delay that guarantees the browser paints the "transition-enabled,
@@ -8,7 +11,7 @@ import { ACTIVE_CHATS_PANEL_TRANSITION_MS } from "@/lib/activeChatsLayout";
  * ensure the transition class is rendered for at least one frame before we
  * change `isVisible`.  10 ms is well under one frame at 60 fps (~16 ms).
  */
-const PAINT_DELAY_MS = 10;
+const PAINT_DELAY_MS = OVERLAY_PANEL_PAINT_DELAY_MS;
 
 /**
  * Drives enter/exit transforms so the panel slides off-screen instead of
