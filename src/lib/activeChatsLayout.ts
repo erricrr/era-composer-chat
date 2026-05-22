@@ -48,7 +48,8 @@ export const activeChatsLayoutTransitionClass =
 export const ACTIVE_CHATS_OPEN_ATTR = "data-active-chats-open";
 
 /** Prevents flex/grid children from overflowing under the desktop rail. */
-export const activeChatsInsetShellClass = "min-w-0 max-w-full overflow-x-hidden";
+export const activeChatsInsetShellClass =
+  "min-w-0 max-w-full overflow-x-hidden";
 
 export function getActiveChatsOpenDataAttribute(
   applyDesktopInset: boolean,
@@ -92,11 +93,24 @@ export function getComposerMenuRailAdjacencyClass(
     : "border-r border-border shadow-lg";
 }
 
-/** Panel: bottom sheet on mobile, right rail on md+. `isVisible` drives slide transform. */
-export function getActiveChatsPanelClassName(isVisible: boolean): string {
+/**
+ * Panel: bottom sheet on mobile, right rail on md+. `isVisible` drives slide transform.
+ *
+ * `isTransitioning` gates the CSS transition: when false (panel stably open or closed) the
+ * `slider-animate` class is omitted so that viewport-resize breakpoint switches between the
+ * mobile (translateY) and desktop (translateX) off-screen positions never animate the panel
+ * into view while it is already hidden.
+ */
+export function getActiveChatsPanelClassName(
+  isVisible: boolean,
+  isTransitioning: boolean,
+): string {
   return cn(
     // Mobile z-[150] matches FooterDrawer; desktop z-60 stays under the header (z-70)
-    "slider-animate fixed z-[150] md:z-60 flex flex-col bg-background",
+    // slider-animate (transition: transform) is enabled only while actually animating so
+    // that breakpoint-driven transform changes on resize are always instantaneous.
+    isTransitioning && "slider-animate",
+    "fixed z-[150] md:z-60 flex flex-col bg-background",
     // Mobile — bottom sheet (overlays content; no page inset)
     "inset-x-0 bottom-0 w-full max-h-[min(85dvh,32rem)] rounded-t-2xl border-t border-border shadow-lg",
     "pb-[max(0px,env(safe-area-inset-bottom))]",
