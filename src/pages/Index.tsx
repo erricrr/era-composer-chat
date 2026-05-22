@@ -1,4 +1,11 @@
-import { lazy, Suspense, useState, useCallback, useEffect, useRef } from "react";
+import {
+  lazy,
+  Suspense,
+  useState,
+  useCallback,
+  useEffect,
+  useRef,
+} from "react";
 import { Link } from "react-router-dom";
 import {
   Composer,
@@ -187,28 +194,29 @@ const Index = () => {
         const composerEra = Array.isArray(composer.era)
           ? composer.era[0]
           : composer.era;
+        // Close menu if it's open (do this immediately, independent of era)
+        if (isMenuOpen) {
+          setIsMenuOpen(false);
+          localStorage.setItem("isMenuOpen", "false");
+        }
         if (composerEra && composerEra !== selectedEra) {
           console.log(
             `[Index] Source is search, changing era to ${composerEra}`,
           );
           setSelectedEra(composerEra);
-          // Set the composer after era change to ensure proper state updates
+          // Set composer AND isChatting together in the same batch so the
+          // "isChatting requires a composer" guard never sees them out of sync.
           setTimeout(() => {
             setSelectedComposer(composer);
             setShouldScrollToComposer(true);
+            setIsChatting(true);
+            localStorage.setItem("isChatting", "true");
           }, 0);
         } else {
           setSelectedComposer(composer);
           setShouldScrollToComposer(true);
-        }
-
-        // Start chat immediately when selecting from search
-        setIsChatting(true);
-        localStorage.setItem("isChatting", "true");
-        // Close menu if it's open
-        if (isMenuOpen) {
-          setIsMenuOpen(false);
-          localStorage.setItem("isMenuOpen", "false");
+          setIsChatting(true);
+          localStorage.setItem("isChatting", "true");
         }
       } else if (options?.source === "restore") {
         // When restoring from localStorage, just set the composer without side effects
@@ -560,7 +568,8 @@ const Index = () => {
   }, [isChatting, isChatClosing, selectedComposer]);
 
   const shouldShowWelcome = !isChatting && !isChatClosing;
-  const shouldShowChatOverlay = (isChatting || isChatClosing) && !!selectedComposer;
+  const shouldShowChatOverlay =
+    (isChatting || isChatClosing) && !!selectedComposer;
 
   return (
     <TooltipProvider>
@@ -734,7 +743,9 @@ const Index = () => {
                   to find a specific composer.{" "}
                 </p>
                 <p className="text-muted-foreground text-xs mb-3">
-                  Note: Not all composers are available to chat with due to copyright, but they're included for their historical importance.
+                  Note: Not all composers are available to chat with due to
+                  copyright, but they're included for their historical
+                  importance.
                 </p>
                 <button
                   onClick={toggleMenu}
@@ -792,9 +803,7 @@ const Index = () => {
           {shouldShowChatOverlay && (
             <div
               className={`fixed bg-background transition-[opacity,transform,right] duration-300 ease-in-out motion-reduce:!transition-none motion-reduce:duration-0 ${
-                isChatClosing
-                  ? "opacity-0 translate-y-4"
-                  : "opacity-100"
+                isChatClosing ? "opacity-0 translate-y-4" : "opacity-100"
               }`}
               style={{
                 left: 0,
@@ -818,7 +827,9 @@ const Index = () => {
                   className="h-full w-full"
                   aria-label={`Chat with ${selectedComposer.name}`}
                 >
-                  <Suspense fallback={<div className="h-full" aria-hidden="true" />}>
+                  <Suspense
+                    fallback={<div className="h-full" aria-hidden="true" />}
+                  >
                     <ChatInterface
                       key={chatClearTrigger}
                       composer={selectedComposer}
@@ -841,10 +852,12 @@ const Index = () => {
                   aria-label="Copyright notice"
                 >
                   <div className="text-center p-6 bg-muted/50 rounded-lg shadow">
-                    <h2 className="text-xl font-semibold mb-2">Chat Unavailable</h2>
+                    <h2 className="text-xl font-semibold mb-2">
+                      Chat Unavailable
+                    </h2>
                     <p className="text-muted-foreground">
-                      Chatting with {selectedComposer.name} is unavailable due to
-                      copyright restrictions.
+                      Chatting with {selectedComposer.name} is unavailable due
+                      to copyright restrictions.
                     </p>
                   </div>
                 </article>
