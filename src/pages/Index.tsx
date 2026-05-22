@@ -668,10 +668,10 @@ const Index = () => {
                       <span
                         aria-hidden
                         className={cn(
-                          "pointer-events-none absolute -bottom-1 -right-1.5 min-w-[11px] text-center text-[9px] font-semibold tabular-nums leading-none transition-colors",
+                          "pointer-events-none absolute -bottom-1 -right-1.5 flex h-[14px] min-w-[14px] items-center justify-center rounded-full px-0.5 text-[9px] font-semibold tabular-nums leading-none transition-colors",
                           activeChatIds.length >= MAX_ACTIVE_CHATS
-                            ? "text-amber-700 dark:text-amber-500"
-                            : "text-muted-foreground/90",
+                            ? "bg-amber-500 text-white dark:bg-amber-600 dark:text-amber-50"
+                            : "border border-border bg-background text-muted-foreground shadow-sm",
                         )}
                       >
                         {activeChatIds.length}
