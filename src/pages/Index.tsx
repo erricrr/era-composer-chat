@@ -827,14 +827,14 @@ const Index = () => {
                     &mdash;search 'classical music essentials' on your favorite
                     streaming service.
                   </p>
-                  <div className="mt-4 border-t border-border pt-3 text-xs text-muted-foreground">
+                  <div className="mt-4 border-t border-border pt-3 text-xs text-muted-foreground whitespace-nowrap">
                     <Link
                       to="/privacy"
                       className="text-primary hover:underline focus:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:rounded-sm"
                     >
                       Privacy Policy
                     </Link>
-                    <span> · </span>
+                    {" · "}
                     <Link
                       to="/terms"
                       className="text-primary hover:underline focus:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:rounded-sm"
