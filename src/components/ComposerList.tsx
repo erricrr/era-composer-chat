@@ -27,6 +27,7 @@ import {
   ScrollAffordanceArea,
   ContentScrollAffordanceArea,
 } from "@/components/ui/scroll-affordance-area";
+import { readableProseClass } from "@/lib/readingLayout";
 
 // Helper to detect Safari browser
 const isSafari = () => {
@@ -759,7 +760,7 @@ export function ComposerList({
                 bgVar="primary-foreground"
                 className="w-full h-full"
               >
-                <div ref={detailsContentRef}>
+                <div ref={detailsContentRef} className={readableProseClass}>
                   <ComposerShortBioHeader
                     composer={selectedComposer}
                     variant="sidebar"

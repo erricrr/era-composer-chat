@@ -10,6 +10,7 @@ import {
   activeChatsLayoutTransitionClass,
   getActiveChatsShellLayout,
 } from "@/lib/activeChatsLayout";
+import { readableProseClass } from "@/lib/readingLayout";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { ContentScrollAffordanceArea } from "@/components/ui/scroll-affordance-area";
@@ -222,7 +223,10 @@ export function ComposerSplitView({
 
             <div
               tabIndex={0}
-              className="focus-ring-inset focus:rounded-none space-y-4 md:space-y-6 max-w-prose mx-auto"
+              className={cn(
+                "focus-ring-inset focus:rounded-none space-y-4 md:space-y-6",
+                readableProseClass,
+              )}
             >
               <div>
                 <p

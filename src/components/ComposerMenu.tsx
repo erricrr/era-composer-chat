@@ -2,6 +2,8 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import { Timeline } from "./Timeline";
 import { ComposerList } from "./ComposerList";
 import { Composer, Era } from "@/data/composers";
+import { readablePanelClass } from "@/lib/readingLayout";
+import { cn } from "@/lib/utils";
 
 interface ComposerMenuProps {
   onSelectComposer: (composer: Composer, options?: { source?: string }) => void;
@@ -107,7 +109,12 @@ export function ComposerMenu({
   }, []); // Only run on mount
 
   return (
-    <div className="container mx-auto mt-3 flex h-full min-w-0 max-w-full flex-col overflow-hidden px-4">
+    <div
+      className={cn(
+        "mx-auto mt-3 flex h-full min-w-0 flex-col overflow-hidden px-4",
+        readablePanelClass,
+      )}
+    >
       <div className="relative">
         <h1 className="text-2xl sm:text-2xl md:text-3xl lg:text-3xl font-bold text-center font-serif mt-0 pb-4 mx-4 sm:mx-[30px]">
           {selectedEra} Era Composers

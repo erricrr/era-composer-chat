@@ -44,6 +44,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { buttonVariants } from "@/components/ui/button";
 import { getActiveChatsShellLayout } from "@/lib/activeChatsLayout";
+import { readablePanelClass } from "@/lib/readingLayout";
 import { cn } from "@/lib/utils";
 import { ScrollAffordanceArea } from "@/components/ui/scroll-affordance-area";
 
@@ -199,7 +200,7 @@ export function ChatInterface({
   const isSplitViewOpen = splitTransitionPhase !== "closed";
   const isSplitViewMounted = splitTransitionPhase !== "closed";
   const fullViewReadableWidthClass = !isSplitViewOpen
-    ? "lg:max-w-5xl lg:mx-auto lg:w-full"
+    ? readablePanelClass
     : "";
 
   useVirtualKeyboard(isMobile || isTouch, textareaRef);
