@@ -8,6 +8,12 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+    proxy: {
+      "/api/chat": {
+        target: "http://127.0.0.1:8888",
+        changeOrigin: true,
+      },
+    },
   },
   plugins: [
     react(),

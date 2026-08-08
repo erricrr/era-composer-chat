@@ -26,6 +26,7 @@
   },
   "scripts": {
     "dev": "NODE_OPTIONS=--experimental-global-webcrypto vite",
+    "dev:full": "netlify dev",
     "build": "NODE_OPTIONS=--experimental-global-webcrypto vite build",
     "build:dev": "NODE_OPTIONS=--experimental-global-webcrypto vite build --mode development",
     "lint": "eslint .",
@@ -92,6 +93,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@netlify/functions": "^4.2.1",
     "@eslint/js": "^9.9.0",
     "@eslint/plugin-kit": "^0.3.3",
     "@tailwindcss/typography": "^0.5.15",
@@ -105,6 +107,7 @@
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.9",
     "globals": "^15.9.0",
+    "netlify-cli": "^23.4.3",
     "patch-package": "^8.0.1",
     "png-to-ico": "^2.1.8",
     "postcss": "^8.5.14",
