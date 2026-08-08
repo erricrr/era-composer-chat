@@ -741,7 +741,7 @@ const Index = () => {
             <aside
               {...landingInsetShell.dataAttribute}
               className={cn(
-                "fixed left-0 z-50 bg-background",
+                "fixed left-0 z-50 overflow-auto bg-background",
                 getActiveChatsShellTransitionClass("transform"),
                 activeChatsSlideGpuClass,
                 getComposerMenuRailAdjacencyClass(

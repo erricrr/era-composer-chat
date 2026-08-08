@@ -111,7 +111,7 @@ export function ComposerMenu({
   return (
     <div
       className={cn(
-        "mx-auto mt-3 flex h-full min-w-0 flex-col overflow-hidden px-4",
+        "mx-auto mt-3 flex min-h-full min-w-0 flex-col overflow-visible px-4",
         readablePanelClass,
       )}
     >
