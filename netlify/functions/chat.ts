@@ -55,7 +55,6 @@ function isAllowedOrigin(event: HandlerEvent): boolean {
   const origin = event.headers.origin || event.headers.referer;
   
   console.log('Checking origin:', origin);
-  console.log('All headers:', JSON.stringify(event.headers));
   
   // Allow requests without origin in non-production (for local dev)
   if (!origin) {
@@ -76,13 +75,14 @@ function isAllowedOrigin(event: HandlerEvent): boolean {
     return isAllowed;
   }
 
-  // Default allowed origins (including Netlify domains)
+  // Default allowed origins (including Netlify domains and custom domains)
   const isLocalhost = origin.includes('localhost') || origin.includes('127.0.0.1');
   const isNetlify = origin.includes('.netlify.app') || origin.includes('netlify.live');
+  const isCustomDomain = origin.includes('eracomposer.app');
   
-  console.log('isLocalhost:', isLocalhost, 'isNetlify:', isNetlify);
+  console.log('isLocalhost:', isLocalhost, 'isNetlify:', isNetlify, 'isCustomDomain:', isCustomDomain);
   
-  return isLocalhost || isNetlify;
+  return isLocalhost || isNetlify || isCustomDomain;
 }
 
 function isValidRequestBody(body: unknown): body is ChatRequestBody {
