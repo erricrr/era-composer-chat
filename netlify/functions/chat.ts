@@ -13,11 +13,14 @@ const RATE_LIMIT_MAX_REQUESTS = 20;
 
 const rateLimitStore = new Map<string, { count: number; windowStart: number }>();
 
-function jsonResponse(statusCode: number, body: object) {
+function jsonResponse(statusCode: number, body: object, origin?: string) {
   return {
     statusCode,
     headers: {
       'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': origin || '*',
+      'Access-Control-Allow-Headers': 'Content-Type',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
     },
     body: JSON.stringify(body),
   };
@@ -50,6 +53,8 @@ function isRateLimited(ip: string): boolean {
 
 function isAllowedOrigin(event: HandlerEvent): boolean {
   const origin = event.headers.origin || event.headers.referer;
+  
+  // Allow requests without origin in non-production (for local dev)
   if (!origin) {
     return process.env.NODE_ENV !== 'production';
   }
@@ -59,16 +64,16 @@ function isAllowedOrigin(event: HandlerEvent): boolean {
     .map((value: string) => value.trim())
     .filter(Boolean);
 
-  if (allowedOrigins.length === 0) {
-    return (
-      origin.includes('localhost') ||
-      origin.includes('127.0.0.1') ||
-      origin.includes('.netlify.app') ||
-      origin.includes('netlify.live')
-    );
+  // If ALLOWED_ORIGINS is set, use it exclusively
+  if (allowedOrigins.length > 0) {
+    return allowedOrigins.some((allowed: string) => origin.startsWith(allowed));
   }
 
-  return allowedOrigins.some((allowed: string) => origin.startsWith(allowed));
+  // Default allowed origins (including Netlify domains)
+  const isLocalhost = origin.includes('localhost') || origin.includes('127.0.0.1');
+  const isNetlify = origin.includes('.netlify.app') || origin.includes('netlify.live');
+  
+  return isLocalhost || isNetlify;
 }
 
 function isValidRequestBody(body: unknown): body is ChatRequestBody {
@@ -97,43 +102,49 @@ function isValidRequestBody(body: unknown): body is ChatRequestBody {
 }
 
 export const handler: Handler = async (event) => {
+  const origin = event.headers.origin || event.headers.referer || '';
+  
+  // Handle CORS preflight
   if (event.httpMethod === 'OPTIONS') {
     return {
       statusCode: 204,
       headers: {
-        Allow: 'POST, OPTIONS',
+        'Access-Control-Allow-Origin': origin || '*',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
       },
       body: '',
     };
   }
 
   if (event.httpMethod !== 'POST') {
-    return jsonResponse(405, { error: 'Method not allowed' });
+    return jsonResponse(405, { error: 'Method not allowed' }, origin);
   }
 
   if (!isAllowedOrigin(event)) {
-    return jsonResponse(403, { error: 'Forbidden' });
+    console.error('Origin blocked:', origin);
+    return jsonResponse(403, { error: 'Forbidden' }, origin);
   }
 
   const clientIp = getClientIp(event);
   if (isRateLimited(clientIp)) {
-    return jsonResponse(429, { error: 'Too many requests. Please try again shortly.' });
+    return jsonResponse(429, { error: 'Too many requests. Please try again shortly.' }, origin);
   }
 
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
-    return jsonResponse(500, { error: 'Server configuration error' });
+    return jsonResponse(500, { error: 'Server configuration error' }, origin);
   }
 
   let body: unknown;
   try {
     body = JSON.parse(event.body || '{}');
   } catch {
-    return jsonResponse(400, { error: 'Invalid JSON body' });
+    return jsonResponse(400, { error: 'Invalid JSON body' }, origin);
   }
 
   if (!isValidRequestBody(body)) {
-    return jsonResponse(400, { error: 'Invalid request payload' });
+    return jsonResponse(400, { error: 'Invalid request payload' }, origin);
   }
 
   try {
@@ -145,9 +156,9 @@ export const handler: Handler = async (event) => {
     );
 
     const response: ChatResponseBody = { text };
-    return jsonResponse(200, response);
+    return jsonResponse(200, response, origin);
   } catch (error) {
     console.error('Gemini chat function error:', error);
-    return jsonResponse(502, { error: 'Failed to generate response' });
+    return jsonResponse(502, { error: 'Failed to generate response' }, origin);
   }
 };
