@@ -54,8 +54,12 @@ function isRateLimited(ip: string): boolean {
 function isAllowedOrigin(event: HandlerEvent): boolean {
   const origin = event.headers.origin || event.headers.referer;
   
+  console.log('Checking origin:', origin);
+  console.log('All headers:', JSON.stringify(event.headers));
+  
   // Allow requests without origin in non-production (for local dev)
   if (!origin) {
+    console.log('No origin header, checking NODE_ENV:', process.env.NODE_ENV);
     return process.env.NODE_ENV !== 'production';
   }
 
@@ -66,12 +70,17 @@ function isAllowedOrigin(event: HandlerEvent): boolean {
 
   // If ALLOWED_ORIGINS is set, use it exclusively
   if (allowedOrigins.length > 0) {
-    return allowedOrigins.some((allowed: string) => origin.startsWith(allowed));
+    console.log('Using ALLOWED_ORIGINS:', allowedOrigins);
+    const isAllowed = allowedOrigins.some((allowed: string) => origin.startsWith(allowed));
+    console.log('Origin allowed by ALLOWED_ORIGINS:', isAllowed);
+    return isAllowed;
   }
 
   // Default allowed origins (including Netlify domains)
   const isLocalhost = origin.includes('localhost') || origin.includes('127.0.0.1');
   const isNetlify = origin.includes('.netlify.app') || origin.includes('netlify.live');
+  
+  console.log('isLocalhost:', isLocalhost, 'isNetlify:', isNetlify);
   
   return isLocalhost || isNetlify;
 }
